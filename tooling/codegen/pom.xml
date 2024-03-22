@@ -35,6 +35,16 @@
 	<dependencies>
         
         <dependency>
+            <groupId>org.causewaystuff</groupId>
+            <artifactId>causewaystuff-commons</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.causewaystuff</groupId>
+            <artifactId>causewaystuff-domsupport</artifactId>
+        </dependency>
+        
+        <dependency>
             <groupId>org.apache.causeway.core</groupId>
             <artifactId>causeway-applib</artifactId>
         </dependency>

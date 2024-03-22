@@ -138,8 +138,20 @@
             <!-- SUB MODULES -->
             
             <dependency>
-                <groupId>at.ac.univie.nutrition.dita</groupId>
-                <artifactId>dita-tooling</artifactId>
+                <groupId>org.causewaystuff</groupId>
+                <artifactId>causewaystuff-commons</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>org.causewaystuff</groupId>
+                <artifactId>causewaystuff-domsupport</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>org.causewaystuff</groupId>
+                <artifactId>causewaystuff-tooling-codegen</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
             
@@ -292,6 +304,8 @@
     </dependencies>
     
     <modules>
+        <module>commons</module>
+        <module>domsupport</module>
         <module>tooling</module>
     </modules>
     
