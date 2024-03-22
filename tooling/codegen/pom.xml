@@ -31,5 +31,39 @@
 	<artifactId>causewaystuff-tooling-codegen</artifactId>
 	<name>Causeway Stuff - Tooling (Code Gen)</name>
 	<description>Code Generation for the Apache Causeway Programming Model</description>
+	
+	<dependencies>
+        
+        <dependency>
+            <groupId>org.apache.causeway.core</groupId>
+            <artifactId>causeway-applib</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.causeway.tooling</groupId>
+            <artifactId>causeway-tooling-c4modeling</artifactId>
+            <scope>runtime</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.structurizr</groupId>
+            <artifactId>structurizr-dsl</artifactId>
+            <version>1.35.0</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.structurizr</groupId>
+            <artifactId>structurizr-export</artifactId>
+            <!-- 2.0.0 breaks parsing -->
+            <version>1.19.0</version>
+        </dependency>
+        
+    </dependencies>
     
 </project>
