@@ -1,0 +1,23 @@
+= Apache Causeway - Stuff
+:toc:
+:toc-title: pass:[<h3>Contents</h3>]
+:toc-placement!:
+
+Project umbrella for the _Apache Causeway_ framework, containing stuff,
+that is NOT released under the official ASF umbrella. 
+____
+https://causeway.apache.org[Apache Causeway] software is a framework for rapidly developing domain-driven apps in Java.
+Write your business logic in entities, domain services and repositories, and the framework dynamically generates a representation of that domain model as a webapp or a RESTful API.
+____
+
+toc::[]
+
+== Modules
+
+=== Tooling
+
+* `CodeGen` - A Java code generator utilizing Apache Causeway's Programming Model
+
+== License
+_Causewaystuff_ is _Open Source_ software released under the https://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license].
+  
