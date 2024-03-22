@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.causewaystuff.tooling.codegen.model.OrmModel;
 
-import org.springframework.javapoet.ClassName;
+import org.causewaystuff.tooling.javapoet.ClassName;
 
 import org.apache.causeway.commons.internal.base._Strings;
 

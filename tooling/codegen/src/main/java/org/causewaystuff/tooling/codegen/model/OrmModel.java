@@ -31,8 +31,8 @@ import org.causewaystuff.commons.types.internal.ObjectRef;
 import org.causewaystuff.commons.types.internal.SneakyRef;
 import org.causewaystuff.tooling.codegen.domgen.LicenseHeader;
 
-import org.springframework.javapoet.ClassName;
-import org.springframework.javapoet.TypeName;
+import org.causewaystuff.tooling.javapoet.ClassName;
+import org.causewaystuff.tooling.javapoet.TypeName;
 
 import org.apache.causeway.applib.services.metamodel.objgraph.ObjectGraph;
 import org.apache.causeway.commons.collections.Can;

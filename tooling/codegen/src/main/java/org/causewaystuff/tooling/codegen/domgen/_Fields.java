@@ -20,9 +20,9 @@ package org.causewaystuff.tooling.codegen.domgen;
 
 import javax.lang.model.element.Modifier;
 
-import org.springframework.javapoet.ClassName;
-import org.springframework.javapoet.FieldSpec;
-import org.springframework.javapoet.TypeName;
+import org.causewaystuff.tooling.javapoet.ClassName;
+import org.causewaystuff.tooling.javapoet.FieldSpec;
+import org.causewaystuff.tooling.javapoet.TypeName;
 
 import lombok.experimental.UtilityClass;
 

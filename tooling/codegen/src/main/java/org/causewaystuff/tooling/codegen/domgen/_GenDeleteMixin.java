@@ -26,10 +26,10 @@ import org.causewaystuff.domsupport.services.search.SearchService;
 import org.causewaystuff.tooling.codegen.domgen.DomainGenerator.QualifiedType;
 import org.causewaystuff.tooling.codegen.model.OrmModel;
 
-import org.springframework.javapoet.ClassName;
-import org.springframework.javapoet.MethodSpec;
-import org.springframework.javapoet.ParameterSpec;
-import org.springframework.javapoet.TypeSpec;
+import org.causewaystuff.tooling.javapoet.ClassName;
+import org.causewaystuff.tooling.javapoet.MethodSpec;
+import org.causewaystuff.tooling.javapoet.ParameterSpec;
+import org.causewaystuff.tooling.javapoet.TypeSpec;
 
 import org.apache.causeway.applib.annotation.ActionLayout.Position;
 import org.apache.causeway.applib.annotation.LabelPosition;

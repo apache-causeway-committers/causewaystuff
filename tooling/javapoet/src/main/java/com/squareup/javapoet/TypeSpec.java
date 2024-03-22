@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.javapoet;
+package com.squareup.javapoet;
 
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
@@ -40,10 +40,10 @@ import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 
-import static org.springframework.javapoet.Util.checkArgument;
-import static org.springframework.javapoet.Util.checkNotNull;
-import static org.springframework.javapoet.Util.checkState;
-import static org.springframework.javapoet.Util.requireExactlyOneOf;
+import static com.squareup.javapoet.Util.checkArgument;
+import static com.squareup.javapoet.Util.checkNotNull;
+import static com.squareup.javapoet.Util.checkState;
+import static com.squareup.javapoet.Util.requireExactlyOneOf;
 
 /**
  * A generated class, interface, or enum declaration.

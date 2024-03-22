@@ -29,10 +29,10 @@ import org.causewaystuff.domsupport.services.lookup.ForeignKeyLookupService;
 import org.causewaystuff.tooling.codegen.domgen.DomainGenerator.QualifiedType;
 import org.causewaystuff.tooling.codegen.model.OrmModel;
 
-import org.springframework.javapoet.ClassName;
-import org.springframework.javapoet.MethodSpec;
-import org.springframework.javapoet.ParameterizedTypeName;
-import org.springframework.javapoet.TypeSpec;
+import org.causewaystuff.tooling.javapoet.ClassName;
+import org.causewaystuff.tooling.javapoet.MethodSpec;
+import org.causewaystuff.tooling.javapoet.ParameterizedTypeName;
+import org.causewaystuff.tooling.javapoet.TypeSpec;
 
 import org.apache.causeway.applib.annotation.Snapshot;
 import org.apache.causeway.applib.annotation.Where;

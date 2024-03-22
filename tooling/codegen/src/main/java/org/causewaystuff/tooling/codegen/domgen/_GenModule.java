@@ -28,8 +28,8 @@ import org.causewaystuff.tooling.codegen.domgen.DomainGenerator.DomainModel;
 import org.causewaystuff.tooling.codegen.domgen.DomainGenerator.JavaFileModel;
 import org.causewaystuff.tooling.codegen.domgen.DomainGenerator.QualifiedType;
 
-import org.springframework.javapoet.ClassName;
-import org.springframework.javapoet.TypeSpec;
+import org.causewaystuff.tooling.javapoet.ClassName;
+import org.causewaystuff.tooling.javapoet.TypeSpec;
 
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.internal.collections._Multimaps;

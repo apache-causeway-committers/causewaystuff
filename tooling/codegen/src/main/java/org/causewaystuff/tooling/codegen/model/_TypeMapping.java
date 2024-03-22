@@ -18,8 +18,8 @@
  */
 package org.causewaystuff.tooling.codegen.model;
 
-import org.springframework.javapoet.ClassName;
-import org.springframework.javapoet.TypeName;
+import org.causewaystuff.tooling.javapoet.ClassName;
+import org.causewaystuff.tooling.javapoet.TypeName;
 
 import org.apache.causeway.commons.internal.exceptions._Exceptions;
 

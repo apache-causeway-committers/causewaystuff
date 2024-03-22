@@ -22,10 +22,10 @@ import java.util.stream.Collectors;
 
 import javax.lang.model.element.Modifier;
 
-import org.springframework.javapoet.ClassName;
-import org.springframework.javapoet.CodeBlock;
-import org.springframework.javapoet.MethodSpec;
-import org.springframework.javapoet.ParameterizedTypeName;
+import org.causewaystuff.tooling.javapoet.ClassName;
+import org.causewaystuff.tooling.javapoet.CodeBlock;
+import org.causewaystuff.tooling.javapoet.MethodSpec;
+import org.causewaystuff.tooling.javapoet.ParameterizedTypeName;
 
 import org.apache.causeway.applib.annotation.Navigable;
 import org.apache.causeway.applib.annotation.Snapshot;

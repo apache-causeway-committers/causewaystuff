@@ -23,8 +23,8 @@ import javax.lang.model.element.Modifier;
 import org.causewaystuff.tooling.codegen.domgen.DomainGenerator.QualifiedType;
 import org.causewaystuff.tooling.codegen.model.OrmModel.Entity;
 
-import org.springframework.javapoet.ClassName;
-import org.springframework.javapoet.TypeSpec;
+import org.causewaystuff.tooling.javapoet.ClassName;
+import org.causewaystuff.tooling.javapoet.TypeSpec;
 
 import lombok.val;
 import lombok.experimental.UtilityClass;

@@ -29,9 +29,9 @@ import java.util.stream.Stream;
 import org.causewaystuff.commons.types.ResourceFolder;
 import org.causewaystuff.tooling.codegen.model.OrmModel;
 
-import org.springframework.javapoet.ClassName;
-import org.springframework.javapoet.JavaFile;
-import org.springframework.javapoet.TypeSpec;
+import org.causewaystuff.tooling.javapoet.ClassName;
+import org.causewaystuff.tooling.javapoet.JavaFile;
+import org.causewaystuff.tooling.javapoet.TypeSpec;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ReflectionUtils;
 

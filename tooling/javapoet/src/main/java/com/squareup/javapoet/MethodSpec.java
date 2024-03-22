@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.javapoet;
+package com.squareup.javapoet;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -35,9 +35,9 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
 import javax.lang.model.util.Types;
 
-import static org.springframework.javapoet.Util.checkArgument;
-import static org.springframework.javapoet.Util.checkNotNull;
-import static org.springframework.javapoet.Util.checkState;
+import static com.squareup.javapoet.Util.checkArgument;
+import static com.squareup.javapoet.Util.checkNotNull;
+import static com.squareup.javapoet.Util.checkState;
 
 /**
  * A generated constructor or method declaration.

@@ -37,6 +37,7 @@
 	<packaging>pom</packaging>
 	
 	<modules>
+        <module>javapoet</module>
 		<module>codegen</module>
 	</modules>
     

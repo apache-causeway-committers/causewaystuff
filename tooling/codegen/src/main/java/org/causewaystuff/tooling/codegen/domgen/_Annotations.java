@@ -29,9 +29,9 @@ import jakarta.inject.Named;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.javapoet.AnnotationSpec;
-import org.springframework.javapoet.ClassName;
-import org.springframework.javapoet.CodeBlock;
+import org.causewaystuff.tooling.javapoet.AnnotationSpec;
+import org.causewaystuff.tooling.javapoet.ClassName;
+import org.causewaystuff.tooling.javapoet.CodeBlock;
 import org.springframework.lang.Nullable;
 
 import org.apache.causeway.applib.annotation.Action;

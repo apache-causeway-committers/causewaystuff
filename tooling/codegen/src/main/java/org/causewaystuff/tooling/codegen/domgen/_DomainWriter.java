@@ -30,7 +30,7 @@ import java.util.stream.Stream;
 
 import org.causewaystuff.tooling.codegen.domgen.DomainGenerator.JavaFileModel;
 
-import org.springframework.javapoet.JavaFile;
+import org.causewaystuff.tooling.javapoet.JavaFile;
 import org.springframework.lang.Nullable;
 
 import org.apache.causeway.commons.internal.assertions._Assert;

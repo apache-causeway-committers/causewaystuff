@@ -32,13 +32,13 @@ import org.causewaystuff.tooling.codegen.model.OrmModel;
 import org.causewaystuff.tooling.codegen.model.OrmModel.Entity;
 import org.causewaystuff.tooling.codegen.model.OrmModel.Field;
 
-import org.springframework.javapoet.ClassName;
-import org.springframework.javapoet.CodeBlock;
-import org.springframework.javapoet.FieldSpec;
-import org.springframework.javapoet.MethodSpec;
-import org.springframework.javapoet.ParameterSpec;
-import org.springframework.javapoet.ParameterizedTypeName;
-import org.springframework.javapoet.TypeSpec;
+import org.causewaystuff.tooling.javapoet.ClassName;
+import org.causewaystuff.tooling.javapoet.CodeBlock;
+import org.causewaystuff.tooling.javapoet.FieldSpec;
+import org.causewaystuff.tooling.javapoet.MethodSpec;
+import org.causewaystuff.tooling.javapoet.ParameterSpec;
+import org.causewaystuff.tooling.javapoet.ParameterizedTypeName;
+import org.causewaystuff.tooling.javapoet.TypeSpec;
 
 import org.apache.causeway.applib.ViewModel;
 import org.apache.causeway.applib.annotation.Editing;

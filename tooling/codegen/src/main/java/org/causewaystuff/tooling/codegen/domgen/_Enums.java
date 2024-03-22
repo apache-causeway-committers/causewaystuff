@@ -24,10 +24,10 @@ import javax.lang.model.element.Modifier;
 
 import org.causewaystuff.tooling.codegen.model.OrmModel;
 
-import org.springframework.javapoet.ClassName;
-import org.springframework.javapoet.FieldSpec;
-import org.springframework.javapoet.TypeName;
-import org.springframework.javapoet.TypeSpec;
+import org.causewaystuff.tooling.javapoet.ClassName;
+import org.causewaystuff.tooling.javapoet.FieldSpec;
+import org.causewaystuff.tooling.javapoet.TypeName;
+import org.causewaystuff.tooling.javapoet.TypeSpec;
 
 import org.apache.causeway.commons.internal.assertions._Assert;
 import org.apache.causeway.commons.internal.base._NullSafe;

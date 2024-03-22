@@ -27,11 +27,11 @@ import org.causewaystuff.tooling.codegen.model.OrmModel;
 import org.causewaystuff.tooling.codegen.model.OrmModel.Entity;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.javapoet.AnnotationSpec;
-import org.springframework.javapoet.ClassName;
-import org.springframework.javapoet.MethodSpec;
-import org.springframework.javapoet.ParameterizedTypeName;
-import org.springframework.javapoet.TypeSpec;
+import org.causewaystuff.tooling.javapoet.AnnotationSpec;
+import org.causewaystuff.tooling.javapoet.ClassName;
+import org.causewaystuff.tooling.javapoet.MethodSpec;
+import org.causewaystuff.tooling.javapoet.ParameterizedTypeName;
+import org.causewaystuff.tooling.javapoet.TypeSpec;
 
 import org.apache.causeway.commons.collections.Can;
 
