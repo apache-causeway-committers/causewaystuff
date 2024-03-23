@@ -73,9 +73,7 @@ jobs:
 
     - name: Build Artifacts (runs the Maven verify phase)
       if: matrix.language == 'java'
-      env:
-        ci-build: "yes"
-      run: mvn --batch-mode --update-snapshots verify
+      run: mvn --batch-mode --update-snapshots verify -P ci-build
 
     # Autobuild attempts to build any compiled languages  (C/C++, C#, Go, or Java).
     # If this step fails, then you should remove it and run the build manually

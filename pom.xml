@@ -55,9 +55,8 @@
         <profile>
             <id>ci-build</id>
             <activation>
-                <property>
-                    <name>causeway.version</name>
-                </property>
+                <!-- to activate use mvn commandline option: mvn ... -P ci-build -->
+                <activeByDefault>false</activeByDefault> 
             </activation>
             <properties>
                 <causeway.version>3.0.0-M1.20240323-0215-c8b0f3ae</causeway.version>
