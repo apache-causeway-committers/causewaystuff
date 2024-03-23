@@ -18,7 +18,8 @@
   under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.causewaystuff</groupId>
@@ -26,9 +27,9 @@
     <version>1.0.0-SNAPSHOT</version>
     <name>Causeway Stuff (Umbrella)</name>
     <description>
-        Umbrella for non-offical ASF stuff for the Apache Causeway framework. 
+        Umbrella for non-offical ASF stuff for the Apache Causeway framework.
     </description>
-    
+
     <url>https://github.com/apache-causeway-committers/causewaystuff</url>
 
     <packaging>pom</packaging>
@@ -37,18 +38,51 @@
         <maven.compiler.release>22</maven.compiler.release>
         <maven.compiler.arg>-parameters</maven.compiler.arg>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        
+
         <spring-boot.version>3.2.4</spring-boot.version>
-<!--        <causeway.version>3.0.0-M1.20230509-0607-5f90bb6a</causeway.version>-->
+        <!--
+        <causeway.version>3.0.0-M1.20240323-0215-c8b0f3ae</causeway.version>-->
         <causeway.version>3.0.0-SNAPSHOT</causeway.version>
-        
+
         <junit-version>[5,)</junit-version>
         <lombok-version>1.18.32</lombok-version>
-        
+
         <!-- testing -->
         <surefire-plugin.argLine>-Xmx384m</surefire-plugin.argLine>
     </properties>
-    
+
+    <profiles>
+        <profile>
+            <id>ci-build</id>
+            <activation>
+                <property>
+                    <name>causeway.version</name>
+                </property>
+            </activation>
+            <properties>
+                <causeway.version>3.0.0-M1.20240323-0215-c8b0f3ae</causeway.version>
+            </properties>
+            <repositories>
+                <repository>
+                    <releases>
+                        <enabled>true</enabled>
+                        <updatePolicy>always</updatePolicy>
+                        <checksumPolicy>fail</checksumPolicy>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                        <updatePolicy>always</updatePolicy>
+                        <checksumPolicy>fail</checksumPolicy>
+                    </snapshots>
+                    <id>causeway-nightly-snapshots</id>
+                    <name>Causeway Nightly Snapshots (maven)</name>
+                    <url>
+                        https://raw.githubusercontent.com/apache-causeway-committers/causeway-nightly/master/mvn-snapshots</url>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
+
     <build>
         <resources>
             <resource>
@@ -101,17 +135,18 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                        <printSummary>false</printSummary>
-                        <argLine>${surefire-plugin.argLine}</argLine>
-                        <forkCount>1C</forkCount>
-                        <reuseForks>true</reuseForks>
-                        <systemPropertyVariables>
-                            <!-- allows tests to reduce verbosity, or conditionally disable
+                    <printSummary>false</printSummary>
+                    <argLine>${surefire-plugin.argLine}</argLine>
+                    <forkCount>1C</forkCount>
+                    <reuseForks>true</reuseForks>
+                    <systemPropertyVariables>
+                        <!-- allows tests to reduce verbosity, or conditionally
+                        disable
                                  when run with surefire; e.g.:
                                  @DisabledIfSystemProperty(named = "isRunningWithSurefire", matches = "true")
                                  -->
-                            <isRunningWithSurefire>true</isRunningWithSurefire>
-                        </systemPropertyVariables>
+                        <isRunningWithSurefire>true</isRunningWithSurefire>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>
@@ -126,73 +161,69 @@
             <name>Central Repository</name>
             <url>https://repo.maven.apache.org/maven2</url>
         </repository>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
     </repositories>
 
     <dependencyManagement>
         <dependencies>
 
             <!-- SUB MODULES -->
-            
+
             <dependency>
                 <groupId>org.causewaystuff</groupId>
                 <artifactId>causewaystuff-commons</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.causewaystuff</groupId>
                 <artifactId>causewaystuff-domsupport</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.causewaystuff</groupId>
                 <artifactId>causewaystuff-tooling-codegen</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
-            
+
             <!-- APACHE CAUSEWAY -->
-            
+
             <dependency>
                 <groupId>org.apache.causeway.commons</groupId>
                 <artifactId>causeway-commons</artifactId>
                 <version>${causeway.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.apache.causeway.core</groupId>
                 <artifactId>causeway-applib</artifactId>
                 <version>${causeway.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.apache.causeway.core</groupId>
                 <artifactId>causeway-core-metamodel</artifactId>
                 <version>${causeway.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.apache.causeway.persistence</groupId>
                 <artifactId>causeway-persistence-jdo-applib</artifactId>
                 <version>${causeway.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.apache.causeway.viewer</groupId>
                 <artifactId>causeway-viewer-restfulobjects-client</artifactId>
                 <version>${causeway.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.apache.causeway.extensions</groupId>
                 <artifactId>causeway-extensions-docgen</artifactId>
                 <version>${causeway.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.apache.causeway.app</groupId>
                 <artifactId>causeway-app-starter-parent</artifactId>
@@ -200,23 +231,23 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            
+
             <!-- UNPUBLISHED -->
-            
+
             <dependency>
                 <groupId>org.apache.causeway.tooling</groupId>
                 <artifactId>causeway-tooling-model4adoc</artifactId>
                 <version>${causeway.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.apache.causeway.tooling</groupId>
                 <artifactId>causeway-tooling-c4modeling</artifactId>
                 <version>${causeway.version}</version>
             </dependency>
-            
+
             <!-- SPRING -->
-            
+
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
@@ -230,7 +261,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            
+
             <!-- JDBC -->
 
             <!-- OTHER -->
@@ -240,9 +271,9 @@
                 <artifactId>lombok</artifactId>
                 <version>${lombok-version}</version>
             </dependency>
-        
+
             <!-- TESTING -->
-            
+
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
@@ -264,27 +295,27 @@
 
         </dependencies>
     </dependencyManagement>
-    
+
     <dependencies>
-        
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.causeway.commons</groupId>
             <artifactId>causeway-commons</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.causeway.core</groupId>
             <artifactId>causeway-applib</artifactId>
         </dependency>
-        
+
         <!-- TESTING -->
-        
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -300,17 +331,17 @@
             <artifactId>junit-jupiter-params</artifactId>
             <scope>test</scope>
         </dependency>
-        
+
     </dependencies>
-    
+
     <modules>
         <module>commons</module>
         <module>domsupport</module>
         <module>tooling</module>
     </modules>
-    
+
     <!-- META DATA -->
-    
+
     <inceptionYear>March 2024</inceptionYear>
     <scm>
         <url>https://github.com/apache-causeway-committers/causewaystuff</url>
