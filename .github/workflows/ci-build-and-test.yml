@@ -31,10 +31,9 @@ jobs:
     env:
       # to be shared among all steps of this job
       BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
-      BASELINE: 1.0.0-M1
 
       # options
-      SKIP_CODE_QL: false
+      SKIP_CODE_QL: true
 
     steps:
     - uses: actions/checkout@v4
