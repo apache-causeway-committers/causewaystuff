@@ -35,13 +35,11 @@
     <packaging>pom</packaging>
 
     <properties>
-        <maven.compiler.release>22</maven.compiler.release>
+        <maven.compiler.release>17</maven.compiler.release>
         <maven.compiler.arg>-parameters</maven.compiler.arg>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <spring-boot.version>3.2.4</spring-boot.version>
-        <!--
-        <causeway.version>3.0.0-M1.20240323-0215-c8b0f3ae</causeway.version>-->
         <causeway.version>3.0.0-SNAPSHOT</causeway.version>
 
         <junit-version>[5,)</junit-version>
@@ -56,7 +54,7 @@
             <id>ci-build</id>
             <activation>
                 <!-- to activate use mvn commandline option: mvn ... -P ci-build -->
-                <activeByDefault>false</activeByDefault> 
+                <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
                 <causeway.version>3.0.0-M1.20240323-0215-c8b0f3ae</causeway.version>
@@ -185,6 +183,12 @@
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.causewaystuff</groupId>
+                <artifactId>causewaystuff-tooling-javapoet</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+
             <!-- APACHE CAUSEWAY -->
 
             <dependency>
@@ -229,20 +233,6 @@
                 <version>${causeway.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
-
-            <!-- UNPUBLISHED -->
-
-            <dependency>
-                <groupId>org.apache.causeway.tooling</groupId>
-                <artifactId>causeway-tooling-model4adoc</artifactId>
-                <version>${causeway.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.causeway.tooling</groupId>
-                <artifactId>causeway-tooling-c4modeling</artifactId>
-                <version>${causeway.version}</version>
             </dependency>
 
             <!-- SPRING -->
