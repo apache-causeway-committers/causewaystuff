@@ -173,13 +173,12 @@
 
             <dependency>
                 <groupId>org.causewaystuff</groupId>
-                <artifactId>causewaystuff-domsupport</artifactId>
+                <artifactId>causewaystuff-companion-applib</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
-
             <dependency>
                 <groupId>org.causewaystuff</groupId>
-                <artifactId>causewaystuff-tooling-codegen</artifactId>
+                <artifactId>causewaystuff-companion-codegen</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
@@ -325,7 +324,7 @@
 
     <modules>
         <module>commons</module>
-        <module>domsupport</module>
+        <module>companion</module>
         <module>tooling</module>
     </modules>
 

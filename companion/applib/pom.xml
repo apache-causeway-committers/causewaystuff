@@ -24,14 +24,14 @@
 	
 	<parent>
 		<groupId>org.causewaystuff</groupId>
-        <artifactId>causewaystuff-bom</artifactId>
+        <artifactId>causewaystuff-companion</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	
-	<artifactId>causewaystuff-domsupport</artifactId>
-	<name>Causeway Stuff - Domain Support</name>
+	<artifactId>causewaystuff-companion-applib</artifactId>
+	<name>Causeway Stuff - Companion (Applib)</name>
 	<description>
-		Types and services expressed by the Code Generator (tooling-codegen). 
+		Supplementary types and services expressed by the Code Generator (companion-codegen). 
 	</description>
 	
 	<dependencies>

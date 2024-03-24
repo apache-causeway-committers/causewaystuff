@@ -15,13 +15,19 @@ toc::[]
 == Modules
 
 * `commons` - Shared general purpose *utilities*.
-* `domsupport` - Provides *Domain Support* service interfaces as expressed by the code generator (tooling-codegen). 
+
+=== Companion
+
+Companion to the _Apache Causeway_ framework, offering supplementary types and services.
+
+* `companion-applib` - Provides *Domain Support* service interfaces as expressed by the code generator (companion-codegen).
+* `companion-codegen` - A *Java code generator* utilizing _Apache Causeway's_ programming model
 
 === Tooling
 
-* `codegen` - A *Java code generator* utilizing _Apache Causeway's_ programming model
-* `javapoet` - Is a library for Java source file generation. We relocated the packages to `org.causewaystuff.tooling.javapoet.*` and patched it with support for Java records.
+* `tooling-javapoet` - Is a library for Java source file generation. We relocated its packages to `org.causewaystuff.tooling.javapoet.*` 
+and patched them with support for Java records.
 
 == License
-_Causewaystuff_ is _Open Source_ software released under the https://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license].
+_Causewaystuff_ is _open-source_ software released under the https://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license].
   

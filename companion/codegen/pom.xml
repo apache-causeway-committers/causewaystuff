@@ -24,13 +24,15 @@
 	
 	<parent>
 		<groupId>org.causewaystuff</groupId>
-        <artifactId>causewaystuff-tooling</artifactId>
+        <artifactId>causewaystuff-companion</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	
-	<artifactId>causewaystuff-tooling-codegen</artifactId>
-	<name>Causeway Stuff - Tooling (Code Gen)</name>
-	<description>Code Generation for the Apache Causeway Programming Model</description>
+	<artifactId>causewaystuff-companion-codegen</artifactId>
+	<name>Causeway Stuff - Companion (Code Gen)</name>
+	<description>
+		Code Generation for the Apache Causeway Programming Model
+	</description>
 	
 	<dependencies>
         
@@ -46,7 +48,7 @@
         
         <dependency>
             <groupId>org.causewaystuff</groupId>
-            <artifactId>causewaystuff-domsupport</artifactId>
+            <artifactId>causewaystuff-companion-applib</artifactId>
         </dependency>
         
         <dependency>
