@@ -20,18 +20,18 @@ package org.causewaystuff.companion.codegen.structgen;
 
 import java.util.HashMap;
 
-import com.structurizr.Workspace;
-import com.structurizr.dsl.StructurizrDslFormatter;
-import com.structurizr.model.Component;
-import com.structurizr.model.Container;
-import com.structurizr.model.Model;
-import com.structurizr.model.SoftwareSystem;
-import com.structurizr.model.Tags;
-import com.structurizr.view.AutomaticLayout.RankDirection;
-import com.structurizr.view.Shape;
-import com.structurizr.view.Styles;
-import com.structurizr.view.SystemContextView;
-import com.structurizr.view.ViewSet;
+import org.causewaystuff.tooling.structurizr.Workspace;
+import org.causewaystuff.tooling.structurizr.dsl.StructurizrDslFormatter;
+import org.causewaystuff.tooling.structurizr.model.Component;
+import org.causewaystuff.tooling.structurizr.model.Container;
+import org.causewaystuff.tooling.structurizr.model.Model;
+import org.causewaystuff.tooling.structurizr.model.SoftwareSystem;
+import org.causewaystuff.tooling.structurizr.model.Tags;
+import org.causewaystuff.tooling.structurizr.view.AutomaticLayout.RankDirection;
+import org.causewaystuff.tooling.structurizr.view.Shape;
+import org.causewaystuff.tooling.structurizr.view.Styles;
+import org.causewaystuff.tooling.structurizr.view.SystemContextView;
+import org.causewaystuff.tooling.structurizr.view.ViewSet;
 
 import org.apache.causeway.applib.services.metamodel.objgraph.ObjectGraph;
 

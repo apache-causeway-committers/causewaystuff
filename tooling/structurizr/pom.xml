@@ -28,12 +28,12 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>causewaystuff-tooling-javapoet</artifactId>
-    <name>Causeway Stuff - Tooling (Java Poet)</name>
-    <description>Programmatic Java Source Generation</description>
+    <artifactId>causewaystuff-tooling-structurizr</artifactId>
+    <name>Causeway Stuff - Tooling (Structurizr)</name>
+    <description>Structurizr Integration</description>
 
     <properties>
-        <jar-plugin.automaticModuleName>org.causewaystuff.tooling.javapoet</jar-plugin.automaticModuleName>
+        <jar-plugin.automaticModuleName>org.causewaystuff.tooling.structurizr</jar-plugin.automaticModuleName>
     </properties>
 
     <build>
@@ -51,16 +51,18 @@
                         <configuration>
                             <artifactSet>
                                 <includes>
-                                    <include>com.squareup:javapoet</include>
+                                    <include>com.structurizr:structurizr-core</include>
+                                    <include>com.structurizr:structurizr-client</include>
+                                    <include>com.structurizr:structurizr-dsl</include>
+                                    <include>com.structurizr:structurizr-export</include>
                                 </includes>
                             </artifactSet>
                             <relocations>
                                 <relocation>
-                                    <pattern>com.squareup.javapoet</pattern>
-                                    <shadedPattern>
-                                        org.causewaystuff.tooling.javapoet</shadedPattern>
+                                    <pattern>com.structurizr</pattern>
+                                    <shadedPattern>org.causewaystuff.tooling.structurizr</shadedPattern>
                                     <includes>
-                                        <include>com.squareup.javapoet.*</include>
+                                        <include>com.structurizr.**</include>
                                     </includes>
                                 </relocation>
                             </relocations>
@@ -73,8 +75,13 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.squareup</groupId>
-            <artifactId>javapoet</artifactId>
+            <groupId>com.structurizr</groupId>
+            <artifactId>structurizr-dsl</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.structurizr</groupId>
+            <artifactId>structurizr-export</artifactId>
             <optional>true</optional>
         </dependency>
     </dependencies>

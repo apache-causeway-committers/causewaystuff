@@ -16,14 +16,14 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.causewaystuff.companion.codegen.structgen;
+package org.causewaystuff.tooling.structurizr;
 
-import org.causewaystuff.tooling.structurizr.Workspace;
-import org.causewaystuff.tooling.structurizr.model.Element;
-import org.causewaystuff.tooling.structurizr.model.Model;
-import org.causewaystuff.tooling.structurizr.model.Relationship;
-import org.causewaystuff.tooling.structurizr.view.View;
-import org.causewaystuff.tooling.structurizr.view.ViewSet;
+import com.structurizr.Workspace;
+import com.structurizr.model.Element;
+import com.structurizr.model.Model;
+import com.structurizr.model.Relationship;
+import com.structurizr.view.View;
+import com.structurizr.view.ViewSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

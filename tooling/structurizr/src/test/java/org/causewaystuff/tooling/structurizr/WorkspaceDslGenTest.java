@@ -16,24 +16,24 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.causewaystuff.companion.codegen.structgen;
+package org.causewaystuff.tooling.structurizr;
 
-import org.causewaystuff.tooling.structurizr.Workspace;
-import org.causewaystuff.tooling.structurizr.dsl.StructurizrDslFormatter;
-import org.causewaystuff.tooling.structurizr.dsl.StructurizrDslParser;
-import org.causewaystuff.tooling.structurizr.model.Container;
-import org.causewaystuff.tooling.structurizr.model.InteractionStyle;
-import org.causewaystuff.tooling.structurizr.model.Model;
-import org.causewaystuff.tooling.structurizr.model.Person;
-import org.causewaystuff.tooling.structurizr.model.SoftwareSystem;
-import org.causewaystuff.tooling.structurizr.model.Tags;
-import org.causewaystuff.tooling.structurizr.view.ContainerView;
-import org.causewaystuff.tooling.structurizr.view.DynamicView;
-import org.causewaystuff.tooling.structurizr.view.Routing;
-import org.causewaystuff.tooling.structurizr.view.Shape;
-import org.causewaystuff.tooling.structurizr.view.Styles;
-import org.causewaystuff.tooling.structurizr.view.SystemContextView;
-import org.causewaystuff.tooling.structurizr.view.ViewSet;
+import com.structurizr.Workspace;
+import com.structurizr.dsl.StructurizrDslFormatter;
+import com.structurizr.dsl.StructurizrDslParser;
+import com.structurizr.model.Container;
+import com.structurizr.model.InteractionStyle;
+import com.structurizr.model.Model;
+import com.structurizr.model.Person;
+import com.structurizr.model.SoftwareSystem;
+import com.structurizr.model.Tags;
+import com.structurizr.view.ContainerView;
+import com.structurizr.view.DynamicView;
+import com.structurizr.view.Routing;
+import com.structurizr.view.Shape;
+import com.structurizr.view.Styles;
+import com.structurizr.view.SystemContextView;
+import com.structurizr.view.ViewSet;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;

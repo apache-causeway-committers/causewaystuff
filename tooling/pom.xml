@@ -38,6 +38,7 @@
 
     <modules>
         <module>javapoet</module>
+        <module>structurizr</module>
     </modules>
 
 </project>

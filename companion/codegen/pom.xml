@@ -33,7 +33,7 @@
     <description>
         Code Generation for the Apache Causeway Programming Model
     </description>
-    
+
     <properties>
         <maven.compiler.release>21</maven.compiler.release>
         <jar-plugin.automaticModuleName>org.causewaystuff.companion.codegen</jar-plugin.automaticModuleName>
@@ -50,6 +50,10 @@
             <groupId>org.causewaystuff</groupId>
             <artifactId>causewaystuff-tooling-javapoet</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.causewaystuff</groupId>
+            <artifactId>causewaystuff-tooling-structurizr</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.causewaystuff</groupId>
@@ -59,16 +63,6 @@
         <dependency>
             <groupId>org.apache.causeway.core</groupId>
             <artifactId>causeway-applib</artifactId>
-        </dependency>
-
-        <!-- to be later replaced by c4modeling -->
-        <dependency>
-            <groupId>com.structurizr</groupId>
-            <artifactId>structurizr-dsl</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.structurizr</groupId>
-            <artifactId>structurizr-export</artifactId>
         </dependency>
 
     </dependencies>
