@@ -35,6 +35,10 @@
         (companion-codegen).
     </description>
 
+    <properties>
+        <jar-plugin.automaticModuleName>org.causewaystuff.companion.applib</jar-plugin.automaticModuleName>
+    </properties>
+
     <dependencies>
 
     </dependencies>

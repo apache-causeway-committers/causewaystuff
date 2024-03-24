@@ -34,6 +34,12 @@
         Blob storage test templates, used by blob storage implementations.
     </description>
 
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+        <!-- not used (not a JPMS module) -->
+        <jar-plugin.automaticModuleName>org.causewaystuff.blobstore.testsupport</jar-plugin.automaticModuleName>
+    </properties>
+
     <dependencies>
         
         <dependency>

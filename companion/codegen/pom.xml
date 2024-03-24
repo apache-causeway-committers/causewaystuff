@@ -36,6 +36,7 @@
     
     <properties>
         <maven.compiler.release>21</maven.compiler.release>
+        <jar-plugin.automaticModuleName>org.causewaystuff.companion.codegen</jar-plugin.automaticModuleName>
     </properties>
 
     <dependencies>

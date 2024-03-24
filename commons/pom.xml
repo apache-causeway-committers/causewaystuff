@@ -34,6 +34,10 @@
         Shared Utilitities
     </description>
 
+    <properties>
+        <jar-plugin.automaticModuleName>org.causewaystuff.commons</jar-plugin.automaticModuleName>
+    </properties>
+
     <dependencies>
 
     </dependencies>

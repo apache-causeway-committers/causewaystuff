@@ -34,6 +34,10 @@
         Blob storage implementation utilizing the host's file system.
     </description>
 
+    <properties>
+        <jar-plugin.automaticModuleName>org.causewaystuff.blobstore.localfs</jar-plugin.automaticModuleName>
+    </properties>
+
     <dependencies>
 
         <dependency>

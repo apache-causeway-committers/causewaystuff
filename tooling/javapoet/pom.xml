@@ -35,6 +35,7 @@
     <properties>
         <javapoet.version>1.13.0</javapoet.version>
         <maven-shade-plugin>3.5.2</maven-shade-plugin>
+        <jar-plugin.automaticModuleName>org.causewaystuff.tooling.javapoet</jar-plugin.automaticModuleName>
     </properties>
 
     <build>

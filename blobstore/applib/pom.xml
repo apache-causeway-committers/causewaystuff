@@ -34,6 +34,10 @@
         Blob Storage API
     </description>
 
+    <properties>
+        <jar-plugin.automaticModuleName>org.causewaystuff.blobstore.applib</jar-plugin.automaticModuleName>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.causewaystuff</groupId>
