@@ -63,6 +63,7 @@ class _GenAssociationMixin {
                 && distinctForeignEntities.isCardinalityMultiple();
 
         val typeModelBuilder = TypeSpec.classBuilder(_Mixins.propertyMixinClassName(fieldWithForeignKeys))
+                .addAnnotation(_Annotations.generated(_GenAssociationMixin.class))
                 .addModifiers(Modifier.PUBLIC)
                 .addAnnotation(isPlural
                         ? _Annotations.collection(attr->attr)

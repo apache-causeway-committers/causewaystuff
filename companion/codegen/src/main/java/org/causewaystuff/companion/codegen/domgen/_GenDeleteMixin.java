@@ -50,6 +50,7 @@ class _GenDeleteMixin {
 
         val typeModelBuilder = TypeSpec.classBuilder(_Mixins.customMixinClassName(entityModel, "delete"))
                 .addModifiers(Modifier.PUBLIC)
+                .addAnnotation(_Annotations.generated(_GenDeleteMixin.class))
                 .addAnnotation(_Annotations.action(attr->attr.semantics(SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)))
                 .addAnnotation(_Annotations.actionLayout(attr->attr
                         .fieldSetId("details")

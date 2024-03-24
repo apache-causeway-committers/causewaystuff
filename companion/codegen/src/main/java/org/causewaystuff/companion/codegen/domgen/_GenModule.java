@@ -69,6 +69,7 @@ class _GenModule {
                 ClassName.get(packageName, config.entitiesModuleClassSimpleName());
 
         val typeModelBuilder = TypeSpec.classBuilder(nameOfClassToGenerate)
+                .addAnnotation(_Annotations.generated(_GenModule.class))
                 .addAnnotation(_Annotations.configuration())
                 .addAnnotation(_Annotations.imports(importsByCategory))
                 .addModifiers(Modifier.PUBLIC)

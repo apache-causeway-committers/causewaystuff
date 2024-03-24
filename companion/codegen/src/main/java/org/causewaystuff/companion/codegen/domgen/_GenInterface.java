@@ -41,7 +41,8 @@ class _GenInterface {
         return new QualifiedType(
                 packageName,
                 TypeSpec.interfaceBuilder(superTypeName)
-                .addModifiers(Modifier.PUBLIC).build());
+                    .addAnnotation(_Annotations.generated(_GenInterface.class))
+                    .addModifiers(Modifier.PUBLIC).build());
     }
 
 }

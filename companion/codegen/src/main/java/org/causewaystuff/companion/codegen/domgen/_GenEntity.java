@@ -60,6 +60,7 @@ class _GenEntity {
 
         var typeModelBuilder = TypeSpec.classBuilder(entityModel.name())
                 .addJavadoc(entityModel.formatDescription("\n"))
+                .addAnnotation(_Annotations.generated(_GenEntity.class))
                 .addAnnotation(_Annotations.named(config.fullLogicalName(entityModel.namespace()) + "." + entityModel.name()))
                 .addAnnotation(_Annotations.domainObject())
                 .addAnnotation(_Annotations.domainObjectLayout(

@@ -51,6 +51,7 @@ class _GenDependants {
 
         val typeModelBuilder = TypeSpec.classBuilder(entityModel.name() + "Deps")
                 .addModifiers(Modifier.PUBLIC)
+                .addAnnotation(_Annotations.generated(_GenDependants.class))
                 .addAnnotation(AnnotationSpec.builder(Configuration.class)
                         .build());
 

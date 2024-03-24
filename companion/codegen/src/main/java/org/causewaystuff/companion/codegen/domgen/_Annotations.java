@@ -24,6 +24,8 @@ import java.util.Optional;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
+import javax.annotation.processing.Generated;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
@@ -122,6 +124,23 @@ class _Annotations {
     AnnotationSpec inject() {
         return AnnotationSpec.builder(Inject.class)
                 .build();
+    }
+    
+    // -- JDK
+    
+    /**
+     * Example:
+     * <pre>{@code
+     * @Generated(value="com.example.Generator")
+     * }</pre>
+     */
+    AnnotationSpec generated(String byClassName) {
+        return AnnotationSpec.builder(Generated.class)
+                .addMember("value", "$1S", byClassName)
+                .build();
+    }
+    AnnotationSpec generated(Class<?> byClass) {
+        return generated(byClass.getName());
     }
 
     // -- SPRING

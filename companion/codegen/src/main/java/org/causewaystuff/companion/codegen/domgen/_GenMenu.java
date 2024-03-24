@@ -44,6 +44,7 @@ class _GenMenu {
             final Collection<OrmModel.Entity> entityModels) {
 
         val typeModelBuilder = TypeSpec.classBuilder("EntitiesMenu")
+                .addAnnotation(_Annotations.generated(_GenMenu.class))
                 .addAnnotation(_Annotations.named(
                         config.fullLogicalName(config.entitiesModulePackageName()) + "." + "EntitiesMenu"))
                 .addAnnotation(_Annotations.domainService())
