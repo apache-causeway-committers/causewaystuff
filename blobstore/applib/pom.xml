@@ -35,7 +35,10 @@
     </description>
 
     <dependencies>
-
+        <dependency>
+            <groupId>org.causewaystuff</groupId>
+            <artifactId>causewaystuff-commons</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

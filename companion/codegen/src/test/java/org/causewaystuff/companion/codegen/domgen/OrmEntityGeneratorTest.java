@@ -18,8 +18,6 @@
  */
 package org.causewaystuff.companion.codegen.domgen;
 
-import org.causewaystuff.companion.codegen.domgen.DomainGenerator;
-import org.causewaystuff.companion.codegen.domgen.LicenseHeader;
 import org.causewaystuff.companion.codegen.model.OrmModel;
 import org.junit.jupiter.api.Test;
 
