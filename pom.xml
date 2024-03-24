@@ -174,6 +174,22 @@
 				<artifactId>causewaystuff-commons</artifactId>
 				<version>1.0.0-SNAPSHOT</version>
 			</dependency>
+			
+			<dependency>
+				<groupId>org.causewaystuff</groupId>
+				<artifactId>causewaystuff-blobstore-applib</artifactId>
+				<version>1.0.0-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>org.causewaystuff</groupId>
+				<artifactId>causewaystuff-blobstore-localfs</artifactId>
+				<version>1.0.0-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>org.causewaystuff</groupId>
+				<artifactId>causewaystuff-blobstore-testsupport</artifactId>
+				<version>1.0.0-SNAPSHOT</version>
+			</dependency>
 
 			<dependency>
 				<groupId>org.causewaystuff</groupId>
@@ -339,6 +355,7 @@
 
 	<modules>
 		<module>commons</module>
+		<module>blobstore</module>
 		<module>companion</module>
 		<module>tooling</module>
 	</modules>

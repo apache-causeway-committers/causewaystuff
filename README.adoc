@@ -16,6 +16,14 @@ toc::[]
 
 * `commons` - Shared general purpose *utilities*.
 
+=== Blobstore
+
+Blob storage API and implementations.
+
+* `blobstore-applib` - Blob storage API.
+* `blobstore-localfs` - Blob storage implementation utilizing the host's file system.
+* `blobstore-testsupport` - Blob storage test templates, used by blob storage implementations.
+
 === Companion
 
 Companion to the _Apache Causeway_ framework, offering supplementary types and services.
