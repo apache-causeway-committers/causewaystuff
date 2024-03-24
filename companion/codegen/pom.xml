@@ -33,6 +33,10 @@
     <description>
         Code Generation for the Apache Causeway Programming Model
     </description>
+    
+    <properties>
+        <maven.compiler.release>21</maven.compiler.release>
+    </properties>
 
     <dependencies>
 
