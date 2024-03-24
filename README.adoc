@@ -14,30 +14,64 @@ toc::[]
 
 == Modules
 
-* `commons` - Shared general purpose *utilities*.
+[cols="1,5a"]
+|===
+
+| commons
+| Shared general purpose *utilities*.
+
+|===
+
 
 === Blobstore
 
 Blob storage API and implementations.
 
-* `blobstore-applib` - Blob storage API.
-* `blobstore-localfs` - Blob storage implementation utilizing the host's file system.
-* `blobstore-testsupport` - Blob storage test templates, used by blob storage implementations.
+[cols="1,5a"]
+|===
+
+| blobstore-applib 
+| Blob storage API.
+
+| blobstore-localfs
+| Blob storage implementation utilizing the host's file system.
+
+| blobstore-testsupport 
+| Blob storage test templates, used by blob storage implementations.
+
+|===
+
 
 === Companion
 
 Companion to the _Apache Causeway_ framework, offering supplementary types and services.
 
-* `companion-applib` - Provides *Domain Support* service interfaces as expressed by the code generator (companion-codegen).
-* `companion-codegen` - A *Java code generator* utilizing _Apache Causeway's_ programming model
+[cols="1,5a"]
+|===
+
+| companion-applib 
+| Provides *Domain Support* service interfaces as expressed by the code generator (companion-codegen).
+
+| companion-codegen
+| A *Java code generator* utilizing _Apache Causeway's_ programming model
+
+|===
 
 === Tooling
 
-* `tooling-javapoet` - Is a library for Java source file generation. We relocated its packages to `org.causewaystuff.tooling.javapoet.*` 
+[cols="1,5a"]
+|===
+
+| tooling-javapoet 
+| _Javapoet_ is a library for Java source file generation. We relocated its packages to `org.causewaystuff.tooling.javapoet.*` 
 and patched them with support for Java records. (Also defining a stable JPMS module name.) 
-* `tooling-structurizr` - Is a library for system diagram generation. We relocated its packages to `com.causewaystuff.tooling.structurizr.*` 
+
+| tooling-structurizr 
+| _Structurizr_ a library for system diagram generation. We relocated its packages to `com.causewaystuff.tooling.structurizr.*` 
 and patched them with support for DSL parsing. (Also defining a stable JPMS module name.)
+
+|===
 
 == License
 _Causewaystuff_ is _open-source_ software released under the https://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license].
-  
+ 
