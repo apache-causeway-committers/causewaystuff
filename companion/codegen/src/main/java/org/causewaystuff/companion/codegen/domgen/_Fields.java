@@ -46,8 +46,22 @@ class _Fields {
 
     //private static final long serialVersionUID = 1L;
     FieldSpec serialVersionUID(final long value) {
-        return FieldSpec.builder(ClassName.LONG, "serialVersionUID", Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
+        return FieldSpec.builder(ClassName.LONG, "serialVersionUID", 
+                    Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
                 .initializer("$1L", value)
+                .build();
+    }
+
+    /**
+     * Example:
+     * <pre>
+     * public final static String NAMESPACE = "my.module";
+     * </pre> 
+     */
+    FieldSpec namespaceConstant(String namespace) {
+        return FieldSpec.builder(ClassName.get(String.class), "NAMESPACE", 
+                    Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+                .initializer("$1S", namespace)
                 .build();
     }
 

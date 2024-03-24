@@ -167,14 +167,14 @@ class _Annotations {
 
             entry.getValue().stream()
                 .sorted((a, b)->a.simpleName().compareTo(b.simpleName()))
-                .map(classToImport->CodeBlock.of("$1T.class", classToImport))
+                .map(classToImport->CodeBlock.of("$1T.class,", classToImport))
                 .forEach(importEntries::add);
         });
 
         return AnnotationSpec.builder(Import.class)
                 .addMember("value", CodeBlock.join(List.of(
                         CodeBlock.of("{"),
-                        CodeBlock.join(importEntries, ",\n"),
+                        CodeBlock.join(importEntries, "\n"),
                         CodeBlock.of("}")),
                         "\n"))
                 .build();

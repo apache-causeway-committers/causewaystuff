@@ -126,6 +126,7 @@ public record DomainGenerator(@NonNull DomainGenerator.Config config) {
 
     public record DomainModel(
             @NonNull OrmModel.Schema schema,
+            @NonNull List<JavaFileModel> configBeans,
             @NonNull List<JavaFileModel> modules,
             @NonNull List<JavaFileModel> entities,
             @NonNull List<JavaFileModel> entityMixins,
@@ -135,10 +136,10 @@ public record DomainGenerator(@NonNull DomainGenerator.Config config) {
 
         DomainModel(final OrmModel.Schema schema) {
             this(schema, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
-                    new ArrayList<>(), new ArrayList<>());
+                    new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         }
         Stream<JavaFileModel> streamJavaModels() {
-            return Stream.of(modules, menus, superTypes, entities, submodules, entityMixins)
+            return Stream.of(configBeans, modules, menus, superTypes, entities, submodules, entityMixins)
                     .flatMap(List::stream);
         }
     }
@@ -229,6 +230,11 @@ public record DomainGenerator(@NonNull DomainGenerator.Config config) {
             _Assert.assertTrue(messages.isEmpty(), ()->messages.stream().collect(Collectors.joining("\n")));
         }
 
+        // config beans
+        domainModel.configBeans().add(
+                JavaFileModel.create(config(),
+                        _GenConfigBean.qualifiedType(config(), domainModel)));
+        
         // module
         domainModel.modules().add(
                 JavaFileModel.create(config(),
