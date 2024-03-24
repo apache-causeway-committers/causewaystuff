@@ -21,12 +21,12 @@ module org.causewaystuff.companion.codegen {
     exports org.causewaystuff.companion.codegen.model;
     exports org.causewaystuff.companion.codegen.structgen;
 
-    requires org.causewaystuff.tooling.javapoet;
-    requires org.causewaystuff.tooling.structurizr;
+    requires lombok;
     requires jakarta.inject;
     requires java.compiler;
-    requires lombok;
-    requires org.apache.causeway.applib;
+    requires transitive org.causewaystuff.tooling.javapoet;
+    requires transitive org.causewaystuff.tooling.structurizr;
+    requires transitive org.apache.causeway.applib;
     requires org.apache.causeway.commons;
     requires org.causewaystuff.commons;
     requires org.causewaystuff.companion.applib;

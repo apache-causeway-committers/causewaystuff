@@ -20,10 +20,10 @@ module org.causewaystuff.blobstore.localfs {
     exports org.causewaystuff.blobstore.localfs;
 
     requires lombok;
-    requires org.apache.causeway.applib;
+    requires transitive org.apache.causeway.applib;
     requires org.apache.causeway.commons;
     requires org.apache.logging.log4j;
-    requires org.causewaystuff.blobstore.applib;
+    requires transitive org.causewaystuff.blobstore.applib;
     requires org.causewaystuff.commons;
     requires spring.context;
     requires spring.core;

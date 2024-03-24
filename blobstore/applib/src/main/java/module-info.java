@@ -19,9 +19,9 @@
 module org.causewaystuff.blobstore.applib {
     exports org.causewaystuff.blobstore.applib;
 
-    requires org.causewaystuff.commons;
     requires lombok;
-    requires org.apache.causeway.applib;
+    requires transitive org.causewaystuff.commons;
+    requires transitive org.apache.causeway.applib;
     requires org.apache.causeway.commons;
     requires spring.beans;
     requires spring.context;

@@ -39,7 +39,7 @@ class LocalFsBlobStoreTest {
 
     @BeforeEach
     void setup() {
-        this.root = FileUtils.tempDir("dita-test");
+        this.root = FileUtils.tempDir("causewaystuff-test");
         this.config = new BlobStoreFactory.BlobStoreConfiguration(LocalFsBlobStore.class, root.getAbsolutePath());
         this.blobStore = new LocalFsBlobStore(config);
     }

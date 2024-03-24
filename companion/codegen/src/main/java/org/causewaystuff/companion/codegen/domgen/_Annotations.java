@@ -130,15 +130,21 @@ class _Annotations {
     
     /**
      * Example:
-     * <pre>{@code
-     * @Generated(value="com.example.Generator")
-     * }</pre>
+     * <pre>
+     * &#64;Generated(value="com.example.Generator")
+     * </pre>
      */
     AnnotationSpec generated(String byClassName) {
         return AnnotationSpec.builder(Generated.class)
                 .addMember("value", "$1S", byClassName)
                 .build();
     }
+    /**
+     * Example:
+     * <pre>
+     * &#64;Generated(value="com.example.Generator")
+     * </pre>
+     */
     AnnotationSpec generated(Class<?> byClass) {
         return generated(byClass.getName());
     }

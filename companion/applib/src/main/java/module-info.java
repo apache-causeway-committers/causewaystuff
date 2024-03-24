@@ -23,7 +23,7 @@ module org.causewaystuff.companion.applib {
     exports org.causewaystuff.companion.applib.services.search;
 
     requires lombok;
-    requires org.apache.causeway.applib;
+    requires transitive org.apache.causeway.applib;
     requires org.apache.causeway.commons;
     requires spring.core;
 }
