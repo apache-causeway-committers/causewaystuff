@@ -46,7 +46,7 @@
         <lombok-version>1.18.32</lombok-version>
 
         <!-- dependencies -->
-        <structurizr-dsl.version>1.35.0</structurizr-dsl.version>
+        <structurizr-dsl.version>2.1.1</structurizr-dsl.version>
         <structurizr-export.version>1.19.0</structurizr-export.version> <!--2.0.0 breaks parsing-->
 
         <!-- testing -->
