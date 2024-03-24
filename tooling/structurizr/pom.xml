@@ -60,7 +60,8 @@
                             <relocations>
                                 <relocation>
                                     <pattern>com.structurizr</pattern>
-                                    <shadedPattern>org.causewaystuff.tooling.structurizr</shadedPattern>
+                                    <shadedPattern>
+                                        org.causewaystuff.tooling.structurizr</shadedPattern>
                                     <includes>
                                         <include>com.structurizr.**</include>
                                     </includes>
@@ -84,6 +85,12 @@
             <artifactId>structurizr-export</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>
