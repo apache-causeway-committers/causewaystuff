@@ -27,8 +27,8 @@ import java.util.Optional;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import org.causewaystuff.commons.types.internal.ObjectRef;
-import org.causewaystuff.commons.types.internal.SneakyRef;
+import org.causewaystuff.commons.base.types.internal.ObjectRef;
+import org.causewaystuff.commons.base.types.internal.SneakyRef;
 import org.causewaystuff.companion.codegen.domgen.LicenseHeader;
 import org.causewaystuff.tooling.javapoet.ClassName;
 import org.causewaystuff.tooling.javapoet.TypeName;

@@ -41,7 +41,7 @@
     <dependencies>
         <dependency>
             <groupId>org.causewaystuff</groupId>
-            <artifactId>causewaystuff-commons</artifactId>
+            <artifactId>causewaystuff-commons-base</artifactId>
         </dependency>
     </dependencies>
 

@@ -20,7 +20,7 @@ package org.causewaystuff.blobstore.applib;
 
 import java.time.Instant;
 
-import org.causewaystuff.commons.types.NamedPath;
+import org.causewaystuff.commons.base.types.NamedPath;
 
 import org.apache.causeway.applib.value.NamedWithMimeType.CommonMimeType;
 import org.apache.causeway.commons.collections.Can;

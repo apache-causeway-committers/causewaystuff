@@ -16,14 +16,6 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-module org.causewaystuff.commons {
-    exports org.causewaystuff.commons.types.internal; //TODO restrict
-    exports org.causewaystuff.commons.types;
-
-    requires com.fasterxml.jackson.annotation;
-    requires com.fasterxml.jackson.core;
-    requires com.fasterxml.jackson.databind;
-    requires lombok;
-    requires org.apache.causeway.commons;
-    requires spring.core;
+module org.causewaystuff.commons.compression {
+    exports org.causewaystuff.commons.compression;
 }

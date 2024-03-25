@@ -20,7 +20,7 @@ package org.causewaystuff.blobstore.applib;
 
 import java.util.Optional;
 
-import org.causewaystuff.commons.types.NamedPath;
+import org.causewaystuff.commons.base.types.NamedPath;
 
 import org.springframework.lang.Nullable;
 

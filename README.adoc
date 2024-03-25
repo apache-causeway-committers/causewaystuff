@@ -14,11 +14,18 @@ toc::[]
 
 == Modules
 
+=== Commons
+
+Shared general purpose utilities.
+
 [cols="1,5a"]
 |===
 
-| commons
-| Shared general purpose *utilities*.
+| commons-base
+| Basic *utilities*.
+
+| commons-compression
+| Integrates *compression algorithms* like GZIP and LZMA.
 
 |===
 
@@ -64,11 +71,11 @@ Companion to the _Apache Causeway_ framework, offering supplementary types and s
 
 | tooling-javapoet 
 | _Javapoet_ is a library for Java source file generation. We relocated its packages to `org.causewaystuff.tooling.javapoet.*` 
-and patched them with support for Java records. (Also defining a stable JPMS module name.) 
+and patched them with support for Java records, also defining a stable JPMS module name. 
 
 | tooling-structurizr 
-| _Structurizr_ a library for system diagram generation. We relocated its packages to `com.causewaystuff.tooling.structurizr.*` 
-and patched them with support for DSL parsing. (Also defining a stable JPMS module name.)
+| _Structurizr_ is a library for system diagram generation. We relocated its packages to `org.causewaystuff.tooling.structurizr.*` 
+and patched them with support for DSL parsing, also defining a stable JPMS module name.
 
 |===
 

@@ -21,10 +21,10 @@ package org.causewaystuff.blobstore.test;
 import java.time.Instant;
 
 import org.causewaystuff.blobstore.applib.BlobDescriptor;
+import org.causewaystuff.blobstore.applib.BlobDescriptor.Compression;
 import org.causewaystuff.blobstore.applib.BlobQualifier;
 import org.causewaystuff.blobstore.applib.BlobStore;
-import org.causewaystuff.blobstore.applib.BlobDescriptor.Compression;
-import org.causewaystuff.commons.types.NamedPath;
+import org.causewaystuff.commons.base.types.NamedPath;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

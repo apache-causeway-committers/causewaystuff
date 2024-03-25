@@ -32,8 +32,8 @@ import org.causewaystuff.blobstore.applib.BlobQualifier;
 import org.causewaystuff.blobstore.applib.BlobStore;
 import org.causewaystuff.blobstore.applib.BlobDescriptor.Compression;
 import org.causewaystuff.blobstore.applib.BlobStoreFactory.BlobStoreConfiguration;
-import org.causewaystuff.commons.types.NamedPath;
-import org.causewaystuff.commons.types.ResourceFolder;
+import org.causewaystuff.commons.base.types.NamedPath;
+import org.causewaystuff.commons.base.types.ResourceFolder;
 
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;

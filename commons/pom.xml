@@ -31,15 +31,14 @@
     <artifactId>causewaystuff-commons</artifactId>
     <name>Causeway Stuff - Commons</name>
     <description>
-        Shared Utilitities
+        Shared general purpose utilities.
     </description>
 
-    <properties>
-        <jar-plugin.automaticModuleName>org.causewaystuff.commons</jar-plugin.automaticModuleName>
-    </properties>
+    <packaging>pom</packaging>
 
-    <dependencies>
-
-    </dependencies>
+    <modules>
+        <module>base</module>
+        <module>compression</module>
+    </modules>
 
 </project>

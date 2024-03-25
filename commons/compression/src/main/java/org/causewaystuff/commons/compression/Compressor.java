@@ -16,14 +16,14 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-module org.causewaystuff.blobstore.applib {
-    exports org.causewaystuff.blobstore.applib;
+package org.causewaystuff.commons.compression;
 
-    requires lombok;
-    requires transitive org.causewaystuff.commons.base;
-    requires transitive org.apache.causeway.applib;
-    requires org.apache.causeway.commons;
-    requires spring.beans;
-    requires spring.context;
-    requires spring.core;
+/**
+ * Common interface for compression algorithms. (WIP/Draft)
+ */
+public interface Compressor {
+
+    byte[] compress(final byte[] input);
+    byte[] decompress(final byte[] input);
+
 }

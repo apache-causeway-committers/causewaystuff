@@ -24,7 +24,7 @@ module org.causewaystuff.blobstore.localfs {
     requires org.apache.causeway.commons;
     requires org.apache.logging.log4j;
     requires transitive org.causewaystuff.blobstore.applib;
-    requires org.causewaystuff.commons;
+    requires org.causewaystuff.commons.base;
     requires spring.context;
     requires spring.core;
 }

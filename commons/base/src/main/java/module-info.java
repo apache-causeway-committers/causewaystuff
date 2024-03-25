@@ -16,14 +16,14 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-module org.causewaystuff.blobstore.applib {
-    exports org.causewaystuff.blobstore.applib;
+module org.causewaystuff.commons.base {
+    exports org.causewaystuff.commons.base.types.internal; //TODO restrict
+    exports org.causewaystuff.commons.base.types;
 
     requires lombok;
-    requires transitive org.causewaystuff.commons.base;
-    requires transitive org.apache.causeway.applib;
+    requires com.fasterxml.jackson.annotation;
+    requires com.fasterxml.jackson.core;
+    requires com.fasterxml.jackson.databind;
     requires org.apache.causeway.commons;
-    requires spring.beans;
-    requires spring.context;
     requires spring.core;
 }

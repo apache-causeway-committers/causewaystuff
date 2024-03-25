@@ -26,11 +26,12 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.causewaystuff.commons.types.ResourceFolder;
+import org.causewaystuff.commons.base.types.ResourceFolder;
 import org.causewaystuff.companion.codegen.model.OrmModel;
 import org.causewaystuff.tooling.javapoet.ClassName;
 import org.causewaystuff.tooling.javapoet.JavaFile;
 import org.causewaystuff.tooling.javapoet.TypeSpec;
+
 import org.springframework.lang.Nullable;
 import org.springframework.util.ReflectionUtils;
 
@@ -234,7 +235,7 @@ public record DomainGenerator(@NonNull DomainGenerator.Config config) {
         domainModel.configBeans().add(
                 JavaFileModel.create(config(),
                         _GenConfigBean.qualifiedType(config(), domainModel)));
-        
+
         // module
         domainModel.modules().add(
                 JavaFileModel.create(config(),

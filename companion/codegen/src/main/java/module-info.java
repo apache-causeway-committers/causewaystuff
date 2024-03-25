@@ -28,7 +28,7 @@ module org.causewaystuff.companion.codegen {
     requires transitive org.causewaystuff.tooling.structurizr;
     requires transitive org.apache.causeway.applib;
     requires org.apache.causeway.commons;
-    requires org.causewaystuff.commons;
+    requires org.causewaystuff.commons.base;
     requires org.causewaystuff.companion.applib;
     requires spring.context;
     requires spring.core;
