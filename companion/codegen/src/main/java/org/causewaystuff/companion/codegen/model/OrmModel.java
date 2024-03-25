@@ -26,12 +26,15 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.causewaystuff.commons.base.types.internal.ObjectRef;
 import org.causewaystuff.commons.base.types.internal.SneakyRef;
 import org.causewaystuff.companion.codegen.domgen.LicenseHeader;
 import org.causewaystuff.tooling.javapoet.ClassName;
 import org.causewaystuff.tooling.javapoet.TypeName;
+
+import org.springframework.lang.Nullable;
 
 import org.apache.causeway.applib.services.metamodel.objgraph.ObjectGraph;
 import org.apache.causeway.commons.collections.Can;
@@ -476,6 +479,13 @@ public class OrmModel {
             }
             return schema;
         }
+        public static Schema of(final @Nullable Stream<Entity> entities) {
+            val schema = new Schema(new TreeMap<String, OrmModel.Entity>());
+            if(entities!=null) {
+                entities.forEach(entity->schema.entities().put(entity.key(), entity));
+            }
+            return schema;
+        }
         @SuppressWarnings({ "rawtypes", "unchecked" })
         public static Schema fromYaml(final String yaml) {
             val entities = new TreeMap<String, OrmModel.Entity>();
@@ -553,6 +563,11 @@ public class OrmModel {
         }
         public ObjectGraph asObjectGraph() {
             return new _ObjectGraphFactory(this).create();
+        }
+        public Schema concat(final Schema other) {
+            return Schema.of(Stream.concat(
+                    this.entities().values().stream(),
+                    other.entities().values().stream()));
         }
         // -- HELPER
         private Optional<OrmModel.Field> lookupForeignKeyField(final String tableDotColumn) {
