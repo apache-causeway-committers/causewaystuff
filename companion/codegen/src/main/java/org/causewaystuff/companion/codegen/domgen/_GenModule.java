@@ -53,7 +53,7 @@ class _GenModule {
         importsByCategory.put("Config Beans", domainModel.configBeans().stream()
                 .map(JavaFileModel::className)
                 .toList());
-        
+
         importsByCategory.put("Menu Entries", List.of(
                 ClassName.get(packageName, "EntitiesMenu")));
 
@@ -78,7 +78,8 @@ class _GenModule {
                 .addAnnotation(_Annotations.imports(importsByCategory))
                 .addModifiers(Modifier.PUBLIC)
                 // public final static String NAMESPACE = "my.module";
-                .addField(_Fields.namespaceConstant(config.logicalNamespacePrefix()))
+                .addField(_Fields.namespaceConstant(config.logicalNamespacePrefix()
+                        + "." + config.entitiesModulePackageName()))
                 // static method that provides all entity classes we listed above
                 .addMethod(_Methods.classList("entityClasses",
                         domainModel.entities().stream()
