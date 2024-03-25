@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -150,13 +151,13 @@ public class OrmModel {
             if(_Strings.isNotEmpty(superType)) {
                 yaml.ind().write("superType: ", superType).nl();
             }
-            yaml.ind().write("secondaryKey:").multilineStartIfNotEmtpy(secondaryKey).nl();
+            yaml.ind().write("secondaryKey:").multiLineStartIfNotEmtpy(secondaryKey).nl();
             secondaryKey.forEach(line->
                 yaml.ind().ind().writeUpper(line).nl());
             {   // title
                 var titleLines = TextUtils.readLines(title);
                 if(titleLines.isCardinalityMultiple()) {
-                    yaml.ind().write("title:").multilineStartIfNotEmtpy(titleLines.toList()).nl();
+                    yaml.ind().write("title:").multiLineStartIfNotEmtpy(titleLines.toList()).nl();
                     titleLines.forEach(line->
                         yaml.ind().ind().write(line).nl());
                 } else {
@@ -169,7 +170,7 @@ public class OrmModel {
             {   // icon
                 var iconLines = TextUtils.readLines(icon);
                 if(iconLines.isCardinalityMultiple()) {
-                    yaml.ind().write("icon:").multilineStartIfNotEmtpy(iconLines.toList()).nl();
+                    yaml.ind().write("icon:").multiLineStartIfNotEmtpy(iconLines.toList()).nl();
                     iconLines.forEach(line->
                         yaml.ind().ind().write(line).nl());
                 } else {
@@ -179,7 +180,7 @@ public class OrmModel {
             if(iconService) {
                 yaml.ind().write("iconService: ", "true").nl();
             }
-            yaml.ind().write("description:").multilineStartIfNotEmtpy(description).nl();
+            yaml.ind().write("description:").multiLineStartIfNotEmtpy(description).nl();
             description.forEach(line->
                 yaml.ind().ind().write(line).nl());
             yaml.ind().write("fields:").nl();
@@ -192,25 +193,28 @@ public class OrmModel {
                 if(field.plural()) {
                     yaml.ind().ind().ind().write("plural: ", "true").nl();
                 }
+                if(field.multiLine().isPresent()) {
+                    yaml.ind().ind().ind().write("multiLine: ", ""+field.multiLine().getAsInt()).nl();
+                }
                 if(_Strings.isNotEmpty(field.elementType())) {
                     yaml.ind().ind().ind().write("elementType: ", field.elementType()).nl();
                 }
                 if(field.isEnum()) {
-                    yaml.ind().ind().ind().write("enum:").multilineStartIfNotEmtpy(field.enumeration).nl();
+                    yaml.ind().ind().ind().write("enum:").multiLineStartIfNotEmtpy(field.enumeration).nl();
                     field.enumeration.forEach(line->
                         yaml.ind().ind().ind().ind().write(line).nl());
                 }
                 if(field.hasDiscriminator()) {
-                    yaml.ind().ind().ind().write("discriminator:").multilineStartIfNotEmtpy(field.discriminator).nl();
+                    yaml.ind().ind().ind().write("discriminator:").multiLineStartIfNotEmtpy(field.discriminator).nl();
                     field.discriminator.forEach(line->
                         yaml.ind().ind().ind().ind().writeUpper(line).nl());
                 }
                 if(field.hasForeignKeys()) {
-                    yaml.ind().ind().ind().write("foreignKeys:").multilineStartIfNotEmtpy(field.foreignKeys).nl();
+                    yaml.ind().ind().ind().write("foreignKeys:").multiLineStartIfNotEmtpy(field.foreignKeys).nl();
                     field.foreignKeys.forEach(line->
                         yaml.ind().ind().ind().ind().writeUpper(line).nl());
                 }
-                yaml.ind().ind().ind().write("description:").multilineStartIfNotEmtpy(field.description).nl();
+                yaml.ind().ind().ind().write("description:").multiLineStartIfNotEmtpy(field.description).nl();
                 field.description.forEach(line->
                     yaml.ind().ind().ind().ind().write(line).nl());
             });
@@ -255,6 +259,7 @@ public class OrmModel {
             boolean required,
             boolean unique,
             boolean plural,
+            OptionalInt multiLine,
             String elementType,
             List<String> enumeration,
             List<String> discriminator,
@@ -271,6 +276,7 @@ public class OrmModel {
                     (Boolean)map.get("required"),
                     (Boolean)map.get("unique"),
                     (boolean)Optional.ofNullable((Boolean)map.get("plural")).orElse(false),
+                    parseNullableIntegerWithBounds((Integer)map.get("multiLine"), 2, 1000),
                     (String)map.get("elementType"),
                     parseMultilineStringTrimmed((String)map.get("enum")),
                     parseMultilineStringTrimmed((String)map.get("discriminator")),
@@ -403,6 +409,7 @@ public class OrmModel {
                     required,
                     unique,
                     plural,
+                    multiLine,
                     elementType,
                     enumeration,
                     discriminator,
@@ -421,6 +428,7 @@ public class OrmModel {
                     required,
                     unique,
                     plural,
+                    multiLine,
                     elementType,
                     enumeration,
                     discriminator,
@@ -603,7 +611,9 @@ public class OrmModel {
                 false,
                 List.of("Customer List and Aliases"),
                 new ArrayList<OrmModel.Field>());
-        val field = new Field(SneakyRef.of(entity), /*ordinal*/0, "name", "NAME", "nvarchar(100)", true, false, false,
+        val field = new Field(SneakyRef.of(entity), /*ordinal*/0, "name", "NAME", "nvarchar(100)",
+                true, false, false,
+                OptionalInt.of(2),
                 "",
                 List.of(), List.of(), List.of(), List.of("aa", "bb", "cc"));
         entity.fields().add(field);
@@ -616,7 +626,7 @@ public class OrmModel {
     private static class YamlWriter {
         final StringBuilder sb = new StringBuilder();
         @Override public String toString() { return sb.toString(); }
-        YamlWriter multilineStartIfNotEmtpy(final List<?> list) {
+        YamlWriter multiLineStartIfNotEmtpy(final List<?> list) {
             if(!_NullSafe.isEmpty(list)) sb.append(" |");
             return this;
         }
@@ -640,6 +650,15 @@ public class OrmModel {
 
     private static boolean parseNullableBoolean(final Boolean bool) {
         return Boolean.TRUE.equals(bool);
+    }
+
+    private static OptionalInt parseNullableIntegerWithBounds(
+            final @Nullable Integer value, final int lowerBound, final int upperBound) {
+        return value==null
+                || value < lowerBound
+                || value > upperBound
+                ? OptionalInt.empty()
+                : OptionalInt.of(value);
     }
 
     private static List<String> parseMultilineString(final String input) {

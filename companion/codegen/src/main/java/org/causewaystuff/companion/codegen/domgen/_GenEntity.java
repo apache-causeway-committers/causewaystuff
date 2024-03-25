@@ -295,6 +295,7 @@ class _GenEntity {
                             .sequence(field.sequence())
                             .describedAs(
                                 field.formatDescription("\n"))
+                            .multiLine(field.multiLine().orElse(0))
                             .hiddenWhere(field.hasForeignKeys()
                                 ? Where.ALL_TABLES
                                 : Where.NOWHERE)))
@@ -340,7 +341,8 @@ class _GenEntity {
                                     ? Optionality.MANDATORY
                                     : Optionality.OPTIONAL)))
                     .addAnnotation(_Annotations.parameterLayout(attr->attr
-                            .describedAs(field.formatDescription("\n"))))
+                            .describedAs(field.formatDescription("\n"))
+                            .multiLine(field.multiLine().orElse(0))))
                     .build())
                 .toList();
     }

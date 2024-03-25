@@ -29,11 +29,12 @@ import javax.annotation.processing.Generated;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.causewaystuff.tooling.javapoet.AnnotationSpec;
 import org.causewaystuff.tooling.javapoet.ClassName;
 import org.causewaystuff.tooling.javapoet.CodeBlock;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.lang.Nullable;
 
 import org.apache.causeway.applib.annotation.Action;
@@ -125,16 +126,16 @@ class _Annotations {
         return AnnotationSpec.builder(Inject.class)
                 .build();
     }
-    
+
     // -- JDK
-    
+
     /**
      * Example:
      * <pre>
      * &#64;Generated(value="com.example.Generator")
      * </pre>
      */
-    AnnotationSpec generated(String byClassName) {
+    AnnotationSpec generated(final String byClassName) {
         return AnnotationSpec.builder(Generated.class)
                 .addMember("value", "$1S", byClassName)
                 .build();
@@ -145,7 +146,7 @@ class _Annotations {
      * &#64;Generated(value="com.example.Generator")
      * </pre>
      */
-    AnnotationSpec generated(Class<?> byClass) {
+    AnnotationSpec generated(final Class<?> byClass) {
         return generated(byClass.getName());
     }
 
@@ -267,6 +268,7 @@ class _Annotations {
         String fieldSetId,
         String sequence,
         String describedAs,
+        int multiLine,
         Navigable navigable,
         Where hiddenWhere) {
     }
@@ -279,6 +281,9 @@ class _Annotations {
             .ifPresent(sequence->builder.addMember("sequence", "$1S", sequence));
         _Strings.nonEmpty(attr.describedAs())
             .ifPresent(describedAs->builder.addMember("describedAs", "$1S", describedAs));
+        if(attr.multiLine()>1) {
+            builder.addMember("multiLine", "$1L", attr.multiLine());
+        }
         Optional.ofNullable(attr.navigable())
             .ifPresent(navigable->builder.addMember("navigable", "$1T.$2L", Navigable.class, navigable.name()));
         Optional.ofNullable(attr.hiddenWhere())
@@ -350,7 +355,7 @@ class _Annotations {
             .ifPresent(describedAs->builder.addMember("describedAs", "$1S", describedAs));
         Optional.ofNullable(attr.labelPosition())
             .ifPresent(labelPosition->builder.addMember("labelPosition", "$1T.$2L", LabelPosition.class, labelPosition.name()));
-        if(attr.multiLine()>0) {
+        if(attr.multiLine()>1) {
             builder.addMember("multiLine", "$1L", attr.multiLine());
         }
         return builder.build();
