@@ -28,9 +28,9 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.causewaystuff.blobstore.applib.BlobDescriptor;
+import org.causewaystuff.blobstore.applib.BlobDescriptor.Compression;
 import org.causewaystuff.blobstore.applib.BlobQualifier;
 import org.causewaystuff.blobstore.applib.BlobStore;
-import org.causewaystuff.blobstore.applib.BlobDescriptor.Compression;
 import org.causewaystuff.blobstore.applib.BlobStoreFactory.BlobStoreConfiguration;
 import org.causewaystuff.commons.base.types.NamedPath;
 import org.causewaystuff.commons.base.types.ResourceFolder;
@@ -140,6 +140,7 @@ public class LocalFsBlobStore implements BlobStore {
             Instant createdOn,
             long size,
             Compression compression,
+            Map<String, String> attributes,
             Can<BlobQualifier> qualifiers) {
         static DescriptorDto of(final BlobDescriptor blobDescriptor) {
             return new DescriptorDto(blobDescriptor.mimeType(),
@@ -147,6 +148,7 @@ public class LocalFsBlobStore implements BlobStore {
                     blobDescriptor.createdOn(),
                     blobDescriptor.size(),
                     blobDescriptor.compression(),
+                    blobDescriptor.attributes(),
                     blobDescriptor.qualifiers());
         }
         static DescriptorDto readFrom(final File file) {
@@ -189,6 +191,7 @@ public class LocalFsBlobStore implements BlobStore {
                     creationTime,
                     attr.size(),
                     compression,
+                    Map.of(),
                     Can.empty());
             return blobDescriptor;
         }
@@ -203,6 +206,7 @@ public class LocalFsBlobStore implements BlobStore {
                     createdOn,
                     size,
                     compression,
+                    attributes,
                     qualifiers);
             return blobDescriptor;
         }

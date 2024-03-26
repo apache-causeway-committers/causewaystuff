@@ -19,6 +19,7 @@
 package org.causewaystuff.blobstore.applib;
 
 import java.time.Instant;
+import java.util.Map;
 
 import org.causewaystuff.commons.base.types.NamedPath;
 
@@ -32,12 +33,34 @@ public record BlobDescriptor(
         Instant createdOn,
         long size,
         Compression compression,
+        Map<String, String> attributes,
         Can<BlobQualifier> qualifiers) {
 
     public enum Compression {
         NONE,
         ZIP,
         SEVEN_ZIP;
+    }
+
+    public BlobDescriptor(
+            final NamedPath path,
+            final CommonMimeType mimeType,
+            final String createdBy,
+            final Instant createdOn,
+            final long size,
+            final Compression compression) {
+        this(path, mimeType, createdBy, createdOn, size, compression, Map.of(), Can.empty());
+    }
+
+    public BlobDescriptor(
+            final NamedPath path,
+            final CommonMimeType mimeType,
+            final String createdBy,
+            final Instant createdOn,
+            final long size,
+            final Compression compression,
+            final Map<String, String> attributes) {
+        this(path, mimeType, createdBy, createdOn, size, compression, attributes, Can.empty());
     }
 
 }

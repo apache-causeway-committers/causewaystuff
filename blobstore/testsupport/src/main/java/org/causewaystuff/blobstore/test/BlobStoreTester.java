@@ -19,6 +19,7 @@
 package org.causewaystuff.blobstore.test;
 
 import java.time.Instant;
+import java.util.Map;
 
 import org.causewaystuff.blobstore.applib.BlobDescriptor;
 import org.causewaystuff.blobstore.applib.BlobDescriptor.Compression;
@@ -43,6 +44,7 @@ public class BlobStoreTester {
     public static record Scenario(
             @NonNull BlobDescriptor blobDescriptor,
             @NonNull Blob blob,
+            @NonNull Map<String, String> expectedAttributes,
             @NonNull Can<Can<BlobQualifier>> matchingQualifiers,
             @NonNull Can<Can<BlobQualifier>> excludingQualifiers
             ) {
@@ -62,9 +64,24 @@ public class BlobStoreTester {
                 var createdOn = Instant.now();
                 var path = NamedPath.of("a", "b", name);
                 var blobDesc = new BlobDescriptor(
-                        path, mime, "scenario-sampler", createdOn, 4, Compression.NONE,
-                        BlobQualifier.of());
-                return new Scenario(blobDesc, blob, Can.empty(), Can.empty());
+                        path, mime, "scenario-sampler", createdOn, 4, Compression.NONE);
+                return new Scenario(blobDesc, blob, Map.of(), Can.empty(), Can.empty());
+            }
+        },
+        SMALL_BINARY_ATTRIBUTED {
+            @Override public Scenario create() {
+                var name = "myblob.bin";
+                var mime = CommonMimeType.BIN;
+                var blob = Blob.of(name, mime, new byte[] {1, 2, 3, 4});
+                var createdOn = Instant.now();
+                var path = NamedPath.of("a", "b", name);
+                var attributes = Map.of(
+                        "attr1", "Hello",
+                        "attr2", "World!");
+                var blobDesc = new BlobDescriptor(
+                        path, mime, "scenario-sampler-attributed", createdOn, 4, Compression.NONE,
+                        attributes);
+                return new Scenario(blobDesc, blob, attributes, Can.empty(), Can.empty());
             }
         },
         SMALL_BINARY_QUALIFIED {
@@ -76,8 +93,9 @@ public class BlobStoreTester {
                 var path = NamedPath.of("a", "b", name);
                 var blobDesc = new BlobDescriptor(
                         path, mime, "scenario-sampler-qualified", createdOn, 4, Compression.NONE,
+                        Map.of(),
                         BlobQualifier.of("qa", "qb"));
-                return new Scenario(blobDesc, blob,
+                return new Scenario(blobDesc, blob, Map.of(),
                         Can.of(
                                 Can.empty(),
                                 BlobQualifier.of("qa"),
@@ -85,8 +103,7 @@ public class BlobStoreTester {
                                 BlobQualifier.of("qa", "qb")),
                         Can.of(BlobQualifier.of("qc")));
             }
-        },
-        ;
+        };
         public abstract Scenario create();
     }
 
@@ -126,6 +143,8 @@ public class BlobStoreTester {
         var blobRecovered = blobStore.lookupBlob(path).orElse(null);
         assertNotNull(blobRecovered);
         assertEquals(scenario.blob(), blobRecovered);
+
+        assertEquals(scenario.expectedAttributes().entrySet(), blobDescRecovered.attributes().entrySet());
 
         // no qualifiers
         assertTrue(blobStore.listDescriptors(NamedPath.empty(), true).getCardinality().isOne());

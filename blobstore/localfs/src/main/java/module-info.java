@@ -27,4 +27,8 @@ module org.causewaystuff.blobstore.localfs {
     requires org.causewaystuff.commons.base;
     requires spring.context;
     requires spring.core;
+
+    // Jackson serialization
+    opens org.causewaystuff.blobstore.localfs to com.fasterxml.jackson.databind;
+
 }
