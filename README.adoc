@@ -79,6 +79,21 @@ and patched them with support for DSL parsing, also defining a stable JPMS modul
 
 |===
 
+=== Tree View
+
+Master/detail tree view for tree-like data structures.
+
+[cols="1,5a"]
+|===
+
+| treeview-applib 
+| Tree View API.
+
+| treeview-metamodel
+| Tree View integration.
+
+|===
+
 == License
 _Causewaystuff_ is _open-source_ software released under the https://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license].
  
