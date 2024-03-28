@@ -25,7 +25,6 @@ import javax.lang.model.element.Modifier;
 
 import org.causewaystuff.companion.applib.services.iconfa.IconFaService;
 import org.causewaystuff.companion.applib.services.lookup.HasSecondaryKey;
-import org.causewaystuff.companion.applib.services.lookup.ISecondaryKey;
 import org.causewaystuff.companion.applib.services.search.SearchService;
 import org.causewaystuff.companion.codegen.domgen.DomainGenerator.QualifiedType;
 import org.causewaystuff.companion.codegen.model.OrmModel;
@@ -35,14 +34,11 @@ import org.causewaystuff.tooling.javapoet.ClassName;
 import org.causewaystuff.tooling.javapoet.CodeBlock;
 import org.causewaystuff.tooling.javapoet.FieldSpec;
 import org.causewaystuff.tooling.javapoet.MethodSpec;
-import org.causewaystuff.tooling.javapoet.ParameterSpec;
 import org.causewaystuff.tooling.javapoet.ParameterizedTypeName;
 import org.causewaystuff.tooling.javapoet.TypeSpec;
 
-import org.apache.causeway.applib.ViewModel;
 import org.apache.causeway.applib.annotation.Editing;
 import org.apache.causeway.applib.annotation.Optionality;
-import org.apache.causeway.applib.annotation.PrecedingParamsPolicy;
 import org.apache.causeway.applib.annotation.Where;
 import org.apache.causeway.applib.services.repository.RepositoryService;
 import org.apache.causeway.commons.collections.Can;
@@ -110,35 +106,7 @@ class _GenEntity {
 
         // inner manager view model
 
-        val managerViewmodel = TypeSpec.classBuilder("Manager")
-                .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-                .addJavadoc("Manager Viewmodel for @{link $1L}", entityModel.name())
-                .addSuperinterface(ClassName.get(ViewModel.class))
-                .addAnnotation(_Annotations.named(config.fullLogicalName(entityModel.namespace())
-                        + "." + entityModel.name() + ".Manager"))
-                .addAnnotation(_Annotations.domainObjectLayout(
-                        entityModel.formatDescription("\n"),
-                        entityModel.icon()))
-                .addAnnotation(_Annotations.allArgsConstructor())
-                .addField(FieldSpec.builder(SearchService.class, "searchService", Modifier.PUBLIC, Modifier.FINAL)
-                        .build())
-                .addField(FieldSpec.builder(String.class, "search", Modifier.PRIVATE)
-                        .addAnnotation(_Annotations.property(attr->attr
-                                .optionality(Optionality.OPTIONAL)
-                                .editing(Editing.ENABLED)))
-                        .addAnnotation(_Annotations.propertyLayout(attr->attr
-                                .fieldSetId("searchBar")))
-                        .addAnnotation(_Annotations.getter())
-                        .addAnnotation(_Annotations.setter())
-                        .build())
-                .addMethod(_Methods.objectSupport("title",
-                        CodeBlock.of("""
-                                return "Manage $1L";""", _Strings.asNaturalName.apply(entityModel.name())),
-                        Modifier.PUBLIC))
-                .addMethod(_Methods.managerSearch(entityModel.name()))
-                .addMethod(_Methods.viewModelMemento(CodeBlock.of("return getSearch();")))
-                .build();
-
+        var managerViewmodel = _GenEntity_Manager.generate(config, entityModel);
         typeModelBuilder.addType(managerViewmodel);
 
         if(entityModel.hasSecondaryKey()) {
@@ -154,75 +122,19 @@ class _GenEntity {
                     ClassName.get("", entityModel.name())));
 
             // inner params record
-
-            val paramsRecord = TypeSpec.recordBuilder("Params")
-                    .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-                    .addJavadoc("Parameter model for @{link $1L}", entityModel.name())
-                    .addRecordComponents(asParameterModelParams(config, entityModel.fields()))
-                    .build();
-
+            var paramsRecord = _GenEntity_Params.generate(config, entityModel);
             typeModelBuilder.addType(paramsRecord);
 
             // inner secondary key record
-
-            val secondaryKeyRecord = TypeSpec.recordBuilder("SecondaryKey")
-                    .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-                    .addSuperinterface(ParameterizedTypeName.get(
-                            ClassName.get(ISecondaryKey.class),
-                            ClassName.get("", entityModel.name())))
-                    .addJavadoc("SecondaryKey for @{link $1L}", entityModel.name())
-                    .addRecordComponents(asSecondaryKeyParams(entityModel.secondaryKeyFields()))
-                    .addMethod(MethodSpec.methodBuilder("correspondingClass")
-                            .addModifiers(Modifier.PUBLIC)
-                            .addAnnotation(_Annotations.override())
-                            .returns(ParameterizedTypeName.get(
-                                    ClassName.get(Class.class),
-                                    ClassName.get("", entityModel.name())))
-                            .addCode("return $1L.class;", entityModel.name())
-                            .build())
-                    .addMethod(MethodSpec.methodBuilder("unresolvable")
-                            .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-                            .addAnnotation(_Annotations.override())
-                            .returns(ClassName.get("", "Unresolvable"))
-                            .addCode("""
-                                    return new Unresolvable(String.format("UNRESOLVABLE %s%s",
-                                        correspondingClass().getSimpleName(),
-                                        this.toString().substring(12)));""")
-                            .build())
-                    .build();
-
+            var secondaryKeyRecord = _GenEntity_SecondaryKey.generate(config, entityModel);
             typeModelBuilder.addType(secondaryKeyRecord);
+
+            // secondary key factory method
             typeModelBuilder.addMethod(asSecondaryKeyMethod(secondaryKeyRecord, entityModel.secondaryKeyFields(), Modifier.PUBLIC));
 
             // inner unresolvable class
-
-            val unresolvableClass = TypeSpec.classBuilder("Unresolvable")
-                    .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-                    .superclass(ClassName.get("", entityModel.name()))
-                    .addJavadoc("Placeholder @{link ViewModel} for @{link $1L} "
-                            + "in case of an unresolvable secondary key.", entityModel.name())
-                    .addSuperinterface(ClassName.get(org.apache.causeway.applib.ViewModel.class))
-                    .addAnnotation(_Annotations.domainObjectLayout(
-                            String.format("Unresolvable %s", entityModel.name()),
-                            "skull .unresolvable-color"))
-                    .addAnnotation(_Annotations.named(config.fullLogicalName(entityModel.namespace())
-                            + "." + entityModel.name() + ".Unresolvable"))
-                    .addAnnotation(_Annotations.requiredArgsConstructor())
-                    .addField(FieldSpec.builder(ClassName.get(String.class), "viewModelMemento", Modifier.PRIVATE, Modifier.FINAL)
-                            .addAnnotation(_Annotations.getterWithOverride())
-                            .addAnnotation(_Annotations.accessorsFluent())
-                            .build())
-                    .addMethod(MethodSpec.methodBuilder("title")
-                            .addModifiers(Modifier.PUBLIC)
-                            .addAnnotation(_Annotations.override())
-                            .returns(ClassName.get(String.class))
-                            .addCode("return viewModelMemento;")
-                            .build())
-                    .build();
-
+            var unresolvableClass = _GenEntity_Unresolvable.generate(config, entityModel);
             typeModelBuilder.addType(unresolvableClass);
-//            typeModelBuilder.addMethod(asUnresolvableMethod(unresolvableClass, entityModel.secondaryKeyFields(), Modifier.PUBLIC));
-
         }
         return new QualifiedType(
                 config.fullPackageName(entityModel.namespace()),
@@ -311,50 +223,6 @@ class _GenEntity {
 
                     return fieldBuilder.build();
                 })
-                .toList();
-    }
-
-    private Iterable<ParameterSpec> asParameterModelParams(
-            final DomainGenerator.Config config,
-            final List<OrmModel.Field> fields,
-            final Modifier ... modifiers) {
-        return fields.stream()
-                .map(field->
-                    ParameterSpec.builder(
-                            field.isEnum()
-                                ? field.asJavaEnumType()
-                                : field.hasForeignKeys()
-                                    ? _Foreign.foreignClassName(field, field.foreignFields().getFirstElseFail(), config)
-                                    : field.asJavaType(),
-                            field.hasForeignKeys()
-                                    ? _Foreign.resolvedFieldName(field)
-                                    : field.name(),
-                            modifiers)
-                    .addJavadoc(field.formatDescription("\n"))
-                    .addAnnotation(_Annotations.parameter(attr->attr
-                            .precedingParamsPolicy(
-                                field.hasDiscriminator()
-                                    ? PrecedingParamsPolicy.RESET
-                                    : PrecedingParamsPolicy.PRESERVE_CHANGES)
-                            .optionality(
-                                field.requiredInTheUi()
-                                    ? Optionality.MANDATORY
-                                    : Optionality.OPTIONAL)))
-                    .addAnnotation(_Annotations.parameterLayout(attr->attr
-                            .describedAs(field.formatDescription("\n"))
-                            .multiLine(field.multiLine().orElse(0))))
-                    .build())
-                .toList();
-    }
-
-    private Iterable<ParameterSpec> asSecondaryKeyParams(
-            final List<OrmModel.Field> fields,
-            final Modifier ... modifiers) {
-        return fields.stream()
-                .map(field->
-                    ParameterSpec.builder(field.asJavaType(), field.name(), modifiers)
-                    .addJavadoc(field.formatDescription("\n"))
-                    .build())
                 .toList();
     }
 
