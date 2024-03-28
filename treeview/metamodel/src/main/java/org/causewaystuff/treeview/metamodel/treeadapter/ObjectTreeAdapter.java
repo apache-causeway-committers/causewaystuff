@@ -35,20 +35,20 @@ public class ObjectTreeAdapter implements TreeAdapter<Object> {
     public Optional<Object> parentOf(final Object node) {
         return specLoader().loadSpecification(node.getClass())
             .lookupFacet(TreeNodeFacet.class)
-            .flatMap(branchesFacet->branchesFacet.parentOf(node));
+            .flatMap(treeNodeFacet->treeNodeFacet.parentOf(node));
     }
     @Override
     public int childCountOf(final Object node) {
         return specLoader().loadSpecification(node.getClass())
             .lookupFacet(TreeNodeFacet.class)
-            .map(branchesFacet->branchesFacet.childCountOf(node))
+            .map(treeNodeFacet->treeNodeFacet.childCountOf(node))
             .orElse(0);
     }
     @Override
     public Stream<Object> childrenOf(final Object node) {
         return specLoader().loadSpecification(node.getClass())
             .lookupFacet(TreeNodeFacet.class)
-            .map(branchesFacet->branchesFacet.childrenOf(node))
+            .map(treeNodeFacet->treeNodeFacet.childrenOf(node))
             .orElseGet(Stream::empty);
     }
 

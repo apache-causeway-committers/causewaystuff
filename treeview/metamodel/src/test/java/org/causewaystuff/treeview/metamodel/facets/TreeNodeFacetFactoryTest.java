@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.apache.causeway.applib.graph.tree.TreeNode;
 import org.apache.causeway.commons.collections.Can;
@@ -71,17 +72,26 @@ extends FacetFactoryTestAbstract {
     @Test
     void test() {
 
+        //TODO perhaps add also parent lookup support
+
         objectScenario(A.class, (processClassContext, facetHolder)->{
             facetFactory.process(new ProcessObjectTypeContext(processClassContext.getCls(), facetHolder));
-
-            var treeNodeFace = facetHolder.getFacet(TreeNodeFacet.class);
-            assertNotNull(treeNodeFace);
-            assertNoMethodsRemoved();
-
-            //TODO we also expect the sub node types to be introspected
-            //TODO perhaps add also parent lookup support
+            assertNotNull(facetHolder.getFacet(TreeNodeFacet.class));
+        });
+        objectScenario(B.class, (processClassContext, facetHolder)->{
+            facetFactory.process(new ProcessObjectTypeContext(processClassContext.getCls(), facetHolder));
+            assertNotNull(facetHolder.getFacet(TreeNodeFacet.class));
+        });
+        objectScenario(C.class, (processClassContext, facetHolder)->{
+            facetFactory.process(new ProcessObjectTypeContext(processClassContext.getCls(), facetHolder));
+            assertNotNull(facetHolder.getFacet(TreeNodeFacet.class));
+        });
+        objectScenario(D.class, (processClassContext, facetHolder)->{
+            facetFactory.process(new ProcessObjectTypeContext(processClassContext.getCls(), facetHolder));
+            assertNull(facetHolder.getFacet(TreeNodeFacet.class));
         });
 
+        //FIXME this cannot work, requires a valid ObjectSpecifications
 
         // instantiate a tree, that we later traverse
         var ds = Can.of(new D("d1"), new D("d2"), new D("d3"));
