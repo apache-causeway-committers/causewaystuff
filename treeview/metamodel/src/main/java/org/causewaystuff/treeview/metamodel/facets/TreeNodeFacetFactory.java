@@ -29,7 +29,7 @@ import jakarta.inject.Inject;
 
 import org.causewaystuff.treeview.applib.annotations.TreeSubNodes;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.functional.Try;
@@ -48,9 +48,10 @@ import org.apache.causeway.core.metamodel.progmodel.ProgrammingModel.FacetProces
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.Accessors;
+import lombok.extern.log4j.Log4j2;
 
-@Service
-//@Log4j2
+@Component
+@Log4j2
 public class TreeNodeFacetFactory
 extends FacetFactoryAbstract
 implements
@@ -123,39 +124,43 @@ implements
         @Getter(onMethod_={@Override}) @Accessors(fluent=true)
         private final Class<T> nodeType;
 
-        private final Optional<MethodHandle> superNodeMethodHandler;
-        private final Can<MethodHandle> subNodesMethodHandlers;
+        private final Optional<MethodHandle> superNodeMethodHandle;
+        private final Can<MethodHandle> subNodesMethodHandles;
 
         protected TreeNodeFacetImpl(final Class<T> nodeType,
-                final @NonNull Optional<MethodHandle> superNodeMethodHandler,
-                final @NonNull Can<MethodHandle> subNodesMethodHandlers,
+                final @NonNull Optional<MethodHandle> superNodeMethodHandle,
+                final @NonNull Can<MethodHandle> subNodesMethodHandles,
                 final @NonNull FacetHolder facetHolder) {
             super(TreeNodeFacet.class, facetHolder, Precedence.DEFAULT);
             this.nodeType = nodeType;
-            this.superNodeMethodHandler = superNodeMethodHandler;
-            this.subNodesMethodHandlers = subNodesMethodHandlers;
+            this.superNodeMethodHandle = superNodeMethodHandle;
+            this.subNodesMethodHandles = subNodesMethodHandles;
         }
 
         @Override
         public Optional<Object> parentOf(final T node) {
-            return superNodeMethodHandler
+            return superNodeMethodHandle
                     .flatMap(mh->{
                         try {
-                            return ((Optional)mh.invoke(node));
+                            return ((Optional<?>)mh.invoke(node));
                         } catch (Throwable e) {
-                            throw _Exceptions.unrecoverable(e);
+                            log.error("failed to invoke superNodeMethodHandler {}",
+                                    mh.toString(), e);
+                            return Optional.empty();
                         }
                     });
         }
 
         @Override
         public int childCountOf(final T node) {
-            return subNodesMethodHandlers.stream()
+            return subNodesMethodHandles.stream()
                 .mapToInt(mh->{
                     try {
-                        return ((Can)mh.invoke(node)).size();
+                        return ((Can<?>)mh.invoke(node)).size();
                     } catch (Throwable e) {
-                        throw _Exceptions.unrecoverable(e);
+                        log.error("failed to invoke subNodesMethodHandle {}",
+                                mh.toString(), e);
+                        return 0;
                     }
                 })
                 .sum();
@@ -163,10 +168,10 @@ implements
 
         @Override
         public Stream<Object> childrenOf(final T node) {
-            return subNodesMethodHandlers.stream()
+            return subNodesMethodHandles.stream()
                 .map(mh->{
                     try {
-                        return (Can)mh.invoke(node);
+                        return (Can<?>)mh.invoke(node);
                     } catch (Throwable e) {
                         throw _Exceptions.unrecoverable(e);
                     }
@@ -177,6 +182,8 @@ implements
         @Override
         public void visitAttributes(final BiConsumer<String, Object> visitor) {
             visitor.accept("nodeType", nodeType.getName());
+            visitor.accept("superNodeMethodHandle", superNodeMethodHandle.map(MethodHandle::toString));
+            visitor.accept("subNodesMethodHandles", subNodesMethodHandles.map(MethodHandle::toString));
         }
     }
 

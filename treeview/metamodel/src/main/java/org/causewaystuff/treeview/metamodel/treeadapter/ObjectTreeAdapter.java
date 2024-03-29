@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 import org.causewaystuff.treeview.metamodel.facets.TreeNodeFacet;
 
 import org.apache.causeway.applib.graph.tree.TreeAdapter;
+import org.apache.causeway.commons.internal.base._Casts;
 import org.apache.causeway.core.metamodel.context.MetaModelContext;
 import org.apache.causeway.core.metamodel.specloader.SpecificationLoader;
 
@@ -33,27 +34,31 @@ public class ObjectTreeAdapter implements TreeAdapter<Object> {
 
     @Override
     public Optional<Object> parentOf(final Object node) {
-        return specLoader().loadSpecification(node.getClass())
-            .lookupFacet(TreeNodeFacet.class)
+        return treeNodeFacet(node)
             .flatMap(treeNodeFacet->treeNodeFacet.parentOf(node));
     }
     @Override
     public int childCountOf(final Object node) {
-        return specLoader().loadSpecification(node.getClass())
-            .lookupFacet(TreeNodeFacet.class)
+        return treeNodeFacet(node)
             .map(treeNodeFacet->treeNodeFacet.childCountOf(node))
             .orElse(0);
     }
     @Override
     public Stream<Object> childrenOf(final Object node) {
-        return specLoader().loadSpecification(node.getClass())
-            .lookupFacet(TreeNodeFacet.class)
+        return treeNodeFacet(node)
             .map(treeNodeFacet->treeNodeFacet.childrenOf(node))
             .orElseGet(Stream::empty);
     }
 
     // -- HELPER
 
+    private <T> Optional<TreeNodeFacet<T>> treeNodeFacet(final T node) {
+        return specLoader().loadSpecification(node.getClass())
+                .lookupFacet(TreeNodeFacet.class)
+                .filter(treeNodeFacet->treeNodeFacet.isHandlingNodeTypeWarnIfNot(node)) 
+                .map(treeNodeFacet->_Casts.<TreeNodeFacet<T>>uncheckedCast(treeNodeFacet));
+    }
+    
     private SpecificationLoader specLoader() {
         if(specLoader==null) {
             this.specLoader = MetaModelContext.instanceElseFail().getSpecificationLoader();
