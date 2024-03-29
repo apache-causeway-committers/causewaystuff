@@ -28,6 +28,7 @@ import java.util.stream.Stream;
 import jakarta.inject.Inject;
 
 import org.causewaystuff.treeview.applib.annotations.TreeSubNodes;
+import org.causewaystuff.treeview.applib.annotations.TreeSuperNode;
 
 import org.springframework.stereotype.Component;
 
@@ -78,8 +79,7 @@ implements
             return; //TODO yet only record types are supported
         }
 
-        //TODO also introspect types of the children
-        var treeSubNodesMethodHandlers = _NullSafe.stream(cls.getRecordComponents())
+        var treeSubNodesMethodHandles = _NullSafe.stream(cls.getRecordComponents())
             .filter(rc->rc.isAnnotationPresent(TreeSubNodes.class))
             .map(rc->{
                 MethodHandle targetMh = Try.call(()->
@@ -89,15 +89,29 @@ implements
             })
             .collect(Can.toCan());
 
-        //TODO also lookup @TreeSuperNode and find the method-handle
-        var treeSuperNodeMethodHandler = Optional.<MethodHandle>empty();
+        var treeSuperNodeMethodHandles = _NullSafe.stream(cls.getRecordComponents())
+                .filter(rc->rc.isAnnotationPresent(TreeSuperNode.class))
+                .map(rc->{
+                    MethodHandle targetMh = Try.call(()->
+                            lookup.findVirtual(cls, rc.getName(), MethodType.methodType(rc.getType())))
+                            .valueAsNonNullElseFail();
+                    return targetMh;
+                })
+                .collect(Can.toCan());
 
-        if(treeSubNodesMethodHandlers.isEmpty()) return;
+        if(treeSubNodesMethodHandles.isEmpty()
+                && treeSuperNodeMethodHandles.isEmpty()) return;
+        
+        if(treeSuperNodeMethodHandles.isCardinalityMultiple()) {
+            log.warn("ambiguous super-node declaration on type {} {}",
+                    cls.getName(),
+                    treeSuperNodeMethodHandles.map(mh->mh.toString()));
+        }
 
         addFacetIfPresent(TreeNodeFacetImpl.create(
                 cls,
-                treeSuperNodeMethodHandler,
-                treeSubNodesMethodHandlers,
+                treeSuperNodeMethodHandles.getFirst(),
+                treeSubNodesMethodHandles,
                 processClassContext.getFacetHolder()));
 
     }

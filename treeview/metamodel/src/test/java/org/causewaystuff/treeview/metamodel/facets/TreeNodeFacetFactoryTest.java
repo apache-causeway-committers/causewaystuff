@@ -18,21 +18,13 @@
  */
 package org.causewaystuff.treeview.metamodel.facets;
 
-import java.util.ArrayList;
-import java.util.stream.Collectors;
-
-import org.causewaystuff.treeview.applib.annotations.TreeSubNodes;
-import org.causewaystuff.treeview.applib.factories.TreeNodeFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import org.apache.causeway.applib.graph.tree.TreeNode;
-import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.core.metamodel._testing.MetaModelContext_forTesting;
 import org.apache.causeway.core.metamodel.context.MetaModelContext;
 import org.apache.causeway.core.metamodel.facets.ObjectTypeFacetFactory.ProcessObjectTypeContext;
@@ -54,69 +46,26 @@ extends FacetFactoryTestAbstract {
         facetFactory = null;
     }
 
-    // -- SCENARIOS
-
-    record A(String name,
-            @TreeSubNodes Can<B> childrenB,
-            @TreeSubNodes Can<C> childrenC) {
-    }
-    record B(String name,
-        @TreeSubNodes Can<D> childrenD) {
-    }
-    record C(String name,
-        @TreeSubNodes Can<D> childrenD) {
-    }
-    record D(String name) {
-    }
-
     @Test
-    void test() {
+    void treeNodeFacetShouldBeInstalledWhenNodeHasAnnotations() {
 
-        //TODO perhaps add also parent lookup support
-
-        objectScenario(A.class, (processClassContext, facetHolder)->{
+        objectScenario(_TreeSample.A.class, (processClassContext, facetHolder)->{
             facetFactory.process(new ProcessObjectTypeContext(processClassContext.getCls(), facetHolder));
             assertNotNull(facetHolder.getFacet(TreeNodeFacet.class));
         });
-        objectScenario(B.class, (processClassContext, facetHolder)->{
+        objectScenario(_TreeSample.B.class, (processClassContext, facetHolder)->{
             facetFactory.process(new ProcessObjectTypeContext(processClassContext.getCls(), facetHolder));
             assertNotNull(facetHolder.getFacet(TreeNodeFacet.class));
         });
-        objectScenario(C.class, (processClassContext, facetHolder)->{
+        objectScenario(_TreeSample.C.class, (processClassContext, facetHolder)->{
             facetFactory.process(new ProcessObjectTypeContext(processClassContext.getCls(), facetHolder));
             assertNotNull(facetHolder.getFacet(TreeNodeFacet.class));
         });
-        objectScenario(D.class, (processClassContext, facetHolder)->{
+        objectScenario(_TreeSample.D.class, (processClassContext, facetHolder)->{
             facetFactory.process(new ProcessObjectTypeContext(processClassContext.getCls(), facetHolder));
+            //FIXME parent lookup support?
             assertNull(facetHolder.getFacet(TreeNodeFacet.class));
         });
-
-        //FIXME this cannot work, requires a valid ObjectSpecifications
-
-        // instantiate a tree, that we later traverse
-        var ds = Can.of(new D("d1"), new D("d2"), new D("d3"));
-        var cs = Can.of(new C("c1", ds), new C("c2", ds));
-        var bs = Can.of(new B("b1", ds), new B("b2", ds));
-        var a = new A("a", bs, cs);
-
-        // traverse the tree
-        var tree = TreeNodeFactory.wrap(a);
-        var nodeNames = new ArrayList<String>();
-        tree.iteratorDepthFirst().forEachRemaining((TreeNode<Object> treeNode)->{
-            var node = treeNode.getValue();
-            if(node instanceof A) {
-                nodeNames.add(((A)node).name());
-            } else if(node instanceof B) {
-                nodeNames.add(((B)node).name());
-            } else if(node instanceof C) {
-                nodeNames.add(((C)node).name());
-            } else if(node instanceof D) {
-                nodeNames.add(((D)node).name());
-            }
-        });
-
-        //TODO fix introspection to include child node types
-        assertEquals("a", nodeNames.stream().collect(Collectors.joining(", ")));
 
     }
 }

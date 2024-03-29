@@ -71,7 +71,7 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <causeway.version>3.0.0-M1.20240323-0215-c8b0f3ae</causeway.version>
+                <causeway.version>3.0.0-M1.20240329-0806-519a5ad6</causeway.version>
             </properties>
             <repositories>
                 <repository>
