@@ -21,6 +21,8 @@ package org.causewaystuff.treeview.metamodel.treeadapter;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import jakarta.inject.Inject;
+
 import org.causewaystuff.treeview.metamodel.facets.TreeNodeFacet;
 
 import org.apache.causeway.applib.graph.tree.TreeAdapter;
@@ -30,13 +32,9 @@ import org.apache.causeway.core.metamodel.specloader.SpecificationLoader;
 
 public class ObjectTreeAdapter implements TreeAdapter<Object> {
 
+    @Inject
     protected SpecificationLoader specLoader;
 
-    @Override
-    public Optional<Object> parentOf(final Object node) {
-        return treeNodeFacet(node)
-            .flatMap(treeNodeFacet->treeNodeFacet.parentOf(node));
-    }
     @Override
     public int childCountOf(final Object node) {
         return treeNodeFacet(node)
@@ -59,6 +57,7 @@ public class ObjectTreeAdapter implements TreeAdapter<Object> {
                 .map(treeNodeFacet->_Casts.<TreeNodeFacet<T>>uncheckedCast(treeNodeFacet));
     }
     
+    //TODO remove
     private SpecificationLoader specLoader() {
         if(specLoader==null) {
             this.specLoader = MetaModelContext.instanceElseFail().getSpecificationLoader();

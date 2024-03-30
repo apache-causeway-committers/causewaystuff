@@ -20,6 +20,7 @@ package org.causewaystuff.treeview.applib.factories;
 
 import org.apache.causeway.applib.graph.tree.TreeAdapter;
 import org.apache.causeway.applib.graph.tree.TreeNode;
+import org.apache.causeway.applib.services.factory.FactoryService;
 import org.apache.causeway.commons.internal.context._Context;
 
 import lombok.SneakyThrows;
@@ -28,8 +29,8 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class TreeNodeFactory {
 
-    public TreeNode<Object> wrap(final Object treeNode) {
-        return TreeNode.lazy(treeNode, defaultTreeAdapter());
+    public TreeNode<Object> wrap(final Object treeNode, FactoryService factoryService) {
+        return TreeNode.root(treeNode, defaultTreeAdapter(), factoryService);
     }
 
     @SneakyThrows //TODO if class not found exception: some message that the metamodel module is missing

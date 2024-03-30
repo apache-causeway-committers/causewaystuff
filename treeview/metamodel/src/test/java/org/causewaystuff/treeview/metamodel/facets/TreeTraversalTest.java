@@ -50,7 +50,7 @@ extends FacetFactoryTestAbstract {
         var a = _TreeSample.sampleA();
 
         // traverse the tree
-        var tree = TreeNodeFactory.wrap(a);
+        var tree = TreeNodeFactory.wrap(a, mmc.getFactoryService());
         
         var nodeNames = tree.streamDepthFirst()
             .map(TreeNode::getValue)
@@ -71,7 +71,7 @@ extends FacetFactoryTestAbstract {
         var a = _TreeSample.sampleA();
         var d = a.childrenB().getFirstElseFail().childrenD().getLastElseFail();
         
-        var tree = TreeNodeFactory.wrap(a);
+        var tree = TreeNodeFactory.wrap(a, mmc.getFactoryService());
         
         // find d's node
         var leafNode = tree.streamDepthFirst()
@@ -85,9 +85,8 @@ extends FacetFactoryTestAbstract {
             .collect(Collectors.joining(", "));
 
         assertEquals(
-                "d3", 
+                "d3, b1, a", 
                 nodeNames);
-
     }
     
 }

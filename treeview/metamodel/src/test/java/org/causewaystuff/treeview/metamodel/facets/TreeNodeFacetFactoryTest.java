@@ -63,7 +63,6 @@ extends FacetFactoryTestAbstract {
         });
         objectScenario(_TreeSample.D.class, (processClassContext, facetHolder)->{
             facetFactory.process(new ProcessObjectTypeContext(processClassContext.getCls(), facetHolder));
-            //FIXME parent lookup support?
             assertNull(facetHolder.getFacet(TreeNodeFacet.class));
         });
 

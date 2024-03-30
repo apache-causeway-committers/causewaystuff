@@ -28,7 +28,6 @@ import java.util.stream.Stream;
 import jakarta.inject.Inject;
 
 import org.causewaystuff.treeview.applib.annotations.TreeSubNodes;
-import org.causewaystuff.treeview.applib.annotations.TreeSuperNode;
 
 import org.springframework.stereotype.Component;
 
@@ -89,33 +88,13 @@ implements
             })
             .collect(Can.toCan());
 
-        var treeSuperNodeMethodHandles = _NullSafe.stream(cls.getRecordComponents())
-                .filter(rc->rc.isAnnotationPresent(TreeSuperNode.class))
-                .map(rc->{
-                    MethodHandle targetMh = Try.call(()->
-                            lookup.findVirtual(cls, rc.getName(), MethodType.methodType(rc.getType())))
-                            .valueAsNonNullElseFail();
-                    return targetMh;
-                })
-                .collect(Can.toCan());
-
-        if(treeSubNodesMethodHandles.isEmpty()
-                && treeSuperNodeMethodHandles.isEmpty()) return;
-        
-        if(treeSuperNodeMethodHandles.isCardinalityMultiple()) {
-            log.warn("ambiguous super-node declaration on type {} {}",
-                    cls.getName(),
-                    treeSuperNodeMethodHandles.map(mh->mh.toString()));
-        }
+        if(treeSubNodesMethodHandles.isEmpty()) return;
 
         addFacetIfPresent(TreeNodeFacetImpl.create(
                 cls,
-                treeSuperNodeMethodHandles.getFirst(),
                 treeSubNodesMethodHandles,
                 processClassContext.getFacetHolder()));
-
     }
-
 
     // -- FACET IMPL
 
@@ -124,45 +103,26 @@ implements
 
         static <T> Optional<TreeNodeFacet<T>> create(
                 final Class<T> nodeType,
-                final Optional<MethodHandle> superNodeMethodHandler,
                 final Can<MethodHandle> subNodesMethodHandlers,
                 final FacetHolder facetHolder){
-            if(superNodeMethodHandler.isEmpty()
-                    && subNodesMethodHandlers.isEmpty()) {
+            if(subNodesMethodHandlers.isEmpty()) {
                 return Optional.empty();
             }
             return Optional.of(new TreeNodeFacetImpl<>(
-                    nodeType, superNodeMethodHandler, subNodesMethodHandlers, facetHolder));
+                    nodeType, subNodesMethodHandlers, facetHolder));
         }
 
         @Getter(onMethod_={@Override}) @Accessors(fluent=true)
         private final Class<T> nodeType;
 
-        private final Optional<MethodHandle> superNodeMethodHandle;
         private final Can<MethodHandle> subNodesMethodHandles;
 
         protected TreeNodeFacetImpl(final Class<T> nodeType,
-                final @NonNull Optional<MethodHandle> superNodeMethodHandle,
                 final @NonNull Can<MethodHandle> subNodesMethodHandles,
                 final @NonNull FacetHolder facetHolder) {
             super(TreeNodeFacet.class, facetHolder, Precedence.DEFAULT);
             this.nodeType = nodeType;
-            this.superNodeMethodHandle = superNodeMethodHandle;
             this.subNodesMethodHandles = subNodesMethodHandles;
-        }
-
-        @Override
-        public Optional<Object> parentOf(final T node) {
-            return superNodeMethodHandle
-                    .flatMap(mh->{
-                        try {
-                            return ((Optional<?>)mh.invoke(node));
-                        } catch (Throwable e) {
-                            log.error("failed to invoke superNodeMethodHandler {}",
-                                    mh.toString(), e);
-                            return Optional.empty();
-                        }
-                    });
         }
 
         @Override
@@ -196,7 +156,6 @@ implements
         @Override
         public void visitAttributes(final BiConsumer<String, Object> visitor) {
             visitor.accept("nodeType", nodeType.getName());
-            visitor.accept("superNodeMethodHandle", superNodeMethodHandle.map(MethodHandle::toString));
             visitor.accept("subNodesMethodHandles", subNodesMethodHandles.map(MethodHandle::toString));
         }
     }

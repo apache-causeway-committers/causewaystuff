@@ -18,7 +18,6 @@
  */
 package org.causewaystuff.treeview.metamodel.facets;
 
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.springframework.lang.Nullable;
@@ -28,8 +27,8 @@ import org.apache.causeway.core.metamodel.facetapi.Facet;
 import lombok.extern.log4j.Log4j2;
 
 public interface TreeNodeFacet<T> extends Facet {
+
     Class<T> nodeType();
-    Optional<Object> parentOf(final T node);
     int childCountOf(final T node);
     Stream<Object> childrenOf(final T node);
 
