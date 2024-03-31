@@ -70,11 +70,11 @@ Companion to the _Apache Causeway_ framework, offering supplementary types and s
 |===
 
 | tooling-javapoet 
-| _Javapoet_ is a library for Java source file generation. We relocated its packages to `org.causewaystuff.tooling.javapoet.*` 
+| _Javapoet_ is a library for Java source file generation. We relocated its packages to `io.github.causewaystuff.tooling.javapoet.*` 
 and patched them with support for Java records, also defining a stable JPMS module name. 
 
 | tooling-structurizr 
-| _Structurizr_ is a library for system diagram generation. We relocated its packages to `org.causewaystuff.tooling.structurizr.*` 
+| _Structurizr_ is a library for system diagram generation. We relocated its packages to `io.github.causewaystuff.tooling.structurizr.*` 
 and patched them with support for DSL parsing, also defining a stable JPMS module name.
 
 |===

@@ -16,9 +16,9 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-module org.causewaystuff.commons.base {
-    exports org.causewaystuff.commons.base.types.internal; //TODO restrict
-    exports org.causewaystuff.commons.base.types;
+module io.github.causewaystuff.commons.base {
+    exports io.github.causewaystuff.commons.base.types.internal; //TODO restrict
+    exports io.github.causewaystuff.commons.base.types;
 
     requires lombok;
     requires com.fasterxml.jackson.annotation;

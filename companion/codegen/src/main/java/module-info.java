@@ -16,20 +16,20 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-module org.causewaystuff.companion.codegen {
-    exports org.causewaystuff.companion.codegen.domgen;
-    exports org.causewaystuff.companion.codegen.model;
-    exports org.causewaystuff.companion.codegen.structgen;
+module io.github.causewaystuff.companion.codegen {
+    exports io.github.causewaystuff.companion.codegen.domgen;
+    exports io.github.causewaystuff.companion.codegen.model;
+    exports io.github.causewaystuff.companion.codegen.structgen;
 
     requires lombok;
     requires jakarta.inject;
     requires java.compiler;
-    requires transitive org.causewaystuff.tooling.javapoet;
-    requires transitive org.causewaystuff.tooling.structurizr;
+    requires transitive io.github.causewaystuff.tooling.javapoet;
+    requires transitive io.github.causewaystuff.tooling.structurizr;
     requires transitive org.apache.causeway.applib;
     requires org.apache.causeway.commons;
-    requires org.causewaystuff.commons.base;
-    requires org.causewaystuff.companion.applib;
+    requires io.github.causewaystuff.commons.base;
+    requires io.github.causewaystuff.companion.applib;
     requires spring.context;
     requires spring.core;
 }

@@ -23,7 +23,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.causewaystuff</groupId>
+        <groupId>io.github.causewaystuff</groupId>
         <artifactId>causewaystuff-tooling</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
@@ -33,7 +33,7 @@
     <description>Structurizr Integration</description>
 
     <properties>
-        <jar-plugin.automaticModuleName>org.causewaystuff.tooling.structurizr</jar-plugin.automaticModuleName>
+        <jar-plugin.automaticModuleName>io.github.causewaystuff.tooling.structurizr</jar-plugin.automaticModuleName>
     </properties>
 
     <build>
@@ -61,7 +61,7 @@
                                 <relocation>
                                     <pattern>com.structurizr</pattern>
                                     <shadedPattern>
-                                        org.causewaystuff.tooling.structurizr</shadedPattern>
+                                        io.github.causewaystuff.tooling.structurizr</shadedPattern>
                                     <includes>
                                         <include>com.structurizr.**</include>
                                     </includes>

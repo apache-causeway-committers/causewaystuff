@@ -16,19 +16,19 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-module org.causewaystuff.blobstore.localfs {
-    exports org.causewaystuff.blobstore.localfs;
+module io.github.causewaystuff.blobstore.localfs {
+    exports io.github.causewaystuff.blobstore.localfs;
 
     requires lombok;
     requires transitive org.apache.causeway.applib;
     requires org.apache.causeway.commons;
     requires org.apache.logging.log4j;
-    requires transitive org.causewaystuff.blobstore.applib;
-    requires org.causewaystuff.commons.base;
+    requires transitive io.github.causewaystuff.blobstore.applib;
+    requires io.github.causewaystuff.commons.base;
     requires spring.context;
     requires spring.core;
 
     // Jackson serialization
-    opens org.causewaystuff.blobstore.localfs to com.fasterxml.jackson.databind;
+    opens io.github.causewaystuff.blobstore.localfs to com.fasterxml.jackson.databind;
 
 }

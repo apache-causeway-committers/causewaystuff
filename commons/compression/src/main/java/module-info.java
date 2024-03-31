@@ -16,6 +16,6 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-module org.causewaystuff.commons.compression {
-    exports org.causewaystuff.commons.compression;
+module io.github.causewaystuff.commons.compression {
+    exports io.github.causewaystuff.commons.compression;
 }

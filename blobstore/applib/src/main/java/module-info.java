@@ -16,11 +16,11 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-module org.causewaystuff.blobstore.applib {
-    exports org.causewaystuff.blobstore.applib;
+module io.github.causewaystuff.blobstore.applib {
+    exports io.github.causewaystuff.blobstore.applib;
 
     requires lombok;
-    requires transitive org.causewaystuff.commons.base;
+    requires transitive io.github.causewaystuff.commons.base;
     requires transitive org.apache.causeway.applib;
     requires org.apache.causeway.commons;
     requires spring.beans;

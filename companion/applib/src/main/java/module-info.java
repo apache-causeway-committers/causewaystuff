@@ -16,11 +16,11 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-module org.causewaystuff.companion.applib {
-    exports org.causewaystuff.companion.applib.services.iconfa;
-    exports org.causewaystuff.companion.applib.services.lookup;
-    exports org.causewaystuff.companion.applib.decorate;
-    exports org.causewaystuff.companion.applib.services.search;
+module io.github.causewaystuff.companion.applib {
+    exports io.github.causewaystuff.companion.applib.services.iconfa;
+    exports io.github.causewaystuff.companion.applib.services.lookup;
+    exports io.github.causewaystuff.companion.applib.decorate;
+    exports io.github.causewaystuff.companion.applib.services.search;
 
     requires lombok;
     requires transitive org.apache.causeway.applib;
