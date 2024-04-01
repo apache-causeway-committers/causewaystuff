@@ -53,8 +53,10 @@
 
         <!-- dependencies -->
         <code-assert.version>0.9.15</code-assert.version>
+        <gradle-tooling.version>7.3-20210825160000+0000</gradle-tooling.version>
         <javaparser.version>3.25.9</javaparser.version>
         <javapoet.version>1.13.0</javapoet.version>
+        <maven-model-builder.version>3.9.6</maven-model-builder.version>
         <structurizr-dsl.version>2.1.1</structurizr-dsl.version>
         <structurizr-export.version>2.1.1</structurizr-export.version>
         <tukaani-xz.version>1.9</tukaani-xz.version>
@@ -369,6 +371,18 @@
                 <groupId>org.tukaani</groupId>
                 <artifactId>xz</artifactId>
                 <version>${tukaani-xz.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.gradle</groupId>
+                <artifactId>gradle-tooling-api</artifactId>
+                <version>${gradle-tooling.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-model-builder</artifactId>
+                <version>${maven-model-builder.version}</version>
             </dependency>
 
             <!-- TESTING -->

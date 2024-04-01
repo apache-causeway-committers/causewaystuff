@@ -24,26 +24,38 @@
 
     <parent>
         <groupId>io.github.causewaystuff</groupId>
-        <artifactId>causewaystuff-bom</artifactId>
+        <artifactId>causewaystuff-tooling</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>causewaystuff-tooling</artifactId>
-    <name>Causeway Stuff - Tooling</name>
+    <artifactId>causewaystuff-tooling-projectmodel</artifactId>
+    <name>Causeway Stuff - Tooling (Project Model)</name>
     <description>
-        Code generation, code mining, automated documentation, etc.
+        Code mining library for Gradle/Maven project module tree introspection.
     </description>
 
-    <packaging>pom</packaging>
+    <properties>
+        <jar-plugin.automaticModuleName>
+            io.github.causewaystuff.tooling.projectmodel</jar-plugin.automaticModuleName>
+    </properties>
 
-    <modules>
-        <!-- relocated libraries -->
-        <module>codeassert</module>
-        <module>javapoet</module>
-        <module>structurizr</module>
-        <!-- our code --> 
-        <module>javamodel</module>
-        <module>projectmodel</module>
-    </modules>
+    <dependencies>
+        
+        <dependency>
+            <groupId>org.apache.causeway.commons</groupId>
+            <artifactId>causeway-commons</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.gradle</groupId>
+            <artifactId>gradle-tooling-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-model-builder</artifactId>
+        </dependency>
+        
+    </dependencies>
 
 </project>

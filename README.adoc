@@ -72,6 +72,9 @@ Companion to the _Apache Causeway_ framework, offering supplementary types and s
 | tooling-javamodel 
 | Code mining library for Java bytecode introspection.
 
+| tooling-projectmodel 
+| Code mining library for Gradle/Maven project module tree introspection.
+
 |===
 
 
