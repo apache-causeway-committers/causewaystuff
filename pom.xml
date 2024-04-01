@@ -56,6 +56,7 @@
         <gradle-tooling.version>7.3-20210825160000+0000</gradle-tooling.version>
         <javaparser.version>3.25.9</javaparser.version>
         <javapoet.version>1.13.0</javapoet.version>
+        <jsoup-version>1.17.2</jsoup-version>
         <maven-model-builder.version>3.9.6</maven-model-builder.version>
         <structurizr-dsl.version>2.1.1</structurizr-dsl.version>
         <structurizr-export.version>2.1.1</structurizr-export.version>
@@ -264,7 +265,7 @@
                 <artifactId>causewaystuff-tooling-structurizr</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>io.github.causewaystuff</groupId>
                 <artifactId>causewaystuff-treeview-applib</artifactId>
@@ -360,6 +361,12 @@
             </dependency>
 
             <!-- OTHER -->
+
+            <dependency>
+                <groupId>org.jsoup</groupId>
+                <artifactId>jsoup</artifactId>
+                <version>${jsoup-version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.projectlombok</groupId>

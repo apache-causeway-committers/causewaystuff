@@ -74,6 +74,8 @@ Companion to the _Apache Causeway_ framework, offering supplementary types and s
 
 See also https://c4model.com/
 
+| tooling-java2adoc 
+| Code mining library for Java source to Asciidoc conversion.
 
 | tooling-javamodel 
 | Code mining library for Java bytecode introspection.
