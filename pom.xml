@@ -58,6 +58,7 @@
         <javapoet.version>1.13.0</javapoet.version>
         <jsoup-version>1.17.2</jsoup-version>
         <maven-model-builder.version>3.9.6</maven-model-builder.version>
+        <picocli.version>4.7.5</picocli.version>
         <structurizr-dsl.version>2.1.1</structurizr-dsl.version>
         <structurizr-export.version>2.1.1</structurizr-export.version>
         <tukaani-xz.version>1.9</tukaani-xz.version>
@@ -247,7 +248,17 @@
 
             <dependency>
                 <groupId>io.github.causewaystuff</groupId>
+                <artifactId>causewaystuff-tooling-c4modeling</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.causewaystuff</groupId>
                 <artifactId>causewaystuff-tooling-codeassert</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.causewaystuff</groupId>
+                <artifactId>causewaystuff-tooling-java2adoc</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
@@ -262,10 +273,15 @@
             </dependency>
             <dependency>
                 <groupId>io.github.causewaystuff</groupId>
+                <artifactId>causewaystuff-tooling-projectmodel</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.causewaystuff</groupId>
                 <artifactId>causewaystuff-tooling-structurizr</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
-
+            
             <dependency>
                 <groupId>io.github.causewaystuff</groupId>
                 <artifactId>causewaystuff-treeview-applib</artifactId>
@@ -300,6 +316,12 @@
             <dependency>
                 <groupId>org.apache.causeway.persistence</groupId>
                 <artifactId>causeway-persistence-jdo-applib</artifactId>
+                <version>${causeway.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.causeway.valuetypes</groupId>
+                <artifactId>causeway-valuetypes-asciidoc-builder</artifactId>
                 <version>${causeway.version}</version>
             </dependency>
 
@@ -361,6 +383,12 @@
             </dependency>
 
             <!-- OTHER -->
+
+            <dependency>
+                <groupId>info.picocli</groupId>
+                <artifactId>picocli</artifactId>
+                <version>${picocli.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.jsoup</groupId>

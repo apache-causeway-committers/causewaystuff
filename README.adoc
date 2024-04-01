@@ -74,6 +74,11 @@ Companion to the _Apache Causeway_ framework, offering supplementary types and s
 
 See also https://c4model.com/
 
+| tooling-cli 
+| Command Line Interface for the _Causewaystuff Tooling_ ecosystem.
+
+See documentation xref:tooling/cli/README.adoc[README]
+
 | tooling-java2adoc 
 | Code mining library for Java source to Asciidoc conversion.
 
