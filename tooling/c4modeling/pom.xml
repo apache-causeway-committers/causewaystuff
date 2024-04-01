@@ -29,7 +29,7 @@
     </parent>
 
     <artifactId>causewaystuff-tooling-c4modeling</artifactId>
-    <name>Causeway Stuff - Tooling (Java Model)</name>
+    <name>Causeway Stuff - Tooling (C4 Modeling)</name>
     <description>
         Library for programmatic C4 Model generation.
 
