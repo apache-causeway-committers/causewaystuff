@@ -69,12 +69,35 @@ Companion to the _Apache Causeway_ framework, offering supplementary types and s
 [cols="1,5a"]
 |===
 
+| tooling-javamodel 
+| Code mining library for Java bytecode introspection.
+
+|===
+
+
+==== Relocated Libraries
+
+[cols="1,5a"]
+|===
+
+| tooling-codeassert 
+| _Code-Assert_ is a library that allows to assert that the source code of a project satisfies certain rules.
+
+We relocated its packages to `io.github.causewaystuff.tooling.codeassert.*` 
+and patched them with support for adoc files, also defining a stable JPMS module name.
+
+See also https://github.com/nidi3/code-assert/pull/47
+
 | tooling-javapoet 
-| _Javapoet_ is a library for Java source file generation. We relocated its packages to `io.github.causewaystuff.tooling.javapoet.*` 
+| _Javapoet_ is a library for Java source file generation.
+
+We relocated its packages to `io.github.causewaystuff.tooling.javapoet.*`
 and patched them with support for Java records, also defining a stable JPMS module name. 
 
 | tooling-structurizr 
-| _Structurizr_ is a library for system diagram generation. We relocated its packages to `io.github.causewaystuff.tooling.structurizr.*` 
+| _Structurizr_ is a library for system diagram generation.
+
+We relocated its packages to `io.github.causewaystuff.tooling.structurizr.*` 
 and patched them with support for DSL parsing, also defining a stable JPMS module name.
 
 |===
