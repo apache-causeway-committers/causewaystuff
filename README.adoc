@@ -69,6 +69,12 @@ Companion to the _Apache Causeway_ framework, offering supplementary types and s
 [cols="1,5a"]
 |===
 
+| tooling-c4modeling 
+| Library for programmatic C4 Model generation.
+
+See also https://c4model.com/
+
+
 | tooling-javamodel 
 | Code mining library for Java bytecode introspection.
 
