@@ -29,8 +29,9 @@ import lombok.extern.log4j.Log4j2;
 public interface TreeNodeFacet<T> extends Facet {
 
     Class<T> nodeType();
-    int childCountOf(final T node);
-    Stream<Object> childrenOf(final T node);
+    
+    int childCountOf(T node);
+    Stream<Object> childrenOf(T node);
 
     default boolean isHandlingNodeType(final @Nullable Object node) {
         return node!=null
@@ -55,4 +56,5 @@ public interface TreeNodeFacet<T> extends Facet {
                     actualNodeType.getName());
         }
     }
+    
 }

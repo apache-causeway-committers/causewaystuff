@@ -23,14 +23,16 @@ import java.util.stream.Stream;
 
 import jakarta.inject.Inject;
 
-import io.github.causewaystuff.treeview.metamodel.facets.TreeNodeFacet;
-
 import org.apache.causeway.applib.graph.tree.TreeAdapter;
 import org.apache.causeway.commons.internal.base._Casts;
 import org.apache.causeway.core.metamodel.context.MetaModelContext;
 import org.apache.causeway.core.metamodel.specloader.SpecificationLoader;
 
-public class ObjectTreeAdapter implements TreeAdapter<Object> {
+import io.github.causewaystuff.treeview.metamodel.facets.TreeNodeFacet;
+
+public class ObjectTreeAdapter 
+implements 
+    TreeAdapter<Object> {
 
     @Inject
     protected SpecificationLoader specLoader;
@@ -57,7 +59,7 @@ public class ObjectTreeAdapter implements TreeAdapter<Object> {
                 .map(treeNodeFacet->_Casts.<TreeNodeFacet<T>>uncheckedCast(treeNodeFacet));
     }
     
-    //TODO remove
+    // fallback, if injection did not work
     private SpecificationLoader specLoader() {
         if(specLoader==null) {
             this.specLoader = MetaModelContext.instanceElseFail().getSpecificationLoader();

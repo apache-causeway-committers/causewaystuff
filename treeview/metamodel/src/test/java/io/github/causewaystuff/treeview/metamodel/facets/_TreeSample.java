@@ -18,26 +18,34 @@
  */
 package io.github.causewaystuff.treeview.metamodel.facets;
 
-import io.github.causewaystuff.treeview.applib.annotations.TreeSubNodes;
-
+import org.apache.causeway.applib.ViewModel;
+import org.apache.causeway.applib.annotation.Programmatic;
+import org.apache.causeway.applib.annotation.Property;
 import org.apache.causeway.commons.collections.Can;
 
+import lombok.Getter;
 import lombok.experimental.UtilityClass;
+
+import io.github.causewaystuff.treeview.applib.annotations.TreeSubNodes;
 
 @UtilityClass
 class _TreeSample {
 
+    static interface SampleNode {
+        String name();
+    }
+    
     record A(String name,
         @TreeSubNodes Can<B> childrenB,
-        @TreeSubNodes Can<C> childrenC) {
+        @TreeSubNodes Can<C> childrenC) implements SampleNode {
     }
     record B(String name,
-        @TreeSubNodes Can<D> childrenD) {
+        @TreeSubNodes Can<D> childrenD) implements SampleNode {
     }
     record C(String name,
-        @TreeSubNodes Can<D> childrenD) {
+        @TreeSubNodes Can<D> childrenD) implements SampleNode {
     }
-    record D(String name) {
+    record D(String name) implements SampleNode {
     }
     
     A sampleA() {
@@ -49,16 +57,30 @@ class _TreeSample {
     }
     
     String nameOf(Object node) {
-        if(node instanceof A) {
-            return ((A)node).name();
-        } else if(node instanceof B) {
-            return ((B)node).name();
-        } else if(node instanceof C) {
-            return ((C)node).name();
-        } else if(node instanceof D) {
-            return ((D)node).name();
+        if(node instanceof SampleNode) {
+            return ((SampleNode)node).name();
         }
         return "?";
+    }
+    
+    public static class SampleNodeView implements ViewModel {
+        
+        @Programmatic 
+        final String memento;
+        
+        public SampleNodeView(String memento) {
+            this.memento = memento;
+            this.name = "TODO";            
+        }
+        
+        @Override
+        public String viewModelMemento() {
+            return memento;
+        }
+
+        @Property @Getter 
+        final String name;
+        
     }
 
 }

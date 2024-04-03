@@ -1,0 +1,96 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+package io.github.causewaystuff.treeview.applib.viewmodel;
+
+import org.apache.causeway.applib.ViewModel;
+import org.apache.causeway.applib.annotation.LabelPosition;
+import org.apache.causeway.applib.annotation.Programmatic;
+import org.apache.causeway.applib.annotation.Property;
+import org.apache.causeway.applib.annotation.PropertyLayout;
+import org.apache.causeway.applib.graph.tree.TreeAdapter;
+import org.apache.causeway.applib.graph.tree.TreeAdapterWithConverter;
+import org.apache.causeway.applib.graph.tree.TreeConverter;
+import org.apache.causeway.applib.graph.tree.TreeNode;
+import org.apache.causeway.applib.graph.tree.TreePath;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.experimental.Accessors;
+
+@AllArgsConstructor
+public abstract class TreeNodeVm<T, V extends TreeNodeVm<T, V>> implements ViewModel {
+    
+    @Programmatic
+    @Getter @Accessors(fluent=true)
+    private final Class<T> nodeType;
+    
+    @Programmatic
+    @Getter @Accessors(fluent=true) 
+    private final T rootNode;
+
+    @Programmatic
+    @Getter @Accessors(fluent=true)
+    private final T activeNode;
+    
+    @Programmatic
+    @Getter @Accessors(fluent=true)
+    private final TreePath activeTreePath;
+
+    @Property
+    @PropertyLayout(labelPosition = LabelPosition.NONE, fieldSetId = "tree", sequence = "1")
+    public TreeNode<V> getTree() {
+        final TreeNode<V> tree = TreeNode.root(getViewModel(rootNode(), null, 0), getTreeAdapterV());
+        
+        // expand the current node
+        activeTreePath.streamUpTheHierarchyStartingAtSelf()
+            .forEach(tree::expand);
+
+        // mark active node as selected
+        tree.select(activeTreePath);
+
+        return tree;
+    }
+    
+    private @NonNull TreeAdapter<V> getTreeAdapterV() {
+        return new TreeAdapterWithConverter<T, V>() {
+            @Override
+            protected TreeAdapter<T> underlyingAdapter() {
+                return getTreeAdapter();
+            }
+            @Override
+            protected TreeConverter<T, V> converter() {
+                return new TreeConverter<T, V>() {
+                    @Override
+                    public V fromUnderlyingNode(T value, V parentNode, int siblingIndex) {
+                        return getViewModel(value, parentNode, siblingIndex);
+                    }
+                    @Override
+                    public T toUnderlyingNode(V value) {
+                        return value.activeNode();
+                    }
+                };
+            }
+        };
+    }
+
+    protected abstract V getViewModel(T node, V parentNode, int siblingIndex);
+    protected abstract TreeAdapter<T> getTreeAdapter();
+    
+}

@@ -27,8 +27,6 @@ import java.util.stream.Stream;
 
 import jakarta.inject.Inject;
 
-import io.github.causewaystuff.treeview.applib.annotations.TreeSubNodes;
-
 import org.springframework.stereotype.Component;
 
 import org.apache.causeway.commons.collections.Can;
@@ -49,6 +47,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.Accessors;
 import lombok.extern.log4j.Log4j2;
+
+import io.github.causewaystuff.treeview.applib.annotations.TreeSubNodes;
 
 @Component
 @Log4j2
@@ -87,8 +87,10 @@ implements
                 return targetMh;
             })
             .collect(Can.toCan());
-
-        if(treeSubNodesMethodHandles.isEmpty()) return;
+        
+        if(treeSubNodesMethodHandles.isEmpty()) {
+            return;
+        }
 
         addFacetIfPresent(TreeNodeFacetImpl.create(
                 cls,
@@ -103,13 +105,13 @@ implements
 
         static <T> Optional<TreeNodeFacet<T>> create(
                 final Class<T> nodeType,
-                final Can<MethodHandle> subNodesMethodHandlers,
+                final Can<MethodHandle> subNodesMethodHandles,
                 final FacetHolder facetHolder){
-            if(subNodesMethodHandlers.isEmpty()) {
+            if(subNodesMethodHandles.isEmpty()) {
                 return Optional.empty();
             }
             return Optional.of(new TreeNodeFacetImpl<>(
-                    nodeType, subNodesMethodHandlers, facetHolder));
+                    nodeType, subNodesMethodHandles, facetHolder));
         }
 
         @Getter(onMethod_={@Override}) @Accessors(fluent=true)
