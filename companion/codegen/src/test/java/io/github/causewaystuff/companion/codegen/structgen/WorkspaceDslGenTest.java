@@ -18,6 +18,13 @@
  */
 package io.github.causewaystuff.companion.codegen.structgen;
 
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+
+import org.apache.causeway.testing.unittestsupport.applib.annotations.DisabledIfRunningWithSurefire;
+
+import lombok.SneakyThrows;
+
 import io.github.causewaystuff.tooling.structurizr.Workspace;
 import io.github.causewaystuff.tooling.structurizr.dsl.StructurizrDslFormatter;
 import io.github.causewaystuff.tooling.structurizr.dsl.StructurizrDslParser;
@@ -35,11 +42,7 @@ import io.github.causewaystuff.tooling.structurizr.view.Styles;
 import io.github.causewaystuff.tooling.structurizr.view.SystemContextView;
 import io.github.causewaystuff.tooling.structurizr.view.ViewSet;
 
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
-
-import lombok.SneakyThrows;
-
+@DisabledIfRunningWithSurefire
 class WorkspaceDslGenTest {
 
     enum Scenario {
