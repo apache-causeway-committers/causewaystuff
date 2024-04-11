@@ -36,28 +36,35 @@ import lombok.experimental.Accessors;
 
 @AllArgsConstructor
 public abstract class TreeNodeVm<T, V extends TreeNodeVm<T, V>> implements ViewModel {
-    
+
     @Programmatic
     @Getter @Accessors(fluent=true)
     private final Class<T> nodeType;
-    
+
     @Programmatic
-    @Getter @Accessors(fluent=true) 
+    @Getter @Accessors(fluent=true)
     private final T rootNode;
 
     @Programmatic
     @Getter @Accessors(fluent=true)
     private final T activeNode;
-    
+
     @Programmatic
     @Getter @Accessors(fluent=true)
     private final TreePath activeTreePath;
+
+    protected TreeNodeVm(final Class<T> nodeType, final T rootNode, final TreePath activeTreePath) {
+        this.nodeType = nodeType;
+        this.rootNode = rootNode;
+        this.activeTreePath = activeTreePath;
+        this.activeNode = getTreeAdapter().resolveRelative(rootNode, activeTreePath).orElseThrow();
+    }
 
     @Property
     @PropertyLayout(labelPosition = LabelPosition.NONE, fieldSetId = "tree", sequence = "1")
     public TreeNode<V> getTree() {
         final TreeNode<V> tree = TreeNode.root(getViewModel(rootNode(), null, 0), getTreeAdapterV());
-        
+
         // expand the current node
         activeTreePath.streamUpTheHierarchyStartingAtSelf()
             .forEach(tree::expand);
@@ -67,7 +74,7 @@ public abstract class TreeNodeVm<T, V extends TreeNodeVm<T, V>> implements ViewM
 
         return tree;
     }
-    
+
     private @NonNull TreeAdapter<V> getTreeAdapterV() {
         return new TreeAdapterWithConverter<T, V>() {
             @Override
@@ -78,11 +85,11 @@ public abstract class TreeNodeVm<T, V extends TreeNodeVm<T, V>> implements ViewM
             protected TreeConverter<T, V> converter() {
                 return new TreeConverter<T, V>() {
                     @Override
-                    public V fromUnderlyingNode(T value, V parentNode, int siblingIndex) {
+                    public V fromUnderlyingNode(final T value, final V parentNode, final int siblingIndex) {
                         return getViewModel(value, parentNode, siblingIndex);
                     }
                     @Override
-                    public T toUnderlyingNode(V value) {
+                    public T toUnderlyingNode(final V value) {
                         return value.activeNode();
                     }
                 };
@@ -92,5 +99,5 @@ public abstract class TreeNodeVm<T, V extends TreeNodeVm<T, V>> implements ViewM
 
     protected abstract V getViewModel(T node, V parentNode, int siblingIndex);
     protected abstract TreeAdapter<T> getTreeAdapter();
-    
+
 }
