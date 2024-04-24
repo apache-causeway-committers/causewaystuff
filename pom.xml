@@ -42,8 +42,8 @@
         <spring-boot.version>3.2.5</spring-boot.version>
         <causeway.version>3.0.0-SNAPSHOT</causeway.version>
 
-        <junit-version>[5,)</junit-version>
-        <lombok-version>1.18.32</lombok-version>
+        <junit.version>5.10.2</junit.version>
+        <lombok.version>1.18.32</lombok.version>
 
         <!-- plugins -->
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
@@ -56,7 +56,7 @@
         <gradle-tooling.version>7.3-20210825160000+0000</gradle-tooling.version>
         <javaparser.version>3.25.10</javaparser.version>
         <javapoet.version>1.13.0</javapoet.version>
-        <jsoup-version>1.17.2</jsoup-version>
+        <jsoup.version>1.17.2</jsoup.version>
         <maven-model-builder.version>3.9.6</maven-model-builder.version>
         <picocli.version>4.7.5</picocli.version>
         <structurizr-dsl.version>2.1.1</structurizr-dsl.version>
@@ -143,7 +143,7 @@
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
-                            <version>${lombok-version}</version>
+                            <version>${lombok.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
@@ -393,13 +393,13 @@
             <dependency>
                 <groupId>org.jsoup</groupId>
                 <artifactId>jsoup</artifactId>
-                <version>${jsoup-version}</version>
+                <version>${jsoup.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>${lombok-version}</version>
+                <version>${lombok.version}</version>
             </dependency>
 
             <dependency>
@@ -425,19 +425,19 @@
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
-                <version>${junit-version}</version>
+                <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-engine</artifactId>
-                <version>${junit-version}</version>
+                <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-params</artifactId>
-                <version>${junit-version}</version>
+                <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
 
