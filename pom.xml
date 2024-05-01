@@ -60,7 +60,7 @@
         <maven-model-builder.version>3.9.6</maven-model-builder.version>
         <picocli.version>4.7.5</picocli.version>
         <structurizr-dsl.version>2.1.2</structurizr-dsl.version>
-        <structurizr-export.version>2.1.1</structurizr-export.version>
+        <structurizr-export.version>2.1.2</structurizr-export.version>
         <tukaani-xz.version>1.9</tukaani-xz.version>
 
         <!-- testing -->
