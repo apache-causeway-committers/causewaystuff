@@ -53,6 +53,7 @@
 
         <!-- dependencies -->
         <code-assert.version>0.9.15</code-assert.version>
+        <commons-compress.version>1.26.1</commons-compress.version>
         <gradle-tooling.version>7.3-20210825160000+0000</gradle-tooling.version>
         <javaparser.version>3.25.10</javaparser.version>
         <javapoet.version>1.13.0</javapoet.version>
@@ -77,7 +78,7 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <causeway.version>3.0.0-M1.20240418-0217-b2c42168</causeway.version>
+                <causeway.version>3.0.0-M1.20240502-0219-f529e018</causeway.version>
             </properties>
             <repositories>
                 <repository>
@@ -281,7 +282,7 @@
                 <artifactId>causewaystuff-tooling-structurizr</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>io.github.causewaystuff</groupId>
                 <artifactId>causewaystuff-treeview-applib</artifactId>
@@ -406,6 +407,12 @@
                 <groupId>org.tukaani</groupId>
                 <artifactId>xz</artifactId>
                 <version>${tukaani-xz.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>${commons-compress.version}</version>
             </dependency>
 
             <dependency>

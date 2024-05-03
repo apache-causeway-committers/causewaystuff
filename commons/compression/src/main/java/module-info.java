@@ -18,4 +18,10 @@
  */
 module io.github.causewaystuff.commons.compression {
     exports io.github.causewaystuff.commons.compression;
+
+    requires static lombok;
+    requires transitive org.apache.causeway.commons;
+    requires transitive org.apache.causeway.applib;
+    requires transitive org.apache.commons.compress;
+
 }

@@ -35,7 +35,8 @@
     </description>
 
     <properties>
-        <jar-plugin.automaticModuleName>io.github.causewaystuff.commons.compression</jar-plugin.automaticModuleName>
+        <jar-plugin.automaticModuleName>
+            io.github.causewaystuff.commons.compression</jar-plugin.automaticModuleName>
     </properties>
 
     <dependencies>
@@ -43,6 +44,11 @@
         <dependency>
             <groupId>org.tukaani</groupId>
             <artifactId>xz</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
         </dependency>
 
     </dependencies>

@@ -20,7 +20,7 @@ module io.github.causewaystuff.commons.base {
     exports io.github.causewaystuff.commons.base.types.internal; //TODO restrict
     exports io.github.causewaystuff.commons.base.types;
 
-    requires lombok;
+    requires static lombok;
     requires com.fasterxml.jackson.annotation;
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.databind;
