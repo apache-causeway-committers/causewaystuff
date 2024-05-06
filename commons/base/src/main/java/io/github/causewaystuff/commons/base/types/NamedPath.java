@@ -35,7 +35,7 @@ import org.apache.causeway.commons.internal.exceptions._Exceptions;
 import lombok.NonNull;
 
 /**
- * Wraps a collection of non-empty {@link String}(s) which represents the names of a (general purpose) path.
+ * Wraps a collection of non-null {@link String}(s) which represents the names of a (general purpose) path.
  */
 public record NamedPath(@NonNull Can<String> names) implements Iterable<String> {
 
