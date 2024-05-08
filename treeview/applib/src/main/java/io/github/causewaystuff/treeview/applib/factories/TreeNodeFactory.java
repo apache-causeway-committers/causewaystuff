@@ -21,6 +21,7 @@ package io.github.causewaystuff.treeview.applib.factories;
 import org.apache.causeway.applib.graph.tree.TreeAdapter;
 import org.apache.causeway.applib.graph.tree.TreeNode;
 import org.apache.causeway.applib.services.factory.FactoryService;
+import org.apache.causeway.commons.internal.base._Casts;
 import org.apache.causeway.commons.internal.context._Context;
 
 import lombok.SneakyThrows;
@@ -29,8 +30,16 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class TreeNodeFactory {
 
-    public TreeNode<Object> wrap(final Object treeNode, FactoryService factoryService) {
+    public TreeNode<Object> wrap(final Object treeNode, final FactoryService factoryService) {
         return TreeNode.root(treeNode, defaultTreeAdapter(), factoryService);
+    }
+
+    /**
+     * Does not guarantee at compile time, that the tree is actually made up of nodes that are instances of {@code commonNodeType}.
+     * In the sad case may result in {@link ClassCastException}(s).
+     */
+    public <T, R extends T> TreeNode<T> wrap(final Class<T> commonNodeType, final R treeNode, final FactoryService factoryService) {
+        return TreeNode.root(treeNode, _Casts.uncheckedCast(defaultTreeAdapter()), factoryService);
     }
 
     @SneakyThrows //TODO if class not found exception: some message that the metamodel module is missing
