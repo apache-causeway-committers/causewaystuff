@@ -4,7 +4,7 @@
 :toc-placement!:
 
 Project umbrella for the _Apache Causeway_ framework, containing stuff,
-that is NOT released under the official ASF umbrella. 
+that is NOT released under the official _Apache Software Foundation_ (ASF) protectorate. 
 ____
 https://causeway.apache.org[Apache Causeway] software is a framework for rapidly developing domain-driven apps in Java.
 Write your business logic in entities, domain services and repositories, and the framework dynamically generates a representation of that domain model as a webapp or a RESTful API.
