@@ -31,13 +31,35 @@
     <artifactId>causewaystuff-tooling-cli</artifactId>
     <name>Causeway Stuff - Tooling (Command Line Interface)</name>
     <description>
-        
+
     </description>
 
     <properties>
         <jar-plugin.automaticModuleName>
             io.github.causewaystuff.tooling.cli</jar-plugin.automaticModuleName>
     </properties>
+
+    <build>
+        <finalName>causeway-tooling-cli</finalName>
+        <plugins>
+
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>spring-boot</classifier>
+                            <mainClass>io.github.causewaystuff.tooling.cli.Cli</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencies>
         <dependency>
