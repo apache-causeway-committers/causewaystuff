@@ -1,0 +1,17 @@
+= Blobstore
+
+Blob storage API and implementations.
+
+[cols="1,5a"]
+|===
+
+| blobstore-applib 
+| Blob storage API.
+
+| blobstore-localfs
+| Blob storage implementation utilizing the host's file system.
+
+| blobstore-testsupport 
+| Blob storage test templates, used by blob storage implementations.
+
+|===

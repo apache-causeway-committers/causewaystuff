@@ -1,0 +1,14 @@
+= Companion
+
+Companion to the _Apache Causeway_ framework, offering supplementary types and services.
+
+[cols="1,5a"]
+|===
+
+| companion-applib 
+| Provides *Domain Support* service interfaces as expressed by the code generator (companion-codegen).
+
+| companion-codegen
+| A *Java code generator* utilizing _Apache Causeway's_ programming model
+
+|===

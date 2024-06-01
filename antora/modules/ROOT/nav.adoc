@@ -1,4 +1,12 @@
 * xref:About.adoc[About]
+* Modules
+** xref:modules/Commons.adoc[Companion]
+** xref:modules/BlobStore.adoc[BlobStore]
+** xref:modules/Companion.adoc[Companion]
+** Tooling
+*** xref:modules/tooling/Tooling-Overview.adoc[Tooling Overview]
+*** xref:modules/tooling/Tooling-CLI.adoc[Tooling CLI]
+** xref:modules/TreeView.adoc[TreeView]
 * Design Documents
 ** xref:designdocs/Companion.adoc[Companion]
-* xref:Modules.adoc[Modules]
+

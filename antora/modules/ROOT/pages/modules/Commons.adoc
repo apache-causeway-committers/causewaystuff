@@ -1,0 +1,14 @@
+= Commons
+
+Shared general purpose utilities.
+
+[cols="1,5a"]
+|===
+
+| commons-base
+| Basic *utilities*.
+
+| commons-compression
+| Integrates *compression algorithms* like GZIP and LZMA.
+
+|===

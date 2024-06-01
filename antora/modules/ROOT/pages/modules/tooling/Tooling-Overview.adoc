@@ -1,56 +1,6 @@
-= Modules
+= Tooling
 
-== Commons
-
-Shared general purpose utilities.
-
-[cols="1,5a"]
-|===
-
-| commons-base
-| Basic *utilities*.
-
-| commons-compression
-| Integrates *compression algorithms* like GZIP and LZMA.
-
-|===
-
-
-== Blobstore
-
-Blob storage API and implementations.
-
-[cols="1,5a"]
-|===
-
-| blobstore-applib 
-| Blob storage API.
-
-| blobstore-localfs
-| Blob storage implementation utilizing the host's file system.
-
-| blobstore-testsupport 
-| Blob storage test templates, used by blob storage implementations.
-
-|===
-
-
-== Companion
-
-Companion to the _Apache Causeway_ framework, offering supplementary types and services.
-
-[cols="1,5a"]
-|===
-
-| companion-applib 
-| Provides *Domain Support* service interfaces as expressed by the code generator (companion-codegen).
-
-| companion-codegen
-| A *Java code generator* utilizing _Apache Causeway's_ programming model
-
-|===
-
-== Tooling
+== Submodules
 
 [cols="1,5a"]
 |===
@@ -63,7 +13,7 @@ See also https://c4model.com/
 | tooling-cli 
 | Command Line Interface for the _Causewaystuff Tooling_ ecosystem.
 
-See documentation xref:tooling/cli/README.adoc[README]
+See documentation xref:Tooling-CLI.adoc[Tooling CLI]
 
 | tooling-java2adoc 
 | Code mining library for Java source to Asciidoc conversion.
@@ -77,7 +27,7 @@ See documentation xref:tooling/cli/README.adoc[README]
 |===
 
 
-=== Relocated Libraries
+== Relocated Libraries
 
 [cols="1,5a"]
 |===
@@ -101,20 +51,5 @@ and patched them with support for Java records, also defining a stable JPMS modu
 
 We relocated its packages to `io.github.causewaystuff.tooling.structurizr.*` 
 and patched them with support for DSL parsing, also defining a stable JPMS module name.
-
-|===
-
-== Tree View
-
-Master/detail tree view for tree-like data structures.
-
-[cols="1,5a"]
-|===
-
-| treeview-applib 
-| Tree View API.
-
-| treeview-metamodel
-| Tree View integration.
 
 |===
