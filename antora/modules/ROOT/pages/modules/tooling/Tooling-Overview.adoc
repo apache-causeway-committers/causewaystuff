@@ -13,7 +13,7 @@ See also https://c4model.com/
 | tooling-cli 
 | Command Line Interface for the _Causewaystuff Tooling_ ecosystem.
 
-See documentation xref:Tooling-CLI.adoc[Tooling CLI]
+See documentation xref:Tooling-CLI.adoc#[Tooling CLI]
 
 | tooling-java2adoc 
 | Code mining library for Java source to Asciidoc conversion.

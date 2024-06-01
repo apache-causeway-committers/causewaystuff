@@ -1,6 +1,6 @@
 * xref:About.adoc[About]
 * Modules
-** xref:modules/Commons.adoc[Companion]
+** xref:modules/Commons.adoc[Commons]
 ** xref:modules/BlobStore.adoc[BlobStore]
 ** xref:modules/Companion.adoc[Companion]
 ** Tooling

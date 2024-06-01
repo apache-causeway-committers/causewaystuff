@@ -11,9 +11,5 @@ ____
 
 Source Code Repository: https://github.com/apache-causeway-committers/causewaystuff[GitHub]
 
-== Design Documents
-
-* xref:designdocs/Companion.adoc[Companion]
-
 == License
 _Causeway Stuff_ is _Open Source_ software released under the https://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license].
