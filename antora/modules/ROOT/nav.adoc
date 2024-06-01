@@ -1,4 +1,4 @@
 * xref:About.adoc[About]
 * Design Documents
 ** xref:designdocs/Companion.adoc[Companion]
-* xref:SubModules.adoc[Sub Modules]
+* xref:Modules.adoc[Modules]
