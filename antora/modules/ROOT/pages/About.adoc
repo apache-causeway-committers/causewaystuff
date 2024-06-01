@@ -1,0 +1,19 @@
+= About
+
+*Causeway Stuff* 
+
+is a project umbrella for the _Apache Causeway_ framework, containing stuff,
+that is NOT released under the official _Apache Software Foundation_ (ASF) protectorate. 
+____
+https://causeway.apache.org[Apache Causeway] software is a framework for rapidly developing domain-driven apps in Java.
+Write your business logic in entities, domain services and repositories, and the framework dynamically generates a representation of that domain model as a webapp or a RESTful API.
+____
+
+Source Code Repository: https://github.com/causeway-commiters/causewaystuff[GitHub]
+
+== Design Documents
+
+* xref:designdocs/Companion.adoc[Companion]
+
+== License
+_Causeway Stuff_ is _Open Source_ software released under the https://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license].
