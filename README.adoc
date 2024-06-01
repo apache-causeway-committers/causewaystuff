@@ -12,6 +12,8 @@ ____
 
 toc::[]
 
+For details see https://causeway-committers.github.io/causewaystuff[Causeway - Stuff Documentation]
+
 == Modules
 
 === Commons
