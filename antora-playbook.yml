@@ -1,10 +1,10 @@
 site:
   title: Causeway Stuff Docs
-  url: https://causeway-commiters.github.io/causewaystuff
+  url: https://apache-causeway-commiters.github.io/causewaystuff
   start_page: main::About.adoc
 content:
   sources:
-  - url: https://github.com/causeway-commiters/causewaystuff.git
+  - url: https://github.com/apache-causeway-commiters/causewaystuff.git
     branches: HEAD
     start_path: antora
 ui:
