@@ -9,7 +9,7 @@ https://causeway.apache.org[Apache Causeway] software is a framework for rapidly
 Write your business logic in entities, domain services and repositories, and the framework dynamically generates a representation of that domain model as a webapp or a RESTful API.
 ____
 
-Source Code Repository: https://github.com/apache-causeway-commiters/causewaystuff[GitHub]
+Source Code Repository: https://github.com/apache-causeway-committers/causewaystuff[GitHub]
 
 == Design Documents
 
