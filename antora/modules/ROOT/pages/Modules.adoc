@@ -1,0 +1,41 @@
+= Modules
+
+_Causeway Stuff_ modules and sub-modules.
+
+[plantuml,fig-modules,svg]
+.Dita Modules
+----
+@startwbs
+
+* Modules
+** Commons
+*** base
+*** compression
+
+** BlobStore
+*** applib
+*** localfs
+*** testsupport
+
+** Companion
+*** applib
+*** codegen
+
+** Tooling
+*** c4modeling 
+*** cli 
+*** java2adoc 
+*** javamodel 
+*** projectmodel 
+*** codeassert¹ 
+*** javapoet¹ 
+*** structurizr¹ 
+
+** TreeView
+*** applib
+*** metamodel
+
+@endwbs
+----
+
+<.> Relocated library, requires Maven to build; might need to be deactivated/closed as a project in your IDE

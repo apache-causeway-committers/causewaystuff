@@ -1,5 +1,5 @@
 * xref:About.adoc[About]
-* Modules
+* xref:Modules.adoc[Modules]
 ** xref:modules/Commons.adoc[Commons]
 ** xref:modules/BlobStore.adoc[BlobStore]
 ** xref:modules/Companion.adoc[Companion]
