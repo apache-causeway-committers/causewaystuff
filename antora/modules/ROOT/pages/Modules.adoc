@@ -3,7 +3,7 @@
 _Causeway Stuff_ modules and sub-modules.
 
 [plantuml,fig-modules,svg]
-.Dita Modules
+.Causeway Stuff Modules
 ----
 @startwbs
 
