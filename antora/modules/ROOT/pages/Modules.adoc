@@ -38,4 +38,11 @@ _Causeway Stuff_ modules and sub-modules.
 @endwbs
 ----
 
-<.> Relocated library, requires Maven to build; might need to be deactivated/closed as a project in your IDE
+<.> Relocated libraries require _Maven_ to build.
++
+To check them out in your IDE, 
+you must first build everything with _Maven_ then 
+close/deactivate the relocated library projects in the IDE.
++ 
+(At least _Eclipse_ - at the time of writing - 
+is unable to make sense of those when opened.)
