@@ -22,15 +22,15 @@ import java.util.List;
 
 import javax.lang.model.element.Modifier;
 
-import io.github.causewaystuff.companion.codegen.model.OrmModel;
-import io.github.causewaystuff.tooling.javapoet.ParameterSpec;
-import io.github.causewaystuff.tooling.javapoet.TypeSpec;
-
 import org.apache.causeway.applib.annotation.Optionality;
 import org.apache.causeway.applib.annotation.PrecedingParamsPolicy;
 
 import lombok.val;
 import lombok.experimental.UtilityClass;
+
+import io.github.causewaystuff.companion.codegen.model.OrmModel;
+import io.github.causewaystuff.tooling.javapoet.ParameterSpec;
+import io.github.causewaystuff.tooling.javapoet.TypeSpec;
 
 @UtilityClass
 class _GenEntity_Params {

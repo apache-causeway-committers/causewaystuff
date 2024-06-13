@@ -29,6 +29,7 @@ import java.util.stream.Stream;
 
 import org.springframework.lang.Nullable;
 
+import org.apache.causeway.applib.annotation.Where;
 import org.apache.causeway.applib.services.metamodel.objgraph.ObjectGraph;
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.functional.IndexedFunction;
@@ -141,6 +142,7 @@ public class OrmModel {
             boolean plural,
             OptionalInt multiLine,
             String elementType,
+            Where hiddenWhere,
             List<String> enumeration,
             List<String> discriminator,
             List<String> foreignKeys,
@@ -250,6 +252,7 @@ public class OrmModel {
                     plural,
                     multiLine,
                     elementType,
+                    hiddenWhere,
                     enumeration,
                     discriminator,
                     foreignKeys,
@@ -269,6 +272,7 @@ public class OrmModel {
                     plural,
                     multiLine,
                     elementType,
+                    hiddenWhere,
                     enumeration,
                     discriminator,
                     foreignKeys,

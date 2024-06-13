@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalInt;
 
+import org.apache.causeway.applib.annotation.Where;
 import org.apache.causeway.commons.collections.Can;
 
 import lombok.val;
@@ -48,6 +49,7 @@ public class OrmSchemaExamples {
                 true, false, false,
                 OptionalInt.of(2),
                 "",
+                Where.ALL_TABLES,
                 List.of(), List.of(), List.of(), List.of("aa", "bb", "cc"));
         entity.fields().add(field);
         return Can.of(

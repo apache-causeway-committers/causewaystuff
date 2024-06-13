@@ -102,6 +102,9 @@ class _Writer {
         if(_Strings.isNotEmpty(field.elementType())) {
             yaml.ind().ind().ind().write("elementType: ", field.elementType()).nl();
         }
+        if(field.hiddenWhere()!=null) {
+            yaml.ind().ind().ind().write("hiddenWhere: ", field.hiddenWhere().name()).nl();
+        }
         if(field.isEnum()) {
             yaml.ind().ind().ind().write("enum:").multiLineStartIfNotEmtpy(field.enumeration()).nl();
             field.enumeration().forEach(line->

@@ -19,9 +19,20 @@
 package io.github.causewaystuff.companion.codegen.domgen;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.lang.model.element.Modifier;
+
+import org.apache.causeway.applib.annotation.Editing;
+import org.apache.causeway.applib.annotation.Optionality;
+import org.apache.causeway.applib.annotation.Where;
+import org.apache.causeway.applib.services.repository.RepositoryService;
+import org.apache.causeway.commons.collections.Can;
+import org.apache.causeway.commons.internal.base._Strings;
+
+import lombok.val;
+import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.companion.applib.services.iconfa.IconFaService;
 import io.github.causewaystuff.companion.applib.services.lookup.HasSecondaryKey;
@@ -36,16 +47,6 @@ import io.github.causewaystuff.tooling.javapoet.FieldSpec;
 import io.github.causewaystuff.tooling.javapoet.MethodSpec;
 import io.github.causewaystuff.tooling.javapoet.ParameterizedTypeName;
 import io.github.causewaystuff.tooling.javapoet.TypeSpec;
-
-import org.apache.causeway.applib.annotation.Editing;
-import org.apache.causeway.applib.annotation.Optionality;
-import org.apache.causeway.applib.annotation.Where;
-import org.apache.causeway.applib.services.repository.RepositoryService;
-import org.apache.causeway.commons.collections.Can;
-import org.apache.causeway.commons.internal.base._Strings;
-
-import lombok.val;
-import lombok.experimental.UtilityClass;
 
 @UtilityClass
 class _GenEntity {
@@ -208,9 +209,11 @@ class _GenEntity {
                             .describedAs(
                                 field.formatDescription("\n"))
                             .multiLine(field.multiLine().orElse(0))
-                            .hiddenWhere(field.hasForeignKeys()
-                                ? Where.ALL_TABLES
-                                : Where.NOWHERE)))
+                            .hiddenWhere(Optional.ofNullable(field.hiddenWhere())
+                                    .orElseGet(()->field.hasForeignKeys()
+                                            ? Where.ALL_TABLES
+                                            : Where.NOWHERE)
+                                    )))
                     .addAnnotation(_Annotations.column(field.column(), !field.required(), field.maxLength()))
                     .addAnnotation(_Annotations.getter())
                     .addAnnotation(_Annotations.setter());

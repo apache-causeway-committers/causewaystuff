@@ -29,10 +29,6 @@ import javax.annotation.processing.Generated;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-import io.github.causewaystuff.tooling.javapoet.AnnotationSpec;
-import io.github.causewaystuff.tooling.javapoet.ClassName;
-import io.github.causewaystuff.tooling.javapoet.CodeBlock;
-
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.lang.Nullable;
@@ -69,6 +65,10 @@ import org.apache.causeway.commons.internal.collections._Multimaps.ListMultimap;
 import lombok.Builder;
 import lombok.val;
 import lombok.experimental.UtilityClass;
+
+import io.github.causewaystuff.tooling.javapoet.AnnotationSpec;
+import io.github.causewaystuff.tooling.javapoet.ClassName;
+import io.github.causewaystuff.tooling.javapoet.CodeBlock;
 
 @UtilityClass
 class _Annotations {
@@ -276,9 +276,9 @@ class _Annotations {
         String fieldSetId,
         String sequence,
         String describedAs,
+        Where hiddenWhere,
         int multiLine,
-        Navigable navigable,
-        Where hiddenWhere) {
+        Navigable navigable) {
     }
     AnnotationSpec propertyLayout(final UnaryOperator<PropertyLayoutSpec.PropertyLayoutSpecBuilder> attrProvider) {
         val builder = AnnotationSpec.builder(PropertyLayout.class);
@@ -289,13 +289,13 @@ class _Annotations {
             .ifPresent(sequence->builder.addMember("sequence", "$1S", sequence));
         _Strings.nonEmpty(attr.describedAs())
             .ifPresent(describedAs->builder.addMember("describedAs", "$1S", describedAs));
+        Optional.ofNullable(attr.hiddenWhere())
+            .ifPresent(hiddenWhere->builder.addMember("hidden", "$1T.$2L", Where.class, hiddenWhere.name()));
         if(attr.multiLine()>1) {
             builder.addMember("multiLine", "$1L", attr.multiLine());
         }
         Optional.ofNullable(attr.navigable())
             .ifPresent(navigable->builder.addMember("navigable", "$1T.$2L", Navigable.class, navigable.name()));
-        Optional.ofNullable(attr.hiddenWhere())
-            .ifPresent(hiddenWhere->builder.addMember("hidden", "$1T.$2L", Where.class, hiddenWhere.name()));
         return builder.build();
     }
 
