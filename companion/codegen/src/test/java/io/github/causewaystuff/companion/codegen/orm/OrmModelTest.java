@@ -18,18 +18,20 @@
  */
 package io.github.causewaystuff.companion.codegen.orm;
 
-import io.github.causewaystuff.companion.codegen.model.OrmModel;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import lombok.val;
 
+import io.github.causewaystuff.companion.codegen.domgen.OrmSchemaExamples;
+import io.github.causewaystuff.companion.codegen.model.OrmModel;
+
 class OrmModelTest {
 
     @Test
     void yamlRoundTrip() {
-        val schema = OrmModel.examples().getElseFail(0);
+        val schema = OrmSchemaExamples.examples().getElseFail(0);
         val yaml = schema.toYaml();
 
         assertEquals(

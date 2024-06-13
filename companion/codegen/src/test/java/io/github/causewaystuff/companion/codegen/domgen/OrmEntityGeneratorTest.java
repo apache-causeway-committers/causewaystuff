@@ -22,13 +22,11 @@ import org.junit.jupiter.api.Test;
 
 import lombok.val;
 
-import io.github.causewaystuff.companion.codegen.model.OrmModel;
-
 class OrmEntityGeneratorTest {
 
     @Test
     void entityGen() {
-        val schema = OrmModel.examples().getElseFail(0);
+        val schema = OrmSchemaExamples.examples().getElseFail(0);
 
         val config = DomainGenerator.Config.builder()
                 .logicalNamespacePrefix("test.logical")
@@ -47,4 +45,6 @@ class OrmEntityGeneratorTest {
                 System.err.printf("%s%n", sample.buildJavaFile().toString());
             });
     }
+
+
 }

@@ -29,7 +29,9 @@ import java.util.stream.Collectors;
 import org.springframework.lang.Nullable;
 
 import org.apache.causeway.commons.functional.IndexedFunction;
+import org.apache.causeway.commons.internal.assertions._Assert;
 import org.apache.causeway.commons.internal.base._Strings;
+import org.apache.causeway.commons.io.TextUtils;
 import org.apache.causeway.commons.io.YamlUtils;
 
 import lombok.val;
@@ -38,6 +40,7 @@ import lombok.experimental.UtilityClass;
 import io.github.causewaystuff.commons.base.types.internal.ObjectRef;
 import io.github.causewaystuff.commons.base.types.internal.SneakyRef;
 import io.github.causewaystuff.companion.codegen.model.OrmModel.Entity;
+import io.github.causewaystuff.companion.codegen.model.OrmModel.EnumConstant;
 import io.github.causewaystuff.companion.codegen.model.OrmModel.Field;
 import io.github.causewaystuff.companion.codegen.model.OrmModel.Schema;
 
@@ -95,8 +98,8 @@ class _Parser {
         return entity;
     }
 
-    @SuppressWarnings("rawtypes")
-    Field parseField(final Entity parent, final int ordinal, final Map.Entry<String, Map> entry) {
+    Field parseField(final Entity parent, final int ordinal,
+            @SuppressWarnings("rawtypes") final Map.Entry<String, Map> entry) {
         val map = entry.getValue();
         return new Field(SneakyRef.of(parent),
                 ordinal,
@@ -112,6 +115,20 @@ class _Parser {
                 parseMultilineStringTrimmed((String)map.get("discriminator")),
                 parseMultilineStringTrimmed((String)map.get("foreignKeys")),
                 parseMultilineString((String)map.get("description")));
+    }
+
+    EnumConstant parseEnum(final Field field, final int ordinal, final String enumDeclarationLine) {
+        // syntax: <matcher>:<enum-value-name>:<description>
+        // 1:NOT_FOUND:Item was not found
+        var cutter = TextUtils.cutter(enumDeclarationLine);
+        _Assert.assertTrue(cutter.contains(":"));
+        var matchOn = cutter.keepBefore(":").getValue();
+        cutter = cutter.keepAfter(":");
+        var hasDescription = cutter.contains(":");
+        var name = cutter.keepBefore(":").getValue();
+        cutter = cutter.keepAfter(":");
+        String description = hasDescription ? cutter.getValue() : null;
+        return new EnumConstant(SneakyRef.of(field), ordinal, name, matchOn, description);
     }
 
     // -- HELPER

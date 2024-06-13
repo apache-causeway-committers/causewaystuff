@@ -19,7 +19,6 @@
 package io.github.causewaystuff.companion.codegen.model;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -105,11 +104,7 @@ public class OrmModel {
                     .collect(Collectors.toList());
         }
         public String formatDescription(final String continuation) {
-            if(isMultilineStringBlank(description)) return "has no description";
-            return description()
-                    .stream()
-                    .map(String::trim)
-                    .collect(Collectors.joining(continuation));
+            return _Format.parseYamlMultiline(description(), "has no description", continuation);
         }
         public Optional<OrmModel.Field> lookupFieldByColumnName(final String columnName) {
             return fields().stream()
@@ -236,18 +231,7 @@ public class OrmModel {
             return parsedMaxLength;
         }
         public String formatDescription(final String continuation, final String ... moreLines) {
-            var descriptionLines = (isMultilineStringBlank(description())
-                    ? Can.of("has no description")
-                    : description()
-                        .stream()
-                        .map(String::trim)
-                        .collect(Can.toCan()));
-            val more = _NullSafe.stream(moreLines)
-                .map(String::trim)
-                .collect(Can.toCan());
-            descriptionLines = descriptionLines.addAll(more);
-            return descriptionLines.stream()
-                    .collect(Collectors.joining(continuation));
+            return _Format.parseYamlMultiline(description(), "has no description", continuation, moreLines);
         }
         public String sequence() {
             return "" + (ordinal + 1);
@@ -308,17 +292,7 @@ public class OrmModel {
             String matchOn,
             String description) {
         static EnumConstant parse(final Field field, final int ordinal, final String enumDeclarationLine) {
-            // syntax: <matcher>:<enum-value-name>:<description>
-            // 1:NOT_FOUND:Item was not found
-            var cutter = TextUtils.cutter(enumDeclarationLine);
-            _Assert.assertTrue(cutter.contains(":"));
-            var matchOn = cutter.keepBefore(":").getValue();
-            cutter = cutter.keepAfter(":");
-            var hasDescription = cutter.contains(":");
-            var name = cutter.keepBefore(":").getValue();
-            cutter = cutter.keepAfter(":");
-            String description = hasDescription ? cutter.getValue() : null;
-            return new EnumConstant(SneakyRef.of(field), ordinal, name, matchOn, description);
+            return _Parser.parseEnum(field, ordinal, enumDeclarationLine);
         }
         public Field parentField() {
             return parentRef.value();
@@ -416,34 +390,6 @@ public class OrmModel {
             return lookupForeignKeyField(tableDotColumn)
                     .orElseThrow(()->_Exceptions.noSuchElement("foreign key not found '%s'", tableDotColumn));
         }
-    }
-
-    /**
-     * JUnit support.
-     */
-    public Can<Schema> examples() {
-        val entity = new Entity(
-                ObjectRef.empty(),
-                "Customer", "causewaystuff", "FOODS", "", List.of(), false, "name", "fa-pencil",
-                false,
-                List.of("Customer List and Aliases"),
-                new ArrayList<OrmModel.Field>());
-        val field = new Field(SneakyRef.of(entity), /*ordinal*/0, "name", "NAME", "nvarchar(100)",
-                true, false, false,
-                OptionalInt.of(2),
-                "",
-                List.of(), List.of(), List.of(), List.of("aa", "bb", "cc"));
-        entity.fields().add(field);
-        return Can.of(
-                Schema.of(List.of(entity)));
-    }
-
-    // -- HELPER
-
-    private boolean isMultilineStringBlank(final List<String> lines) {
-        return _NullSafe.size(lines)==0
-            ? true
-            : _Strings.isNullOrEmpty(lines.stream().collect(Collectors.joining("")).trim());
     }
 
 }
