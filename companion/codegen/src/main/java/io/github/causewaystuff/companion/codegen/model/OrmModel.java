@@ -208,6 +208,9 @@ public class OrmModel {
         public boolean hasForeignKeys() {
             return foreignKeys.size()>0;
         }
+        public Can<Field> foreignFields() {
+            return _Foreign.foreignFields(this);
+        }
         public boolean isBooleanPrimitive() {
             return asJavaType().equals(TypeName.BOOLEAN);
         }
@@ -235,12 +238,6 @@ public class OrmModel {
         }
         public String sequence() {
             return "" + (ordinal + 1);
-        }
-        public Can<Field> foreignFields() {
-            final Schema schema = parentEntity().parentSchema();
-            return foreignKeys().stream()
-                    .map(schema::lookupForeignKeyFieldElseFail)
-                    .collect(Can.toCan());
         }
         public void withRequired(final boolean required) {
             var copy = new Field(parentRef,
@@ -336,19 +333,13 @@ public class OrmModel {
                     .filter(e->e.table().equalsIgnoreCase(tableName))
                     .findFirst();
         }
-        public Can<Entity> findEntitiesWithoutRelations(){
-            val foreignKeyFields = // as table.column literal
-                    entities().values().stream().flatMap(fe->fe.fields().stream())
-                        .flatMap(ff->ff.foreignKeys().stream())
-                        .map(String::toLowerCase)
-                        .collect(Collectors.toSet());
-            val entitiesWithoutRelations =  entities().values().stream()
-                .filter(e->!e.fields().stream().anyMatch(f->f.hasForeignKeys()))
-                .filter(e->!e.fields().stream().anyMatch(f->
-                    foreignKeyFields.contains(e.table().toLowerCase() + "." + f.column().toLowerCase())))
-                .sorted((a, b)->_Strings.compareNullsFirst(a.name(), b.name()))
-                .collect(Can.toCan());
-            return entitiesWithoutRelations;
+        public Schema concat(final Schema other) {
+            return Schema.of(Stream.concat(
+                    this.entities().values().stream(),
+                    other.entities().values().stream()));
+        }
+        public ObjectGraph asObjectGraph() {
+            return new _ObjectGraphFactory(this).create();
         }
         // -- YAML IO
         public static Schema fromYaml(final String yaml) {
@@ -366,29 +357,9 @@ public class OrmModel {
         public void writeEntitiesToIndividualFiles(final File rootDirectory, final LicenseHeader licenseHeader) {
             _FileUtils.writeEntitiesToIndividualFiles(entities().values(), rootDirectory, licenseHeader);
         }
-        // -- UTILITY
-        public ObjectGraph asObjectGraph() {
-            return new _ObjectGraphFactory(this).create();
-        }
-        public Schema concat(final Schema other) {
-            return Schema.of(Stream.concat(
-                    this.entities().values().stream(),
-                    other.entities().values().stream()));
-        }
-        // -- HELPER
-        private Optional<OrmModel.Field> lookupForeignKeyField(final String tableDotColumn) {
-            val parts = _Strings.splitThenStream(tableDotColumn, ".")
-                    .collect(Can.toCan());
-            _Assert.assertEquals(2, parts.size(), ()->String.format(
-                    "could not parse foreign key '%s'", tableDotColumn));
-            val tableName = parts.getElseFail(0);
-            val columnName = parts.getElseFail(1);
-            return lookupEntityByTableName(tableName)
-                    .flatMap(entity->entity.lookupFieldByColumnName(columnName));
-        }
-        private OrmModel.Field lookupForeignKeyFieldElseFail(final String tableDotColumn) {
-            return lookupForeignKeyField(tableDotColumn)
-                    .orElseThrow(()->_Exceptions.noSuchElement("foreign key not found '%s'", tableDotColumn));
+        // -- UTIL
+        public Can<Entity> findEntitiesWithoutRelations() {
+            return _Foreign.findEntitiesWithoutRelations(this);
         }
     }
 
