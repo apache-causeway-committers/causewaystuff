@@ -19,7 +19,6 @@
 package io.github.causewaystuff.companion.codegen.model;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,12 +27,6 @@ import java.util.OptionalInt;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import io.github.causewaystuff.commons.base.types.internal.ObjectRef;
-import io.github.causewaystuff.commons.base.types.internal.SneakyRef;
-import io.github.causewaystuff.companion.codegen.domgen.LicenseHeader;
-import io.github.causewaystuff.tooling.javapoet.ClassName;
-import io.github.causewaystuff.tooling.javapoet.TypeName;
 
 import org.springframework.lang.Nullable;
 
@@ -45,14 +38,16 @@ import org.apache.causeway.commons.internal.base._NullSafe;
 import org.apache.causeway.commons.internal.base._Strings;
 import org.apache.causeway.commons.internal.exceptions._Exceptions;
 import org.apache.causeway.commons.internal.primitives._Ints;
-import org.apache.causeway.commons.io.DataSource;
-import org.apache.causeway.commons.io.FileUtils;
 import org.apache.causeway.commons.io.TextUtils;
-import org.apache.causeway.commons.io.YamlUtils;
 
-import lombok.SneakyThrows;
 import lombok.val;
 import lombok.experimental.UtilityClass;
+
+import io.github.causewaystuff.commons.base.types.internal.ObjectRef;
+import io.github.causewaystuff.commons.base.types.internal.SneakyRef;
+import io.github.causewaystuff.companion.codegen.domgen.LicenseHeader;
+import io.github.causewaystuff.tooling.javapoet.ClassName;
+import io.github.causewaystuff.tooling.javapoet.TypeName;
 
 /**
  * Read and write schema model from and to YAML format.
@@ -74,40 +69,6 @@ public class OrmModel {
             boolean iconService,
             List<String> description,
             List<Field> fields) {
-        @SuppressWarnings({ "rawtypes", "unchecked" })
-        static Entity parse(final Map.Entry<String, Map> entry) {
-            val map = entry.getValue();
-            val fieldsAsMap = (Map<String, Map>)map.get("fields");
-            final String namespace = (String)map.get("namespace");
-            final String name = _Strings.nonEmpty((String)map.get("name"))
-                    .orElseGet(()->
-                        entry.getKey().startsWith(namespace)
-                            ? entry.getKey().substring(namespace.length() + 1)
-                            : entry.getKey()
-                    );
-            val entity = new Entity(
-                    ObjectRef.empty(),
-                    name,
-                    namespace,
-                    (String)map.get("table"),
-                    parseNullableStringTrimmed((String)map.get("superType")),
-                    parseMultilineStringTrimmed((String)map.get("secondaryKey")),
-                    parseNullableBoolean((Boolean)map.get("suppressUniqueConstraint")),
-                    (String)map.get("title"),
-                    (String)map.get("icon"),
-                    parseNullableBoolean((Boolean)map.get("iconService")),
-                    parseMultilineString((String)map.get("description")),
-                    new ArrayList<>());
-            fieldsAsMap.entrySet().stream()
-                    .map(IndexedFunction.zeroBased((index, innerEntry)->Field.parse(entity, index, innerEntry)))
-                    .forEach(entity.fields()::add);
-            //validate
-//            entity.secondaryKeyFields().forEach((final OrmModel.Field f)->_Assert.assertEquals(
-//                    Can.empty(), Can.ofCollection(f.foreignKeys()),
-//                        ()->String.format("invalid secondary key member %s#%s: must not have any foreign-keys",
-//                                entity.name(), f.name())));
-            return entity;
-        }
         public Schema parentSchema() {
             return parentRef.getValue();
         }
@@ -143,87 +104,8 @@ public class OrmModel {
                                             fieldId, key())))
                     .collect(Collectors.toList());
         }
-        String toYaml() {
-            val yaml = new YamlWriter();
-            yaml.write(key(), ":").nl();
-            yaml.ind().write("namespace: ", namespace).nl();
-            yaml.ind().write("table: ", table).nl();
-            if(_Strings.isNotEmpty(superType)) {
-                yaml.ind().write("superType: ", superType).nl();
-            }
-            yaml.ind().write("secondaryKey:").multiLineStartIfNotEmtpy(secondaryKey).nl();
-            secondaryKey.forEach(line->
-                yaml.ind().ind().writeUpper(line).nl());
-            {   // title
-                var titleLines = TextUtils.readLines(title);
-                if(titleLines.isCardinalityMultiple()) {
-                    yaml.ind().write("title:").multiLineStartIfNotEmtpy(titleLines.toList()).nl();
-                    titleLines.forEach(line->
-                        yaml.ind().ind().write(line).nl());
-                } else {
-                    yaml.ind().write("title: ", title).nl();
-                }
-            }
-            if(suppressUniqueConstraint) {
-                yaml.ind().write("suppressUniqueConstraint: ", "true").nl();
-            }
-            {   // icon
-                var iconLines = TextUtils.readLines(icon);
-                if(iconLines.isCardinalityMultiple()) {
-                    yaml.ind().write("icon:").multiLineStartIfNotEmtpy(iconLines.toList()).nl();
-                    iconLines.forEach(line->
-                        yaml.ind().ind().write(line).nl());
-                } else {
-                    yaml.ind().write("icon: ", icon).nl();
-                }
-            }
-            if(iconService) {
-                yaml.ind().write("iconService: ", "true").nl();
-            }
-            yaml.ind().write("description:").multiLineStartIfNotEmtpy(description).nl();
-            description.forEach(line->
-                yaml.ind().ind().write(line).nl());
-            yaml.ind().write("fields:").nl();
-            fields.forEach(field->{
-                yaml.ind().ind().write(field.name(), ":").nl();
-                yaml.ind().ind().ind().write("column: ", field.column()).nl();
-                yaml.ind().ind().ind().write("column-type: ", field.columnType()).nl();
-                yaml.ind().ind().ind().write("required: ", ""+field.required()).nl();
-                yaml.ind().ind().ind().write("unique: ", ""+field.unique()).nl();
-                if(field.plural()) {
-                    yaml.ind().ind().ind().write("plural: ", "true").nl();
-                }
-                if(field.multiLine().isPresent()) {
-                    yaml.ind().ind().ind().write("multiLine: ", ""+field.multiLine().getAsInt()).nl();
-                }
-                if(_Strings.isNotEmpty(field.elementType())) {
-                    yaml.ind().ind().ind().write("elementType: ", field.elementType()).nl();
-                }
-                if(field.isEnum()) {
-                    yaml.ind().ind().ind().write("enum:").multiLineStartIfNotEmtpy(field.enumeration).nl();
-                    field.enumeration.forEach(line->
-                        yaml.ind().ind().ind().ind().write(line).nl());
-                }
-                if(field.hasDiscriminator()) {
-                    yaml.ind().ind().ind().write("discriminator:").multiLineStartIfNotEmtpy(field.discriminator).nl();
-                    field.discriminator.forEach(line->
-                        yaml.ind().ind().ind().ind().writeUpper(line).nl());
-                }
-                if(field.hasForeignKeys()) {
-                    yaml.ind().ind().ind().write("foreignKeys:").multiLineStartIfNotEmtpy(field.foreignKeys).nl();
-                    field.foreignKeys.forEach(line->
-                        yaml.ind().ind().ind().ind().writeUpper(line).nl());
-                }
-                yaml.ind().ind().ind().write("description:").multiLineStartIfNotEmtpy(field.description).nl();
-                field.description.forEach(line->
-                    yaml.ind().ind().ind().ind().write(line).nl());
-            });
-            return yaml.toString();
-        }
         public String formatDescription(final String continuation) {
-            if(isMultilineStringBlank(description)) {
-                return "has no description";
-            }
+            if(isMultilineStringBlank(description)) return "has no description";
             return description()
                     .stream()
                     .map(String::trim)
@@ -236,17 +118,20 @@ public class OrmModel {
         }
         @Override
         public boolean equals(final Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof Entity)) {
-                return false;
-            }
+            if (this == o) return true;
+            if (!(o instanceof Entity)) return false;
             return this.key().equals(((Entity) o).key());
         }
         @Override
         public int hashCode() {
             return key().hashCode();
+        }
+        // -- YAML IO
+        static Entity parse(@SuppressWarnings("rawtypes") final Map.Entry<String, Map> entry) {
+            return _Parser.parseEntity(entry);
+        }
+        String toYaml() {
+            return _Writer.toYaml(this);
         }
     }
 
@@ -265,24 +150,6 @@ public class OrmModel {
             List<String> discriminator,
             List<String> foreignKeys,
             List<String> description) {
-        @SuppressWarnings("rawtypes")
-        static Field parse(final Entity parent, final int ordinal, final Map.Entry<String, Map> entry) {
-            val map = entry.getValue();
-            return new Field(SneakyRef.of(parent),
-                    ordinal,
-                    entry.getKey(),
-                    (String)map.get("column"),
-                    (String)map.get("column-type"),
-                    (Boolean)map.get("required"),
-                    (Boolean)map.get("unique"),
-                    (boolean)Optional.ofNullable((Boolean)map.get("plural")).orElse(false),
-                    parseNullableIntegerWithBounds((Integer)map.get("multiLine"), 2, 1000),
-                    (String)map.get("elementType"),
-                    parseMultilineStringTrimmed((String)map.get("enum")),
-                    parseMultilineStringTrimmed((String)map.get("discriminator")),
-                    parseMultilineStringTrimmed((String)map.get("foreignKeys")),
-                    parseMultilineString((String)map.get("description")));
-        }
         public Entity parentEntity() {
             return parentRef.value();
         }
@@ -327,21 +194,21 @@ public class OrmModel {
             // then Optionality.MANDATORY is enforced (regardless of any required=false)
             return required()
                     || (isEnum()
-                            && enumConstants().stream().anyMatch(EnumConstant::isRepresentingNull));
+                    && enumConstants().stream().anyMatch(EnumConstant::isRepresentingNull));
         }
         public boolean hasDiscriminator() {
             return discriminator.size()>0;
         }
         public List<Field> discriminatorFields() {
             return _NullSafe.stream(discriminator)
-                    .map(fieldId->parentEntity().fields()
-                            .stream()
-                            .filter(field->field.column().equalsIgnoreCase(fieldId))
-                            .findAny()
-                            .orElseThrow(()->_Exceptions
-                                    .noSuchElement("secondary-key field not found by column name '%s' in %s",
-                                            fieldId, parentEntity().key())))
-                    .collect(Collectors.toList());
+                .map(fieldId->parentEntity().fields()
+                        .stream()
+                        .filter(field->field.column().equalsIgnoreCase(fieldId))
+                        .findAny()
+                        .orElseThrow(()->_Exceptions
+                                .noSuchElement("secondary-key field not found by column name '%s' in %s",
+                                        fieldId, parentEntity().key())))
+                .collect(Collectors.toList());
         }
         public boolean hasForeignKeys() {
             return foreignKeys.size()>0;
@@ -358,23 +225,14 @@ public class OrmModel {
                     + _Strings.capitalize(name());
         }
         public int maxLength() {
-
-            if(_TypeMapping.isMaxLengthSuppressedFor(columnType())) {
-                return -1;
-            }
-
+            if(_TypeMapping.isMaxLengthSuppressedFor(columnType())) return -1;
             val lengthLiteralOrColumnType = TextUtils.cutter(columnType())
                 .keepAfter("(")
                 .keepBeforeLast(")")
                 .getValue();
-
             final int parsedMaxLength = _Ints.parseInt(lengthLiteralOrColumnType, 10).orElse(-1);
-
             //H2 max
-            if(parsedMaxLength>1000000000) {
-                return 1000000000;
-            }
-
+            if(parsedMaxLength>1000000000) return 1000000000;
             return parsedMaxLength;
         }
         public String formatDescription(final String continuation, final String ... moreLines) {
@@ -494,37 +352,9 @@ public class OrmModel {
             }
             return schema;
         }
-        @SuppressWarnings({ "rawtypes", "unchecked" })
-        public static Schema fromYaml(final String yaml) {
-            val entities = new TreeMap<String, OrmModel.Entity>();
-            YamlUtils.tryRead(Map.class, yaml)
-            .ifFailureFail()
-            .getValue()
-            .map(map->(Map<String, Map>)map)
-            .ifPresent(map->{
-                map.entrySet().stream()
-                .map(Entity::parse)
-                .forEach(entity->entities.put(entity.key(), entity));
-            });
-            var schema = new Schema(entities);
-            return schema;
-        }
         public Schema(final Map<String, Entity> entities){
             this.entities = entities;
             entities.values().forEach(e->e.parentRef.setValue(this));
-        }
-        public String toYaml() {
-            val sb = new StringBuilder();
-            for(val entity : entities().values()) {
-                sb.append(entity.toYaml());
-            }
-            return sb.toString();
-        }
-        @SneakyThrows
-        public void writeToFileAsYaml(final File file, final LicenseHeader licenseHeader) {
-            val lic = licenseHeaderAsYaml(licenseHeader);
-            val yaml = TextUtils.readLines(toYaml());
-            TextUtils.writeLinesToFile(lic.addAll(yaml), file, StandardCharsets.UTF_8);
         }
         public Optional<OrmModel.Entity> lookupEntityByTableName(final String tableName) {
             return entities().values()
@@ -546,29 +376,23 @@ public class OrmModel {
                 .collect(Can.toCan());
             return entitiesWithoutRelations;
         }
-        // -- UTILITY
-        @SneakyThrows
+        // -- YAML IO
+        public static Schema fromYaml(final String yaml) {
+            return _Parser.parseSchema(yaml);
+        }
         public static Schema fromYamlFolder(final File rootDirectory) {
-            val root = FileUtils.existingDirectoryElseFail(rootDirectory);
-            val sb = new StringBuilder();
-            FileUtils.searchFiles(root, dir->true, file->file.getName().endsWith(".yaml"))
-                .stream()
-                .map(DataSource::ofFile)
-                .forEach(ds->{
-                    sb.append(ds.tryReadAsStringUtf8().valueAsNonNullElseFail()).append("\n\n");
-                });
-            return fromYaml(sb.toString());
+            return fromYaml(_FileUtils.collectSchemaFromFolder(rootDirectory));
         }
-        public void splitIntoFiles(final File rootDirectory, final LicenseHeader licenseHeader) {
-            val dir0 = FileUtils.makeDir(rootDirectory);
-            val dir1 = FileUtils.existingDirectoryElseFail(dir0);
-            entities().values().forEach(entity->{
-                val destFile = new File(dir1, entity.name() + ".yaml");
-                val lic = licenseHeaderAsYaml(licenseHeader);
-                val yaml = TextUtils.readLines(entity.toYaml());
-                TextUtils.writeLinesToFile(lic.addAll(yaml), destFile, StandardCharsets.UTF_8);
-            });
+        public String toYaml() {
+            return _Writer.toYaml(this);
         }
+        public void writeToFileAsYaml(final File file, final LicenseHeader licenseHeader) {
+            _FileUtils.writeSchemaToFile(this, file, licenseHeader);
+        }
+        public void writeEntitiesToIndividualFiles(final File rootDirectory, final LicenseHeader licenseHeader) {
+            _FileUtils.writeEntitiesToIndividualFiles(entities().values(), rootDirectory, licenseHeader);
+        }
+        // -- UTILITY
         public ObjectGraph asObjectGraph() {
             return new _ObjectGraphFactory(this).create();
         }
@@ -591,13 +415,6 @@ public class OrmModel {
         private OrmModel.Field lookupForeignKeyFieldElseFail(final String tableDotColumn) {
             return lookupForeignKeyField(tableDotColumn)
                     .orElseThrow(()->_Exceptions.noSuchElement("foreign key not found '%s'", tableDotColumn));
-        }
-        private Can<String> licenseHeaderAsYaml(final LicenseHeader licenseHeader){
-            return Can.of("-----------------------------------------------------------")
-                    .addAll(TextUtils.readLines(licenseHeader.text()))
-                    .add("-----------------------------------------------------------")
-                    .map(s->"# " + s)
-                    .add("");
         }
     }
 
@@ -623,70 +440,10 @@ public class OrmModel {
 
     // -- HELPER
 
-    private static class YamlWriter {
-        final StringBuilder sb = new StringBuilder();
-        @Override public String toString() { return sb.toString(); }
-        YamlWriter multiLineStartIfNotEmtpy(final List<?> list) {
-            if(!_NullSafe.isEmpty(list)) sb.append(" |");
-            return this;
-        }
-        YamlWriter write(final String ...s) {
-            for(val str:s) sb.append(str);
-            return this;
-        }
-        YamlWriter writeUpper(final String ...s) {
-            for(val str:s) sb.append(str.toUpperCase());
-            return this;
-        }
-        YamlWriter ind() {
-            sb.append("  ");
-            return this;
-        }
-        YamlWriter nl() {
-            sb.append('\n');
-            return this;
-        }
-    }
-
-    private static boolean parseNullableBoolean(final Boolean bool) {
-        return Boolean.TRUE.equals(bool);
-    }
-
-    private static OptionalInt parseNullableIntegerWithBounds(
-            final @Nullable Integer value, final int lowerBound, final int upperBound) {
-        return value==null
-                || value < lowerBound
-                || value > upperBound
-                ? OptionalInt.empty()
-                : OptionalInt.of(value);
-    }
-
-    private static List<String> parseMultilineString(final String input) {
-        return _Strings.splitThenStream(input, "\n")
-            .filter(_Strings::isNotEmpty)
-            .collect(Collectors.toList());
-    }
-
-    private static List<String> parseMultilineStringTrimmed(final String input) {
-        return _Strings.splitThenStream(input, "\n")
-            .filter(_Strings::isNotEmpty)
-            .map(String::trim)
-            .collect(Collectors.toList());
-    }
-
-    private static String parseNullableStringTrimmed(final String input) {
-        return Optional.ofNullable(input).stream()
-            .map(String::trim)
-            .filter(_Strings::isNotEmpty)
-            .findFirst()
-            .orElse(null);
-    }
-
     private boolean isMultilineStringBlank(final List<String> lines) {
         return _NullSafe.size(lines)==0
             ? true
             : _Strings.isNullOrEmpty(lines.stream().collect(Collectors.joining("")).trim());
     }
-
 
 }
