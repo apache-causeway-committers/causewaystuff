@@ -25,14 +25,15 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 
+import com.github.javaparser.StaticJavaParser;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.internal.collections._Sets;
+import org.apache.causeway.commons.io.DataSource;
 import org.apache.causeway.commons.io.TextUtils;
-
-import io.github.causewaystuff.tooling.javamodel.AnalyzerConfigFactory;
 import org.apache.causeway.valuetypes.asciidoc.builder.AsciiDocWriter;
 
 import lombok.NonNull;
@@ -41,8 +42,23 @@ import lombok.val;
 import io.github.causewaystuff.tooling.codeassert.config.Language;
 import io.github.causewaystuff.tooling.j2adoc.J2AdocContext;
 import io.github.causewaystuff.tooling.j2adoc.util.AsciiDocIncludeTagFilter;
+import io.github.causewaystuff.tooling.javamodel.AnalyzerConfigFactory;
 
 class J2AdocTest {
+
+    @Test
+    void regression() {
+
+        // javaparser.version=3.26.0 fails to parse snippet ..
+        // hence we reinstated 3.25.10
+
+        val source=
+        DataSource.ofResource(getClass(), "SampleSwitch.java.txt")
+        .tryReadAsStringUtf8()
+        .valueAsNonNullElseFail();
+
+        StaticJavaParser.parse(source);
+    }
 
     @Test @Disabled
     void testJavaDoc2AsciiDoc() throws IOException {

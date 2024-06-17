@@ -1,0 +1,16 @@
+class SampleSwitch {
+
+    enum X {
+        A
+    }
+
+	protected String getJdoIsolationLevel(X x) {
+		switch (x) {
+			case X.A:
+				return "x";
+			default:
+				return null;
+		}
+	}
+
+}

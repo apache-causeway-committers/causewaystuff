@@ -55,7 +55,7 @@
         <code-assert.version>0.9.15</code-assert.version>
         <commons-compress.version>1.26.2</commons-compress.version>
         <gradle-tooling.version>7.3-20210825160000+0000</gradle-tooling.version>
-        <javaparser.version>3.26.0</javaparser.version>
+        <javaparser.version>3.25.10</javaparser.version>
         <javapoet.version>1.13.0</javapoet.version>
         <jsoup.version>1.17.2</jsoup.version>
         <maven-model-builder.version>3.9.7</maven-model-builder.version>
