@@ -58,7 +58,7 @@
         <javaparser.version>3.25.10</javaparser.version>
         <javapoet.version>1.13.0</javapoet.version>
         <jsoup.version>1.17.2</jsoup.version>
-        <maven-model-builder.version>3.9.7</maven-model-builder.version>
+        <maven-model-builder.version>3.9.8</maven-model-builder.version>
         <picocli.version>4.7.6</picocli.version>
         <structurizr-dsl.version>2.1.3</structurizr-dsl.version>
         <structurizr-export.version>2.1.3</structurizr-export.version>
