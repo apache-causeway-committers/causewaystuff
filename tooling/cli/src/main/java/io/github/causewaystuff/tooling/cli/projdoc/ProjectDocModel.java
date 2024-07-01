@@ -35,7 +35,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.builder.EqualsExclude;
 import org.asciidoctor.ast.Document;
 
 import org.springframework.lang.Nullable;
@@ -216,7 +215,8 @@ public class ProjectDocModel {
     @EqualsAndHashCode
     private static class ProjectAndContainerTuple {
         final ProjectNode projectNode;
-        @EqualsExclude final Container container;
+        @EqualsAndHashCode.Exclude
+        final Container container;
     }
 
     private static class GroupDiagram {
