@@ -18,6 +18,8 @@
  */
 package io.github.causewaystuff.commons.base.util;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 import org.apache.causeway.applib.services.factory.FactoryService;
 import org.apache.causeway.applib.services.inject.ServiceInjector;
 import org.apache.causeway.applib.services.repository.RepositoryService;
@@ -44,6 +46,17 @@ public class RuntimeUtils {
 
     @Getter(lazy=true)
     private final WrapperFactory wrapperFactory = getIocContainer().get(WrapperFactory.class).orElseThrow();
+
+    /**
+     * Invalidates cached values, potentially useful in case the underlying application context was refreshed.
+     */
+    public void invalidate() {
+        ((AtomicReference<Object>)factoryService).set(null);
+        ((AtomicReference<Object>)serviceInjector).set(null);
+        ((AtomicReference<Object>)repositoryService).set(null);
+        ((AtomicReference<Object>)wrapperFactory).set(null);
+        ((AtomicReference<Object>)iocContainer).set(null);
+    }
 
     // -- HELPER
 
