@@ -36,7 +36,7 @@ class TreeTraversalTest
 extends FacetFactoryTestAbstract {
 
     MetaModelContext mmc;
-    
+
     @BeforeEach
     void setUp() {
         mmc = MetaModelContext_forTesting.builder()
@@ -52,7 +52,7 @@ extends FacetFactoryTestAbstract {
 
         // traverse the tree
         var tree = TreeNodeFactory.wrap(a, mmc.getFactoryService());
-        
+
         var nodeNames = tree.streamDepthFirst()
             .map(TreeNode::getValue)
             .map(_TreeSample::nameOf)
@@ -63,31 +63,31 @@ extends FacetFactoryTestAbstract {
                 nodeNames);
 
     }
-    
+
     @Test
     void leafToRootTraversal() {
 
-        // instantiate a tree and pick an arbitrary leaf value, 
+        // instantiate a tree and pick an arbitrary leaf value,
         // from which we later traverse up to the root
         var a = _TreeSample.sampleA();
         var d = a.childrenB().getFirstElseFail().childrenD().getLastElseFail();
-        
+
         var tree = TreeNodeFactory.wrap(a, mmc.getFactoryService());
-        
+
         // find d's node
         var leafNode = tree.streamDepthFirst()
                 .filter((TreeNode<Object> treeNode)->d.equals(treeNode.getValue()))
                 .findFirst()
                 .orElseThrow();
-        
+
         var nodeNames = leafNode.streamHierarchyUp()
             .map(TreeNode::getValue)
             .map(_TreeSample::nameOf)
             .collect(Collectors.joining(", "));
 
         assertEquals(
-                "d3, b1, a", 
+                "d3, b1, a",
                 nodeNames);
     }
-    
+
 }

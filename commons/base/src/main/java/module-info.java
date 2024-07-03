@@ -25,5 +25,6 @@ module io.github.causewaystuff.commons.base {
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.databind;
     requires org.apache.causeway.commons;
+    requires org.apache.causeway.applib;
     requires spring.core;
 }

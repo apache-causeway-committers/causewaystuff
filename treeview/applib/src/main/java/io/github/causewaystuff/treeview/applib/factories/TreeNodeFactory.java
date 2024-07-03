@@ -27,9 +27,14 @@ import org.apache.causeway.commons.internal.context._Context;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 
+import io.github.causewaystuff.commons.base.util.RuntimeUtils;
+
 @UtilityClass
 public class TreeNodeFactory {
 
+    public TreeNode<Object> wrap(final Object treeNode) {
+        return wrap(treeNode, RuntimeUtils.getFactoryService());
+    }
     public TreeNode<Object> wrap(final Object treeNode, final FactoryService factoryService) {
         return TreeNode.root(treeNode, defaultTreeAdapter(), factoryService);
     }
@@ -38,9 +43,18 @@ public class TreeNodeFactory {
      * Does not guarantee at compile time, that the tree is actually made up of nodes that are instances of {@code commonNodeType}.
      * In the sad case may result in {@link ClassCastException}(s).
      */
+    public <T, R extends T> TreeNode<T> wrap(final Class<T> commonNodeType, final R treeNode) {
+        return wrap(commonNodeType, treeNode, RuntimeUtils.getFactoryService());
+    }
+    /**
+     * Does not guarantee at compile time, that the tree is actually made up of nodes that are instances of {@code commonNodeType}.
+     * In the sad case may result in {@link ClassCastException}(s).
+     */
     public <T, R extends T> TreeNode<T> wrap(final Class<T> commonNodeType, final R treeNode, final FactoryService factoryService) {
         return TreeNode.root(treeNode, _Casts.uncheckedCast(defaultTreeAdapter()), factoryService);
     }
+
+    // -- HELPER
 
     @SneakyThrows //TODO if class not found exception: some message that the metamodel module is missing
     @SuppressWarnings("unchecked")
