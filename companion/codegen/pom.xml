@@ -54,6 +54,10 @@
             <groupId>io.github.causewaystuff</groupId>
             <artifactId>causewaystuff-tooling-structurizr</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.github.causewaystuff</groupId>
+            <artifactId>causewaystuff-tooling-projectmodel</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>io.github.causewaystuff</groupId>

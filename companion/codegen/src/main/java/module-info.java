@@ -26,10 +26,13 @@ module io.github.causewaystuff.companion.codegen {
     requires java.compiler;
     requires transitive io.github.causewaystuff.tooling.javapoet;
     requires transitive io.github.causewaystuff.tooling.structurizr;
+    requires transitive io.github.causewaystuff.tooling.projectmodel;
     requires transitive org.apache.causeway.applib;
     requires org.apache.causeway.commons;
     requires io.github.causewaystuff.commons.base;
     requires io.github.causewaystuff.companion.applib;
     requires spring.context;
     requires spring.core;
+
+    opens io.github.causewaystuff.companion.codegen.cli to com.fasterxml.jackson.databind;
 }

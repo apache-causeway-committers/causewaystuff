@@ -21,7 +21,9 @@ package io.github.causewaystuff.commons.base.types;
 import java.io.File;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
+import org.apache.causeway.commons.internal.base._NullSafe;
 import org.apache.causeway.commons.internal.exceptions._Exceptions;
 import org.apache.causeway.commons.internal.functions._Predicates;
 import org.apache.causeway.commons.io.FileUtils;
@@ -61,6 +63,15 @@ public record ResourceFolder(File root) {
     }
 
     // -- UTILITIES
+
+    /**
+     * Returns a (non-recursive) {@link Stream} of (immediate) sub-folder names.
+     */
+    public Stream<String> streamSubFolderNames() {
+        return _NullSafe.stream(root.listFiles())
+                .filter(file->file.isDirectory())
+                .map(File::getName);
+    }
 
     public Optional<ResourceFolder> relative(final String relativeFolderName) {
         return FileUtils.existingDirectory(relativeFile(relativeFolderName))
