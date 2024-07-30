@@ -62,7 +62,7 @@
         <picocli.version>4.7.6</picocli.version>
         <structurizr-dsl.version>2.2.0</structurizr-dsl.version>
         <structurizr-export.version>2.2.0</structurizr-export.version>
-        <tukaani-xz.version>1.9</tukaani-xz.version>
+        <tukaani-xz.version>1.10</tukaani-xz.version>
 
         <!-- testing -->
         <surefire-plugin.argLine>-Xmx384m</surefire-plugin.argLine>
