@@ -20,60 +20,49 @@ package io.github.causewaystuff.companion.codegen.cli;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.internal.base._Strings;
 import org.apache.causeway.commons.io.DataSource;
 import org.apache.causeway.commons.io.YamlUtils;
 
-import lombok.val;
-
 import io.github.causewaystuff.commons.base.types.ResourceFolder;
+import io.github.causewaystuff.companion.codegen.cli.CodegenTask.CodegenResource;
+import io.github.causewaystuff.tooling.projectmodel.ProjectNode;
 import io.github.causewaystuff.tooling.projectmodel.ProjectNodeFactory;
 
 public class CompanionCli {
 
     public static void main(final String[] args) {
-
         var argsModel = ArgsModel.parse(args);
-        val projTree = ProjectNodeFactory.maven(argsModel.projectRoot().root());
-
-        projTree.depthFirst(projModel -> {
-            ResourceFolder.ofFile(projModel.getProjectDirectory())
-            .relative("src/main/resources")
-            .map(CodegenTask::fromResourcesRoot)
-            .ifPresent(codegenTask->{
-
-                //TODO wire up processor
-                System.err.printf("%s%n", codegenTask);
-            });
-        });
-
+        var projTree = ProjectNodeFactory.maven(argsModel.projectRoot().root());
+        projTree.depthFirst(projModel ->
+            CodegenYamlModel.createTask(projModel)
+            .ifPresent(CodegenTask::run));
     }
 
     // -- HELPER
 
-    private record CodegenResource(
-            String include,
-            String prefix) {
-    }
-
     record CodegenYamlModel(
             List<CodegenResource> codegen) {
-    }
-
-    private record CodegenTask(
-            ResourceFolder resourcesRoot,
-            List<CodegenResource> includes) {
-        static CodegenTask fromResourcesRoot(final ResourceFolder resourcesRoot) {
+        static Optional<CodegenTask> createTask(final ProjectNode projectNode) {
+            final ResourceFolder artifactRoot = ResourceFolder.ofFile(projectNode.getProjectDirectory());
+            final ResourceFolder javaRoot = artifactRoot.relative("src/main/java")
+                    .orElse(null);
+            final ResourceFolder resourcesRoot = artifactRoot.relative("src/main/resources")
+                    .orElse(null);
+            if(javaRoot==null
+                    || resourcesRoot==null) {
+                return Optional.empty();
+            }
             var companionYaml = resourcesRoot.relativeFile("companion.yaml");
             if(!companionYaml.exists()) {
-                return null;
+                return Optional.empty();
             }
             return YamlUtils.tryRead(CodegenYamlModel.class, DataSource.ofFile(companionYaml))
                     .getValue()
-                    .map(codegenYamlModel->new CodegenTask(resourcesRoot, codegenYamlModel.codegen()))
-                    .orElse(null);
+                    .map(codegenYamlModel->new CodegenTask(projectNode, javaRoot, resourcesRoot, codegenYamlModel.codegen()));
         }
     }
 
