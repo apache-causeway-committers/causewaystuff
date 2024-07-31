@@ -27,18 +27,18 @@ import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator;
 import io.github.causewaystuff.companion.codegen.domgen.LicenseHeader;
 import io.github.causewaystuff.companion.codegen.model.OrmModel;
 
-public record SchemaAssembler(LicenseHeader licenseHeader, OrmModel.Schema schema) {
-    public static SchemaAssembler assemble(final File yamlFolder) {
+record SchemaAssembler(LicenseHeader licenseHeader, OrmModel.Schema schema) {
+    static SchemaAssembler assemble(final File yamlFolder) {
         FileUtils.existingDirectoryElseFail(yamlFolder);
         var schema = OrmModel.Schema.fromYamlFolder(yamlFolder);
         return new SchemaAssembler(LicenseHeader.ASF_V2, schema);
     }
-    public void writeAssembly(final File destinationSchemaFile) {
+    void writeAssembly(final File destinationSchemaFile) {
         schema.writeToFileAsYaml(
                 destinationSchemaFile,
                 licenseHeader);
     }
-    public void writeJavaFiles(
+    void writeJavaFiles(
             final UnaryOperator<DomainGenerator.Config.ConfigBuilder> customizer) {
         var config = customizer.apply(DomainGenerator.Config.builder()
                 //.datastore("store2") // DN Data Federation

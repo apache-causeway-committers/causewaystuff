@@ -27,7 +27,7 @@ import org.apache.causeway.commons.io.TextUtils;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class FileKeepStrategy {
+class FileKeepStrategy {
 
     public Predicate<File> layout(){
         return file->file.getName().endsWith(".layout.xml")
