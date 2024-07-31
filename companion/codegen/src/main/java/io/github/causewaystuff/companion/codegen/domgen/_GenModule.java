@@ -24,12 +24,6 @@ import java.util.List;
 
 import javax.lang.model.element.Modifier;
 
-import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.DomainModel;
-import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.JavaFileModel;
-import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.QualifiedType;
-import io.github.causewaystuff.tooling.javapoet.ClassName;
-import io.github.causewaystuff.tooling.javapoet.TypeSpec;
-
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.internal.collections._Multimaps;
 import org.apache.causeway.commons.internal.collections._Multimaps.ListMultimap;
@@ -37,6 +31,12 @@ import org.apache.causeway.commons.internal.collections._Multimaps.ListMultimap;
 import lombok.NonNull;
 import lombok.val;
 import lombok.experimental.UtilityClass;
+
+import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.DomainModel;
+import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.JavaFileModel;
+import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.QualifiedType;
+import io.github.causewaystuff.tooling.javapoet.ClassName;
+import io.github.causewaystuff.tooling.javapoet.TypeSpec;
 
 @UtilityClass
 class _GenModule {
@@ -80,6 +80,13 @@ class _GenModule {
                 // public final static String NAMESPACE = "my.module";
                 .addField(_Fields.namespaceConstant(config.logicalNamespacePrefix()
                         + "." + config.entitiesModulePackageName()))
+
+                // static method that provides the schema source
+                .addMethod(_Methods.schemaSource("schemaSource",
+                        nameOfClassToGenerate,
+                        "/entities.schema.yaml",
+                        Modifier.PUBLIC, Modifier.STATIC))
+
                 // static method that provides all entity classes we listed above
                 .addMethod(_Methods.classList("entityClasses",
                         domainModel.entities().stream()

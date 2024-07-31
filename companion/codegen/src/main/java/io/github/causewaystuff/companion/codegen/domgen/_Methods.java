@@ -22,18 +22,19 @@ import java.util.stream.Collectors;
 
 import javax.lang.model.element.Modifier;
 
-import io.github.causewaystuff.tooling.javapoet.ClassName;
-import io.github.causewaystuff.tooling.javapoet.CodeBlock;
-import io.github.causewaystuff.tooling.javapoet.MethodSpec;
-import io.github.causewaystuff.tooling.javapoet.ParameterizedTypeName;
-
 import org.apache.causeway.applib.annotation.Navigable;
 import org.apache.causeway.applib.annotation.Snapshot;
 import org.apache.causeway.applib.annotation.Where;
 import org.apache.causeway.applib.fa.FontAwesomeLayers;
 import org.apache.causeway.commons.collections.Can;
+import org.apache.causeway.commons.io.DataSource;
 
 import lombok.experimental.UtilityClass;
+
+import io.github.causewaystuff.tooling.javapoet.ClassName;
+import io.github.causewaystuff.tooling.javapoet.CodeBlock;
+import io.github.causewaystuff.tooling.javapoet.MethodSpec;
+import io.github.causewaystuff.tooling.javapoet.ParameterizedTypeName;
 
 @UtilityClass
 class _Methods {
@@ -100,6 +101,22 @@ class _Methods {
             .addCode("""
                     return new $1L.Manager(searchService, "");""",
                     entityName)
+            .build();
+    }
+
+    // public static DataSource schemaSource() {
+    //     return DataSource.ofResource(DitaModuleGdParams.class, "/entities.schema.yaml");
+    // }
+    MethodSpec schemaSource(final String methodName, final ClassName ownerClassName, final String resource,
+            final Modifier ... modifiers) {
+        return MethodSpec.methodBuilder(methodName)
+            .addModifiers(modifiers)
+            .returns(ClassName.get(DataSource.class))
+            .addCode("""
+                    return DataSource.ofResource($1L.class, $2S);""",
+                    ownerClassName,
+                    resource
+                    )
             .build();
     }
 
