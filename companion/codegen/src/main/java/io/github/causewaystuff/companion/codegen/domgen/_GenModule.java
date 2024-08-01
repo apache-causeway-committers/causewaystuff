@@ -54,8 +54,10 @@ class _GenModule {
                 .map(JavaFileModel::className)
                 .toList());
 
-        importsByCategory.put("Menu Entries", List.of(
-                ClassName.get(packageName, "EntitiesMenu")));
+        if(!domainModel.entities().isEmpty()) {
+            importsByCategory.put("Menu Entries", List.of(
+                    ClassName.get(packageName, "EntitiesMenu")));
+        }
 
         importsByCategory.put("Entities", domainModel.entities().stream()
                 .map(JavaFileModel::className)

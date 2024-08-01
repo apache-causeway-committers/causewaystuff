@@ -26,12 +26,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import io.github.causewaystuff.commons.base.types.ResourceFolder;
-import io.github.causewaystuff.companion.codegen.model.Schema;
-import io.github.causewaystuff.tooling.javapoet.ClassName;
-import io.github.causewaystuff.tooling.javapoet.JavaFile;
-import io.github.causewaystuff.tooling.javapoet.TypeSpec;
-
 import org.springframework.lang.Nullable;
 import org.springframework.util.ReflectionUtils;
 
@@ -45,6 +39,12 @@ import lombok.NonNull;
 import lombok.Value;
 import lombok.val;
 import lombok.experimental.Accessors;
+
+import io.github.causewaystuff.commons.base.types.ResourceFolder;
+import io.github.causewaystuff.companion.codegen.model.Schema;
+import io.github.causewaystuff.tooling.javapoet.ClassName;
+import io.github.causewaystuff.tooling.javapoet.JavaFile;
+import io.github.causewaystuff.tooling.javapoet.TypeSpec;
 
 public record DomainGenerator(@NonNull DomainGenerator.Config config) {
 
@@ -241,10 +241,12 @@ public record DomainGenerator(@NonNull DomainGenerator.Config config) {
                 JavaFileModel.create(config(),
                         _GenModule.qualifiedType(config(), domainModel)));
 
-        // menu entries
-        domainModel.menus().add(
-                JavaFileModel.create(config(),
-                        _GenMenu.qualifiedType(config(), entityModels)));
+        if(!entityModels.isEmpty()) {
+            // menu entries
+            domainModel.menus().add(
+                    JavaFileModel.create(config(),
+                            _GenMenu.qualifiedType(config(), entityModels)));
+        }
 
         return domainModel;
     }
