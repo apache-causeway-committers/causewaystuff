@@ -26,13 +26,13 @@ class OrmEntityGeneratorTest {
 
     @Test
     void entityGen() {
-        val schema = OrmSchemaExamples.examples().getElseFail(0);
+        val domain = OrmSchemaExamples.examples().getElseFail(0);
 
         val config = DomainGenerator.Config.builder()
                 .logicalNamespacePrefix("test.logical")
                 .packageNamePrefix("test.actual")
                 .licenseHeader(LicenseHeader.ASF_V2)
-                .schema(schema)
+                .domain(domain)
                 .entitiesModulePackageName("mod")
                 .entitiesModuleClassSimpleName("MyEntitiesModule")
                 .build();

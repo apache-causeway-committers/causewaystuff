@@ -27,14 +27,14 @@ import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator;
 import io.github.causewaystuff.companion.codegen.domgen.LicenseHeader;
 import io.github.causewaystuff.companion.codegen.model.Schema;
 
-record SchemaAssembler(LicenseHeader licenseHeader, Schema.Domain schema) {
+record SchemaAssembler(LicenseHeader licenseHeader, Schema.Domain domain) {
     static SchemaAssembler assemble(final File yamlFolder) {
         FileUtils.existingDirectoryElseFail(yamlFolder);
-        var schema = Schema.Domain.fromYamlFolder(yamlFolder);
-        return new SchemaAssembler(LicenseHeader.ASF_V2, schema);
+        var domain = Schema.Domain.fromYamlFolder(yamlFolder);
+        return new SchemaAssembler(LicenseHeader.ASF_V2, domain);
     }
     void writeAssembly(final File destinationSchemaFile) {
-        schema.writeToFileAsYaml(
+        domain.writeToFileAsYaml(
                 destinationSchemaFile,
                 licenseHeader);
     }
@@ -42,7 +42,7 @@ record SchemaAssembler(LicenseHeader licenseHeader, Schema.Domain schema) {
             final UnaryOperator<DomainGenerator.Config.ConfigBuilder> customizer) {
         var config = customizer.apply(DomainGenerator.Config.builder()
                 //.datastore("store2") // DN Data Federation
-                .schema(schema))
+                .domain(domain))
                 .licenseHeader(licenseHeader)
                 .build();
         config.destinationFolder().purgeFiles(config.onPurgeKeep());

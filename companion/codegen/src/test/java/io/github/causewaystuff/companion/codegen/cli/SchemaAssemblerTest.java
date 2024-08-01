@@ -18,13 +18,27 @@
  */
 package io.github.causewaystuff.companion.codegen.cli;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.approvaltests.Approvals;
+import org.approvaltests.core.Options;
+import org.approvaltests.reporters.DiffReporter;
+import org.approvaltests.reporters.UseReporter;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.apache.causeway.commons.io.TextUtils;
 
 import lombok.val;
 
 import io.github.causewaystuff.commons.base.types.ResourceFolder;
+import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator;
+import io.github.causewaystuff.companion.codegen.domgen.LicenseHeader;
 import io.github.causewaystuff.companion.codegen.model.Schema;
 
 class SchemaAssemblerTest {
@@ -32,14 +46,51 @@ class SchemaAssemblerTest {
     @Test
     void assembleAndRoundtrip() {
         var schemaTestFileFolder = ResourceFolder.testResourceRoot().relativeFile("schema-test-files");
-        var domain = SchemaAssembler.assemble(schemaTestFileFolder)
-                .schema();
+        var assembler = SchemaAssembler.assemble(schemaTestFileFolder);
+        var domain = assembler.domain();
 
         // test round-trip
         val yaml = domain.toYaml();
         assertEquals(
                 domain,
                 Schema.Domain.fromYaml(yaml));
+    }
+
+    @ParameterizedTest(name = "{index}: {0}")
+    @MethodSource("javaSource")
+    @UseReporter(DiffReporter.class)
+    void javaGenerator(final String name, final String source) {
+        Approvals.verify(source, Approvals.NAMES.withParameters(name));
+    }
+
+    private static Stream<Arguments> javaSource() {
+        var schemaTestFileFolder = ResourceFolder.testResourceRoot().relativeFile("schema-test-files");
+        var assembler = SchemaAssembler.assemble(schemaTestFileFolder);
+        var domain = assembler.domain();
+
+        var config = DomainGenerator.Config.builder()
+                .domain(domain)
+                .licenseHeader(LicenseHeader.ASF_V2)
+                .build();
+
+        return new DomainGenerator(config)
+            .streamJavaModels()
+            .map(javaModel->
+                Arguments.of(javaModel.className().toString(), javaModel.buildJavaFile().toString()));
+    }
+
+    /**
+     * Note: WinMerge needs to play along, that is configure their default file encoding to UTF-8.
+     */
+    static Options yamlOptions() {
+        return new Options()
+            .withScrubber(s ->
+                // UNIX style line endings
+                TextUtils.streamLines(s)
+                    .collect(Collectors.joining("\n"))
+            )
+            .forFile()
+            .withExtension(".yaml");
     }
 
 }

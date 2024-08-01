@@ -52,7 +52,7 @@ record CodegenTask(
                     System.out.printf("CodegenTask: including %s:%s%n", this, includedFolder);
 
                     var schemaAssembler = SchemaAssembler.assemble(includedFolder.root());
-                    domains.add(schemaAssembler.schema());
+                    domains.add(schemaAssembler.domain());
 
                     schemaAssembler.writeJavaFiles(cfg->cfg
                             .destinationFolder(javaRoot)

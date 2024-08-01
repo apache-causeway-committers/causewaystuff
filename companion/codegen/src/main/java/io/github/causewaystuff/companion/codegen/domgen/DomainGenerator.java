@@ -57,7 +57,7 @@ public record DomainGenerator(@NonNull DomainGenerator.Config config) {
         private final @NonNull String packageNamePrefix = "";
         @Builder.Default
         private final @NonNull LicenseHeader licenseHeader = LicenseHeader.NONE;
-        private final @NonNull Schema.Domain schema;
+        private final @NonNull Schema.Domain domain;
         @Builder.Default
         private final @NonNull String entitiesModulePackageName = "";
         @Builder.Default
@@ -147,9 +147,9 @@ public record DomainGenerator(@NonNull DomainGenerator.Config config) {
 
     public DomainModel createDomainModel() {
 
-        val entityModels = config().schema().entities().values().stream().toList();
+        val entityModels = config().domain().entities().values().stream().toList();
 
-        val domainModel = new DomainModel(config().schema());
+        val domainModel = new DomainModel(config().domain());
 
         // superTypes
         entityModels.stream()
@@ -252,7 +252,10 @@ public record DomainGenerator(@NonNull DomainGenerator.Config config) {
     }
 
     public void writeToDirectory(final @NonNull File dest) {
-        _DomainWriter.writeToDirectory(createDomainModel().streamJavaModels(), dest);
+        _DomainWriter.writeToDirectory(streamJavaModels(), dest);
+    }
+    public Stream<JavaFileModel> streamJavaModels() {
+        return createDomainModel().streamJavaModels();
     }
 
 }

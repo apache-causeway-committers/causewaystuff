@@ -96,3 +96,4 @@ _commit.sh
 create-db-schema.sql
 # eclipse plugin https://nodj.github.io/AutoDeriv/
 .derived
+*.bak
