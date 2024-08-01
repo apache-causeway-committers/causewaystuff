@@ -105,7 +105,7 @@ class _Methods {
     }
 
     // public static DataSource schemaSource() {
-    //     return DataSource.ofResource(DitaModuleGdParams.class, "/entities.schema.yaml");
+    //     return DataSource.ofResource(MyModule.class, "/companion-schema.yaml");
     // }
     MethodSpec schemaSource(final String methodName, final ClassName ownerClassName, final String resource,
             final Modifier ... modifiers) {

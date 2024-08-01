@@ -101,8 +101,14 @@ class _Parser {
         return switch (entry.getKey()) {
             case "viewmodel" -> Can.of(parseViewmodel(entry, parserHint));
             case "entity" -> Can.of(parseEntity(entry, parserHint));
-            case "viewmodels" -> parseViewmodels((List)entry.getValue());
-            case "entities" -> parseEntities((List)entry.getValue());
+            case "viewmodels" ->
+                String.class.isInstance(entry.getValue())
+                    ? Can.empty()
+                    : parseViewmodels((List)entry.getValue());
+            case "entities" ->
+                String.class.isInstance(entry.getValue())
+                    ? Can.empty()
+                    : parseEntities((List)entry.getValue());
             default ->
                 throw new IllegalArgumentException("Unexpected domain-object type: " + entry.getKey());
         };

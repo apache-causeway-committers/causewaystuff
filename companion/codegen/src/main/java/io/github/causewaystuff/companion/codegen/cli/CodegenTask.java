@@ -18,9 +18,12 @@
  */
 package io.github.causewaystuff.companion.codegen.cli;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.github.causewaystuff.commons.base.types.ResourceFolder;
+import io.github.causewaystuff.companion.codegen.domgen.LicenseHeader;
+import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.tooling.projectmodel.ProjectNode;
 
 record CodegenTask(
@@ -40,29 +43,36 @@ record CodegenTask(
 
     void run() {
 
-        includes().forEach(include->{
-            var included = resourcesRoot.relative(include.include()).orElse(null);
-            if(included==null) {
-                return;
-            }
+        var domains = new ArrayList<Schema.Domain>();
 
-            System.out.printf("CodegenTask: including %s:%s%n", this, included);
+        includes().forEach(codegenResource->{
+            resourcesRoot.relative(codegenResource.include())
+                .ifPresent(includedFolder->{
 
-            var schemaAssembler = SchemaAssembler.assemble(included.root());
-            schemaAssembler.writeAssembly(
-                    resourcesRoot.relativeFile("%s.schema.yaml", include.include()));
+                    System.out.printf("CodegenTask: including %s:%s%n", this, includedFolder);
 
-            schemaAssembler.writeJavaFiles(cfg->cfg
-                    .destinationFolder(javaRoot)
-                    .logicalNamespacePrefix(include.logicalNamespacePrefix())
-                    .packageNamePrefix(include.packageNamePrefix())
-                    .onPurgeKeep(FileKeepStrategy.layout()
-                            .or(FileKeepStrategy.javaNonGenerated())
-                            )
-                    .entitiesModulePackageName(include.entitiesModulePackageName())
-                    .entitiesModuleClassSimpleName(include.entitiesModuleClassSimpleName()));
+                    var schemaAssembler = SchemaAssembler.assemble(includedFolder.root());
+                    domains.add(schemaAssembler.schema());
+
+                    schemaAssembler.writeJavaFiles(cfg->cfg
+                            .destinationFolder(javaRoot)
+                            .logicalNamespacePrefix(codegenResource.logicalNamespacePrefix())
+                            .packageNamePrefix(codegenResource.packageNamePrefix())
+                            .onPurgeKeep(FileKeepStrategy.layout()
+                                    .or(FileKeepStrategy.javaNonGenerated())
+                                    )
+                            .entitiesModulePackageName(codegenResource.entitiesModulePackageName())
+                            .entitiesModuleClassSimpleName(codegenResource.entitiesModuleClassSimpleName()));
+                });
         });
 
+        domains.stream()
+        .reduce(Schema.Domain::concat)
+        .ifPresent(combinedDomain->{
+            combinedDomain.writeToFileAsYaml(
+                    resourcesRoot.relativeFile("companion-schema.yaml"),
+                    LicenseHeader.ASF_V2);
+        });
     }
 
 }
