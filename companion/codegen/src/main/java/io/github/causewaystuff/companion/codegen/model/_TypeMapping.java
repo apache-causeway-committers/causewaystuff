@@ -19,6 +19,7 @@
 package io.github.causewaystuff.companion.codegen.model;
 
 import org.apache.causeway.commons.internal.exceptions._Exceptions;
+import org.apache.causeway.commons.io.TextUtils;
 
 import lombok.experimental.UtilityClass;
 
@@ -57,9 +58,15 @@ class _TypeMapping {
     }
 
     TypeName simpleNameToJava(final String javaType) {
+        if(javaType.contains(".")) {
+            var cutter = TextUtils.cutter(javaType);
+            return ClassName.get(
+                    cutter.keepBeforeLast(".").getValue(),
+                    cutter.keepAfterLast(".").getValue());
+        }
         return switch (javaType) {
         case "String" -> ClassName.get("java.lang", "String");
-        case "BigDecimal" -> ClassName.get("java.lang", "BigDecimal");
+        case "BigDecimal" -> ClassName.get("java.math", "BigDecimal");
         case "int" -> ClassName.INT;
         case "long" -> ClassName.LONG;
         case "short" -> ClassName.SHORT;

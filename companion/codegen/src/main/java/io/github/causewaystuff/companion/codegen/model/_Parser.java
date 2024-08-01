@@ -150,6 +150,7 @@ class _Parser {
                 );
         val viewmodel = new Viewmodel(
                 ObjectRef.empty(),
+                Optional.ofNullable((String)map.get("generator")).orElse("class"),
                 name,
                 namespace,
                 (String)map.get("title"),

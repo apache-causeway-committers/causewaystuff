@@ -51,6 +51,7 @@ class _Writer {
 
     void writeViewmodel(final YamlWriter yaml, final Schema.Viewmodel viewmodel) {
         yaml.write("- fqn: ", viewmodel.fqn()).nl();
+        yaml.ind().write("generator: ", viewmodel.generator()).nl();
         yaml.ind().write("name: ", viewmodel.name()).nl();
         yaml.ind().write("namespace: ", viewmodel.namespace()).nl();
         {   // icon

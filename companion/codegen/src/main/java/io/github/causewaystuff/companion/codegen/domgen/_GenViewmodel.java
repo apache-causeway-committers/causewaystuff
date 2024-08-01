@@ -19,9 +19,14 @@
 package io.github.causewaystuff.companion.codegen.domgen;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.lang.model.element.Modifier;
 
+import org.apache.causeway.applib.annotation.Editing;
+import org.apache.causeway.applib.annotation.Optionality;
+import org.apache.causeway.applib.annotation.PrecedingParamsPolicy;
+import org.apache.causeway.applib.annotation.Where;
 import org.apache.causeway.commons.internal.base._Strings;
 
 import lombok.experimental.UtilityClass;
@@ -31,6 +36,7 @@ import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.tooling.javapoet.CodeBlock;
 import io.github.causewaystuff.tooling.javapoet.FieldSpec;
 import io.github.causewaystuff.tooling.javapoet.MethodSpec;
+import io.github.causewaystuff.tooling.javapoet.ParameterSpec;
 import io.github.causewaystuff.tooling.javapoet.TypeSpec;
 
 @UtilityClass
@@ -40,22 +46,46 @@ class _GenViewmodel {
             final DomainGenerator.Config config,
             final Schema.Viewmodel vm) {
 
-        var typeModelBuilder = TypeSpec.classBuilder(vm.name())
-                .addJavadoc(vm.formatDescription("\n"))
-                .addAnnotation(_Annotations.generated(_GenViewmodel.class))
-                .addAnnotation(_Annotations.named(config.fullLogicalName(vm.namespace()) + "." + vm.name()))
-                .addAnnotation(_Annotations.domainObject())
-                .addAnnotation(_Annotations.domainObjectLayout(
-                        vm.formatDescription("\n"),
-                        vm.icon()))
-                .addModifiers(Modifier.PUBLIC)
-                .addMethod(asTitleMethod(vm, Modifier.PUBLIC))
-                .addFields(asFields(vm.fields(), Modifier.PRIVATE))
-                ;
+        return switch (vm.generator()) {
+            case "class" -> {
+                var typeModelBuilder = TypeSpec.classBuilder(vm.name())
+                        .addJavadoc(vm.formatDescription("\n"))
+                        .addAnnotation(_Annotations.generated(_GenViewmodel.class))
+                        .addAnnotation(_Annotations.named(config.fullLogicalName(vm.namespace()) + "." + vm.name()))
+                        .addAnnotation(_Annotations.domainObject())
+                        .addAnnotation(_Annotations.domainObjectLayout(
+                                vm.formatDescription("\n"),
+                                vm.icon()))
+                        .addModifiers(Modifier.PUBLIC)
+                        .addMethod(asTitleMethod(vm, Modifier.PUBLIC))
+                        .addFields(asFields(vm.fields(), Modifier.PRIVATE))
+                        ;
 
-        return new QualifiedType(
-                config.fullPackageName(vm.namespace()),
-                typeModelBuilder.build());
+                yield new QualifiedType(
+                        config.fullPackageName(vm.namespace()),
+                        typeModelBuilder.build());
+            }
+            case "record" -> {
+                var typeModelBuilder = TypeSpec.recordBuilder(vm.name())
+                        .addJavadoc(vm.formatDescription("\n"))
+                        .addAnnotation(_Annotations.generated(_GenViewmodel.class))
+                        .addAnnotation(_Annotations.named(config.fullLogicalName(vm.namespace()) + "." + vm.name()))
+                        .addAnnotation(_Annotations.domainObject())
+                        .addAnnotation(_Annotations.domainObjectLayout(
+                                vm.formatDescription("\n"),
+                                vm.icon()))
+                        .addModifiers(Modifier.PUBLIC)
+                        .addMethod(asTitleMethod(vm, Modifier.PUBLIC))
+                        .addRecordComponents(asParameters(vm.fields()))
+                        ;
+
+                yield new QualifiedType(
+                        config.fullPackageName(vm.namespace()),
+                        typeModelBuilder.build());
+            }
+            default ->
+                throw new IllegalArgumentException("Unexpected value: " + vm.generator());
+            };
     }
 
     // -- HELPER
@@ -79,35 +109,58 @@ class _GenViewmodel {
                             field.name(),
                             modifiers)
                     .addJavadoc(field.formatDescription("\n"))
-//                    .addAnnotation(_Annotations.property(attr->{
-//                        attr.optionality(field.requiredInTheUi()
-//                                ? Optionality.MANDATORY
-//                                : Optionality.OPTIONAL);
-//                        attr.editing(Editing.ENABLED);
-//                        return attr;
-//                    }))
-//                    .addAnnotation(_Annotations.propertyLayout(attr->attr
-//                            .fieldSetId(field.isMemberOfSecondaryKey()
-//                                    ? "identity"
-//                                    : field.hasForeignKeys()
-//                                        ? "foreign"
-//                                        : "details")
-//                            .sequence(field.sequence())
-//                            .describedAs(
-//                                field.formatDescription("\n"))
-//                            .multiLine(field.multiLine().orElse(0))
-//                            .hiddenWhere(Optional.ofNullable(field.hiddenWhere())
-//                                    .orElseGet(()->field.hasForeignKeys()
-//                                            ? Where.ALL_TABLES
-//                                            : Where.NOWHERE)
-//                                    )))
-//                    .addAnnotation(_Annotations.column(field.column(), !field.required(), field.maxLength()))
-//                    .addAnnotation(_Annotations.getter())
-//                    .addAnnotation(_Annotations.setter())
+                    .addAnnotation(_Annotations.property(attr->{
+                        attr.optionality(field.requiredInTheUi()
+                                ? Optionality.MANDATORY
+                                : Optionality.OPTIONAL);
+                        attr.editing(Editing.ENABLED);
+                        return attr;
+                    }))
+                    .addAnnotation(_Annotations.propertyLayout(attr->attr
+                            .fieldSetId("details")
+                            .sequence(field.sequence())
+                            .describedAs(
+                                field.formatDescription("\n"))
+                            .multiLine(field.multiLine().orElse(0))
+                            .hiddenWhere(Optional.ofNullable(field.hiddenWhere())
+                                    .orElse(Where.NOWHERE)
+                                    )))
+                    .addAnnotation(_Annotations.getter())
+                    .addAnnotation(_Annotations.setter())
                     ;
 
                     return fieldBuilder.build();
                 })
+                .toList();
+    }
+
+    private Iterable<ParameterSpec> asParameters(
+            final List<Schema.VmField> fields) {
+        return fields.stream()
+                .map(field->
+                    ParameterSpec.builder(
+                            field.isEnum()
+                                ? field.asJavaEnumType()
+                                : field.asJavaType(),
+                            field.name())
+                    .addJavadoc(field.formatDescription("\n"))
+                    .addAnnotation(_Annotations.parameter(attr->attr
+                            .precedingParamsPolicy(
+                                PrecedingParamsPolicy.PRESERVE_CHANGES)
+                            .optionality(
+                                field.requiredInTheUi()
+                                    ? Optionality.MANDATORY
+                                    : Optionality.OPTIONAL)))
+                    .addAnnotation(_Annotations.propertyLayout(attr->attr
+                            .fieldSetId("details")
+                            .sequence(field.sequence())
+                            .describedAs(
+                                field.formatDescription("\n"))
+                            .multiLine(field.multiLine().orElse(0))
+                            .hiddenWhere(Optional.ofNullable(field.hiddenWhere())
+                                    .orElse(Where.NOWHERE)
+                                    )))
+                    .build())
                 .toList();
     }
 

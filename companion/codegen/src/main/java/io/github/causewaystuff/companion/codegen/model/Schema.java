@@ -72,6 +72,7 @@ public class Schema {
     public sealed interface Field permits VmField, EntityField {
         int ordinal();
         String name();
+        boolean required();
         List<String> enumeration();
         List<String> description();
 
@@ -95,10 +96,18 @@ public class Schema {
                     .map(IndexedFunction.zeroBased((index, ev)->EnumConstant.parse(this, index, ev)))
                     .collect(Collectors.toList());
         }
+        default boolean requiredInTheUi() {
+            // when enum and the enum also represents null,
+            // then Optionality.MANDATORY is enforced (regardless of any required=false)
+            return required()
+                    || (isEnum()
+                    && enumConstants().stream().anyMatch(EnumConstant::isRepresentingNull));
+        }
     }
 
     public record Viewmodel(
             ObjectRef<Domain> parentRef,
+            String generator,
             String name,
             String namespace,
             String title,
@@ -243,13 +252,6 @@ public class Schema {
         public boolean isMemberOfSecondaryKey() {
             return parentEntity().secondaryKeyFields()
                     .contains(this);
-        }
-        public boolean requiredInTheUi() {
-            // when enum and the enum also represents null,
-            // then Optionality.MANDATORY is enforced (regardless of any required=false)
-            return required()
-                    || (isEnum()
-                    && enumConstants().stream().anyMatch(EnumConstant::isRepresentingNull));
         }
         public boolean hasDiscriminator() {
             return discriminator.size()>0;
