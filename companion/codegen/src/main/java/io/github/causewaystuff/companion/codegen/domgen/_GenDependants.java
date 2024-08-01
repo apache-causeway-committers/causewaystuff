@@ -23,8 +23,8 @@ import javax.lang.model.element.Modifier;
 import io.github.causewaystuff.companion.applib.decorate.CollectionTitleDecorator;
 import io.github.causewaystuff.companion.applib.services.lookup.DependantLookupService;
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.QualifiedType;
-import io.github.causewaystuff.companion.codegen.model.OrmModel;
-import io.github.causewaystuff.companion.codegen.model.OrmModel.Entity;
+import io.github.causewaystuff.companion.codegen.model.Schema;
+import io.github.causewaystuff.companion.codegen.model.Schema.Entity;
 
 import org.springframework.context.annotation.Configuration;
 import io.github.causewaystuff.tooling.javapoet.AnnotationSpec;
@@ -44,7 +44,7 @@ class _GenDependants {
 
     QualifiedType qualifiedType(
             final DomainGenerator.Config config,
-            final OrmModel.Entity entityModel,
+            final Schema.Entity entityModel,
             final Can<DependantMixinSpec> mixinSpecs) {
 
         val packageName = config.fullPackageName(entityModel.namespace());
@@ -58,8 +58,8 @@ class _GenDependants {
         // inner mixin classes
 
         mixinSpecs.forEach(mixinSpec->{
-            OrmModel.Field fieldWithForeignKeys = mixinSpec.fieldWithForeignKeys();
-            Can<OrmModel.Field> foreignFields = mixinSpec.foreignFields();
+            Schema.Field fieldWithForeignKeys = mixinSpec.fieldWithForeignKeys();
+            Can<Schema.Field> foreignFields = mixinSpec.foreignFields();
             ClassName propertyMixinClassName = mixinSpec.propertyMixinClassName();
             val localEntity = mixinSpec.localEntity();
 
@@ -87,9 +87,9 @@ class _GenDependants {
     }
 
     static record DependantMixinSpec(
-        OrmModel.Field fieldWithForeignKeys,
+        Schema.Field fieldWithForeignKeys,
                 // all sharing the same foreignEntity, as guaranteed by the caller
-        Can<OrmModel.Field> foreignFields,
+        Can<Schema.Field> foreignFields,
         ClassName propertyMixinClassName) {
         /**
          * entity this mixin contributes to
@@ -106,9 +106,9 @@ class _GenDependants {
 
     private MethodSpec mixedInCollection(
             final DomainGenerator.Config config,
-            final OrmModel.Entity localEntity, // entity this mixin contributes to
-            final OrmModel.Field fieldWithForeignKeys,
-            final Can<OrmModel.Field> foreignFields,
+            final Schema.Entity localEntity, // entity this mixin contributes to
+            final Schema.Field fieldWithForeignKeys,
+            final Can<Schema.Field> foreignFields,
             final ClassName associationMixinClassName,
             final Modifier ... modifiers) {
 

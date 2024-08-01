@@ -18,7 +18,7 @@
  */
 package io.github.causewaystuff.companion.codegen.domgen;
 
-import io.github.causewaystuff.companion.codegen.model.OrmModel;
+import io.github.causewaystuff.companion.codegen.model.Schema;
 
 import org.apache.causeway.commons.internal.base._Strings;
 
@@ -28,18 +28,18 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 class _Mixins {
 
-    String customMixinClassName(final OrmModel.Entity entityModel, final String memberName) {
+    String customMixinClassName(final Schema.Entity entityModel, final String memberName) {
         return entityModel.name() + "_" + memberName;
     }
 
-    String propertyMixinClassName(final OrmModel.Field field) {
+    String propertyMixinClassName(final Schema.Field field) {
         return customMixinClassName(field.parentEntity(),
                 _Foreign.resolvedFieldName(field));
     }
 
     String collectionMixinClassName(
-            final OrmModel.Entity localEntity,
-            final OrmModel.Field dependantField) {
+            final Schema.Entity localEntity,
+            final Schema.Field dependantField) {
         val dependantEntity = dependantField.parentEntity();
         return localEntity.name()
                 + "_dependent"

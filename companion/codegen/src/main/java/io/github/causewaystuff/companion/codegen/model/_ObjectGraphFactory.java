@@ -27,13 +27,13 @@ import org.apache.causeway.applib.services.metamodel.objgraph.ObjectGraph;
 
 import lombok.val;
 
-record _ObjectGraphFactory(OrmModel.Schema schema) implements ObjectGraph.Factory {
+record _ObjectGraphFactory(Schema.Domain schema) implements ObjectGraph.Factory {
 
     @Override
     public ObjectGraph create() {
         var objectGraph = new ObjectGraph();
 
-        final Map<OrmModel.Entity, ObjectGraph.Object> objByEntity = new HashMap<>();
+        final Map<Schema.Entity, ObjectGraph.Object> objByEntity = new HashMap<>();
 
         // add objects
         for(val entity : schema.entities().values()) {
@@ -56,8 +56,8 @@ record _ObjectGraphFactory(OrmModel.Schema schema) implements ObjectGraph.Factor
         return objectGraph;
     }
 
-    private static ObjectGraph.Object object(final OrmModel.Entity entity) {
-        final String id = entity.key();
+    private static ObjectGraph.Object object(final Schema.Entity entity) {
+        final String id = entity.fqn();
         boolean isAbstract = false;
         val obj = new ObjectGraph.Object(id,
                 entity.namespace(),

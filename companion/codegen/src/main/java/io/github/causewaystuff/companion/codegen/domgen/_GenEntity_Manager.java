@@ -21,7 +21,7 @@ package io.github.causewaystuff.companion.codegen.domgen;
 import javax.lang.model.element.Modifier;
 
 import io.github.causewaystuff.companion.applib.services.search.SearchService;
-import io.github.causewaystuff.companion.codegen.model.OrmModel;
+import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.tooling.javapoet.ClassName;
 import io.github.causewaystuff.tooling.javapoet.CodeBlock;
 import io.github.causewaystuff.tooling.javapoet.FieldSpec;
@@ -40,7 +40,7 @@ class _GenEntity_Manager {
 
     TypeSpec generate(
             final DomainGenerator.Config config,
-            final OrmModel.Entity entityModel) {
+            final Schema.Entity entityModel) {
 
         var managerViewmodel = TypeSpec.classBuilder("Manager")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)

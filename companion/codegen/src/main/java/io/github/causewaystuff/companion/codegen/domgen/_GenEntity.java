@@ -38,9 +38,9 @@ import io.github.causewaystuff.companion.applib.services.iconfa.IconFaService;
 import io.github.causewaystuff.companion.applib.services.lookup.HasSecondaryKey;
 import io.github.causewaystuff.companion.applib.services.search.SearchService;
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.QualifiedType;
-import io.github.causewaystuff.companion.codegen.model.OrmModel;
-import io.github.causewaystuff.companion.codegen.model.OrmModel.Entity;
-import io.github.causewaystuff.companion.codegen.model.OrmModel.Field;
+import io.github.causewaystuff.companion.codegen.model.Schema;
+import io.github.causewaystuff.companion.codegen.model.Schema.Entity;
+import io.github.causewaystuff.companion.codegen.model.Schema.Field;
 import io.github.causewaystuff.tooling.javapoet.ClassName;
 import io.github.causewaystuff.tooling.javapoet.CodeBlock;
 import io.github.causewaystuff.tooling.javapoet.FieldSpec;
@@ -53,7 +53,7 @@ class _GenEntity {
 
     public QualifiedType qualifiedType(
             final DomainGenerator.Config config,
-            final OrmModel.Entity entityModel) {
+            final Schema.Entity entityModel) {
 
         var typeModelBuilder = TypeSpec.classBuilder(entityModel.name())
                 .addJavadoc(entityModel.formatDescription("\n"))
@@ -100,7 +100,7 @@ class _GenEntity {
         // inner enums
 
         entityModel.fields().stream()
-                .filter(OrmModel.Field::isEnum)
+                .filter(Schema.Field::isEnum)
                 .forEach(field->
                     typeModelBuilder.addType(
                             _Enums.enumForColumn(field.asJavaType(), field.enumConstants())));
@@ -179,7 +179,7 @@ class _GenEntity {
     }
 
     private Iterable<FieldSpec> asFields(
-            final List<OrmModel.Field> fields,
+            final List<Schema.Field> fields,
             final Modifier ... modifiers) {
         return fields.stream()
                 .map(field->{
@@ -231,7 +231,7 @@ class _GenEntity {
 
     private MethodSpec asSecondaryKeyMethod(
             final TypeSpec secondaryKeyClass,
-            final List<OrmModel.Field> fields,
+            final List<Schema.Field> fields,
             final Modifier ... modifiers) {
         return MethodSpec.methodBuilder("secondaryKey")
                 .addModifiers(modifiers)

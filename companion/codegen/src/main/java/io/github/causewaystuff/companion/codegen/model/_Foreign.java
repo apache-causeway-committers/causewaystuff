@@ -29,14 +29,14 @@ import org.apache.causeway.commons.internal.exceptions._Exceptions;
 import lombok.val;
 import lombok.experimental.UtilityClass;
 
-import io.github.causewaystuff.companion.codegen.model.OrmModel.Entity;
-import io.github.causewaystuff.companion.codegen.model.OrmModel.Field;
-import io.github.causewaystuff.companion.codegen.model.OrmModel.Schema;
+import io.github.causewaystuff.companion.codegen.model.Schema.Entity;
+import io.github.causewaystuff.companion.codegen.model.Schema.Field;
+import io.github.causewaystuff.companion.codegen.model.Schema.Domain;
 
 @UtilityClass
 class _Foreign {
 
-    Can<Entity> findEntitiesWithoutRelations(final Schema schema){
+    Can<Entity> findEntitiesWithoutRelations(final Domain schema){
         val foreignKeyFields = // as table.column literal
                 schema.entities().values().stream().flatMap(fe->fe.fields().stream())
                     .flatMap(ff->ff.foreignKeys().stream())
@@ -52,7 +52,7 @@ class _Foreign {
     }
 
     Can<Field> foreignFields(final Field field) {
-        final Schema schema = field.parentEntity().parentSchema();
+        final Domain schema = field.parentEntity().parentSchema();
         return field.foreignKeys().stream()
                 .map(tableDotCom->lookupForeignKeyFieldElseFail(schema, tableDotCom))
                 .collect(Can.toCan());
@@ -60,12 +60,12 @@ class _Foreign {
 
     // -- HELPER
 
-    private OrmModel.Field lookupForeignKeyFieldElseFail(final Schema schema, final String tableDotColumn) {
+    private Schema.Field lookupForeignKeyFieldElseFail(final Domain schema, final String tableDotColumn) {
         return lookupForeignKeyField(schema, tableDotColumn)
                 .orElseThrow(()->_Exceptions.noSuchElement("foreign key not found '%s'", tableDotColumn));
     }
 
-    private Optional<OrmModel.Field> lookupForeignKeyField(final Schema schema, final String tableDotColumn) {
+    private Optional<Schema.Field> lookupForeignKeyField(final Domain schema, final String tableDotColumn) {
         val parts = _Strings.splitThenStream(tableDotColumn, ".")
                 .collect(Can.toCan());
         _Assert.assertEquals(2, parts.size(), ()->String.format(

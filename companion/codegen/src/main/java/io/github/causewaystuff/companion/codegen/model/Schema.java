@@ -53,10 +53,46 @@ import io.github.causewaystuff.tooling.javapoet.TypeName;
  * Read and write schema model from and to YAML format.
  */
 @UtilityClass
-public class OrmModel {
+public class Schema {
+
+    public sealed interface DomainObject permits Viewmodel, Entity {
+        String name();
+        String namespace();
+        default String fqn() {
+            return String.format("%s.%s", namespace(), name());
+        }
+    }
+
+    public record Viewmodel(
+            ObjectRef<Domain> parentRef,
+            String name,
+            String namespace,
+            String title,
+            String icon,
+            boolean iconService,
+            List<String> description,
+            List<VmField> fields) implements DomainObject {
+        public Domain parentSchema() {
+            return parentRef.getValue();
+        }
+    }
+
+    public record VmField(
+            SneakyRef<Viewmodel> parentRef,
+            int ordinal,
+            String name,
+            String javaType,
+            boolean required,
+            boolean plural,
+            OptionalInt multiLine,
+            String elementType,
+            Where hiddenWhere,
+            List<String> enumeration,
+            List<String> description) {
+    }
 
     public record Entity(
-            ObjectRef<Schema> parentRef,
+            ObjectRef<Domain> parentRef,
             String name,
             String namespace,
             String table,
@@ -68,12 +104,9 @@ public class OrmModel {
             String icon,
             boolean iconService,
             List<String> description,
-            List<Field> fields) {
-        public Schema parentSchema() {
+            List<Field> fields)  implements DomainObject {
+        public Domain parentSchema() {
             return parentRef.getValue();
-        }
-        public String key() {
-            return String.format("%s.%s", namespace, name);
         }
         public boolean hasSuperType() {
             return _Strings.isNotEmpty(superType);
@@ -101,13 +134,13 @@ public class OrmModel {
                             .findAny()
                             .orElseThrow(()->_Exceptions
                                     .noSuchElement("secondary-key field not found by column name '%s' in %s",
-                                            fieldId, key())))
+                                            fieldId, fqn())))
                     .collect(Collectors.toList());
         }
         public String formatDescription(final String continuation) {
             return _Format.parseYamlMultiline(description(), "has no description", continuation);
         }
-        public Optional<OrmModel.Field> lookupFieldByColumnName(final String columnName) {
+        public Optional<Schema.Field> lookupFieldByColumnName(final String columnName) {
             return fields().stream()
                     .filter(f->f.column().equalsIgnoreCase(columnName))
                     .findFirst();
@@ -116,11 +149,11 @@ public class OrmModel {
         public boolean equals(final Object o) {
             if (this == o) return true;
             if (!(o instanceof Entity)) return false;
-            return this.key().equals(((Entity) o).key());
+            return this.fqn().equals(((Entity) o).fqn());
         }
         @Override
         public int hashCode() {
-            return key().hashCode();
+            return fqn().hashCode();
         }
         // -- YAML IO
         static Entity parse(@SuppressWarnings("rawtypes") final Map.Entry<String, Map> entry) {
@@ -204,7 +237,7 @@ public class OrmModel {
                         .findAny()
                         .orElseThrow(()->_Exceptions
                                 .noSuchElement("secondary-key field not found by column name '%s' in %s",
-                                        fieldId, parentEntity().key())))
+                                        fieldId, parentEntity().fqn())))
                 .collect(Collectors.toList());
         }
         public boolean hasForeignKeys() {
@@ -309,36 +342,47 @@ public class OrmModel {
         }
     }
 
-    /**
-     * Entity metadata by {@code <namespace>.<name>}.
-     */
-    public record Schema(Map<String, Entity> entities) {
-        public static Schema of(final Iterable<Entity> entities) {
-            val schema = new Schema(new TreeMap<String, OrmModel.Entity>());
+
+    public record Domain(
+            /**
+             * Viewmodel metadata by {@code <namespace>.<name>}.
+             */
+            Map<String, Viewmodel> viewmodels,
+            /**
+             * Entity metadata by {@code <namespace>.<name>}.
+             */
+            Map<String, Entity> entities) {
+        @Deprecated //incomplete
+        public static Domain of(final Iterable<Entity> entities) {
+            val schema = new Domain(null, new TreeMap<String, Schema.Entity>());
             for(val entity: entities) {
-                schema.entities().put(entity.key(), entity);
+                schema.entities().put(entity.fqn(), entity);
             }
             return schema;
         }
-        public static Schema of(final @Nullable Stream<Entity> entities) {
-            val schema = new Schema(new TreeMap<String, OrmModel.Entity>());
+        @Deprecated //incomplete
+        public static Domain of(final @Nullable Stream<Entity> entities) {
+            val schema = new Domain(null, new TreeMap<String, Schema.Entity>());
             if(entities!=null) {
-                entities.forEach(entity->schema.entities().put(entity.key(), entity));
+                entities.forEach(entity->schema.entities().put(entity.fqn(), entity));
             }
             return schema;
         }
-        public Schema(final Map<String, Entity> entities){
+        public Domain(
+                final Map<String, Viewmodel> viewmodels,
+                final Map<String, Entity> entities){
+            this.viewmodels = viewmodels;
             this.entities = entities;
             entities.values().forEach(e->e.parentRef.setValue(this));
         }
-        public Optional<OrmModel.Entity> lookupEntityByTableName(final String tableName) {
+        public Optional<Schema.Entity> lookupEntityByTableName(final String tableName) {
             return entities().values()
                     .stream()
                     .filter(e->e.table().equalsIgnoreCase(tableName))
                     .findFirst();
         }
-        public Schema concat(final Schema other) {
-            return Schema.of(Stream.concat(
+        public Domain concat(final Domain other) {
+            return Domain.of(Stream.concat(
                     this.entities().values().stream(),
                     other.entities().values().stream()));
         }
@@ -346,10 +390,10 @@ public class OrmModel {
             return new _ObjectGraphFactory(this).create();
         }
         // -- YAML IO
-        public static Schema fromYaml(final String yaml) {
+        public static Domain fromYaml(final String yaml) {
             return _Parser.parseSchema(yaml);
         }
-        public static Schema fromYamlFolder(final File rootDirectory) {
+        public static Domain fromYamlFolder(final File rootDirectory) {
             return fromYaml(_FileUtils.collectSchemaFromFolder(rootDirectory));
         }
         public String toYaml() {

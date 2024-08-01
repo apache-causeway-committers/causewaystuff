@@ -30,21 +30,21 @@ import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.commons.base.types.internal.ObjectRef;
 import io.github.causewaystuff.commons.base.types.internal.SneakyRef;
-import io.github.causewaystuff.companion.codegen.model.OrmModel;
-import io.github.causewaystuff.companion.codegen.model.OrmModel.Entity;
-import io.github.causewaystuff.companion.codegen.model.OrmModel.Field;
-import io.github.causewaystuff.companion.codegen.model.OrmModel.Schema;
+import io.github.causewaystuff.companion.codegen.model.Schema;
+import io.github.causewaystuff.companion.codegen.model.Schema.Entity;
+import io.github.causewaystuff.companion.codegen.model.Schema.Field;
+import io.github.causewaystuff.companion.codegen.model.Schema.Domain;
 
 @UtilityClass
 public class OrmSchemaExamples {
 
-    public Can<Schema> examples() {
+    public Can<Domain> examples() {
         val entity = new Entity(
                 ObjectRef.empty(),
                 "Customer", "causewaystuff", "FOODS", "", List.of(), false, "name", "fa-pencil",
                 false,
                 List.of("Customer List and Aliases"),
-                new ArrayList<OrmModel.Field>());
+                new ArrayList<Schema.Field>());
         val field = new Field(SneakyRef.of(entity), /*ordinal*/0, "name", "NAME", "nvarchar(100)",
                 true, false, false,
                 OptionalInt.of(2),
@@ -53,7 +53,7 @@ public class OrmSchemaExamples {
                 List.of(), List.of(), List.of(), List.of("aa", "bb", "cc"));
         entity.fields().add(field);
         return Can.of(
-                Schema.of(List.of(entity)));
+                Domain.of(List.of(entity)));
     }
 
 }

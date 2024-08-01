@@ -27,7 +27,7 @@ import javax.lang.model.element.Modifier;
 
 import io.github.causewaystuff.companion.applib.services.lookup.ForeignKeyLookupService;
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.QualifiedType;
-import io.github.causewaystuff.companion.codegen.model.OrmModel;
+import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.tooling.javapoet.ClassName;
 import io.github.causewaystuff.tooling.javapoet.MethodSpec;
 import io.github.causewaystuff.tooling.javapoet.ParameterizedTypeName;
@@ -48,15 +48,15 @@ class _GenAssociationMixin {
 
     QualifiedType qualifiedType(
             final DomainGenerator.Config config,
-            final OrmModel.Field fieldWithForeignKeys,
-            final Can<OrmModel.Field> foreignFields) {
+            final Schema.Field fieldWithForeignKeys,
+            final Can<Schema.Field> foreignFields) {
 
         val entityModel = fieldWithForeignKeys.parentEntity();
         val packageName = config.fullPackageName(entityModel.namespace()); // shared with entity and mixin
 
         val isPlural = fieldWithForeignKeys.plural();
         val distinctForeignEntities = foreignFields.stream()
-                .map(OrmModel.Field::parentEntity)
+                .map(Schema.Field::parentEntity)
                 .distinct()
                 .collect(Can.toCan());
         val useEitherPattern = foreignFields.size()==2
@@ -97,8 +97,8 @@ class _GenAssociationMixin {
 
     private Optional<MethodSpec> mixedInAssociation(
             final DomainGenerator.Config config,
-            final OrmModel.Field field,
-            final Can<OrmModel.Field> foreignFields,
+            final Schema.Field field,
+            final Can<Schema.Field> foreignFields,
             final Modifier ... modifiers) {
 
         val isPlural = field.plural();
@@ -115,12 +115,12 @@ class _GenAssociationMixin {
         }
 
         final Can<Foreign> foreigners = foreignFields
-                .map((OrmModel.Field foreignField)->{
+                .map((Schema.Field foreignField)->{
                     val foreignEntityClass = _Foreign.foreignClassName(field, foreignField, config);
                     var argList = Can.ofCollection(field.discriminatorFields())
                             .add(field)
                             .stream()
-                            .map(OrmModel.Field::getter)
+                            .map(Schema.Field::getter)
                             .map(getter->String.format("mixee.%s()", getter))
                             .collect(Collectors.toCollection(ArrayList::new));
                     val argCount = argList.size();
@@ -149,7 +149,7 @@ class _GenAssociationMixin {
         }
 
         val distinctForeignEntities = foreignFields.stream()
-                .map(OrmModel.Field::parentEntity)
+                .map(Schema.Field::parentEntity)
                 .distinct()
                 .collect(Can.toCan());
 

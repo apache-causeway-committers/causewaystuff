@@ -40,28 +40,48 @@ import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.commons.base.types.internal.ObjectRef;
 import io.github.causewaystuff.commons.base.types.internal.SneakyRef;
-import io.github.causewaystuff.companion.codegen.model.OrmModel.Entity;
-import io.github.causewaystuff.companion.codegen.model.OrmModel.EnumConstant;
-import io.github.causewaystuff.companion.codegen.model.OrmModel.Field;
-import io.github.causewaystuff.companion.codegen.model.OrmModel.Schema;
+import io.github.causewaystuff.companion.codegen.model.Schema.Domain;
+import io.github.causewaystuff.companion.codegen.model.Schema.Entity;
+import io.github.causewaystuff.companion.codegen.model.Schema.EnumConstant;
+import io.github.causewaystuff.companion.codegen.model.Schema.Field;
+import io.github.causewaystuff.companion.codegen.model.Schema.Viewmodel;
+import io.github.causewaystuff.companion.codegen.model.Schema.VmField;
 
 @UtilityClass
 class _Parser {
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    Schema parseSchema(final String yaml) {
-        val entities = new TreeMap<String, OrmModel.Entity>();
+    Domain parseSchema(final String yaml) {
+        val viewmodels = new TreeMap<String, Schema.Viewmodel>();
+        val entities = new TreeMap<String, Schema.Entity>();
         YamlUtils.tryRead(Map.class, yaml)
         .ifFailureFail()
         .getValue()
         .map(map->(Map<String, Map>)map)
         .ifPresent(map->{
             map.entrySet().stream()
-            .map(_Parser::parseEntity)
-            .forEach(entity->entities.put(entity.key(), entity));
+            .map(_Parser::parseDomainObject)
+            .forEach(domainObj->{
+                switch (domainObj) {
+                case Schema.Viewmodel viewmodel ->
+                    viewmodels.put(viewmodel.fqn(), viewmodel);
+                case Schema.Entity entity ->
+                    entities.put(entity.fqn(), entity);
+                }
+            });
         });
-        var schema = new Schema(entities);
-        return schema;
+        var domain = new Domain(viewmodels, entities);
+        return domain;
+    }
+
+    @SuppressWarnings({ "rawtypes" })
+    Schema.DomainObject parseDomainObject(final Map.Entry<String, Map> entry) {
+        return switch (entry.getKey()) {
+            case "viewmodel" -> parseViewmodel(entry);
+            case "entity" -> parseEntity(entry);
+            default ->
+                throw new IllegalArgumentException("Unexpected domain-object type: " + entry.getKey());
+        };
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -97,6 +117,48 @@ class _Parser {
 //                    ()->String.format("invalid secondary key member %s#%s: must not have any foreign-keys",
 //                            entity.name(), f.name())));
         return entity;
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    Viewmodel parseViewmodel(final Map.Entry<String, Map> entry) {
+        val map = entry.getValue();
+        val fieldsAsMap = (Map<String, Map>)map.get("fields");
+        final String namespace = (String)map.get("namespace");
+        final String name = _Strings.nonEmpty((String)map.get("name"))
+                .orElseGet(()->
+                    entry.getKey().startsWith(namespace)
+                        ? entry.getKey().substring(namespace.length() + 1)
+                        : entry.getKey()
+                );
+        val viewmodel = new Viewmodel(
+                ObjectRef.empty(),
+                name,
+                namespace,
+                (String)map.get("title"),
+                (String)map.get("icon"),
+                parseNullableBoolean((Boolean)map.get("iconService")),
+                parseMultilineString((String)map.get("description")),
+                new ArrayList<>());
+        fieldsAsMap.entrySet().stream()
+                .map(IndexedFunction.zeroBased((index, innerEntry)->parseField(viewmodel, index, innerEntry)))
+                .forEach(viewmodel.fields()::add);
+        return viewmodel;
+    }
+
+    VmField parseField(final Viewmodel parent, final int ordinal,
+            @SuppressWarnings("rawtypes") final Map.Entry<String, Map> entry) {
+        val map = entry.getValue();
+        return new VmField(SneakyRef.of(parent),
+                ordinal,
+                entry.getKey(),
+                (String)map.get("java-type"),
+                (boolean)Optional.ofNullable((Boolean)map.get("required")).orElse(true),
+                (boolean)Optional.ofNullable((Boolean)map.get("plural")).orElse(false),
+                parseNullableIntegerWithBounds((Integer)map.get("multiLine"), 2, 1000),
+                (String)map.get("elementType"),
+                parseNullableWhere((String)map.get("hiddenWhere")),
+                parseMultilineStringTrimmed((String)map.get("enum")),
+                parseMultilineString((String)map.get("description")));
     }
 
     Field parseField(final Entity parent, final int ordinal,

@@ -20,7 +20,7 @@ package io.github.causewaystuff.companion.codegen.domgen;
 
 import java.util.List;
 
-import io.github.causewaystuff.companion.codegen.model.OrmModel;
+import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.tooling.javapoet.ClassName;
 
 import org.apache.causeway.commons.internal.base._Strings;
@@ -31,7 +31,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 class _Foreign {
 
-    ClassName foreignClassName(final OrmModel.Field field, final OrmModel.Field foreignField, final DomainGenerator.Config config) {
+    ClassName foreignClassName(final Schema.Field field, final Schema.Field foreignField, final DomainGenerator.Config config) {
         val foreignEntity = foreignField.parentEntity();
         val foreignPackageName = config.fullPackageName(foreignEntity.namespace());
         val foreignEntityClass = field.hasElementType()
@@ -43,7 +43,7 @@ class _Foreign {
     private final static List<String> knownPropertyNameSuffixes = List.of(
             "Code",
             "LookupKey");
-    String resolvedFieldName(final OrmModel.Field field) {
+    String resolvedFieldName(final Schema.Field field) {
         val mixedInPropertyName = knownPropertyNameSuffixes.stream()
                 .filter(field.name()::endsWith)
                 .findFirst()

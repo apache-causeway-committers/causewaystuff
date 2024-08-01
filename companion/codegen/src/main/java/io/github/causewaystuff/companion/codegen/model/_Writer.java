@@ -30,7 +30,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 class _Writer {
 
-    String toYaml(final OrmModel.Schema schema) {
+    String toYaml(final Schema.Domain schema) {
         val yaml = new YamlWriter();
         for(val entity : schema.entities().values()) {
             writeEntity(yaml, entity);
@@ -38,14 +38,14 @@ class _Writer {
         return yaml.toString();
     }
 
-    String toYaml(final OrmModel.Entity entity) {
+    String toYaml(final Schema.Entity entity) {
         val yaml = new YamlWriter();
         writeEntity(yaml, entity);
         return yaml.toString();
     }
 
-    void writeEntity(final YamlWriter yaml, final OrmModel.Entity entity) {
-        yaml.write(entity.key(), ":").nl();
+    void writeEntity(final YamlWriter yaml, final Schema.Entity entity) {
+        yaml.write(entity.fqn(), ":").nl();
         yaml.ind().write("namespace: ", entity.namespace()).nl();
         yaml.ind().write("table: ", entity.table()).nl();
         if(_Strings.isNotEmpty(entity.superType())) {
@@ -87,7 +87,7 @@ class _Writer {
         entity.fields().forEach(field->writeField(yaml, field));
     }
 
-    void writeField(final YamlWriter yaml, final OrmModel.Field field) {
+    void writeField(final YamlWriter yaml, final Schema.Field field) {
         yaml.ind().ind().write(field.name(), ":").nl();
         yaml.ind().ind().ind().write("column: ", field.column()).nl();
         yaml.ind().ind().ind().write("column-type: ", field.columnType()).nl();

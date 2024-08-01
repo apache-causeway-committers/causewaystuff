@@ -20,7 +20,7 @@ package io.github.causewaystuff.companion.codegen.domgen;
 
 import javax.lang.model.element.Modifier;
 
-import io.github.causewaystuff.companion.codegen.model.OrmModel;
+import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.tooling.javapoet.ClassName;
 import io.github.causewaystuff.tooling.javapoet.FieldSpec;
 import io.github.causewaystuff.tooling.javapoet.MethodSpec;
@@ -35,7 +35,7 @@ class _GenEntity_Unresolvable {
 
     TypeSpec generate(
             final DomainGenerator.Config config,
-            final OrmModel.Entity entityModel) {
+            final Schema.Entity entityModel) {
         var unresolvableClass = TypeSpec.classBuilder("Unresolvable")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
                 .superclass(ClassName.get("", entityModel.name()))

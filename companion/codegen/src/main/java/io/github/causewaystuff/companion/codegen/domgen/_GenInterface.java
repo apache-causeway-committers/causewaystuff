@@ -21,7 +21,7 @@ package io.github.causewaystuff.companion.codegen.domgen;
 import javax.lang.model.element.Modifier;
 
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.QualifiedType;
-import io.github.causewaystuff.companion.codegen.model.OrmModel.Entity;
+import io.github.causewaystuff.companion.codegen.model.Schema.Entity;
 import io.github.causewaystuff.tooling.javapoet.ClassName;
 import io.github.causewaystuff.tooling.javapoet.TypeSpec;
 

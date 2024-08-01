@@ -28,7 +28,7 @@ import org.apache.causeway.applib.annotation.PrecedingParamsPolicy;
 import lombok.val;
 import lombok.experimental.UtilityClass;
 
-import io.github.causewaystuff.companion.codegen.model.OrmModel;
+import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.tooling.javapoet.ParameterSpec;
 import io.github.causewaystuff.tooling.javapoet.TypeSpec;
 
@@ -37,7 +37,7 @@ class _GenEntity_Params {
 
     TypeSpec generate(
             final DomainGenerator.Config config,
-            final OrmModel.Entity entityModel) {
+            final Schema.Entity entityModel) {
 
         val paramsRecord = TypeSpec.recordBuilder("Params")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
@@ -52,7 +52,7 @@ class _GenEntity_Params {
 
     private Iterable<ParameterSpec> asParameterModelParams(
             final DomainGenerator.Config config,
-            final List<OrmModel.Field> fields,
+            final List<Schema.Field> fields,
             final Modifier ... modifiers) {
         return fields.stream()
                 .map(field->

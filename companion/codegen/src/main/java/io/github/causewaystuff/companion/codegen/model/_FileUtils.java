@@ -30,7 +30,7 @@ import lombok.val;
 import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.companion.codegen.domgen.LicenseHeader;
-import io.github.causewaystuff.companion.codegen.model.OrmModel.Entity;
+import io.github.causewaystuff.companion.codegen.model.Schema.Entity;
 
 @UtilityClass
 class _FileUtils {
@@ -55,7 +55,7 @@ class _FileUtils {
         return sb.toString();
     }
 
-    void writeSchemaToFile(final OrmModel.Schema schema, final File file, final LicenseHeader licenseHeader) {
+    void writeSchemaToFile(final Schema.Domain schema, final File file, final LicenseHeader licenseHeader) {
         val lic = _FileUtils.licenseHeaderAsYaml(licenseHeader);
         val yaml = TextUtils.readLines(_Writer.toYaml(schema));
         TextUtils.writeLinesToFile(lic.addAll(yaml), file, StandardCharsets.UTF_8);

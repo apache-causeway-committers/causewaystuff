@@ -22,7 +22,7 @@ import java.util.List;
 
 import javax.lang.model.element.Modifier;
 
-import io.github.causewaystuff.companion.codegen.model.OrmModel;
+import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.tooling.javapoet.ClassName;
 import io.github.causewaystuff.tooling.javapoet.FieldSpec;
 import io.github.causewaystuff.tooling.javapoet.TypeName;
@@ -37,7 +37,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 class _Enums {
 
-    TypeSpec enumForColumn(final TypeName columnType, final List<OrmModel.EnumConstant> enumConsts) {
+    TypeSpec enumForColumn(final TypeName columnType, final List<Schema.EnumConstant> enumConsts) {
         _Assert.assertFalse(_NullSafe.isEmpty(enumConsts));
         var field = enumConsts.get(0).parentField();
 

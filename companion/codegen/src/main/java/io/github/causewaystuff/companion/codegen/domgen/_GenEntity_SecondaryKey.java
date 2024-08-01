@@ -23,7 +23,7 @@ import java.util.List;
 import javax.lang.model.element.Modifier;
 
 import io.github.causewaystuff.companion.applib.services.lookup.ISecondaryKey;
-import io.github.causewaystuff.companion.codegen.model.OrmModel;
+import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.tooling.javapoet.ClassName;
 import io.github.causewaystuff.tooling.javapoet.MethodSpec;
 import io.github.causewaystuff.tooling.javapoet.ParameterSpec;
@@ -37,7 +37,7 @@ class _GenEntity_SecondaryKey {
 
     TypeSpec generate(
             final DomainGenerator.Config config,
-            final OrmModel.Entity entityModel) {
+            final Schema.Entity entityModel) {
 
         var secondaryKeyRecord = TypeSpec.recordBuilder("SecondaryKey")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
@@ -72,7 +72,7 @@ class _GenEntity_SecondaryKey {
     // -- HELPER
 
     private Iterable<ParameterSpec> asSecondaryKeyParams(
-            final List<OrmModel.Field> fields,
+            final List<Schema.Field> fields,
             final Modifier ... modifiers) {
         return fields.stream()
                 .map(field->

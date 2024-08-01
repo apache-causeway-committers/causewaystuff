@@ -16,26 +16,18 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package io.github.causewaystuff.companion.codegen.orm;
+package io.github.causewaystuff.companion.codegen.cli;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import io.github.causewaystuff.commons.base.types.ResourceFolder;
 
-import lombok.val;
-
-import io.github.causewaystuff.companion.codegen.domgen.OrmSchemaExamples;
-import io.github.causewaystuff.companion.codegen.model.Schema;
-
-class OrmModelTest {
+class SchemaAssemblerTest {
 
     @Test
-    void yamlRoundTrip() {
-        val schema = OrmSchemaExamples.examples().getElseFail(0);
-        val yaml = schema.toYaml();
-
-        assertEquals(
-                schema,
-                Schema.Domain.fromYaml(yaml));
+    void assemble() {
+        var schemaTestFileFolder = ResourceFolder.testResourceRoot().relativeFile("schema-test-files");
+        SchemaAssembler.assemble(schemaTestFileFolder);
     }
+
 }

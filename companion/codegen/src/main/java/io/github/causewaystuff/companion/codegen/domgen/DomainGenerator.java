@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import io.github.causewaystuff.commons.base.types.ResourceFolder;
-import io.github.causewaystuff.companion.codegen.model.OrmModel;
+import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.tooling.javapoet.ClassName;
 import io.github.causewaystuff.tooling.javapoet.JavaFile;
 import io.github.causewaystuff.tooling.javapoet.TypeSpec;
@@ -57,7 +57,7 @@ public record DomainGenerator(@NonNull DomainGenerator.Config config) {
         private final @NonNull String packageNamePrefix = "";
         @Builder.Default
         private final @NonNull LicenseHeader licenseHeader = LicenseHeader.NONE;
-        private final @NonNull OrmModel.Schema schema;
+        private final @NonNull Schema.Domain schema;
         @Builder.Default
         private final @NonNull String entitiesModulePackageName = "";
         @Builder.Default
@@ -85,7 +85,7 @@ public record DomainGenerator(@NonNull DomainGenerator.Config config) {
         public String fullPackageName(final String realativeName) {
             return prefixed(packageNamePrefix(), realativeName);
         }
-        public ClassName javaPoetClassName(final OrmModel.Entity entityModel) {
+        public ClassName javaPoetClassName(final Schema.Entity entityModel) {
             return ClassName.get(fullPackageName(entityModel.namespace()), entityModel.name());
         }
     }
@@ -126,7 +126,7 @@ public record DomainGenerator(@NonNull DomainGenerator.Config config) {
     }
 
     public record DomainModel(
-            @NonNull OrmModel.Schema schema,
+            @NonNull Schema.Domain schema,
             @NonNull List<JavaFileModel> configBeans,
             @NonNull List<JavaFileModel> modules,
             @NonNull List<JavaFileModel> entities,
@@ -135,7 +135,7 @@ public record DomainGenerator(@NonNull DomainGenerator.Config config) {
             @NonNull List<JavaFileModel> superTypes,
             @NonNull List<JavaFileModel> menus) {
 
-        DomainModel(final OrmModel.Schema schema) {
+        DomainModel(final Schema.Domain schema) {
             this(schema, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
                     new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         }
@@ -166,7 +166,7 @@ public record DomainGenerator(@NonNull DomainGenerator.Config config) {
             .forEach(domainModel.entities()::add);
 
         // entity mixins
-        var dependantMixnSpecsByEntity = _Multimaps.<OrmModel.Entity, _GenDependants.DependantMixinSpec>newListMultimap();
+        var dependantMixnSpecsByEntity = _Multimaps.<Schema.Entity, _GenDependants.DependantMixinSpec>newListMultimap();
         entityModels.stream()
             .forEach(entityModel->{
 
@@ -188,13 +188,13 @@ public record DomainGenerator(@NonNull DomainGenerator.Config config) {
                     val associationMixin = associationMixinModel.className();
 
                     // for each association mixin created, there is at least one collection counterpart
-                    final List<Can<OrmModel.Field>> foreignFieldGroups =  switch (foreignFields.getCardinality()) {
+                    final List<Can<Schema.Field>> foreignFieldGroups =  switch (foreignFields.getCardinality()) {
                         case ZERO -> List.of(); // unexpected code reach
                         case ONE -> List.of(foreignFields);
                         case MULTIPLE -> {
-                            val result = new ArrayList<Can<OrmModel.Field>>();
+                            val result = new ArrayList<Can<Schema.Field>>();
                             // group foreign fields by foreign entity, then for each foreign entity create a collection mixin
-                            val multiMap = _Multimaps.<OrmModel.Entity, OrmModel.Field>newListMultimap();
+                            val multiMap = _Multimaps.<Schema.Entity, Schema.Field>newListMultimap();
                             foreignFields.forEach(foreignField->multiMap.putElement(foreignField.parentEntity(), foreignField));
                             multiMap.forEach((foreignEntity, groupedForeignFields)->{
                                 result.add(Can.ofCollection(groupedForeignFields));

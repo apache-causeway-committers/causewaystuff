@@ -25,12 +25,12 @@ import org.apache.causeway.commons.io.FileUtils;
 
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator;
 import io.github.causewaystuff.companion.codegen.domgen.LicenseHeader;
-import io.github.causewaystuff.companion.codegen.model.OrmModel;
+import io.github.causewaystuff.companion.codegen.model.Schema;
 
-record SchemaAssembler(LicenseHeader licenseHeader, OrmModel.Schema schema) {
+record SchemaAssembler(LicenseHeader licenseHeader, Schema.Domain schema) {
     static SchemaAssembler assemble(final File yamlFolder) {
         FileUtils.existingDirectoryElseFail(yamlFolder);
-        var schema = OrmModel.Schema.fromYamlFolder(yamlFolder);
+        var schema = Schema.Domain.fromYamlFolder(yamlFolder);
         return new SchemaAssembler(LicenseHeader.ASF_V2, schema);
     }
     void writeAssembly(final File destinationSchemaFile) {

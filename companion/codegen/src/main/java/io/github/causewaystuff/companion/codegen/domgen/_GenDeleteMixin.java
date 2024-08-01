@@ -24,7 +24,7 @@ import io.github.causewaystuff.companion.applib.services.lookup.DependantLookupS
 import io.github.causewaystuff.companion.applib.services.lookup.ForeignKeyLookupService;
 import io.github.causewaystuff.companion.applib.services.search.SearchService;
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.QualifiedType;
-import io.github.causewaystuff.companion.codegen.model.OrmModel;
+import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.tooling.javapoet.ClassName;
 import io.github.causewaystuff.tooling.javapoet.MethodSpec;
 import io.github.causewaystuff.tooling.javapoet.ParameterSpec;
@@ -44,7 +44,7 @@ class _GenDeleteMixin {
 
     QualifiedType qualifiedType(
             final DomainGenerator.Config config,
-            final OrmModel.Entity entityModel) {
+            final Schema.Entity entityModel) {
 
         val packageName = config.fullPackageName(entityModel.namespace());
 
