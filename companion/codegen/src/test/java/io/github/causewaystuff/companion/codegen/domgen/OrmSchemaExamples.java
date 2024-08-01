@@ -31,9 +31,9 @@ import lombok.experimental.UtilityClass;
 import io.github.causewaystuff.commons.base.types.internal.ObjectRef;
 import io.github.causewaystuff.commons.base.types.internal.SneakyRef;
 import io.github.causewaystuff.companion.codegen.model.Schema;
+import io.github.causewaystuff.companion.codegen.model.Schema.Domain;
 import io.github.causewaystuff.companion.codegen.model.Schema.Entity;
 import io.github.causewaystuff.companion.codegen.model.Schema.Field;
-import io.github.causewaystuff.companion.codegen.model.Schema.Domain;
 
 @UtilityClass
 public class OrmSchemaExamples {
@@ -53,7 +53,7 @@ public class OrmSchemaExamples {
                 List.of(), List.of(), List.of(), List.of("aa", "bb", "cc"));
         entity.fields().add(field);
         return Can.of(
-                Domain.of(List.of(entity)));
+                Domain.of(List.of(),List.of(entity)));
     }
 
 }

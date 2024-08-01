@@ -22,6 +22,7 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 
 import org.apache.causeway.commons.collections.Can;
+import org.apache.causeway.commons.internal.base._Strings;
 import org.apache.causeway.commons.io.DataSource;
 import org.apache.causeway.commons.io.FileUtils;
 import org.apache.causeway.commons.io.TextUtils;
@@ -31,6 +32,7 @@ import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.companion.codegen.domgen.LicenseHeader;
 import io.github.causewaystuff.companion.codegen.model.Schema.Entity;
+import io.github.causewaystuff.companion.codegen.model._Parser.ParserHint;
 
 @UtilityClass
 class _FileUtils {
@@ -45,14 +47,17 @@ class _FileUtils {
 
     String collectSchemaFromFolder(final File rootDirectory) {
         val root = FileUtils.existingDirectoryElseFail(rootDirectory);
-        val sb = new StringBuilder();
-        FileUtils.searchFiles(root, dir->true, file->file.getName().endsWith(".yaml"))
+        val domain = FileUtils.searchFiles(root, dir->true, file->file.getName().endsWith(".yaml"))
             .stream()
-            .map(DataSource::ofFile)
-            .forEach(ds->{
-                sb.append(ds.tryReadAsStringUtf8().valueAsNonNullElseFail()).append("\n\n");
-            });
-        return sb.toString();
+            .map(file->{
+                var ds = DataSource.ofFile(file);
+                var yaml = ds.tryReadAsStringUtf8().valueAsNonNullElseFail();
+                return _Parser.parseSchema(yaml,
+                        new ParserHint(_Strings.substring(file.getName(), 0, -5)));
+            })
+            .reduce((a, b)->a.concat(b))
+            .get();
+        return domain.toYaml();
     }
 
     void writeSchemaToFile(final Schema.Domain schema, final File file, final LicenseHeader licenseHeader) {

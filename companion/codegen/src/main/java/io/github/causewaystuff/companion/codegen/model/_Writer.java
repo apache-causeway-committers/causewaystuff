@@ -32,6 +32,11 @@ class _Writer {
 
     String toYaml(final Schema.Domain schema) {
         val yaml = new YamlWriter();
+        yaml.write("viewmodels:").nl();
+        for(val viewmodel : schema.viewmodels().values()) {
+            writeViewmodel(yaml, viewmodel);
+        }
+        yaml.write("entities:").nl();
         for(val entity : schema.entities().values()) {
             writeEntity(yaml, entity);
         }
@@ -44,8 +49,58 @@ class _Writer {
         return yaml.toString();
     }
 
+    void writeViewmodel(final YamlWriter yaml, final Schema.Viewmodel viewmodel) {
+        yaml.write("- fqn: ", viewmodel.fqn()).nl();
+        yaml.ind().write("name: ", viewmodel.name()).nl();
+        yaml.ind().write("namespace: ", viewmodel.namespace()).nl();
+        {   // icon
+            var iconLines = TextUtils.readLines(viewmodel.icon());
+            if(iconLines.isCardinalityMultiple()) {
+                yaml.ind().write("icon:").multiLineStartIfNotEmtpy(iconLines.toList()).nl();
+                iconLines.forEach(line->
+                yaml.ind().ind().write(line).nl());
+            } else {
+                yaml.ind().write("icon: ", viewmodel.icon()).nl();
+            }
+        }
+        if(viewmodel.iconService()) {
+            yaml.ind().write("iconService: ", "true").nl();
+        }
+        yaml.ind().write("description:").multiLineStartIfNotEmtpy(viewmodel.description()).nl();
+        viewmodel.description().forEach(line->
+        yaml.ind().ind().write(line).nl());
+        yaml.ind().write("fields:").nl();
+        viewmodel.fields().forEach(field->writeField(yaml, field));
+    }
+
+    void writeField(final YamlWriter yaml, final Schema.VmField field) {
+        yaml.ind().ind().write(field.name(), ":").nl();
+        yaml.ind().ind().ind().write("required: ", ""+field.required()).nl();
+        if(field.plural()) {
+            yaml.ind().ind().ind().write("plural: ", "true").nl();
+        }
+        if(field.multiLine().isPresent()) {
+            yaml.ind().ind().ind().write("multiLine: ", ""+field.multiLine().getAsInt()).nl();
+        }
+        if(_Strings.isNotEmpty(field.elementType())) {
+            yaml.ind().ind().ind().write("elementType: ", field.elementType()).nl();
+        }
+        if(field.hiddenWhere()!=null) {
+            yaml.ind().ind().ind().write("hiddenWhere: ", field.hiddenWhere().name()).nl();
+        }
+        if(field.isEnum()) {
+            yaml.ind().ind().ind().write("enum:").multiLineStartIfNotEmtpy(field.enumeration()).nl();
+            field.enumeration().forEach(line->
+            yaml.ind().ind().ind().ind().write(line).nl());
+        }
+        yaml.ind().ind().ind().write("description:").multiLineStartIfNotEmtpy(field.description()).nl();
+        field.description().forEach(line->
+        yaml.ind().ind().ind().ind().write(line).nl());
+    }
+
     void writeEntity(final YamlWriter yaml, final Schema.Entity entity) {
-        yaml.write(entity.fqn(), ":").nl();
+        yaml.write("- fqn: ", entity.fqn()).nl();
+        yaml.ind().write("name: ", entity.name()).nl();
         yaml.ind().write("namespace: ", entity.namespace()).nl();
         yaml.ind().write("table: ", entity.table()).nl();
         if(_Strings.isNotEmpty(entity.superType())) {

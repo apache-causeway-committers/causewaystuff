@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 import org.springframework.lang.Nullable;
 
 import org.apache.causeway.applib.annotation.Where;
+import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.functional.IndexedFunction;
 import org.apache.causeway.commons.internal.assertions._Assert;
 import org.apache.causeway.commons.internal.base._Strings;
@@ -50,8 +51,26 @@ import io.github.causewaystuff.companion.codegen.model.Schema.VmField;
 @UtilityClass
 class _Parser {
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    record ParserHint(
+            @Nullable String sourceFileName) {
+        static ParserHint empty() {
+            return new ParserHint(null);
+        }
+        String name(final String name) {
+            return _Strings.isNotEmpty(name)
+                    ? name
+                    : _Strings.isNotEmpty(sourceFileName)
+                        ? sourceFileName
+                        : name;
+        }
+    }
+
     Domain parseSchema(final String yaml) {
+        return parseSchema(yaml, ParserHint.empty());
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    Domain parseSchema(final String yaml, final ParserHint parserHint) {
         val viewmodels = new TreeMap<String, Schema.Viewmodel>();
         val entities = new TreeMap<String, Schema.Entity>();
         YamlUtils.tryRead(Map.class, yaml)
@@ -60,7 +79,8 @@ class _Parser {
         .map(map->(Map<String, Map>)map)
         .ifPresent(map->{
             map.entrySet().stream()
-            .map(_Parser::parseDomainObject)
+            .map(entry->_Parser.parseDomainObjects(entry, parserHint))
+            .flatMap(Can::stream)
             .forEach(domainObj->{
                 switch (domainObj) {
                 case Schema.Viewmodel viewmodel ->
@@ -74,22 +94,76 @@ class _Parser {
         return domain;
     }
 
-    @SuppressWarnings({ "rawtypes" })
-    Schema.DomainObject parseDomainObject(final Map.Entry<String, Map> entry) {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    Can<Schema.DomainObject> parseDomainObjects(
+            final Map.Entry<String, Map> entry,
+            final ParserHint parserHint) {
         return switch (entry.getKey()) {
-            case "viewmodel" -> parseViewmodel(entry);
-            case "entity" -> parseEntity(entry);
+            case "viewmodel" -> Can.of(parseViewmodel(entry, parserHint));
+            case "entity" -> Can.of(parseEntity(entry, parserHint));
+            case "viewmodels" -> parseViewmodels((List)entry.getValue());
+            case "entities" -> parseEntities((List)entry.getValue());
             default ->
                 throw new IllegalArgumentException("Unexpected domain-object type: " + entry.getKey());
         };
     }
 
+    @SuppressWarnings("rawtypes")
+    private Can<Schema.DomainObject> parseViewmodels(
+            final List<Map> viewmodels) {
+        return viewmodels.stream()
+                .map(entityAsMap->Map.of("", entityAsMap).entrySet().iterator().next())
+                .map(entityAsMapEntry->
+                    parseViewmodel(entityAsMapEntry, ParserHint.empty()))
+                .collect(Can.toCan());
+    }
+
+    @SuppressWarnings("rawtypes")
+    private Can<Schema.DomainObject> parseEntities(
+            final List<Map> entities) {
+        return entities.stream()
+                .map(entityAsMap->Map.of("", entityAsMap).entrySet().iterator().next())
+                .map(entityAsMapEntry->
+                    parseEntity(entityAsMapEntry, ParserHint.empty()))
+                .collect(Can.toCan());
+    }
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    Entity parseEntity(final Map.Entry<String, Map> entry) {
+    Viewmodel parseViewmodel(
+            final Map.Entry<String, Map> entry,
+            final ParserHint parserHint) {
         val map = entry.getValue();
         val fieldsAsMap = (Map<String, Map>)map.get("fields");
         final String namespace = (String)map.get("namespace");
-        final String name = _Strings.nonEmpty((String)map.get("name"))
+        final String name = _Strings.nonEmpty(parserHint.name((String)map.get("name")))
+                .orElseGet(()->
+                    entry.getKey().startsWith(namespace)
+                        ? entry.getKey().substring(namespace.length() + 1)
+                        : entry.getKey()
+                );
+        val viewmodel = new Viewmodel(
+                ObjectRef.empty(),
+                name,
+                namespace,
+                (String)map.get("title"),
+                (String)map.get("icon"),
+                parseNullableBoolean((Boolean)map.get("iconService")),
+                parseMultilineString((String)map.get("description")),
+                new ArrayList<>());
+        fieldsAsMap.entrySet().stream()
+                .map(IndexedFunction.zeroBased((index, innerEntry)->parseField(viewmodel, index, innerEntry)))
+                .forEach(viewmodel.fields()::add);
+        return viewmodel;
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    Entity parseEntity(
+            final Map.Entry<String, Map> entry,
+            final ParserHint parserHint) {
+        val map = entry.getValue();
+        val fieldsAsMap = (Map<String, Map>)map.get("fields");
+        final String namespace = (String)map.get("namespace");
+        final String name = _Strings.nonEmpty(parserHint.name((String)map.get("name")))
                 .orElseGet(()->
                     entry.getKey().startsWith(namespace)
                         ? entry.getKey().substring(namespace.length() + 1)
@@ -117,32 +191,6 @@ class _Parser {
 //                    ()->String.format("invalid secondary key member %s#%s: must not have any foreign-keys",
 //                            entity.name(), f.name())));
         return entity;
-    }
-
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    Viewmodel parseViewmodel(final Map.Entry<String, Map> entry) {
-        val map = entry.getValue();
-        val fieldsAsMap = (Map<String, Map>)map.get("fields");
-        final String namespace = (String)map.get("namespace");
-        final String name = _Strings.nonEmpty((String)map.get("name"))
-                .orElseGet(()->
-                    entry.getKey().startsWith(namespace)
-                        ? entry.getKey().substring(namespace.length() + 1)
-                        : entry.getKey()
-                );
-        val viewmodel = new Viewmodel(
-                ObjectRef.empty(),
-                name,
-                namespace,
-                (String)map.get("title"),
-                (String)map.get("icon"),
-                parseNullableBoolean((Boolean)map.get("iconService")),
-                parseMultilineString((String)map.get("description")),
-                new ArrayList<>());
-        fieldsAsMap.entrySet().stream()
-                .map(IndexedFunction.zeroBased((index, innerEntry)->parseField(viewmodel, index, innerEntry)))
-                .forEach(viewmodel.fields()::add);
-        return viewmodel;
     }
 
     VmField parseField(final Viewmodel parent, final int ordinal,

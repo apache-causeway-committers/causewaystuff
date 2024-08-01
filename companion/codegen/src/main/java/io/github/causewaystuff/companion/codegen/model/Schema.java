@@ -46,6 +46,7 @@ import lombok.experimental.UtilityClass;
 import io.github.causewaystuff.commons.base.types.internal.ObjectRef;
 import io.github.causewaystuff.commons.base.types.internal.SneakyRef;
 import io.github.causewaystuff.companion.codegen.domgen.LicenseHeader;
+import io.github.causewaystuff.companion.codegen.model._Parser.ParserHint;
 import io.github.causewaystuff.tooling.javapoet.ClassName;
 import io.github.causewaystuff.tooling.javapoet.TypeName;
 
@@ -89,6 +90,9 @@ public class Schema {
             Where hiddenWhere,
             List<String> enumeration,
             List<String> description) {
+        public boolean isEnum() {
+            return enumeration.size()>0;
+        }
     }
 
     public record Entity(
@@ -157,7 +161,7 @@ public class Schema {
         }
         // -- YAML IO
         static Entity parse(@SuppressWarnings("rawtypes") final Map.Entry<String, Map> entry) {
-            return _Parser.parseEntity(entry);
+            return _Parser.parseEntity(entry, ParserHint.empty());
         }
         String toYaml() {
             return _Writer.toYaml(this);
@@ -352,19 +356,31 @@ public class Schema {
              * Entity metadata by {@code <namespace>.<name>}.
              */
             Map<String, Entity> entities) {
-        @Deprecated //incomplete
-        public static Domain of(final Iterable<Entity> entities) {
-            val schema = new Domain(null, new TreeMap<String, Schema.Entity>());
+        public static Domain of(
+                final Iterable<Entity> viewmodels,
+                final Iterable<Entity> entities) {
+            val schema = new Domain(
+                    new TreeMap<String, Schema.Viewmodel>(),
+                    new TreeMap<String, Schema.Entity>());
+            for(val vm: viewmodels) {
+                schema.entities().put(vm.fqn(), vm);
+            }
             for(val entity: entities) {
                 schema.entities().put(entity.fqn(), entity);
             }
             return schema;
         }
-        @Deprecated //incomplete
-        public static Domain of(final @Nullable Stream<Entity> entities) {
-            val schema = new Domain(null, new TreeMap<String, Schema.Entity>());
+        public static Domain of(
+                final @Nullable Stream<Viewmodel> viewmodels,
+                final @Nullable Stream<Entity> entities) {
+            val schema = new Domain(
+                    new TreeMap<String, Schema.Viewmodel>(),
+                    new TreeMap<String, Schema.Entity>());
             if(entities!=null) {
                 entities.forEach(entity->schema.entities().put(entity.fqn(), entity));
+            }
+            if(entities!=null) {
+                viewmodels.forEach(vm->schema.viewmodels().put(vm.fqn(), vm));
             }
             return schema;
         }
@@ -382,9 +398,13 @@ public class Schema {
                     .findFirst();
         }
         public Domain concat(final Domain other) {
-            return Domain.of(Stream.concat(
-                    this.entities().values().stream(),
-                    other.entities().values().stream()));
+            return Domain.of(
+                    Stream.concat(
+                        this.viewmodels().values().stream(),
+                        other.viewmodels().values().stream()),
+                    Stream.concat(
+                        this.entities().values().stream(),
+                        other.entities().values().stream()));
         }
         public ObjectGraph asObjectGraph() {
             return new _ObjectGraphFactory(this).create();

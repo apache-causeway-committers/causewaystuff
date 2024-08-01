@@ -20,14 +20,26 @@ package io.github.causewaystuff.companion.codegen.cli;
 
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import lombok.val;
+
 import io.github.causewaystuff.commons.base.types.ResourceFolder;
+import io.github.causewaystuff.companion.codegen.model.Schema;
 
 class SchemaAssemblerTest {
 
     @Test
-    void assemble() {
+    void assembleAndRoundtrip() {
         var schemaTestFileFolder = ResourceFolder.testResourceRoot().relativeFile("schema-test-files");
-        SchemaAssembler.assemble(schemaTestFileFolder);
+        var domain = SchemaAssembler.assemble(schemaTestFileFolder)
+                .schema();
+
+        // test round-trip
+        val yaml = domain.toYaml();
+        assertEquals(
+                domain,
+                Schema.Domain.fromYaml(yaml));
     }
 
 }
