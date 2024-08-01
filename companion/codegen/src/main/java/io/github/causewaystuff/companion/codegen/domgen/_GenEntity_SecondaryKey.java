@@ -72,7 +72,7 @@ class _GenEntity_SecondaryKey {
     // -- HELPER
 
     private Iterable<ParameterSpec> asSecondaryKeyParams(
-            final List<Schema.Field> fields,
+            final List<Schema.EntityField> fields,
             final Modifier ... modifiers) {
         return fields.stream()
                 .map(field->

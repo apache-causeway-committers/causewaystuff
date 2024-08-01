@@ -48,15 +48,15 @@ class _GenAssociationMixin {
 
     QualifiedType qualifiedType(
             final DomainGenerator.Config config,
-            final Schema.Field fieldWithForeignKeys,
-            final Can<Schema.Field> foreignFields) {
+            final Schema.EntityField fieldWithForeignKeys,
+            final Can<Schema.EntityField> foreignFields) {
 
         val entityModel = fieldWithForeignKeys.parentEntity();
         val packageName = config.fullPackageName(entityModel.namespace()); // shared with entity and mixin
 
         val isPlural = fieldWithForeignKeys.plural();
         val distinctForeignEntities = foreignFields.stream()
-                .map(Schema.Field::parentEntity)
+                .map(Schema.EntityField::parentEntity)
                 .distinct()
                 .collect(Can.toCan());
         val useEitherPattern = foreignFields.size()==2
@@ -97,8 +97,8 @@ class _GenAssociationMixin {
 
     private Optional<MethodSpec> mixedInAssociation(
             final DomainGenerator.Config config,
-            final Schema.Field field,
-            final Can<Schema.Field> foreignFields,
+            final Schema.EntityField field,
+            final Can<Schema.EntityField> foreignFields,
             final Modifier ... modifiers) {
 
         val isPlural = field.plural();
@@ -115,12 +115,12 @@ class _GenAssociationMixin {
         }
 
         final Can<Foreign> foreigners = foreignFields
-                .map((Schema.Field foreignField)->{
+                .map((Schema.EntityField foreignField)->{
                     val foreignEntityClass = _Foreign.foreignClassName(field, foreignField, config);
                     var argList = Can.ofCollection(field.discriminatorFields())
                             .add(field)
                             .stream()
-                            .map(Schema.Field::getter)
+                            .map(Schema.EntityField::getter)
                             .map(getter->String.format("mixee.%s()", getter))
                             .collect(Collectors.toCollection(ArrayList::new));
                     val argCount = argList.size();
@@ -149,7 +149,7 @@ class _GenAssociationMixin {
         }
 
         val distinctForeignEntities = foreignFields.stream()
-                .map(Schema.Field::parentEntity)
+                .map(Schema.EntityField::parentEntity)
                 .distinct()
                 .collect(Can.toCan());
 

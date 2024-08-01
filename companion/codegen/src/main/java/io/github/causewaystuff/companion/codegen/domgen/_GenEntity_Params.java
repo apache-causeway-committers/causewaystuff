@@ -52,7 +52,7 @@ class _GenEntity_Params {
 
     private Iterable<ParameterSpec> asParameterModelParams(
             final DomainGenerator.Config config,
-            final List<Schema.Field> fields,
+            final List<Schema.EntityField> fields,
             final Modifier ... modifiers) {
         return fields.stream()
                 .map(field->

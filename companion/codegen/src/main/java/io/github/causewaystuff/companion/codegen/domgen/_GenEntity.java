@@ -40,7 +40,7 @@ import io.github.causewaystuff.companion.applib.services.search.SearchService;
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.QualifiedType;
 import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.companion.codegen.model.Schema.Entity;
-import io.github.causewaystuff.companion.codegen.model.Schema.Field;
+import io.github.causewaystuff.companion.codegen.model.Schema.EntityField;
 import io.github.causewaystuff.tooling.javapoet.ClassName;
 import io.github.causewaystuff.tooling.javapoet.CodeBlock;
 import io.github.causewaystuff.tooling.javapoet.FieldSpec;
@@ -100,7 +100,7 @@ class _GenEntity {
         // inner enums
 
         entityModel.fields().stream()
-                .filter(Schema.Field::isEnum)
+                .filter(Schema.EntityField::isEnum)
                 .forEach(field->
                     typeModelBuilder.addType(
                             _Enums.enumForColumn(field.asJavaType(), field.enumConstants())));
@@ -115,7 +115,7 @@ class _GenEntity {
             if(!entityModel.suppressUniqueConstraint()) {
                 typeModelBuilder.addAnnotation(_Annotations.unique(
                         String.format("SEC_KEY_UNQ_%s", entityModel.name()),
-                        Can.ofCollection(entityModel.secondaryKeyFields()).map(Field::name)));
+                        Can.ofCollection(entityModel.secondaryKeyFields()).map(EntityField::name)));
             }
 
             typeModelBuilder.addSuperinterface(ParameterizedTypeName.get(
@@ -179,7 +179,7 @@ class _GenEntity {
     }
 
     private Iterable<FieldSpec> asFields(
-            final List<Schema.Field> fields,
+            final List<Schema.EntityField> fields,
             final Modifier ... modifiers) {
         return fields.stream()
                 .map(field->{
@@ -231,7 +231,7 @@ class _GenEntity {
 
     private MethodSpec asSecondaryKeyMethod(
             final TypeSpec secondaryKeyClass,
-            final List<Schema.Field> fields,
+            final List<Schema.EntityField> fields,
             final Modifier ... modifiers) {
         return MethodSpec.methodBuilder("secondaryKey")
                 .addModifiers(modifiers)
@@ -241,7 +241,7 @@ class _GenEntity {
                 .build();
     }
 
-    private String asArgList(final List<Field> fields) {
+    private String asArgList(final List<EntityField> fields) {
         return fields.stream()
                 .map(field->field.isEnum()
                         ? String.format("%s()!=null ? %s().matchOn : null", field.getter(), field.getter())

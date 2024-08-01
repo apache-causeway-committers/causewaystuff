@@ -75,6 +75,7 @@ class _Writer {
 
     void writeField(final YamlWriter yaml, final Schema.VmField field) {
         yaml.ind().ind().write(field.name(), ":").nl();
+        yaml.ind().ind().ind().write("type: ", ""+field.type()).nl();
         yaml.ind().ind().ind().write("required: ", ""+field.required()).nl();
         if(field.plural()) {
             yaml.ind().ind().ind().write("plural: ", "true").nl();
@@ -142,7 +143,7 @@ class _Writer {
         entity.fields().forEach(field->writeField(yaml, field));
     }
 
-    void writeField(final YamlWriter yaml, final Schema.Field field) {
+    void writeField(final YamlWriter yaml, final Schema.EntityField field) {
         yaml.ind().ind().write(field.name(), ":").nl();
         yaml.ind().ind().ind().write("column: ", field.column()).nl();
         yaml.ind().ind().ind().write("column-type: ", field.columnType()).nl();

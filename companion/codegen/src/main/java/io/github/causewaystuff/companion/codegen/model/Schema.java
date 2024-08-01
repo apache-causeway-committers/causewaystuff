@@ -40,6 +40,7 @@ import org.apache.causeway.commons.internal.exceptions._Exceptions;
 import org.apache.causeway.commons.internal.primitives._Ints;
 import org.apache.causeway.commons.io.TextUtils;
 
+import lombok.NonNull;
 import lombok.val;
 import lombok.experimental.UtilityClass;
 
@@ -59,8 +60,40 @@ public class Schema {
     public sealed interface DomainObject permits Viewmodel, Entity {
         String name();
         String namespace();
+        List<String> description();
         default String fqn() {
             return String.format("%s.%s", namespace(), name());
+        }
+        default String formatDescription(final String continuation) {
+            return _Format.parseYamlMultiline(description(), "has no description", continuation);
+        }
+    }
+
+    public sealed interface Field permits VmField, EntityField {
+        int ordinal();
+        String name();
+        List<String> enumeration();
+        List<String> description();
+
+        TypeName asJavaType();
+
+        default boolean isEnum() {
+            return enumeration().size()>0;
+        }
+        default TypeName asJavaEnumType() {
+            return ClassName.get("", _Strings.capitalize(name()));
+        }
+
+        default String formatDescription(final String continuation, final String ... moreLines) {
+            return _Format.parseYamlMultiline(description(), "has no description", continuation, moreLines);
+        }
+        default String sequence() {
+            return "" + (ordinal() + 1);
+        }
+        default List<EnumConstant> enumConstants() {
+            return _NullSafe.stream(enumeration())
+                    .map(IndexedFunction.zeroBased((index, ev)->EnumConstant.parse(this, index, ev)))
+                    .collect(Collectors.toList());
         }
     }
 
@@ -82,16 +115,17 @@ public class Schema {
             SneakyRef<Viewmodel> parentRef,
             int ordinal,
             String name,
-            String javaType,
+            @NonNull String type,
             boolean required,
             boolean plural,
             OptionalInt multiLine,
             String elementType,
             Where hiddenWhere,
             List<String> enumeration,
-            List<String> description) {
-        public boolean isEnum() {
-            return enumeration.size()>0;
+            List<String> description) implements Field {
+        @Override
+        public TypeName asJavaType() {
+            return _TypeMapping.simpleNameToJava(type);
         }
     }
 
@@ -108,7 +142,7 @@ public class Schema {
             String icon,
             boolean iconService,
             List<String> description,
-            List<Field> fields)  implements DomainObject {
+            List<EntityField> fields)  implements DomainObject {
         public Domain parentSchema() {
             return parentRef.getValue();
         }
@@ -130,7 +164,7 @@ public class Schema {
         public boolean hasSecondaryKey() {
             return secondaryKey.size()>0;
         }
-        public List<Field> secondaryKeyFields() {
+        public List<EntityField> secondaryKeyFields() {
             return _NullSafe.stream(secondaryKey)
                     .map(fieldId->fields()
                             .stream()
@@ -141,10 +175,7 @@ public class Schema {
                                             fieldId, fqn())))
                     .collect(Collectors.toList());
         }
-        public String formatDescription(final String continuation) {
-            return _Format.parseYamlMultiline(description(), "has no description", continuation);
-        }
-        public Optional<Schema.Field> lookupFieldByColumnName(final String columnName) {
+        public Optional<Schema.EntityField> lookupFieldByColumnName(final String columnName) {
             return fields().stream()
                     .filter(f->f.column().equalsIgnoreCase(columnName))
                     .findFirst();
@@ -168,7 +199,7 @@ public class Schema {
         }
     }
 
-    public record Field(
+    public record EntityField(
             SneakyRef<Entity> parentRef,
             int ordinal,
             String name,
@@ -183,18 +214,16 @@ public class Schema {
             List<String> enumeration,
             List<String> discriminator,
             List<String> foreignKeys,
-            List<String> description) {
+            List<String> description) implements Field {
         public Entity parentEntity() {
             return parentRef.value();
         }
         public String fqColumnName() {
             return parentEntity().table().toUpperCase() + "." + column().toUpperCase();
         }
+        @Override
         public TypeName asJavaType() {
             return _TypeMapping.dbToJava(columnType(), !required);
-        }
-        public TypeName asJavaEnumType() {
-            return ClassName.get("", _Strings.capitalize(name()));
         }
         public boolean hasElementType() {
             return _Strings.isNotEmpty(elementType);
@@ -215,14 +244,6 @@ public class Schema {
             return parentEntity().secondaryKeyFields()
                     .contains(this);
         }
-        public boolean isEnum() {
-            return enumeration.size()>0;
-        }
-        public List<EnumConstant> enumConstants() {
-            return _NullSafe.stream(enumeration)
-                    .map(IndexedFunction.zeroBased((index, ev)->EnumConstant.parse(this, index, ev)))
-                    .collect(Collectors.toList());
-        }
         public boolean requiredInTheUi() {
             // when enum and the enum also represents null,
             // then Optionality.MANDATORY is enforced (regardless of any required=false)
@@ -233,7 +254,7 @@ public class Schema {
         public boolean hasDiscriminator() {
             return discriminator.size()>0;
         }
-        public List<Field> discriminatorFields() {
+        public List<EntityField> discriminatorFields() {
             return _NullSafe.stream(discriminator)
                 .map(fieldId->parentEntity().fields()
                         .stream()
@@ -247,7 +268,7 @@ public class Schema {
         public boolean hasForeignKeys() {
             return foreignKeys.size()>0;
         }
-        public Can<Field> foreignFields() {
+        public Can<EntityField> foreignFields() {
             return _Foreign.foreignFields(this);
         }
         public boolean isBooleanPrimitive() {
@@ -272,14 +293,8 @@ public class Schema {
             if(parsedMaxLength>1000000000) return 1000000000;
             return parsedMaxLength;
         }
-        public String formatDescription(final String continuation, final String ... moreLines) {
-            return _Format.parseYamlMultiline(description(), "has no description", continuation, moreLines);
-        }
-        public String sequence() {
-            return "" + (ordinal + 1);
-        }
         public void withRequired(final boolean required) {
-            var copy = new Field(parentRef,
+            var copy = new EntityField(parentRef,
                     ordinal,
                     name,
                     column,
@@ -299,7 +314,7 @@ public class Schema {
                     : f);
         }
         public void withUnique(final boolean unique) {
-            var copy = new Field(parentRef,
+            var copy = new EntityField(parentRef,
                     ordinal,
                     name,
                     column,

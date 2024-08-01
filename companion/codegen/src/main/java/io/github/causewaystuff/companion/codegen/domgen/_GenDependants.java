@@ -58,8 +58,8 @@ class _GenDependants {
         // inner mixin classes
 
         mixinSpecs.forEach(mixinSpec->{
-            Schema.Field fieldWithForeignKeys = mixinSpec.fieldWithForeignKeys();
-            Can<Schema.Field> foreignFields = mixinSpec.foreignFields();
+            Schema.EntityField fieldWithForeignKeys = mixinSpec.fieldWithForeignKeys();
+            Can<Schema.EntityField> foreignFields = mixinSpec.foreignFields();
             ClassName propertyMixinClassName = mixinSpec.propertyMixinClassName();
             val localEntity = mixinSpec.localEntity();
 
@@ -87,9 +87,9 @@ class _GenDependants {
     }
 
     static record DependantMixinSpec(
-        Schema.Field fieldWithForeignKeys,
+        Schema.EntityField fieldWithForeignKeys,
                 // all sharing the same foreignEntity, as guaranteed by the caller
-        Can<Schema.Field> foreignFields,
+        Can<Schema.EntityField> foreignFields,
         ClassName propertyMixinClassName) {
         /**
          * entity this mixin contributes to
@@ -107,8 +107,8 @@ class _GenDependants {
     private MethodSpec mixedInCollection(
             final DomainGenerator.Config config,
             final Schema.Entity localEntity, // entity this mixin contributes to
-            final Schema.Field fieldWithForeignKeys,
-            final Can<Schema.Field> foreignFields,
+            final Schema.EntityField fieldWithForeignKeys,
+            final Can<Schema.EntityField> foreignFields,
             final ClassName associationMixinClassName,
             final Modifier ... modifiers) {
 

@@ -43,6 +43,7 @@ import io.github.causewaystuff.commons.base.types.internal.ObjectRef;
 import io.github.causewaystuff.commons.base.types.internal.SneakyRef;
 import io.github.causewaystuff.companion.codegen.model.Schema.Domain;
 import io.github.causewaystuff.companion.codegen.model.Schema.Entity;
+import io.github.causewaystuff.companion.codegen.model.Schema.EntityField;
 import io.github.causewaystuff.companion.codegen.model.Schema.EnumConstant;
 import io.github.causewaystuff.companion.codegen.model.Schema.Field;
 import io.github.causewaystuff.companion.codegen.model.Schema.Viewmodel;
@@ -205,7 +206,7 @@ class _Parser {
         return new VmField(SneakyRef.of(parent),
                 ordinal,
                 entry.getKey(),
-                (String)map.get("java-type"),
+                (String)map.get("type"),
                 (boolean)Optional.ofNullable((Boolean)map.get("required")).orElse(true),
                 (boolean)Optional.ofNullable((Boolean)map.get("plural")).orElse(false),
                 parseNullableIntegerWithBounds((Integer)map.get("multiLine"), 2, 1000),
@@ -215,10 +216,10 @@ class _Parser {
                 parseMultilineString((String)map.get("description")));
     }
 
-    Field parseField(final Entity parent, final int ordinal,
+    EntityField parseField(final Entity parent, final int ordinal,
             @SuppressWarnings("rawtypes") final Map.Entry<String, Map> entry) {
         val map = entry.getValue();
-        return new Field(SneakyRef.of(parent),
+        return new EntityField(SneakyRef.of(parent),
                 ordinal,
                 entry.getKey(),
                 (String)map.get("column"),

@@ -18,12 +18,12 @@
  */
 package io.github.causewaystuff.companion.codegen.model;
 
-import io.github.causewaystuff.tooling.javapoet.ClassName;
-import io.github.causewaystuff.tooling.javapoet.TypeName;
-
 import org.apache.causeway.commons.internal.exceptions._Exceptions;
 
 import lombok.experimental.UtilityClass;
+
+import io.github.causewaystuff.tooling.javapoet.ClassName;
+import io.github.causewaystuff.tooling.javapoet.TypeName;
 
 @UtilityClass
 class _TypeMapping {
@@ -56,6 +56,21 @@ class _TypeMapping {
         throw _Exceptions.unmatchedCase(typeName);
     }
 
+    TypeName simpleNameToJava(final String javaType) {
+        return switch (javaType) {
+        case "String" -> ClassName.get("java.lang", "String");
+        case "BigDecimal" -> ClassName.get("java.lang", "BigDecimal");
+        case "int" -> ClassName.INT;
+        case "long" -> ClassName.LONG;
+        case "short" -> ClassName.SHORT;
+        case "byte" -> ClassName.BYTE;
+        case "float" -> ClassName.FLOAT;
+        case "double" -> ClassName.DOUBLE;
+        case "boolean" -> ClassName.BOOLEAN;
+        default -> throw new IllegalArgumentException("Unexpected value: " + javaType);
+        };
+    }
+
     boolean isMaxLengthSuppressedFor(final String typeName) {
         return typeName.equals("bit(1)")
                 || typeName.startsWith("int")
@@ -64,5 +79,7 @@ class _TypeMapping {
                 || typeName.startsWith("float")
                 || typeName.startsWith("datetime");
     }
+
+
 
 }

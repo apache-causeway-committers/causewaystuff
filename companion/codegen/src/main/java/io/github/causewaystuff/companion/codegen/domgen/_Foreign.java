@@ -31,7 +31,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 class _Foreign {
 
-    ClassName foreignClassName(final Schema.Field field, final Schema.Field foreignField, final DomainGenerator.Config config) {
+    ClassName foreignClassName(final Schema.EntityField field, final Schema.EntityField foreignField, final DomainGenerator.Config config) {
         val foreignEntity = foreignField.parentEntity();
         val foreignPackageName = config.fullPackageName(foreignEntity.namespace());
         val foreignEntityClass = field.hasElementType()
@@ -43,7 +43,7 @@ class _Foreign {
     private final static List<String> knownPropertyNameSuffixes = List.of(
             "Code",
             "LookupKey");
-    String resolvedFieldName(final Schema.Field field) {
+    String resolvedFieldName(final Schema.EntityField field) {
         val mixedInPropertyName = knownPropertyNameSuffixes.stream()
                 .filter(field.name()::endsWith)
                 .findFirst()

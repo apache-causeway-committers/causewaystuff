@@ -33,7 +33,7 @@ import io.github.causewaystuff.commons.base.types.internal.SneakyRef;
 import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.companion.codegen.model.Schema.Domain;
 import io.github.causewaystuff.companion.codegen.model.Schema.Entity;
-import io.github.causewaystuff.companion.codegen.model.Schema.Field;
+import io.github.causewaystuff.companion.codegen.model.Schema.EntityField;
 
 @UtilityClass
 public class OrmSchemaExamples {
@@ -44,8 +44,8 @@ public class OrmSchemaExamples {
                 "Customer", "causewaystuff", "FOODS", "", List.of(), false, "name", "fa-pencil",
                 false,
                 List.of("Customer List and Aliases"),
-                new ArrayList<Schema.Field>());
-        val field = new Field(SneakyRef.of(entity), /*ordinal*/0, "name", "NAME", "nvarchar(100)",
+                new ArrayList<Schema.EntityField>());
+        val field = new EntityField(SneakyRef.of(entity), /*ordinal*/0, "name", "NAME", "nvarchar(100)",
                 true, false, false,
                 OptionalInt.of(2),
                 "",

@@ -129,6 +129,7 @@ public record DomainGenerator(@NonNull DomainGenerator.Config config) {
             @NonNull Schema.Domain schema,
             @NonNull List<JavaFileModel> configBeans,
             @NonNull List<JavaFileModel> modules,
+            @NonNull List<JavaFileModel> viewmodels,
             @NonNull List<JavaFileModel> entities,
             @NonNull List<JavaFileModel> entityMixins,
             @NonNull List<JavaFileModel> submodules,
@@ -137,10 +138,10 @@ public record DomainGenerator(@NonNull DomainGenerator.Config config) {
 
         DomainModel(final Schema.Domain schema) {
             this(schema, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
-                    new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         }
         Stream<JavaFileModel> streamJavaModels() {
-            return Stream.of(configBeans, modules, menus, superTypes, entities, submodules, entityMixins)
+            return Stream.of(configBeans, modules, menus, superTypes, viewmodels, entities, submodules, entityMixins)
                     .flatMap(List::stream);
         }
     }
@@ -148,8 +149,15 @@ public record DomainGenerator(@NonNull DomainGenerator.Config config) {
     public DomainModel createDomainModel() {
 
         val entityModels = config().domain().entities().values().stream().toList();
+        val viewmodelModels = config().domain().viewmodels().values().stream().toList();
 
         val domainModel = new DomainModel(config().domain());
+
+        // viewmodels
+        viewmodelModels.stream()
+            .map(viewmodelModel->JavaFileModel.create(config(),
+                    _GenViewmodel.qualifiedType(config(), viewmodelModel)))
+            .forEach(domainModel.viewmodels()::add);
 
         // superTypes
         entityModels.stream()
@@ -188,13 +196,13 @@ public record DomainGenerator(@NonNull DomainGenerator.Config config) {
                     val associationMixin = associationMixinModel.className();
 
                     // for each association mixin created, there is at least one collection counterpart
-                    final List<Can<Schema.Field>> foreignFieldGroups =  switch (foreignFields.getCardinality()) {
+                    final List<Can<Schema.EntityField>> foreignFieldGroups =  switch (foreignFields.getCardinality()) {
                         case ZERO -> List.of(); // unexpected code reach
                         case ONE -> List.of(foreignFields);
                         case MULTIPLE -> {
-                            val result = new ArrayList<Can<Schema.Field>>();
+                            val result = new ArrayList<Can<Schema.EntityField>>();
                             // group foreign fields by foreign entity, then for each foreign entity create a collection mixin
-                            val multiMap = _Multimaps.<Schema.Entity, Schema.Field>newListMultimap();
+                            val multiMap = _Multimaps.<Schema.Entity, Schema.EntityField>newListMultimap();
                             foreignFields.forEach(foreignField->multiMap.putElement(foreignField.parentEntity(), foreignField));
                             multiMap.forEach((foreignEntity, groupedForeignFields)->{
                                 result.add(Can.ofCollection(groupedForeignFields));

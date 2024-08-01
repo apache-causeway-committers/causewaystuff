@@ -18,11 +18,9 @@
  */
 package io.github.causewaystuff.companion.codegen.cli;
 
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.approvaltests.Approvals;
-import org.approvaltests.core.Options;
 import org.approvaltests.reporters.DiffReporter;
 import org.approvaltests.reporters.UseReporter;
 import org.junit.jupiter.api.Test;
@@ -31,8 +29,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import org.apache.causeway.commons.io.TextUtils;
 
 import lombok.val;
 
@@ -77,20 +73,6 @@ class SchemaAssemblerTest {
             .streamJavaModels()
             .map(javaModel->
                 Arguments.of(javaModel.className().toString(), javaModel.buildJavaFile().toString()));
-    }
-
-    /**
-     * Note: WinMerge needs to play along, that is configure their default file encoding to UTF-8.
-     */
-    static Options yamlOptions() {
-        return new Options()
-            .withScrubber(s ->
-                // UNIX style line endings
-                TextUtils.streamLines(s)
-                    .collect(Collectors.joining("\n"))
-            )
-            .forFile()
-            .withExtension(".yaml");
     }
 
 }

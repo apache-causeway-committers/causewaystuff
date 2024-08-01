@@ -32,14 +32,14 @@ class _Mixins {
         return entityModel.name() + "_" + memberName;
     }
 
-    String propertyMixinClassName(final Schema.Field field) {
+    String propertyMixinClassName(final Schema.EntityField field) {
         return customMixinClassName(field.parentEntity(),
                 _Foreign.resolvedFieldName(field));
     }
 
     String collectionMixinClassName(
             final Schema.Entity localEntity,
-            final Schema.Field dependantField) {
+            final Schema.EntityField dependantField) {
         val dependantEntity = dependantField.parentEntity();
         return localEntity.name()
                 + "_dependent"
