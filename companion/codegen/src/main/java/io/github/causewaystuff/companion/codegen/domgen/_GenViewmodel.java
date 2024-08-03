@@ -25,7 +25,6 @@ import javax.lang.model.element.Modifier;
 
 import org.apache.causeway.applib.annotation.Editing;
 import org.apache.causeway.applib.annotation.Optionality;
-import org.apache.causeway.applib.annotation.PrecedingParamsPolicy;
 import org.apache.causeway.applib.annotation.Where;
 import org.apache.causeway.commons.internal.base._Strings;
 
@@ -76,7 +75,7 @@ class _GenViewmodel {
                                 vm.icon()))
                         .addModifiers(Modifier.PUBLIC)
                         .addMethod(asTitleMethod(vm, Modifier.PUBLIC))
-                        .addRecordComponents(asParameters(vm.fields()))
+                        .addRecordComponents(asRecordComponents(vm.fields()))
                         ;
 
                 yield new QualifiedType(
@@ -134,7 +133,7 @@ class _GenViewmodel {
                 .toList();
     }
 
-    private Iterable<ParameterSpec> asParameters(
+    private Iterable<ParameterSpec> asRecordComponents(
             final List<Schema.VmField> fields) {
         return fields.stream()
                 .map(field->
@@ -144,13 +143,11 @@ class _GenViewmodel {
                                 : field.asJavaType(),
                             field.name())
                     .addJavadoc(field.formatDescription("\n"))
-                    .addAnnotation(_Annotations.parameter(attr->attr
-                            .precedingParamsPolicy(
-                                PrecedingParamsPolicy.PRESERVE_CHANGES)
-                            .optionality(
-                                field.requiredInTheUi()
-                                    ? Optionality.MANDATORY
-                                    : Optionality.OPTIONAL)))
+//                    .addAnnotation(_Annotations.property(attr->attr
+//                            .optionality(
+//                                field.requiredInTheUi()
+//                                    ? Optionality.MANDATORY
+//                                    : Optionality.OPTIONAL)))
                     .addAnnotation(_Annotations.propertyLayout(attr->attr
                             .fieldSetId("details")
                             .sequence(field.sequence())
