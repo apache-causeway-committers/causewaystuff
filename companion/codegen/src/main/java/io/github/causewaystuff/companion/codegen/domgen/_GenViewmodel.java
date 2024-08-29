@@ -73,6 +73,7 @@ class _GenViewmodel {
                         .addAnnotation(_Annotations.domainObjectLayout(
                                 vm.formatDescription("\n"),
                                 vm.icon()))
+                        .addAnnotation(_Annotations.builder())
                         .addModifiers(Modifier.PUBLIC)
                         .addMethod(asTitleMethod(vm, Modifier.PUBLIC))
                         .addRecordComponents(asRecordComponents(vm.fields()))

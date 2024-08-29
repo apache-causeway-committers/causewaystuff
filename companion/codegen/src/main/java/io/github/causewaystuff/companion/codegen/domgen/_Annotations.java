@@ -82,6 +82,10 @@ class _Annotations {
 
     // -- LOMBOK
 
+    AnnotationSpec builder() {
+        return AnnotationSpec.builder(ClassName.get("lombok", "Builder"))
+                .build();
+    }
     AnnotationSpec allArgsConstructor() {
         return AnnotationSpec.builder(ClassName.get("lombok", "AllArgsConstructor"))
                 .build();
