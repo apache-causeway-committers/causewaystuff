@@ -5,6 +5,7 @@ import jakarta.inject.Named;
 import java.lang.String;
 import java.math.BigDecimal;
 import javax.annotation.processing.Generated;
+import lombok.Builder;
 import org.apache.causeway.applib.annotation.DomainObject;
 import org.apache.causeway.applib.annotation.DomainObjectLayout;
 import org.apache.causeway.applib.annotation.ObjectSupport;
@@ -37,6 +38,7 @@ import org.apache.causeway.applib.annotation.Where;
 @DomainObjectLayout(
         describedAs = "has no description"
 )
+@Builder
 public record ConsumptionRecord(
         @PropertyLayout(
                 fieldSetId = "details",
