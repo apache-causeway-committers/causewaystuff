@@ -156,6 +156,7 @@ class _Parser {
                 (String)map.get("title"),
                 (String)map.get("icon"),
                 parseNullableBoolean((Boolean)map.get("iconService")),
+                (String)map.get("named"),
                 parseMultilineString((String)map.get("description")),
                 new ArrayList<>());
         fieldsAsMap.entrySet().stream()
@@ -188,6 +189,7 @@ class _Parser {
                 (String)map.get("title"),
                 (String)map.get("icon"),
                 parseNullableBoolean((Boolean)map.get("iconService")),
+                (String)map.get("named"),
                 parseMultilineString((String)map.get("description")),
                 new ArrayList<>());
         fieldsAsMap.entrySet().stream()

@@ -13,7 +13,7 @@ import org.apache.causeway.applib.annotation.PropertyLayout;
 import org.apache.causeway.applib.annotation.Where;
 
 /**
- * has no description
+ * description goes here
  * @param respondentOrdinal sequential
  * respondent
  * index
@@ -36,7 +36,8 @@ import org.apache.causeway.applib.annotation.Where;
 @Named("reporter.dom.ConsumptionRecord")
 @DomainObject
 @DomainObjectLayout(
-        describedAs = "has no description"
+        named = "uiName",
+        describedAs = "description goes here"
 )
 @Builder
 public record ConsumptionRecord(

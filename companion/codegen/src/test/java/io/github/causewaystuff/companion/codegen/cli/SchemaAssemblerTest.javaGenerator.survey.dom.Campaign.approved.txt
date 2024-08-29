@@ -50,6 +50,7 @@ import org.apache.causeway.applib.services.repository.RepositoryService;
 @Named("survey.dom.Campaign")
 @DomainObject
 @DomainObjectLayout(
+        named = "uiName",
         describedAs = "A  campaign defines a part of a food consumption survey that contains several interviews.\n"
                         + "Campaigns can be defined to be the whole study,\n"
                         + "a seasonal part of a study, a regional part of a study etc.",
@@ -356,6 +357,7 @@ public class Campaign implements Cloneable<Campaign>, HasSecondaryKey<Campaign> 
             nature = Nature.VIEW_MODEL
     )
     @DomainObjectLayout(
+            named = "Unresolvable Campaign",
             describedAs = "Unresolvable Campaign",
             cssClassFa = "skull .unresolvable-color"
     )

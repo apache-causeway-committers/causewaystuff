@@ -20,15 +20,16 @@ package io.github.causewaystuff.companion.codegen.domgen;
 
 import javax.lang.model.element.Modifier;
 
+import org.apache.causeway.applib.annotation.Nature;
+
+import lombok.experimental.UtilityClass;
+
+import io.github.causewaystuff.companion.codegen.domgen._Annotations.DomainObjectLayoutSpec;
 import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.tooling.javapoet.ClassName;
 import io.github.causewaystuff.tooling.javapoet.FieldSpec;
 import io.github.causewaystuff.tooling.javapoet.MethodSpec;
 import io.github.causewaystuff.tooling.javapoet.TypeSpec;
-
-import org.apache.causeway.applib.annotation.Nature;
-
-import lombok.experimental.UtilityClass;
 
 @UtilityClass
 class _GenEntity_Unresolvable {
@@ -45,8 +46,12 @@ class _GenEntity_Unresolvable {
                 .addAnnotation(_Annotations.generated(_GenEntity_Unresolvable.class))
                 .addAnnotation(_Annotations.domainObject(Nature.VIEW_MODEL))
                 .addAnnotation(_Annotations.domainObjectLayout(
-                        String.format("Unresolvable %s", entityModel.name()),
-                        "skull .unresolvable-color"))
+                        DomainObjectLayoutSpec.builder()
+                            .named(String.format("Unresolvable %s", entityModel.name()))
+                            .describedAs(String.format("Unresolvable %s", entityModel.name()))
+                            .cssClassFa("skull .unresolvable-color")
+                            .build()
+                        ))
                 .addAnnotation(_Annotations.named(config.fullLogicalName(entityModel.namespace())
                         + "." + entityModel.name() + ".Unresolvable"))
                 .addAnnotation(_Annotations.requiredArgsConstructor())

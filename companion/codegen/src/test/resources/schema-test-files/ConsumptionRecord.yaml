@@ -20,6 +20,9 @@
 viewmodel:
   namespace: reporter.dom
   generator: record
+  named: uiName
+  description: |
+      description goes here
   fields:
     respondentOrdinal:
       type: int

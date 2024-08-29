@@ -43,6 +43,7 @@ public class OrmSchemaExamples {
                 ObjectRef.empty(),
                 "Customer", "causewaystuff", "FOODS", "", List.of(), false, "name", "fa-pencil",
                 false,
+                "named",
                 List.of("Customer List and Aliases"),
                 new ArrayList<Schema.EntityField>());
         val field = new EntityField(SneakyRef.of(entity), /*ordinal*/0, "name", "NAME", "nvarchar(100)",

@@ -20,6 +20,8 @@ package io.github.causewaystuff.companion.codegen.model;
 
 import java.util.List;
 
+import org.springframework.util.StringUtils;
+
 import org.apache.causeway.commons.internal.base._NullSafe;
 import org.apache.causeway.commons.internal.base._Strings;
 import org.apache.causeway.commons.io.TextUtils;
@@ -66,6 +68,9 @@ class _Writer {
         }
         if(viewmodel.iconService()) {
             yaml.ind().write("iconService: ", "true").nl();
+        }
+        if(StringUtils.hasLength(viewmodel.named())) {
+            yaml.ind().write("named: ", viewmodel.named()).nl();
         }
         yaml.ind().write("description:").multiLineStartIfNotEmtpy(viewmodel.description()).nl();
         viewmodel.description().forEach(line->
@@ -136,6 +141,9 @@ class _Writer {
         }
         if(entity.iconService()) {
             yaml.ind().write("iconService: ", "true").nl();
+        }
+        if(StringUtils.hasLength(entity.named())) {
+            yaml.ind().write("named: ", entity.named()).nl();
         }
         yaml.ind().write("description:").multiLineStartIfNotEmtpy(entity.description()).nl();
         entity.description().forEach(line->

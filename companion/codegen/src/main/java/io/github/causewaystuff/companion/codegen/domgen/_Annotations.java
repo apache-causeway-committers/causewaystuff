@@ -203,18 +203,28 @@ class _Annotations {
         return AnnotationSpec.builder(DomainService.class)
                 .build();
     }
+
+    // -- CAUSEWAY - DOMAIN OBJECT LAYOUT
+
+    @Builder
+    static record DomainObjectLayoutSpec(
+        String named,
+        String describedAs,
+        String cssClassFa) {
+    }
     /**
      * @param describedAs - entity description
      * @param cssClassFa - entity icon (Font Awesome)
      */
     AnnotationSpec domainObjectLayout(
-            final @Nullable String describedAs,
-            final @Nullable String cssClassFa) {
+            final DomainObjectLayoutSpec domainObjectLayoutSpec) {
         val builder = AnnotationSpec.builder(DomainObjectLayout.class);
-        _Strings.nonEmpty(describedAs)
-            .ifPresent(__->builder.addMember("describedAs", "$1S", describedAs));
-        _Strings.nonEmpty(cssClassFa)
-            .ifPresent(__->builder.addMember("cssClassFa", "$1S", cssClassFa));
+        _Strings.nonEmpty(domainObjectLayoutSpec.named)
+            .ifPresent(__->builder.addMember("named", "$1S", domainObjectLayoutSpec.named));
+        _Strings.nonEmpty(domainObjectLayoutSpec.describedAs)
+            .ifPresent(__->builder.addMember("describedAs", "$1S", domainObjectLayoutSpec.describedAs));
+        _Strings.nonEmpty(domainObjectLayoutSpec.cssClassFa)
+            .ifPresent(__->builder.addMember("cssClassFa", "$1S", domainObjectLayoutSpec.cssClassFa));
         return builder.build();
     }
 

@@ -38,6 +38,7 @@ import io.github.causewaystuff.companion.applib.services.iconfa.IconFaService;
 import io.github.causewaystuff.companion.applib.services.lookup.HasSecondaryKey;
 import io.github.causewaystuff.companion.applib.services.search.SearchService;
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.QualifiedType;
+import io.github.causewaystuff.companion.codegen.domgen._Annotations.DomainObjectLayoutSpec;
 import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.companion.codegen.model.Schema.Entity;
 import io.github.causewaystuff.companion.codegen.model.Schema.EntityField;
@@ -61,8 +62,12 @@ class _GenEntity {
                 .addAnnotation(_Annotations.named(config.fullLogicalName(entityModel.namespace()) + "." + entityModel.name()))
                 .addAnnotation(_Annotations.domainObject())
                 .addAnnotation(_Annotations.domainObjectLayout(
-                        entityModel.formatDescription("\n"),
-                        entityModel.icon()))
+                        DomainObjectLayoutSpec.builder()
+                            .named(entityModel.named())
+                            .describedAs(entityModel.formatDescription("\n"))
+                            .cssClassFa(entityModel.icon())
+                            .build()
+                        ))
                 .addAnnotation(_Annotations.persistenceCapable(entityModel.table()))
                 .addAnnotation(_Annotations.datastoreIdentity())
                 .addModifiers(Modifier.PUBLIC)

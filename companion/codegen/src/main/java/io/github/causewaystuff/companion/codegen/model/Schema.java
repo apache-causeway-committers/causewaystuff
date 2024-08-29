@@ -113,6 +113,10 @@ public class Schema {
             String title,
             String icon,
             boolean iconService,
+            /**
+             * as named in the UI, not in code
+             */
+            String named,
             List<String> description,
             List<VmField> fields) implements DomainObject {
         public Domain parentSchema() {
@@ -150,6 +154,10 @@ public class Schema {
             String title,
             String icon,
             boolean iconService,
+            /**
+             * as named in the UI, not in code
+             */
+            String named,
             List<String> description,
             List<EntityField> fields)  implements DomainObject {
         public Domain parentSchema() {

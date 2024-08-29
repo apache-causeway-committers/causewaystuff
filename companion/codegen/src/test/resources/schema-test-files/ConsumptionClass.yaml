@@ -19,6 +19,9 @@
 
 viewmodel:
   namespace: reporter.dom
+  named: uiName
+  description: |
+      description goes here
   fields:
     respondentOrdinal:
       type: int

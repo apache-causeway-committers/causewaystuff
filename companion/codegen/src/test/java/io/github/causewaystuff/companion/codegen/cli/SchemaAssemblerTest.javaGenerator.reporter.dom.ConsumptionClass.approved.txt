@@ -17,13 +17,14 @@ import org.apache.causeway.applib.annotation.PropertyLayout;
 import org.apache.causeway.applib.annotation.Where;
 
 /**
- * has no description
+ * description goes here
  */
 @Generated("io.github.causewaystuff.companion.codegen.domgen._GenViewmodel")
 @Named("reporter.dom.ConsumptionClass")
 @DomainObject
 @DomainObjectLayout(
-        describedAs = "has no description"
+        named = "uiName",
+        describedAs = "description goes here"
 )
 public class ConsumptionClass {
     /**

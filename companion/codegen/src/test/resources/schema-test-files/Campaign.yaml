@@ -25,6 +25,7 @@ entity:
     CODE
   title: String.format("%s (code=%s|%s)", name, surveyCode, code)
   icon: solid users-viewfinder .campaign-color
+  named: uiName
   description: |
     A  campaign defines a part of a food consumption survey that contains several interviews.
     Campaigns can be defined to be the whole study, 

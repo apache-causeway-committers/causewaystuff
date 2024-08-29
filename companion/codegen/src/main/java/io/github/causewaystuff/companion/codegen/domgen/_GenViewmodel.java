@@ -31,6 +31,7 @@ import org.apache.causeway.commons.internal.base._Strings;
 import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.QualifiedType;
+import io.github.causewaystuff.companion.codegen.domgen._Annotations.DomainObjectLayoutSpec;
 import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.tooling.javapoet.CodeBlock;
 import io.github.causewaystuff.tooling.javapoet.FieldSpec;
@@ -53,8 +54,12 @@ class _GenViewmodel {
                         .addAnnotation(_Annotations.named(config.fullLogicalName(vm.namespace()) + "." + vm.name()))
                         .addAnnotation(_Annotations.domainObject())
                         .addAnnotation(_Annotations.domainObjectLayout(
-                                vm.formatDescription("\n"),
-                                vm.icon()))
+                                DomainObjectLayoutSpec.builder()
+                                    .named(vm.named())
+                                    .describedAs(vm.formatDescription("\n"))
+                                    .cssClassFa(vm.icon())
+                                    .build()
+                                ))
                         .addModifiers(Modifier.PUBLIC)
                         .addMethod(asTitleMethod(vm, Modifier.PUBLIC))
                         .addFields(asFields(vm.fields(), Modifier.PRIVATE))
@@ -71,8 +76,12 @@ class _GenViewmodel {
                         .addAnnotation(_Annotations.named(config.fullLogicalName(vm.namespace()) + "." + vm.name()))
                         .addAnnotation(_Annotations.domainObject())
                         .addAnnotation(_Annotations.domainObjectLayout(
-                                vm.formatDescription("\n"),
-                                vm.icon()))
+                                DomainObjectLayoutSpec.builder()
+                                    .named(vm.named())
+                                    .describedAs(vm.formatDescription("\n"))
+                                    .cssClassFa(vm.icon())
+                                    .build()
+                                ))
                         .addAnnotation(_Annotations.builder())
                         .addModifiers(Modifier.PUBLIC)
                         .addMethod(asTitleMethod(vm, Modifier.PUBLIC))

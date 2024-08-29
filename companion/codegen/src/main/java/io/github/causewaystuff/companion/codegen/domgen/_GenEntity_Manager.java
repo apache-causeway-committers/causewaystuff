@@ -20,13 +20,6 @@ package io.github.causewaystuff.companion.codegen.domgen;
 
 import javax.lang.model.element.Modifier;
 
-import io.github.causewaystuff.companion.applib.services.search.SearchService;
-import io.github.causewaystuff.companion.codegen.model.Schema;
-import io.github.causewaystuff.tooling.javapoet.ClassName;
-import io.github.causewaystuff.tooling.javapoet.CodeBlock;
-import io.github.causewaystuff.tooling.javapoet.FieldSpec;
-import io.github.causewaystuff.tooling.javapoet.TypeSpec;
-
 import org.apache.causeway.applib.ViewModel;
 import org.apache.causeway.applib.annotation.Editing;
 import org.apache.causeway.applib.annotation.Nature;
@@ -34,6 +27,14 @@ import org.apache.causeway.applib.annotation.Optionality;
 import org.apache.causeway.commons.internal.base._Strings;
 
 import lombok.experimental.UtilityClass;
+
+import io.github.causewaystuff.companion.applib.services.search.SearchService;
+import io.github.causewaystuff.companion.codegen.domgen._Annotations.DomainObjectLayoutSpec;
+import io.github.causewaystuff.companion.codegen.model.Schema;
+import io.github.causewaystuff.tooling.javapoet.ClassName;
+import io.github.causewaystuff.tooling.javapoet.CodeBlock;
+import io.github.causewaystuff.tooling.javapoet.FieldSpec;
+import io.github.causewaystuff.tooling.javapoet.TypeSpec;
 
 @UtilityClass
 class _GenEntity_Manager {
@@ -51,8 +52,12 @@ class _GenEntity_Manager {
                         + "." + entityModel.name() + ".Manager"))
                 .addAnnotation(_Annotations.domainObject(Nature.VIEW_MODEL))
                 .addAnnotation(_Annotations.domainObjectLayout(
-                        entityModel.formatDescription("\n"),
-                        entityModel.icon()))
+                        DomainObjectLayoutSpec.builder()
+                            .describedAs(entityModel.named())
+                            .describedAs(entityModel.formatDescription("\n"))
+                            .cssClassFa(entityModel.icon())
+                            .build()
+                        ))
                 .addAnnotation(_Annotations.allArgsConstructor())
                 .addField(FieldSpec.builder(SearchService.class, "searchService", Modifier.PUBLIC, Modifier.FINAL)
                         .build())
