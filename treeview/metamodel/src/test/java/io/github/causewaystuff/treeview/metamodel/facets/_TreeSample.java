@@ -18,6 +18,8 @@
  */
 package io.github.causewaystuff.treeview.metamodel.facets;
 
+import java.util.Map;
+
 import org.apache.causeway.applib.ViewModel;
 import org.apache.causeway.applib.annotation.Programmatic;
 import org.apache.causeway.applib.annotation.Property;
@@ -34,10 +36,10 @@ class _TreeSample {
     static interface SampleNode {
         String name();
     }
-    
+
     record A(String name,
         @TreeSubNodes Can<B> childrenB,
-        @TreeSubNodes Can<C> childrenC) implements SampleNode {
+        @TreeSubNodes Map<String, C> childrenC) implements SampleNode {
     }
     record B(String name,
         @TreeSubNodes Can<D> childrenD) implements SampleNode {
@@ -47,40 +49,40 @@ class _TreeSample {
     }
     record D(String name) implements SampleNode {
     }
-    
+
     A sampleA() {
         var ds = Can.of(new D("d1"), new D("d2"), new D("d3"));
         var cs = Can.of(new C("c1", ds), new C("c2", ds));
         var bs = Can.of(new B("b1", ds), new B("b2", ds));
-        var a = new A("a", bs, cs);
+        var a = new A("a", bs, cs.toMap(C::name));
         return a;
     }
-    
-    String nameOf(Object node) {
+
+    String nameOf(final Object node) {
         if(node instanceof SampleNode) {
             return ((SampleNode)node).name();
         }
         return "?";
     }
-    
+
     public static class SampleNodeView implements ViewModel {
-        
-        @Programmatic 
+
+        @Programmatic
         final String memento;
-        
-        public SampleNodeView(String memento) {
+
+        public SampleNodeView(final String memento) {
             this.memento = memento;
-            this.name = "TODO";            
+            this.name = "TODO";
         }
-        
+
         @Override
         public String viewModelMemento() {
             return memento;
         }
 
-        @Property @Getter 
+        @Property @Getter
         final String name;
-        
+
     }
 
 }

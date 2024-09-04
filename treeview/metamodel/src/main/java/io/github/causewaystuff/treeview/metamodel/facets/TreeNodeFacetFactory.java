@@ -87,7 +87,7 @@ implements
                 return targetMh;
             })
             .collect(Can.toCan());
-        
+
         if(treeSubNodesMethodHandles.isEmpty()) {
             return;
         }
@@ -132,7 +132,7 @@ implements
             return subNodesMethodHandles.stream()
                 .mapToInt(mh->{
                     try {
-                        return ((Can<?>)mh.invoke(node)).size();
+                        return _NullSafe.sizeAutodetect(mh.invoke(node));
                     } catch (Throwable e) {
                         log.error("failed to invoke subNodesMethodHandle {}",
                                 mh.toString(), e);
@@ -145,14 +145,13 @@ implements
         @Override
         public Stream<Object> childrenOf(final T node) {
             return subNodesMethodHandles.stream()
-                .map(mh->{
+                .flatMap(mh->{
                     try {
-                        return (Can<?>)mh.invoke(node);
+                        return _NullSafe.streamAutodetect(mh.invoke(node));
                     } catch (Throwable e) {
                         throw _Exceptions.unrecoverable(e);
                     }
-                })
-                .flatMap(Can::stream);
+                });
         }
 
         @Override
