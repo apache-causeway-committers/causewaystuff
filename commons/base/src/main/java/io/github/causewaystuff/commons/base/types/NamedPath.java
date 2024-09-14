@@ -148,6 +148,14 @@ public record NamedPath(@NonNull Can<String> names) implements Iterable<String> 
         return names().getElseFail(index);
     }
 
+    public Optional<String> lastName() {
+        return names().getLast();
+    }
+
+    public String lastNameElseFail() {
+        return names().getLastElseFail();
+    }
+
     public Stream<String> streamNames() {
         return names().stream();
     }

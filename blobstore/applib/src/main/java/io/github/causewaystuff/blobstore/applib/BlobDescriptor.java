@@ -18,14 +18,25 @@
  */
 package io.github.causewaystuff.blobstore.applib;
 
+import java.io.File;
 import java.time.Instant;
 import java.util.Map;
 
-import io.github.causewaystuff.commons.base.types.NamedPath;
+import jakarta.activation.MimeType;
+
+import org.springframework.lang.Nullable;
 
 import org.apache.causeway.applib.value.NamedWithMimeType.CommonMimeType;
 import org.apache.causeway.commons.collections.Can;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
+
+import io.github.causewaystuff.commons.base.types.NamedPath;
+
+@Builder
 public record BlobDescriptor(
         NamedPath path,
         CommonMimeType mimeType,
@@ -36,10 +47,31 @@ public record BlobDescriptor(
         Map<String, String> attributes,
         Can<BlobQualifier> qualifiers) {
 
+    @RequiredArgsConstructor
     public enum Compression {
-        NONE,
-        ZIP,
-        SEVEN_ZIP;
+        NONE("", null),
+        ZIP(".zip", CommonMimeType.ZIP),
+        SEVEN_ZIP(".7z", CommonMimeType._7Z);
+        @Getter @Accessors(fluent=true)
+        final String fileSuffix;
+        final @Nullable CommonMimeType commonMimeType;
+        public static Compression valueOf(final @Nullable MimeType mimeType) {
+            if(mimeType==null) return Compression.NONE;
+            for(var c : Compression.values()) {
+                if(c==NONE) continue;
+                if(c.commonMimeType.matches(mimeType)) return c;
+            }
+            return Compression.NONE;
+        }
+        public static Compression valueOf(final @Nullable File file) {
+            if(file==null) return Compression.NONE;
+            var fileName = file.getName().toLowerCase();
+            for(var c : Compression.values()) {
+                if(c==NONE) continue;
+                if(fileName.endsWith(c.fileSuffix)) return c;
+            }
+            return Compression.NONE;
+        }
     }
 
     public BlobDescriptor(
@@ -61,6 +93,18 @@ public record BlobDescriptor(
             final Compression compression,
             final Map<String, String> attributes) {
         this(path, mimeType, createdBy, createdOn, size, compression, attributes, Can.empty());
+    }
+
+    public BlobDescriptorBuilder asBuilder() {
+        return BlobDescriptor.builder()
+                .path(path)
+                .mimeType(mimeType)
+                .createdBy(createdBy)
+                .createdOn(createdOn)
+                .size(size)
+                .compression(compression)
+                .attributes(attributes)
+                .qualifiers(qualifiers);
     }
 
 }

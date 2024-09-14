@@ -21,12 +21,6 @@ package io.github.causewaystuff.blobstore.test;
 import java.time.Instant;
 import java.util.Map;
 
-import io.github.causewaystuff.blobstore.applib.BlobDescriptor;
-import io.github.causewaystuff.blobstore.applib.BlobDescriptor.Compression;
-import io.github.causewaystuff.blobstore.applib.BlobQualifier;
-import io.github.causewaystuff.blobstore.applib.BlobStore;
-import io.github.causewaystuff.commons.base.types.NamedPath;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -37,6 +31,12 @@ import org.apache.causeway.commons.collections.Can;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+
+import io.github.causewaystuff.blobstore.applib.BlobDescriptor;
+import io.github.causewaystuff.blobstore.applib.BlobDescriptor.Compression;
+import io.github.causewaystuff.blobstore.applib.BlobQualifier;
+import io.github.causewaystuff.blobstore.applib.BlobStore;
+import io.github.causewaystuff.commons.base.types.NamedPath;
 
 @RequiredArgsConstructor
 public class BlobStoreTester {
@@ -161,8 +161,67 @@ public class BlobStoreTester {
                     ()->String.format("expeced to discriminate %s, but did not", q));
         });
 
-        assertTrue(blobStore.listDescriptors(NamedPath.empty(), true).getCardinality().isOne());
+        assertTrue(descriptors().getCardinality().isOne());
+        var baseDescriptor = firstDescriptor();
 
+        // compress no-op
+        var noCompressDescriptor = blobStore.compress(baseDescriptor, Compression.NONE);
+        assertTrue(descriptors().getCardinality().isOne());
+        assertEquals(noCompressDescriptor, firstDescriptor());
+
+        // zip
+        var zipDescriptor = blobStore.compress(baseDescriptor, Compression.ZIP);
+        {
+            assertTrue(descriptors().getCardinality().isOne());
+            var firstDescriptor = firstDescriptor();
+            assertEquals(Compression.ZIP, firstDescriptor.compression());
+            assertEquals(
+                    scenario.path().lastNameElseFail(),
+                    firstDescriptor.path().lastNameElseFail());
+            // verify zip exists
+            var zippedBlob = blobStore.lookupBlob(zipDescriptor.path())
+                    .orElseThrow();
+            assertEquals(CommonMimeType.ZIP.getMimeType(), zippedBlob.getMimeType());
+        }
+
+        // 7z re-compress
+        var sevenZDescriptor = blobStore.compress(zipDescriptor, Compression.SEVEN_ZIP);
+        {
+            assertTrue(descriptors().getCardinality().isOne());
+            var firstDescriptor = firstDescriptor();
+            assertEquals(Compression.SEVEN_ZIP, firstDescriptor.compression());
+            assertEquals(
+                    scenario.path().lastNameElseFail(),
+                    firstDescriptor.path().lastNameElseFail());
+            // verify 7z exists
+            var sevenZBlob = blobStore.lookupBlob(sevenZDescriptor.path())
+                    .orElseThrow();
+            assertEquals(CommonMimeType._7Z.getMimeType(), sevenZBlob.getMimeType());
+        }
+
+        // un-zip
+        var unzipDescriptor = blobStore.compress(sevenZDescriptor, Compression.NONE);
+        {
+            assertTrue(descriptors().getCardinality().isOne());
+            var firstDescriptor = firstDescriptor();
+            assertEquals(Compression.NONE, firstDescriptor.compression());
+            assertEquals(
+                    scenario.path().lastNameElseFail(),
+                    firstDescriptor.path().lastNameElseFail());
+            // verify zip exists
+            var unzippedBlob = blobStore.lookupBlob(unzipDescriptor.path())
+                    .orElseThrow();
+            assertEquals(CommonMimeType.BIN.getMimeType(), unzippedBlob.getMimeType());
+        }
+
+    }
+
+    private Can<BlobDescriptor> descriptors() {
+        return blobStore.listDescriptors(NamedPath.empty(), true);
+    }
+
+    private BlobDescriptor firstDescriptor() {
+        return descriptors().getFirstElseFail();
     }
 
 }

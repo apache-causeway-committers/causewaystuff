@@ -20,14 +20,14 @@ package io.github.causewaystuff.blobstore.applib;
 
 import java.util.Optional;
 
-import io.github.causewaystuff.commons.base.types.NamedPath;
-
 import org.springframework.lang.Nullable;
 
 import org.apache.causeway.applib.value.Blob;
 import org.apache.causeway.commons.collections.Can;
 
 import lombok.NonNull;
+
+import io.github.causewaystuff.commons.base.types.NamedPath;
 
 public interface BlobStore {
 
@@ -69,5 +69,16 @@ public interface BlobStore {
      * Deletes blob and descriptor that are associated with given {@link NamedPath} (if any).
      */
     void deleteBlob(@Nullable NamedPath path);
+
+    /**
+     * Compresses the {@link Blob} that is associated with given {@link BlobDescriptor} using
+     * given {@link BlobDescriptor.Compression}.
+     * <p>
+     * Acts as a no-op if given blob descriptor's compression equals given compression parameter.
+     * @param blobDescriptor
+     * @param compression
+     * @return new {@link BlobDescriptor} with new compression value from given compression parameter.
+     */
+    BlobDescriptor compress(@NonNull BlobDescriptor blobDescriptor, @NonNull BlobDescriptor.Compression compression);
 
 }

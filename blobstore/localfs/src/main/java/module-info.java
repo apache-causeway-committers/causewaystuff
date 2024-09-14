@@ -25,6 +25,7 @@ module io.github.causewaystuff.blobstore.localfs {
     requires org.apache.logging.log4j;
     requires transitive io.github.causewaystuff.blobstore.applib;
     requires io.github.causewaystuff.commons.base;
+    requires io.github.causewaystuff.commons.compression;
     requires spring.context;
     requires spring.core;
 

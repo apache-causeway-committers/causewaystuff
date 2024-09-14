@@ -44,6 +44,11 @@
             <groupId>io.github.causewaystuff</groupId>
             <artifactId>causewaystuff-blobstore-applib</artifactId>
         </dependency>
+        
+        <dependency>
+            <groupId>io.github.causewaystuff</groupId>
+            <artifactId>causewaystuff-commons-compression</artifactId>
+        </dependency>
 
         <!-- TESTING -->
 

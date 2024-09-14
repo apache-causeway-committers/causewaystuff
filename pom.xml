@@ -78,7 +78,7 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <causeway.version>3.1.0.20240904-1522-79d046ab</causeway.version>
+                <causeway.version>3.1.0.20240910-0239-68ea4c19</causeway.version>
             </properties>
             <repositories>
                 <repository>
@@ -217,6 +217,11 @@
             <dependency>
                 <groupId>io.github.causewaystuff</groupId>
                 <artifactId>causewaystuff-commons-base</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.causewaystuff</groupId>
+                <artifactId>causewaystuff-commons-compression</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 

@@ -22,18 +22,9 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
-
-import io.github.causewaystuff.blobstore.applib.BlobDescriptor;
-import io.github.causewaystuff.blobstore.applib.BlobDescriptor.Compression;
-import io.github.causewaystuff.blobstore.applib.BlobQualifier;
-import io.github.causewaystuff.blobstore.applib.BlobStore;
-import io.github.causewaystuff.blobstore.applib.BlobStoreFactory.BlobStoreConfiguration;
-import io.github.causewaystuff.commons.base.types.NamedPath;
-import io.github.causewaystuff.commons.base.types.ResourceFolder;
 
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
@@ -43,7 +34,6 @@ import org.apache.causeway.applib.value.NamedWithMimeType.CommonMimeType;
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.functional.Try;
 import org.apache.causeway.commons.internal.assertions._Assert;
-import org.apache.causeway.commons.internal.base._Strings;
 import org.apache.causeway.commons.internal.functions._Predicates;
 import org.apache.causeway.commons.io.DataSink;
 import org.apache.causeway.commons.io.DataSource;
@@ -55,6 +45,14 @@ import lombok.SneakyThrows;
 import lombok.Synchronized;
 import lombok.extern.log4j.Log4j2;
 
+import io.github.causewaystuff.blobstore.applib.BlobDescriptor;
+import io.github.causewaystuff.blobstore.applib.BlobDescriptor.Compression;
+import io.github.causewaystuff.blobstore.applib.BlobQualifier;
+import io.github.causewaystuff.blobstore.applib.BlobStore;
+import io.github.causewaystuff.blobstore.applib.BlobStoreFactory.BlobStoreConfiguration;
+import io.github.causewaystuff.commons.base.types.NamedPath;
+import io.github.causewaystuff.commons.base.types.ResourceFolder;
+
 @Repository
 @Log4j2
 public class LocalFsBlobStore implements BlobStore {
@@ -64,13 +62,19 @@ public class LocalFsBlobStore implements BlobStore {
 
     public LocalFsBlobStore(final BlobStoreConfiguration config) {
         this.rootDirectory = ResourceFolder.ofFile(new File(config.resource()));
-        this.descriptorsByPath = scan();
+        this.descriptorsByPath = new Scanner(rootDirectory).scan();
     }
 
     @Override @Synchronized
     public void putBlob(final @NonNull BlobDescriptor blobDescriptor, final @NonNull Blob blob) {
 
-        var locator = Locator.of(rootDirectory, blobDescriptor.path());
+        var blobCompression =
+                BlobDescriptor.Compression.valueOf(blob.getMimeType());
+        _Assert.assertEquals(
+                blobDescriptor.compression(),
+                blobCompression);
+
+        var locator = FileLocator.of(rootDirectory, blobDescriptor);
         locator.makeDir();
 
         // TODO specify override behavior
@@ -109,16 +113,26 @@ public class LocalFsBlobStore implements BlobStore {
         if(descriptor==null) {
             return Optional.empty();
         }
-        var locator = Locator.of(rootDirectory, path);
-        //_Assert.assertTrue(locator.hasManifest()); allow on-the-fly descriptors, that only exist in memory
+        var locator = FileLocator.of(rootDirectory, descriptor);
         _Assert.assertTrue(locator.hasBlob());
-        return Blob.tryRead(descriptor.path().names().getLastElseFail(), descriptor.mimeType(), locator.blobFile())
+        return Blob.tryRead(
+                descriptor.path().lastNameElseFail(),
+                switch (descriptor.compression()) {
+                    case NONE -> descriptor.mimeType();
+                    case ZIP -> CommonMimeType.ZIP;
+                    case SEVEN_ZIP -> CommonMimeType._7Z;
+                },
+                locator.blobFile())
                 .getValue();
     }
 
     @Override @Synchronized
     public void deleteBlob(final @Nullable NamedPath path) {
-        var locator = Locator.of(rootDirectory, path);
+        var descriptor = lookupDescriptor(path).orElse(null);
+        if(descriptor==null) {
+            return;
+        }
+        var locator = FileLocator.of(rootDirectory, descriptor);
         var manifestFile = locator.manifestFile();
         var blobFile = locator.blobFile();
 
@@ -129,6 +143,29 @@ public class LocalFsBlobStore implements BlobStore {
             Try.run(()->FileUtils.deleteFile(manifestFile));
         }
         descriptorsByPath.remove(path);
+    }
+
+    @Override
+    public BlobDescriptor compress(
+            final @NonNull BlobDescriptor blobDescriptor,
+            final @NonNull BlobDescriptor.Compression compression) {
+        var oldCompression = blobDescriptor.compression();
+        if(oldCompression.equals(compression)) {
+            return blobDescriptor;
+        }
+        var newDescriptor = blobDescriptor.asBuilder()
+                .compression(compression)
+                .build();
+        var oldBlob = lookupBlob(blobDescriptor.path())
+                .orElse(null);
+        if(oldBlob==null) {
+            return newDescriptor;
+        }
+        deleteBlob(blobDescriptor.path());
+        putBlob(newDescriptor, CompressUtils.recompressBlob(
+                oldBlob, blobDescriptor.mimeType(),
+                oldCompression, compression));
+        return newDescriptor;
     }
 
     // -- HELPER
@@ -212,94 +249,6 @@ public class LocalFsBlobStore implements BlobStore {
         }
     }
 
-    private static record Locator(
-            NamedPath relativeFolderAsPath,
-            File manifestFile,
-            File blobFile) {
-        static final String MANIFEST_SUFFIX = "~.yaml";
-        static Locator of(
-                final ResourceFolder rootDirectory,
-                final NamedPath path) {
-            var destFolderAsNamedPath = path.parentElseFail();
-            var blobPath = destFolderAsNamedPath.add(path.names().getLastElseFail());
-            var manifestPath = destFolderAsNamedPath.add(path.names().getLastElseFail() + MANIFEST_SUFFIX);
-            return new Locator(
-                    null,
-                    rootDirectory.relativeFile(manifestPath),
-                    rootDirectory.relativeFile(blobPath));
-        }
-        static Locator forManifestFile(
-                final ResourceFolder rootDirectory,
-                final File manifestFile) {
-            var relPath = NamedPath.of(manifestFile.getParentFile())
-                    .toRelativePath(NamedPath.of(rootDirectory.root()));
-            return new Locator(
-                    relPath,
-                    manifestFile,
-                    new File(manifestFile.getParentFile(),
-                            _Strings.substring(manifestFile.getName(), 0, -MANIFEST_SUFFIX.length())));
-        }
-        static Locator forBlobFile(
-                final ResourceFolder rootDirectory,
-                final File blobFile) {
-            var relPath = NamedPath.of(blobFile.getParentFile())
-                    .toRelativePath(NamedPath.of(rootDirectory.root()));
-            return new Locator(
-                    relPath,
-                    new File(blobFile.getParentFile(), blobFile.getName() + MANIFEST_SUFFIX),
-                    blobFile);
-        }
-        void makeDir() {
-            FileUtils.makeDir(manifestFile.getParentFile());
-        }
-        boolean hasBlob() {
-            return blobFile().exists();
-        }
-//        boolean hasManifest() {
-//            return manifestFile().exists();
-//        }
-    }
-
-    /**
-     * Scan all {@link BlobDescriptor}(s), as recovered from file-system on the fly.
-     */
-    @SneakyThrows
-    private Map<NamedPath, BlobDescriptor> scan() {
-        log.info("scanning folder {}", rootDirectory);
-        var descriptorsByPath = new HashMap<NamedPath, BlobDescriptor>();
-        // read all manifest files
-        FileUtils.searchFiles(rootDirectory.root(), dir->true, file->file.getName().endsWith(Locator.MANIFEST_SUFFIX))
-            .stream()
-            .map(manifestFile->Locator.forManifestFile(rootDirectory, manifestFile))
-            .map(this::blobDescriptorForManifest)
-            .forEach(descriptor->descriptorsByPath.put(descriptor.path(), descriptor));
-        // scan non-manifest files and add to scan result
-        FileUtils.searchFiles(rootDirectory.root(), dir->true, file->!file.getName().endsWith(Locator.MANIFEST_SUFFIX))
-            .stream()
-            .map(blobFile->Locator.forBlobFile(rootDirectory, blobFile))
-            .map(this::blobDescriptorForBlob)
-            .forEach(descriptor->descriptorsByPath.merge(descriptor.path(), descriptor, this::mergeBlobDescriptors));
-
-        return descriptorsByPath;
-    }
-
-    private BlobDescriptor blobDescriptorForManifest(final Locator locator) {
-        var blobDescriptor = DescriptorDto.readFrom(locator.manifestFile())
-            .toBlobDescriptor(locator.relativeFolderAsPath().add(locator.blobFile().getName()));
-        return blobDescriptor;
-    }
-
-    @SneakyThrows
-    private BlobDescriptor blobDescriptorForBlob(final Locator locator) {
-        var blobFile = locator.blobFile();
-        return DescriptorDto.autoDetect(blobFile)
-            .toBlobDescriptor(locator.relativeFolderAsPath().add(locator.blobFile().getName()));
-    }
-
-    private BlobDescriptor mergeBlobDescriptors(final BlobDescriptor fromManifest, final BlobDescriptor fromBlob) {
-        return fromManifest; //TODO update size?
-    }
-
     private Predicate<BlobDescriptor> satisfiesAll(final @Nullable Can<BlobQualifier> requiredQualifiers) {
         if(requiredQualifiers==null
                 || requiredQualifiers.isEmpty()) {
@@ -310,5 +259,7 @@ public class LocalFsBlobStore implements BlobStore {
             return desc.qualifiers().toSet().containsAll(required);
         };
     }
+
+
 
 }
