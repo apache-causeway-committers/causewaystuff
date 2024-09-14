@@ -114,7 +114,8 @@ public class LocalFsBlobStore implements BlobStore {
             return Optional.empty();
         }
         var locator = FileLocator.of(rootDirectory, descriptor);
-        _Assert.assertTrue(locator.hasBlob());
+        _Assert.assertTrue(locator.hasBlob(),
+                ()->String.format("missing blob for path %s", path));
         return Blob.tryRead(
                 descriptor.path().lastNameElseFail(),
                 switch (descriptor.compression()) {
@@ -259,7 +260,5 @@ public class LocalFsBlobStore implements BlobStore {
             return desc.qualifiers().toSet().containsAll(required);
         };
     }
-
-
 
 }

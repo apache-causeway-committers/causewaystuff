@@ -28,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.apache.causeway.applib.value.Blob;
 import org.apache.causeway.applib.value.NamedWithMimeType.CommonMimeType;
 import org.apache.causeway.commons.collections.Can;
+import org.apache.causeway.commons.collections.Cardinality;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -143,13 +144,12 @@ public class BlobStoreTester {
         var blobRecovered = blobStore.lookupBlob(path).orElse(null);
         assertNotNull(blobRecovered);
         assertEquals(scenario.blob(), blobRecovered);
-
         assertEquals(scenario.expectedAttributes().entrySet(), blobDescRecovered.attributes().entrySet());
 
         // no qualifiers
-        assertTrue(blobStore.listDescriptors(NamedPath.empty(), true).getCardinality().isOne());
-        assertTrue(blobStore.listDescriptors(NamedPath.of("a"), true).getCardinality().isOne());
-        assertTrue(blobStore.listDescriptors(NamedPath.of("b"), true).getCardinality().isZero());
+        assertEquals(Cardinality.ONE, blobStore.listDescriptors(NamedPath.empty(), true).getCardinality());
+        assertEquals(Cardinality.ONE, blobStore.listDescriptors(NamedPath.of("a"), true).getCardinality());
+        assertEquals(Cardinality.ZERO, blobStore.listDescriptors(NamedPath.of("b"), true).getCardinality());
 
         // with qualifiers
         scenario.matchingQualifiers().forEach(q->{

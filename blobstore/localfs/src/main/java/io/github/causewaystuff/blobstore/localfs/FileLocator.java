@@ -22,11 +22,9 @@ import java.io.File;
 
 import org.springframework.lang.Nullable;
 
-import org.apache.causeway.commons.internal.base._Strings;
 import org.apache.causeway.commons.io.FileUtils;
 
 import lombok.NonNull;
-import lombok.SneakyThrows;
 
 import io.github.causewaystuff.blobstore.applib.BlobDescriptor;
 import io.github.causewaystuff.blobstore.localfs.LocalFsBlobStore.DescriptorDto;
@@ -34,7 +32,7 @@ import io.github.causewaystuff.commons.base.types.NamedPath;
 import io.github.causewaystuff.commons.base.types.ResourceFolder;
 
 record FileLocator(
-        NamedPath relativeFolderAsPath,
+        BlobDescriptor blobDescriptor,
         File manifestFile,
         File blobFile) {
 
@@ -50,17 +48,35 @@ record FileLocator(
         var manifestPath = destFolderAsNamedPath.add(path.lastNameElseFail() + MANIFEST_SUFFIX);
         var manifestFile = rootDirectory.relativeFile(manifestPath);
         return new FileLocator(
-                null,
+                blobDescriptor,
                 manifestFile,
                 honorCompressionExtension(manifestFile, blobDescriptor.compression()));
     }
 
-    // -- CONSTRUTION
-
-    public FileLocator(
-            final NamedPath relativeFolderAsPath,
+    static FileLocator forManifestFile(
+            final ResourceFolder rootDirectory,
             final File manifestFile) {
-        this(relativeFolderAsPath, manifestFile, honorCompressionExtension(manifestFile, null));
+        var blobDescriptor = blobDescriptor(rootDirectory, manifestFile);
+        return new FileLocator(
+                blobDescriptor,
+                manifestFile,
+                honorCompressionExtension(manifestFile, blobDescriptor.compression()));
+    }
+
+    static FileLocator forBlobFile(
+            final ResourceFolder rootDirectory,
+            final File blobFile) {
+        var dto = DescriptorDto.autoDetect(blobFile);
+        var compression = dto.compression();
+        var relPath = NamedPath.of(blobFile.getParentFile())
+                .toRelativePath(NamedPath.of(rootDirectory.root()));
+        var baseName = baseNameFromBlobName(blobFile.getName(), compression);
+        var fallbackDescriptor = dto
+                .toBlobDescriptor(relPath.add(baseName));
+        return new FileLocator(
+                fallbackDescriptor,
+                new File(blobFile.getParentFile(), baseName + FileLocator.MANIFEST_SUFFIX),
+                blobFile);
     }
 
     // -- UTILS
@@ -73,20 +89,17 @@ record FileLocator(
         return blobFile().exists();
     }
 
-    BlobDescriptor blobDescriptorForManifest() {
-        var blobDescriptor = DescriptorDto.readFrom(manifestFile())
-            .toBlobDescriptor(relativeFolderAsPath().add(blobFile().getName()));
-        return blobDescriptor;
-    }
-
-    @SneakyThrows
-    BlobDescriptor blobDescriptorForBlob() {
-        var blobFile = blobFile();
-        return DescriptorDto.autoDetect(blobFile)
-            .toBlobDescriptor(relativeFolderAsPath().add(blobFile().getName()));
-    }
-
     // -- HELPER
+
+    private static BlobDescriptor blobDescriptor(
+            final ResourceFolder rootDirectory,
+            final File manifestFile) {
+        var relPath = NamedPath.of(manifestFile.getParentFile())
+                .toRelativePath(NamedPath.of(rootDirectory.root()));
+        return DescriptorDto.readFrom(manifestFile)
+                .toBlobDescriptor(relPath
+                        .add(baseNameFromManifestName(manifestFile.getName())));
+    }
 
     private static String honorCompressionExtension(
             final String baseName, final BlobDescriptor.Compression compression) {
@@ -105,7 +118,10 @@ record FileLocator(
     }
 
     private static String baseNameFromManifestName(final String manifestName) {
-        return _Strings.substring(manifestName, 0, -FileLocator.MANIFEST_SUFFIX.length());
+        return manifestName.substring(0, manifestName.length()-FileLocator.MANIFEST_SUFFIX.length());
+    }
+    private static String baseNameFromBlobName(final String blobName, final BlobDescriptor.Compression compression) {
+        return blobName.substring(0, blobName.length()-compression.fileSuffix().length());
     }
 
 }
