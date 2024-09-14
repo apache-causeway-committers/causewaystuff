@@ -28,7 +28,6 @@ import org.springframework.lang.Nullable;
 
 import org.apache.causeway.applib.value.NamedWithMimeType.CommonMimeType;
 import org.apache.causeway.commons.collections.Can;
-import org.apache.causeway.commons.internal.exceptions._Exceptions;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -96,27 +95,28 @@ public record BlobDescriptor(
         this(path, mimeType, createdBy, createdOn, size, compression, attributes, Can.empty());
     }
 
-    public BlobDescriptor(
-            final NamedPath path,
-            final CommonMimeType mimeType,
-            final String createdBy,
-            final Instant createdOn,
-            final long size,
-            final Compression compression,
-            final Map<String, String> attributes,
-            final Can<BlobQualifier> qualifiers) {
-        if(path.lastNameElseFail().endsWith(".zip")) {
-            throw _Exceptions.illegalArgument("%s", path);
-        }
-        this.path = path;
-        this.mimeType = mimeType;
-        this.createdBy = createdBy;
-        this.createdOn = createdOn;
-        this.size = size;
-        this.compression = compression;
-        this.attributes = attributes;
-        this.qualifiers = qualifiers;
-    }
+//validation
+//    public BlobDescriptor(
+//            final NamedPath path,
+//            final CommonMimeType mimeType,
+//            final String createdBy,
+//            final Instant createdOn,
+//            final long size,
+//            final Compression compression,
+//            final Map<String, String> attributes,
+//            final Can<BlobQualifier> qualifiers) {
+//        if(path.lastNameElseFail().endsWith(".zip")) {
+//            throw _Exceptions.illegalArgument("%s", path);
+//        }
+//        this.path = path;
+//        this.mimeType = mimeType;
+//        this.createdBy = createdBy;
+//        this.createdOn = createdOn;
+//        this.size = size;
+//        this.compression = compression;
+//        this.attributes = attributes;
+//        this.qualifiers = qualifiers;
+//    }
 
     public BlobDescriptorBuilder asBuilder() {
         return BlobDescriptor.builder()
