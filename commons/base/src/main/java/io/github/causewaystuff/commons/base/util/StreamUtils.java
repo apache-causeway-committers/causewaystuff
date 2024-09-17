@@ -110,7 +110,7 @@ public class StreamUtils {
         @SneakyThrows
         public T take() {
             while(hasPotentiallyMore()) {
-                var t = q.poll(10, TimeUnit.MILLISECONDS);
+                var t = q.poll(1, TimeUnit.MILLISECONDS);
                 if(t!=null) {
                     return t;
                 }
