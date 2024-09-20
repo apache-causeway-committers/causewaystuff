@@ -60,7 +60,7 @@
         <jsoup.version>1.18.1</jsoup.version>
         <maven-model-builder.version>3.9.9</maven-model-builder.version>
         <picocli.version>4.7.6</picocli.version>
-        <structurizr-dsl.version>2.2.0</structurizr-dsl.version>
+        <structurizr-dsl.version>3.0.0</structurizr-dsl.version>
         <structurizr-export.version>2.2.0</structurizr-export.version>
         <tukaani-xz.version>1.10</tukaani-xz.version>
 
