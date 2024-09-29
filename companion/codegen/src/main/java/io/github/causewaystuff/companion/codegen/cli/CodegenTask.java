@@ -58,9 +58,6 @@ record CodegenTask(
                             .destinationFolder(javaRoot)
                             .logicalNamespacePrefix(codegenResource.logicalNamespacePrefix())
                             .packageNamePrefix(codegenResource.packageNamePrefix())
-                            .onPurgeKeep(FileKeepStrategy.layout()
-                                    .or(FileKeepStrategy.javaNonGenerated())
-                                    )
                             .entitiesModulePackageName(codegenResource.entitiesModulePackageName())
                             .entitiesModuleClassSimpleName(codegenResource.entitiesModuleClassSimpleName()));
                 });

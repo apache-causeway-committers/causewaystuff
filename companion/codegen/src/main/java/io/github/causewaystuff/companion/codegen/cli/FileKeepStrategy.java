@@ -20,6 +20,7 @@ package io.github.causewaystuff.companion.codegen.cli;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.function.Predicate;
 
 import org.apache.causeway.commons.io.TextUtils;
@@ -29,14 +30,23 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 class FileKeepStrategy {
 
-    public Predicate<File> layout(){
-        return file->file.getName().endsWith(".layout.xml")
-                || file.getName().endsWith(".layout.fallback.xml");
-    }
+//    public Predicate<File> layout(){
+//        return file->file.getName().endsWith(".layout.xml")
+//                || file.getName().endsWith(".layout.fallback.xml");
+//    }
+//
+//    public Predicate<File> javaNonGenerated(){
+//        return file->
+//            file.getName().endsWith(".java")
+//                && nonGenerated().test(file);
+//    }
 
-    public Predicate<File> javaNonGenerated(){
+    private List<String> generatedFileTypes = List.of(".java", ".xml", ".yaml");
+
+    public Predicate<File> nonGenerated(){
         return file->
-            file.getName().endsWith(".java")
+            generatedFileTypes.stream()
+                .anyMatch(ext->file.getName().endsWith(ext))
             && !TextUtils.readLinesFromFile(file, StandardCharsets.UTF_8)
                 .stream()
                 .anyMatch(line->line.startsWith("@Generated"));

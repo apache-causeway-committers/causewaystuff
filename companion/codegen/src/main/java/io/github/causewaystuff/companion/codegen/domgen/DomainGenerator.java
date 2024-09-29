@@ -64,7 +64,7 @@ public record DomainGenerator(@NonNull DomainGenerator.Config config) {
         private final @NonNull String entitiesModuleClassSimpleName = "EntitiesModule";
 
         @Builder.Default
-        private final @NonNull Predicate<File> onPurgeKeep = file->false;
+        private final @NonNull Predicate<File> onPurgeKeep = file->true; // safety net
 
         /**
          * Data Federation Support
