@@ -152,7 +152,7 @@
                     <dependency>
                         <groupId>org.ow2.asm</groupId>
                         <artifactId>asm</artifactId>
-                        <version>9.7</version> <!-- in support of JDK23 as build JVM - overrides 9.6 from v3.13.0-->
+                        <version>9.7.1</version> <!-- in support of JDK23 as build JVM - overrides 9.6 from v3.13.0-->
                     </dependency>
                 </dependencies>
             </plugin>
