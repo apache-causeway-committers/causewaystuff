@@ -30,8 +30,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import lombok.val;
-
 import io.github.causewaystuff.commons.base.types.ResourceFolder;
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator;
 import io.github.causewaystuff.companion.codegen.domgen.LicenseHeader;
@@ -46,7 +44,7 @@ class SchemaAssemblerTest {
         var domain = assembler.domain();
 
         // test round-trip
-        val yaml = domain.toYaml();
+        var yaml = domain.toYaml();
         assertEquals(
                 domain,
                 Schema.Domain.fromYaml(yaml));

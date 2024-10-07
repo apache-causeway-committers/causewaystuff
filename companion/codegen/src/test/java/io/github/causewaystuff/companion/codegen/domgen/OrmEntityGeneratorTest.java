@@ -20,15 +20,13 @@ package io.github.causewaystuff.companion.codegen.domgen;
 
 import org.junit.jupiter.api.Test;
 
-import lombok.val;
-
 class OrmEntityGeneratorTest {
 
     @Test
     void entityGen() {
-        val domain = OrmSchemaExamples.examples().getElseFail(0);
+        var domain = OrmSchemaExamples.examples().getElseFail(0);
 
-        val config = DomainGenerator.Config.builder()
+        var config = DomainGenerator.Config.builder()
                 .logicalNamespacePrefix("test.logical")
                 .packageNamePrefix("test.actual")
                 .licenseHeader(LicenseHeader.ASF_V2)
@@ -37,7 +35,7 @@ class OrmEntityGeneratorTest {
                 .entitiesModuleClassSimpleName("MyEntitiesModule")
                 .build();
 
-        val entityGen = new DomainGenerator(config);
+        var entityGen = new DomainGenerator(config);
 
         entityGen.createDomainModel().streamJavaModels()
             .forEach(sample->{

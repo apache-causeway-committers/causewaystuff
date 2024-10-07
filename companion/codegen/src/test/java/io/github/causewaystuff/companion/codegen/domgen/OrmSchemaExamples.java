@@ -25,7 +25,6 @@ import java.util.OptionalInt;
 import org.apache.causeway.applib.annotation.Where;
 import org.apache.causeway.commons.collections.Can;
 
-import lombok.val;
 import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.commons.base.types.internal.ObjectRef;
@@ -39,14 +38,14 @@ import io.github.causewaystuff.companion.codegen.model.Schema.EntityField;
 public class OrmSchemaExamples {
 
     public Can<Domain> examples() {
-        val entity = new Entity(
+        var entity = new Entity(
                 ObjectRef.empty(),
                 "Customer", "causewaystuff", "FOODS", "", List.of(), false, "name", "fa-pencil",
                 false,
                 "named",
                 List.of("Customer List and Aliases"),
                 new ArrayList<Schema.EntityField>());
-        val field = new EntityField(SneakyRef.of(entity), /*ordinal*/0, "name", "NAME", "nvarchar(100)",
+        var field = new EntityField(SneakyRef.of(entity), /*ordinal*/0, "name", "NAME", "nvarchar(100)",
                 true, false, false,
                 OptionalInt.of(2),
                 "",
