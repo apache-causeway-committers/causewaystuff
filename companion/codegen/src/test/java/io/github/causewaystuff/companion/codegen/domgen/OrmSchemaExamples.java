@@ -50,6 +50,7 @@ public class OrmSchemaExamples {
                 OptionalInt.of(2),
                 "",
                 Where.ALL_TABLES,
+                null,
                 List.of(), List.of(), List.of(), List.of("aa", "bb", "cc"));
         entity.fields().add(field);
         return Can.of(

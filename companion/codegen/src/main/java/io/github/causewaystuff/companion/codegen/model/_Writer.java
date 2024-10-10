@@ -95,6 +95,9 @@ class _Writer {
         if(field.hiddenWhere()!=null) {
             yaml.ind().ind().ind().write("hiddenWhere: ", field.hiddenWhere().name()).nl();
         }
+        if(_Strings.isNotEmpty(field.fieldSet())) {
+            yaml.ind().ind().ind().write("fieldSet: ", field.fieldSet()).nl();
+        }
         if(field.isEnum()) {
             yaml.ind().ind().ind().write("enum:").multiLineStartIfNotEmtpy(field.enumeration()).nl();
             field.enumeration().forEach(line->
@@ -169,6 +172,9 @@ class _Writer {
         }
         if(field.hiddenWhere()!=null) {
             yaml.ind().ind().ind().write("hiddenWhere: ", field.hiddenWhere().name()).nl();
+        }
+        if(_Strings.isNotEmpty(field.fieldSet())) {
+            yaml.ind().ind().ind().write("fieldSet: ", field.fieldSet()).nl();
         }
         if(field.isEnum()) {
             yaml.ind().ind().ind().write("enum:").multiLineStartIfNotEmtpy(field.enumeration()).nl();

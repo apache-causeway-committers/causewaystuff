@@ -215,6 +215,7 @@ class _Parser {
                 parseNullableIntegerWithBounds((Integer)map.get("multiLine"), 2, 1000),
                 (String)map.get("elementType"),
                 parseNullableWhere((String)map.get("hiddenWhere")),
+                (String)map.get("fieldSet"),
                 parseMultilineStringTrimmed((String)map.get("enum")),
                 parseMultilineString((String)map.get("description")));
     }
@@ -233,6 +234,7 @@ class _Parser {
                 parseNullableIntegerWithBounds((Integer)map.get("multiLine"), 2, 1000),
                 (String)map.get("elementType"),
                 parseNullableWhere((String)map.get("hiddenWhere")),
+                (String)map.get("fieldSet"),
                 parseMultilineStringTrimmed((String)map.get("enum")),
                 parseMultilineStringTrimmed((String)map.get("discriminator")),
                 parseMultilineStringTrimmed((String)map.get("foreignKeys")),

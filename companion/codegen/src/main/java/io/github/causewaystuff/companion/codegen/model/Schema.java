@@ -75,6 +75,7 @@ public class Schema {
         boolean required();
         List<String> enumeration();
         List<String> description();
+        String fieldSet();
 
         TypeName asJavaType();
 
@@ -134,6 +135,7 @@ public class Schema {
             OptionalInt multiLine,
             String elementType,
             Where hiddenWhere,
+            String fieldSet,
             List<String> enumeration,
             List<String> description) implements Field {
         @Override
@@ -228,6 +230,7 @@ public class Schema {
             OptionalInt multiLine,
             String elementType,
             Where hiddenWhere,
+            String fieldSet,
             List<String> enumeration,
             List<String> discriminator,
             List<String> foreignKeys,
@@ -315,6 +318,7 @@ public class Schema {
                     multiLine,
                     elementType,
                     hiddenWhere,
+                    fieldSet,
                     enumeration,
                     discriminator,
                     foreignKeys,
@@ -335,6 +339,7 @@ public class Schema {
                     multiLine,
                     elementType,
                     hiddenWhere,
+                    fieldSet,
                     enumeration,
                     discriminator,
                     foreignKeys,

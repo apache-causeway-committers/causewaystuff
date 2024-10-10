@@ -126,7 +126,7 @@ class _GenViewmodel {
                         return attr;
                     }))
                     .addAnnotation(_Annotations.propertyLayout(attr->attr
-                            .fieldSetId("details")
+                            .fieldSetId(_Strings.nonEmpty(field.fieldSet()).orElse("details"))
                             .sequence(field.sequence())
                             .describedAs(
                                 field.formatDescription("\n"))
@@ -159,7 +159,7 @@ class _GenViewmodel {
 //                                    ? Optionality.MANDATORY
 //                                    : Optionality.OPTIONAL)))
                     .addAnnotation(_Annotations.propertyLayout(attr->attr
-                            .fieldSetId("details")
+                            .fieldSetId(_Strings.nonEmpty(field.fieldSet()).orElse("details"))
                             .sequence(field.sequence())
                             .describedAs(
                                 field.formatDescription("\n"))

@@ -209,7 +209,7 @@ class _GenEntity {
                                     ? "identity"
                                     : field.hasForeignKeys()
                                         ? "foreign"
-                                        : "details")
+                                        : _Strings.nonEmpty(field.fieldSet()).orElse("details"))
                             .sequence(field.sequence())
                             .describedAs(
                                 field.formatDescription("\n"))
