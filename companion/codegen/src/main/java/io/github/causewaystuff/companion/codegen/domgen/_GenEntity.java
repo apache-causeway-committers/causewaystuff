@@ -219,7 +219,11 @@ class _GenEntity {
                                             ? Where.ALL_TABLES
                                             : Where.NOWHERE)
                                     )))
-                    .addAnnotation(_Annotations.column(field.column(), !field.required(), field.maxLength()))
+                    .addAnnotation(_Annotations.column(col->col
+                            .columnName(field.column())
+                            .jdbcType(_TypeMapping.dbTypeToJdbcColumnExplicitType(field.columnType()))
+                            .allowsNull(!field.required())
+                            .maxLength(field.maxLength())))
                     .addAnnotation(_Annotations.getter())
                     .addAnnotation(_Annotations.setter());
 

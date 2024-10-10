@@ -422,21 +422,28 @@ class _Annotations {
                 .addMember("column", "$1S", "id")
                 .build();
     }
-    /**
-     * @param columnName - name of the db column, if null or empty uses default name
-     * @param allowsNull - whether null is allowed as database value for this column
-     * @param maxLength - ignored if less than one
-     */
-    AnnotationSpec column(
-            final String columnName,
-            final boolean allowsNull,
-            final int maxLength) {
+
+    @Builder
+    static record JdoColumnSpec(
+            /** name of the db column, if null or empty uses default name */
+            String columnName,
+            /** whether null is allowed as database value for this column */
+            boolean allowsNull,
+            /** ignored if less than one */
+            int maxLength,
+            String jdbcType) {
+    }
+    AnnotationSpec column(final UnaryOperator<JdoColumnSpec.JdoColumnSpecBuilder> attrProvider) {
         val annotBuilder = AnnotationSpec.builder(ClassName.get("javax.jdo.annotations", "Column"));
-        _Strings.nonEmpty(_Strings.trim(columnName))
+        val attr = attrProvider.apply(JdoColumnSpec.builder()).build();
+        _Strings.nonEmpty(_Strings.trim(attr.columnName))
             .ifPresent(name->annotBuilder.addMember("name", "$1S", name));
-        annotBuilder.addMember("allowsNull", "$1S", "" + allowsNull);
-        if(maxLength>0) {
-            annotBuilder.addMember("length", "$1L", Math.min(maxLength, 1024*4)); // upper bound = 4k
+        annotBuilder.addMember("allowsNull", "$1S", "" + attr.allowsNull);
+        if(attr.maxLength>0) {
+            annotBuilder.addMember("length", "$1L", Math.min(attr.maxLength, 1024*4)); // upper bound = 4k
+        }
+        if(attr.jdbcType!=null) {
+            annotBuilder.addMember("jdbcType", "$1S", attr.jdbcType);
         }
         return annotBuilder.build();
     }
