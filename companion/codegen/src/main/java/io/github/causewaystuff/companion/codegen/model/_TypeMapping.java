@@ -30,7 +30,8 @@ import io.github.causewaystuff.tooling.javapoet.TypeName;
 class _TypeMapping {
 
     TypeName dbToJava(final String typeName, final boolean nullable) {
-        if(typeName.startsWith("nvarchar")) {
+        if(typeName.startsWith("nvarchar")
+                || typeName.equals("clob")) {
             return ClassName.get("java.lang", "String");
         }
         if(typeName.equals("bit(1)")) {
@@ -80,13 +81,12 @@ class _TypeMapping {
 
     boolean isMaxLengthSuppressedFor(final String typeName) {
         return typeName.equals("bit(1)")
+                || typeName.equals("clob")
                 || typeName.startsWith("int")
                 || typeName.startsWith("smallint")
                 || typeName.startsWith("tinyint")
                 || typeName.startsWith("float")
                 || typeName.startsWith("datetime");
     }
-
-
 
 }
