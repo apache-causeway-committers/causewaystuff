@@ -109,24 +109,8 @@ public record Listing<T>(
 
     }
 
-    public enum LineType {
-        /**
-         * Can be mapped to {@code T}. Not commented out.
-         */
-        DTO_ENABLED,
-        /**
-         * Can be mapped to {@code T}, but commented out.
-         */
-        DTO_DISABLED,
-        /**
-         * Blank line or arbitrary comment, cannot be mapped to {@code T}.
-         */
-        COMMENT,
-    }
-
     public sealed interface Line
     permits MappedLine, LineComment{
-        LineType lineType();
         String format();
     }
     public sealed interface MappedLine<T>
@@ -135,11 +119,13 @@ public record Listing<T>(
         T object();
     }
 
+    /**
+     * Can be mapped to {@code T}. Not commented out.
+     */
     public record LineEnabled<T>(
             @NonNull T object,
             @NonNull String objectStringified)
             implements MappedLine<T> {
-        @Override public LineType lineType() { return LineType.DTO_ENABLED; }
         @Override public String format() {
             return objectStringified;
         }
@@ -147,11 +133,13 @@ public record Listing<T>(
             return new LineDisabled<>(object, objectStringified);
         }
     }
+    /**
+     * Can be mapped to {@code T}, but commented out.
+     */
     public record LineDisabled<T>(
             @NonNull T object,
             @NonNull String objectStringified)
             implements MappedLine<T> {
-        @Override public LineType lineType() { return LineType.DTO_DISABLED; }
         @Override public String format() {
             return "#" + objectStringified;
         }
@@ -162,11 +150,13 @@ public record Listing<T>(
             return new LineRemoved<>(object, objectStringified);
         }
     }
+    /**
+     * Can be mapped to {@code T}, but was removed, hence commented out.
+     */
     public record LineRemoved<T>(
             @NonNull T object,
             @NonNull String objectStringified)
             implements MappedLine<T> {
-        @Override public LineType lineType() { return LineType.DTO_DISABLED; }
         @Override public String format() {
             return "#REMOVED " + objectStringified;
         }
@@ -174,10 +164,12 @@ public record Listing<T>(
             return new LineDisabled<>(object, objectStringified);
         }
     }
+    /**
+     * Blank line or arbitrary comment, cannot be mapped to {@code T}.
+     */
     public record LineComment(
             @NonNull String comment)
             implements Line {
-        @Override public LineType lineType() { return LineType.COMMENT; }
         @Override public String format() {
             return comment;
         }
