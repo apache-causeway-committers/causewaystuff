@@ -20,10 +20,9 @@
 
 package io.github.causewaystuff.tooling.cli.projdoc;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import io.github.causewaystuff.tooling.cli.projdoc.ProjectDocModel;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ProjectDocModel_sanitizeDescription_Test {
 
@@ -31,23 +30,25 @@ class ProjectDocModel_sanitizeDescription_Test {
     void strips() {
 
         final String str = ProjectDocModel.sanitizeDescription(
-                "JDO Spring integration.\n" +
-                "\t\t\n" +
-                "\t\tThis is a fork of the Spring ORM JDO sources at github, \n" +
-                "        for which support had been dropped back in 2016 [1].\n" +
-                "\t\t\n" +
-                "\t\tCredits to the original authors.\n" +
-                "\t\t\n" +
-                "\t\t[1] https://github.com/spring-projects/spring-framework/issues/18702");
+                """
+                    JDO Spring integration.
+                    	\t
+                    		This is a fork of the Spring ORM JDO sources at github,\s
+                            for which support had been dropped back in 2016 [1].
+                    	\t
+                    		Credits to the original authors.
+                    	\t
+                    		[1] https://github.com/spring-projects/spring-framework/issues/18702""");
 
-        Assertions.assertEquals(str,
-                "JDO Spring integration.\n" +
-                "\n" +
-                "This is a fork of the Spring ORM JDO sources at github,\n" +
-                "for which support had been dropped back in 2016 [1].\n" +
-                "\n" +
-                "Credits to the original authors.\n" +
-                "\n" +
-                "[1] https://github.com/spring-projects/spring-framework/issues/18702");
+        assertEquals(str,
+                """
+                    JDO Spring integration.
+
+                    This is a fork of the Spring ORM JDO sources at github,
+                    for which support had been dropped back in 2016 [1].
+
+                    Credits to the original authors.
+
+                    [1] https://github.com/spring-projects/spring-framework/issues/18702""");
     }
 }

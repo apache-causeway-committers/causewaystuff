@@ -31,7 +31,8 @@ extends BiFunction<J2AdocUnit, File, Document> {
     /**
      *
      * @param j2AdocUnit - the java AST to convert to asciidoc
-     * @param file - the file that will be written to.  The intent is not for the formatter to write to this file, but it can be used to determine if include's of hook files are required.
+     * @param file - the file that will be written to.
+     *    The intent is not for the formatter to write to this file, but it can be used to determine if include's of hook files are required.
      *
      * @return - the asciidoc representation of the java AST.
      */

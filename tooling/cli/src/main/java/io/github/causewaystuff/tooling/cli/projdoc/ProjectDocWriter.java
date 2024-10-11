@@ -46,6 +46,7 @@ final class ProjectDocWriter {
             final @NonNull J2AdocContext j2aContext,
             final @NonNull ProjectDocModel.Mode mode) {
 
+        @SuppressWarnings("unused")
         val global = cliConfig.getGlobal();
         val overview = cliConfig.getCommands().getOverview();
         val index = cliConfig.getCommands().getIndex();
