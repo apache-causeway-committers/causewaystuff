@@ -285,7 +285,9 @@ public record Listing<T>(
 
         // process the remaining incoming lines
         if(!incomingByKey.isEmpty()) {
-            mergedLines.add(new LineComment("#MERGED"));
+            if(mergedLines.isEmpty()) {
+                mergedLines.add(new LineComment("#MERGED")); // skip if we are filling an empty listing
+            }
             if(MergePolicy.ADD_NEW_AS_ENABLED==policy) {
                 incomingByKey.values()
                     .forEach(mergedLines::add);
