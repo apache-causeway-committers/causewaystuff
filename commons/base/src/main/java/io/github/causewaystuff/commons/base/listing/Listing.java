@@ -31,6 +31,7 @@ import org.springframework.lang.Nullable;
 
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.functional.Try;
+import org.apache.causeway.commons.internal.base._NullSafe;
 import org.apache.causeway.commons.io.TextUtils;
 
 import lombok.NonNull;
@@ -52,13 +53,21 @@ public record Listing<T>(
             @NonNull Function<T, ?> keyExtractor) {
 
         // -- LISTING FACTORIES
+
         public Listing<T> emptyListing() {
             return createListing(Can.empty());
         }
-        public Listing<T> createListing(@Nullable final Can<T> enabledElements) {
-            if(enabledElements==null) return emptyListing();
-            return new Listing<>(this, enabledElements.map(t->new LineEnabled<>(t, stringifier().apply(t))));
+
+        public Listing<T> createListing(@Nullable final Iterable<T> enabledElements) {
+            return createListing(_NullSafe.stream(enabledElements));
         }
+        public Listing<T> createListing(@Nullable final Stream<T> enabledElementStream) {
+            if(enabledElementStream==null) return emptyListing();
+            return new Listing<>(this, enabledElementStream
+                    .map(t->new LineEnabled<>(t, stringifier().apply(t)))
+                    .collect(Can.toCan()));
+        }
+
         public Listing<T> parseListing(@Nullable final String wholeText) {
             if(wholeText==null) return emptyListing();
             return parseListing(TextUtils.readLines(wholeText));
@@ -67,10 +76,8 @@ public record Listing<T>(
             if(textLines==null) return emptyListing();
             return new Listing<>(this, textLines.map(this::parseLine));
         }
-        public Listing<T> createListing(@Nullable final Stream<T> stream) {
-            if(stream==null) return emptyListing();
-            return null;
-        }
+
+        // -- PARSING
 
         /**
          * Parses the whole line as is, including comments.
