@@ -24,8 +24,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import io.github.causewaystuff.tooling.j2adoc.format.UnitFormatterAbstract;
-
 class UnitFormatterAbstractTest {
 
     @Nested

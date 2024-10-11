@@ -31,6 +31,10 @@ import org.asciidoctor.ast.List;
 import org.asciidoctor.ast.StructuralNode;
 
 import org.apache.causeway.commons.collections.Can;
+import org.apache.causeway.valuetypes.asciidoc.builder.AsciiDocFactory;
+
+import lombok.NonNull;
+import lombok.val;
 
 import io.github.causewaystuff.tooling.j2adoc.J2AdocContext;
 import io.github.causewaystuff.tooling.j2adoc.J2AdocUnit;
@@ -38,10 +42,6 @@ import io.github.causewaystuff.tooling.j2adoc.convert.J2AdocConverter;
 import io.github.causewaystuff.tooling.j2adoc.convert.J2AdocConverterDefault;
 import io.github.causewaystuff.tooling.javamodel.ast.CallableDeclarations;
 import io.github.causewaystuff.tooling.javamodel.ast.Javadocs;
-import org.apache.causeway.valuetypes.asciidoc.builder.AsciiDocFactory;
-
-import lombok.NonNull;
-import lombok.val;
 
 public class UnitFormatterWithSourceAndSections
 extends UnitFormatterAbstract {
@@ -65,12 +65,7 @@ extends UnitFormatterAbstract {
         val ul = AsciiDocFactory.callouts(parent);
 
         var converter = J2AdocConverterDefault.of(j2aContext);
-        val firstParaOnly = new BiFunction<Javadoc, J2AdocUnit, Document>() {
-            @Override
-            public Document apply(final Javadoc javadoc, final J2AdocUnit j2Unit) {
-                return converter.javadoc(javadoc, unit, J2AdocConverter.Mode.FIRST_PARA_ONLY);
-            }
-        };
+        val firstParaOnly = (BiFunction<Javadoc, J2AdocUnit, Document>) (javadoc, j2Unit) -> converter.javadoc(javadoc, unit, J2AdocConverter.Mode.FIRST_PARA_ONLY);
 
         appendMembersToList(ul, unit,
                 unit.getTypeDeclaration().getEnumConstantDeclarations(),
@@ -114,12 +109,7 @@ extends UnitFormatterAbstract {
         //
         val membersDoc = AsciiDocFactory.doc();
 
-        val allJavadocStrategy = new BiFunction<Javadoc, J2AdocUnit, Document>() {
-            @Override
-            public Document apply(final Javadoc javadoc, final J2AdocUnit j2Unit) {
-                return converter.javadoc(javadoc, unit, J2AdocConverter.Mode.ALL);
-            }
-        };
+        val allJavadocStrategy = (BiFunction<Javadoc, J2AdocUnit, Document>) (javadoc, j2Unit) -> converter.javadoc(javadoc, unit, J2AdocConverter.Mode.ALL);
 
         appendMemberSections(membersDoc, unit,
                 unit.getTypeDeclaration().getEnumConstantDeclarations(),
@@ -164,7 +154,7 @@ extends UnitFormatterAbstract {
 
     /**
      * Helper method for use by subclasses; calls
-     * {@link #appendMemberSection(StructuralNode, String, Document)}
+     * {@link #appendMemberSection(StructuralNode, String, String, Document)}
      * for all provided {@link NodeWithJavadoc declarations}, using the
      * provided memberRepresenter and the provided strategy for converting the
      * javadoc into Asciidoc.

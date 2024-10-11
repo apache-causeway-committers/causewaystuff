@@ -19,7 +19,6 @@
 package io.github.causewaystuff.tooling.j2adoc.convert;
 
 import org.jsoup.Jsoup;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,31 +28,23 @@ import org.apache.causeway.commons.io.TextUtils;
 import org.apache.causeway.valuetypes.asciidoc.builder.AsciiDocFactory;
 import org.apache.causeway.valuetypes.asciidoc.builder.AsciiDocWriter;
 
-import lombok.val;
-
-import io.github.causewaystuff.tooling.j2adoc.convert.HtmlToAsciiDoc;
-
 class HtmlToAsciiDocTest {
-
-    @BeforeEach
-    void setUp() throws Exception {
-    }
 
     @Test
     void simplifiedParagraphSyntax() {
 
-        val doc = AsciiDocFactory.doc();
+        var doc = AsciiDocFactory.doc();
 
         // when
-        val descriptionAsHtml = Jsoup.parse("Hello<p>second paragraph<p>third paragraph");
-        val descriptionAdoc = HtmlToAsciiDoc.body(descriptionAsHtml.selectFirst("body"));
+        var descriptionAsHtml = Jsoup.parse("Hello<p>second paragraph<p>third paragraph");
+        var descriptionAdoc = HtmlToAsciiDoc.body(descriptionAsHtml.selectFirst("body"));
 
-        val blocks = descriptionAdoc.getBlocks();
+        var blocks = descriptionAdoc.getBlocks();
         doc.getBlocks().addAll(blocks);
 
         // then we expect 3 paragraphs delimited by an empty line
         final String adocAsString = AsciiDocWriter.toString(doc);
-        val lines = TextUtils.readLines(adocAsString).map(String::trim);
+        var lines = TextUtils.readLines(adocAsString).map(String::trim);
 
         assertEquals(Can.of("Hello", "", "second paragraph", "", "third paragraph", ""), lines);
     }

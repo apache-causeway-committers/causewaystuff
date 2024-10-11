@@ -49,7 +49,6 @@ implements Comparable<ResourceCoordinates> {
 
         val cutter = TextUtils.cutter(file.getName());
 
-        //XXX lombok issue, cannot use val
         final String simpleName = cutter.keepBeforeLast(".").getValue();
         final String fileNameExtension = cutter.keepAfterLast(".").getValue();
 

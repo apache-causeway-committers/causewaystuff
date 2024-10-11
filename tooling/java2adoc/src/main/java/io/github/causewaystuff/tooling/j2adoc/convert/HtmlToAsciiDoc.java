@@ -29,7 +29,9 @@ import org.jsoup.nodes.TextNode;
 import org.jsoup.select.NodeTraversor;
 import org.jsoup.select.NodeVisitor;
 
+import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.internal.base._Strings;
+import org.apache.causeway.commons.io.TextUtils;
 import org.apache.causeway.valuetypes.asciidoc.builder.AsciiDocFactory;
 
 import lombok.SneakyThrows;
@@ -56,7 +58,7 @@ final class HtmlToAsciiDoc {
                     val textNode = (TextNode)node;
 
                     val text = helper.isPreFormatted()
-                            ? textNode.getWholeText()
+                            ? skipBlankLinesAtHeadAndTail(textNode.getWholeText())
                             : textNode.text().trim();
 
                     if(!text.isBlank()) {
@@ -92,6 +94,7 @@ final class HtmlToAsciiDoc {
                     return;
                 }
             }
+
 
             @Override
             public void tail(Node node, int depth) {
@@ -130,6 +133,17 @@ final class HtmlToAsciiDoc {
     }
 
     // -- HELPER
+
+    private static String skipBlankLinesAtHeadAndTail(String wholeText) {
+        var headTrimmed = TextUtils.readLines(wholeText).stream()
+                .dropWhile(String::isBlank)
+                .collect(Can.toCan());
+        return headTrimmed.reverse().stream()
+            .dropWhile(String::isBlank)
+            .collect(Can.toCan())
+            .reverse()
+            .join("\n");
+    }
 
     private final static class BlockHelper {
 
@@ -174,7 +188,7 @@ final class HtmlToAsciiDoc {
 
         void blockAppend(final String source) {
             val block = getBlock();
-            block.setSource(block.getSource()+source);
+            block.setSource(block.getSource() + source);
         }
 
         org.asciidoctor.ast.List nextList() {
