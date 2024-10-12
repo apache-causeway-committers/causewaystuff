@@ -49,14 +49,14 @@ public record PropertyLayoutSpec(
     public PropertyLayoutSpec overrideWith(final @Nullable PropertyLayoutSpec successor) {
         if(successor == null) return this;
         return this.toBuilder()
-                .cssClass(_TypeUtil.override(successor.cssClass, cssClass))
-                .fieldSet(_TypeUtil.override(successor.fieldSet, fieldSet))
-                .sequence(_TypeUtil.override(successor.sequence, sequence))
-                .description(_TypeUtil.override(successor.description, description))
-                .multiLine(_TypeUtil.override(successor.multiLine, multiLine))
-                .hiddenWhere(_TypeUtil.override(successor.hiddenWhere, hiddenWhere))
-                .navigable(_TypeUtil.override(successor.navigable, navigable))
-                .labelPosition(_TypeUtil.override(successor.labelPosition, labelPosition))
+                .cssClass(_TypeUtil.override(cssClass, successor.cssClass))
+                .fieldSet(_TypeUtil.override(fieldSet, successor.fieldSet))
+                .sequence(_TypeUtil.override(sequence, successor.sequence))
+                .description(_TypeUtil.override(description, successor.description))
+                .multiLine(_TypeUtil.override(multiLine, successor.multiLine))
+                .hiddenWhere(_TypeUtil.override(hiddenWhere, successor.hiddenWhere))
+                .navigable(_TypeUtil.override(navigable, successor.navigable))
+                .labelPosition(_TypeUtil.override(labelPosition, successor.labelPosition))
                 .build();
     }
 
