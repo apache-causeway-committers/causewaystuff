@@ -65,8 +65,7 @@ record _ObjectGraphFactory(Schema.Domain schema) implements ObjectGraph.Factory 
                 isAbstract
                     ? Optional.of("abstract")
                     : Optional.empty(),
-                Optional.ofNullable(
-                        entity.formatDescription("\n")),
+                Optional.ofNullable(entity.description()).map(Multiline::describedAs),
                 new ArrayList<>());
         return obj;
     }

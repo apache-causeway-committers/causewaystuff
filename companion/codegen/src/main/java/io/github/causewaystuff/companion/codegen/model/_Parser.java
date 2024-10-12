@@ -154,7 +154,7 @@ class _Parser {
                 (String)map.get("icon"),
                 parseNullableBoolean((Boolean)map.get("iconService")),
                 (String)map.get("named"),
-                Multiline.parseMultilineString((String)map.get("description")).lines(),
+                Multiline.parseMultilineString((String)map.get("description")),
                 new ArrayList<>());
         fieldsAsMap.entrySet().stream()
                 .map(IndexedFunction.zeroBased((index, innerEntry)->parseField(viewmodel, index, innerEntry)))
@@ -187,7 +187,7 @@ class _Parser {
                 (String)map.get("icon"),
                 parseNullableBoolean((Boolean)map.get("iconService")),
                 (String)map.get("named"),
-                Multiline.parseMultilineString((String)map.get("description")).lines(),
+                Multiline.parseMultilineString((String)map.get("description")),
                 new ArrayList<>());
         fieldsAsMap.entrySet().stream()
                 .map(IndexedFunction.zeroBased((index, innerEntry)->parseField(entity, index, innerEntry)))

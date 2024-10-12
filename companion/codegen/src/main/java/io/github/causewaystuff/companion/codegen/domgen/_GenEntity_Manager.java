@@ -54,7 +54,7 @@ class _GenEntity_Manager {
                 .addAnnotation(_Annotations.domainObjectLayout(
                         DomainObjectLayoutSpec.builder()
                             .describedAs(entityModel.named())
-                            .describedAs(entityModel.formatDescription("\n"))
+                            .describedAs(entityModel.description().describedAs())
                             .cssClassFa(entityModel.icon())
                             .build()
                         ))

@@ -58,12 +58,9 @@ public class Schema {
     public sealed interface DomainObject permits Viewmodel, Entity {
         String name();
         String namespace();
-        List<String> description();
+        Multiline description();
         default String fqn() {
             return String.format("%s.%s", namespace(), name());
-        }
-        default String formatDescription(final String continuation) {
-            return _Format.parseYamlMultiline(description(), "has no description", continuation);
         }
     }
 
@@ -111,7 +108,7 @@ public class Schema {
              * as named in the UI, not in code
              */
             String named,
-            List<String> description,
+            Multiline description,
             List<VmField> fields) implements DomainObject {
         public Domain parentSchema() {
             return parentRef.getValue();
@@ -150,7 +147,7 @@ public class Schema {
              * as named in the UI, not in code
              */
             String named,
-            List<String> description,
+            Multiline description,
             List<EntityField> fields)  implements DomainObject {
         public Domain parentSchema() {
             return parentRef.getValue();

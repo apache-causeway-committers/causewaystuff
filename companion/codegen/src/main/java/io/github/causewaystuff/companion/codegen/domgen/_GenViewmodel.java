@@ -47,14 +47,14 @@ class _GenViewmodel {
         return switch (vm.generator()) {
             case "class" -> {
                 var typeModelBuilder = TypeSpec.classBuilder(vm.name())
-                        .addJavadoc(vm.formatDescription("\n"))
+                        .addJavadoc(vm.description().describedAs())
                         .addAnnotation(_Annotations.generated(_GenViewmodel.class))
                         .addAnnotation(_Annotations.named(config.fullLogicalName(vm.namespace()) + "." + vm.name()))
                         .addAnnotation(_Annotations.domainObject())
                         .addAnnotation(_Annotations.domainObjectLayout(
                                 DomainObjectLayoutSpec.builder()
                                     .named(vm.named())
-                                    .describedAs(vm.formatDescription("\n"))
+                                    .describedAs(vm.description().describedAs())
                                     .cssClassFa(vm.icon())
                                     .build()
                                 ))
@@ -69,14 +69,14 @@ class _GenViewmodel {
             }
             case "record" -> {
                 var typeModelBuilder = TypeSpec.recordBuilder(vm.name())
-                        .addJavadoc(vm.formatDescription("\n"))
+                        .addJavadoc(vm.description().describedAs())
                         .addAnnotation(_Annotations.generated(_GenViewmodel.class))
                         .addAnnotation(_Annotations.named(config.fullLogicalName(vm.namespace()) + "." + vm.name()))
                         .addAnnotation(_Annotations.domainObject())
                         .addAnnotation(_Annotations.domainObjectLayout(
                                 DomainObjectLayoutSpec.builder()
                                     .named(vm.named())
-                                    .describedAs(vm.formatDescription("\n"))
+                                    .describedAs(vm.description().describedAs())
                                     .cssClassFa(vm.icon())
                                     .build()
                                 ))

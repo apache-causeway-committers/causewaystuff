@@ -56,14 +56,14 @@ class _GenEntity {
             final Schema.Entity entityModel) {
 
         var typeModelBuilder = TypeSpec.classBuilder(entityModel.name())
-                .addJavadoc(entityModel.formatDescription("\n"))
+                .addJavadoc(entityModel.description().describedAs())
                 .addAnnotation(_Annotations.generated(_GenEntity.class))
                 .addAnnotation(_Annotations.named(config.fullLogicalName(entityModel.namespace()) + "." + entityModel.name()))
                 .addAnnotation(_Annotations.domainObject())
                 .addAnnotation(_Annotations.domainObjectLayout(
                         DomainObjectLayoutSpec.builder()
                             .named(entityModel.named())
-                            .describedAs(entityModel.formatDescription("\n"))
+                            .describedAs(entityModel.description().describedAs())
                             .cssClassFa(entityModel.icon())
                             .build()
                         ))

@@ -74,9 +74,7 @@ class _Writer {
         if(StringUtils.hasLength(viewmodel.named())) {
             yaml.ind().write("named: ", viewmodel.named()).nl();
         }
-        yaml.ind().write("description:").multiLineStartIfNotEmtpy(viewmodel.description()).nl();
-        viewmodel.description().forEach(line->
-        yaml.ind().ind().write(line).nl());
+        yaml.write(1, "description", viewmodel.description());
         yaml.ind().write("fields:").nl();
         viewmodel.fields().forEach(field->writeField(yaml, field));
     }
@@ -148,9 +146,7 @@ class _Writer {
         if(StringUtils.hasLength(entity.named())) {
             yaml.ind().write("named: ", entity.named()).nl();
         }
-        yaml.ind().write("description:").multiLineStartIfNotEmtpy(entity.description()).nl();
-        entity.description().forEach(line->
-        yaml.ind().ind().write(line).nl());
+        yaml.write(1, "description", entity.description());
         yaml.ind().write("fields:").nl();
         entity.fields().forEach(field->writeField(yaml, field));
     }
