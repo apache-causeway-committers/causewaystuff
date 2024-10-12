@@ -66,6 +66,7 @@ import lombok.Builder;
 import lombok.val;
 import lombok.experimental.UtilityClass;
 
+import io.github.causewaystuff.companion.codegen.model.PropertyLayoutSpec;
 import io.github.causewaystuff.tooling.javapoet.AnnotationSpec;
 import io.github.causewaystuff.tooling.javapoet.ClassName;
 import io.github.causewaystuff.tooling.javapoet.CodeBlock;
@@ -285,19 +286,11 @@ class _Annotations {
         return builder.build();
     }
 
-    @Builder
-    static record PropertyLayoutSpec(
-        String fieldSetId,
-        String sequence,
-        String describedAs,
-        Where hiddenWhere,
-        int multiLine,
-        Navigable navigable) {
-    }
-    AnnotationSpec propertyLayout(final UnaryOperator<PropertyLayoutSpec.PropertyLayoutSpecBuilder> attrProvider) {
+    AnnotationSpec propertyLayout(final PropertyLayoutSpec attr) {
         val builder = AnnotationSpec.builder(PropertyLayout.class);
-        val attr = attrProvider.apply(PropertyLayoutSpec.builder()).build();
-        _Strings.nonEmpty(attr.fieldSetId())
+        _Strings.nonEmpty(attr.cssClass())
+            .ifPresent(cssClass->builder.addMember("cssClass", "$1S", cssClass));
+        _Strings.nonEmpty(attr.fieldSet())
             .ifPresent(fieldSetId->builder.addMember("fieldSetId", "$1S", fieldSetId));
         _Strings.nonEmpty(attr.sequence())
             .ifPresent(sequence->builder.addMember("sequence", "$1S", sequence));
@@ -305,12 +298,22 @@ class _Annotations {
             .ifPresent(describedAs->builder.addMember("describedAs", "$1S", describedAs));
         Optional.ofNullable(attr.hiddenWhere())
             .ifPresent(hiddenWhere->builder.addMember("hidden", "$1T.$2L", Where.class, hiddenWhere.name()));
-        if(attr.multiLine()>1) {
+        if(attr.multiLine()!=null
+                && attr.multiLine()>1) {
             builder.addMember("multiLine", "$1L", attr.multiLine());
         }
         Optional.ofNullable(attr.navigable())
             .ifPresent(navigable->builder.addMember("navigable", "$1T.$2L", Navigable.class, navigable.name()));
+        Optional.ofNullable(attr.labelPosition())
+            .ifPresent(labelPosition->builder.addMember("labelPosition", "$1T.$2L", LabelPosition.class, labelPosition.name()));
         return builder.build();
+    }
+
+    AnnotationSpec propertyLayout(
+            final UnaryOperator<PropertyLayoutSpec.PropertyLayoutSpecBuilder> primer,
+            final PropertyLayoutSpec override) {
+        val attr = primer.apply(PropertyLayoutSpec.builder()).build();
+        return propertyLayout(attr.overrideWith(override));
     }
 
     // -- CAUSEWAY - COLLECTION

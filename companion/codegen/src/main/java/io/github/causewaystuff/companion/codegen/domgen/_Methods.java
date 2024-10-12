@@ -95,7 +95,8 @@ class _Methods {
                     .snapshot(Snapshot.EXCLUDED)))
             .addAnnotation(_Annotations.propertyLayout(attr->attr
                     .hiddenWhere(Where.EVERYWHERE)
-                    .navigable(Navigable.PARENT)))
+                    .navigable(Navigable.PARENT), null /*no override*/)
+            )
             .addAnnotation(_Annotations.notPersistent())
             .returns(ClassName.get("", entityName + ".Manager"))
             .addCode("""

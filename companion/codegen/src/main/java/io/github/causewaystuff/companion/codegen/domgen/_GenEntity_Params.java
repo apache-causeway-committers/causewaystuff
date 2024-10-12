@@ -19,6 +19,7 @@
 package io.github.causewaystuff.companion.codegen.domgen;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.lang.model.element.Modifier;
 
@@ -78,7 +79,7 @@ class _GenEntity_Params {
                                     : Optionality.OPTIONAL)))
                     .addAnnotation(_Annotations.parameterLayout(attr->attr
                             .describedAs(field.formatDescription("\n"))
-                            .multiLine(field.multiLine().orElse(0))))
+                            .multiLine(Optional.ofNullable(field.propertyLayout()).map(pl->pl.multiLine()).orElse(0))))
                     .build())
                 .toList();
     }

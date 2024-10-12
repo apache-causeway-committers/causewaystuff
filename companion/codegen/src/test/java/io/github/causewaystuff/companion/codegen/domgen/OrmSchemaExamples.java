@@ -20,7 +20,6 @@ package io.github.causewaystuff.companion.codegen.domgen;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.OptionalInt;
 
 import org.apache.causeway.applib.annotation.Where;
 import org.apache.causeway.commons.collections.Can;
@@ -29,6 +28,7 @@ import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.commons.base.types.internal.ObjectRef;
 import io.github.causewaystuff.commons.base.types.internal.SneakyRef;
+import io.github.causewaystuff.companion.codegen.model.PropertyLayoutSpec;
 import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.companion.codegen.model.Schema.Domain;
 import io.github.causewaystuff.companion.codegen.model.Schema.Entity;
@@ -47,10 +47,11 @@ public class OrmSchemaExamples {
                 new ArrayList<Schema.EntityField>());
         var field = new EntityField(SneakyRef.of(entity), /*ordinal*/0, "name", "NAME", "nvarchar(100)",
                 true, false, false,
-                OptionalInt.of(2),
                 "",
-                Where.ALL_TABLES,
-                null,
+                PropertyLayoutSpec.builder()
+                    .multiLine(2)
+                    .hiddenWhere(Where.ALL_TABLES)
+                    .build(),
                 List.of(), List.of(), List.of(), List.of("aa", "bb", "cc"));
         entity.fields().add(field);
         return Can.of(

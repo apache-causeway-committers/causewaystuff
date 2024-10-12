@@ -19,7 +19,6 @@
 package io.github.causewaystuff.companion.codegen.domgen;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.lang.model.element.Modifier;
@@ -205,20 +204,19 @@ class _GenEntity {
                         return attr;
                     }))
                     .addAnnotation(_Annotations.propertyLayout(attr->attr
-                            .fieldSetId(field.isMemberOfSecondaryKey()
+                            .fieldSet(field.isMemberOfSecondaryKey()
                                     ? "identity"
                                     : field.hasForeignKeys()
                                         ? "foreign"
-                                        : _Strings.nonEmpty(field.fieldSet()).orElse("details"))
+                                        : "details")
                             .sequence(field.sequence())
                             .describedAs(
                                 field.formatDescription("\n"))
-                            .multiLine(field.multiLine().orElse(0))
-                            .hiddenWhere(Optional.ofNullable(field.hiddenWhere())
-                                    .orElseGet(()->field.hasForeignKeys()
+                            .hiddenWhere(field.hasForeignKeys()
                                             ? Where.ALL_TABLES
-                                            : Where.NOWHERE)
-                                    )))
+                                            : null),
+                            field.propertyLayout())
+                    )
                     .addAnnotation(_Annotations.column(col->col
                             .columnName(field.column())
                             .jdbcType(_TypeMapping.dbTypeToJdbcColumnExplicitType(field.columnType()))

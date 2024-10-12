@@ -19,13 +19,11 @@
 package io.github.causewaystuff.companion.codegen.domgen;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.lang.model.element.Modifier;
 
 import org.apache.causeway.applib.annotation.Editing;
 import org.apache.causeway.applib.annotation.Optionality;
-import org.apache.causeway.applib.annotation.Where;
 import org.apache.causeway.commons.internal.base._Strings;
 
 import lombok.experimental.UtilityClass;
@@ -126,14 +124,12 @@ class _GenViewmodel {
                         return attr;
                     }))
                     .addAnnotation(_Annotations.propertyLayout(attr->attr
-                            .fieldSetId(_Strings.nonEmpty(field.fieldSet()).orElse("details"))
+                            .fieldSet("details")
                             .sequence(field.sequence())
                             .describedAs(
-                                field.formatDescription("\n"))
-                            .multiLine(field.multiLine().orElse(0))
-                            .hiddenWhere(Optional.ofNullable(field.hiddenWhere())
-                                    .orElse(Where.NOWHERE)
-                                    )))
+                                field.formatDescription("\n")),
+                        field.propertyLayout())
+                    )
                     .addAnnotation(_Annotations.getter())
                     .addAnnotation(_Annotations.setter())
                     ;
@@ -153,20 +149,13 @@ class _GenViewmodel {
                                 : field.asJavaType(),
                             field.name())
                     .addJavadoc(field.formatDescription("\n"))
-//                    .addAnnotation(_Annotations.property(attr->attr
-//                            .optionality(
-//                                field.requiredInTheUi()
-//                                    ? Optionality.MANDATORY
-//                                    : Optionality.OPTIONAL)))
                     .addAnnotation(_Annotations.propertyLayout(attr->attr
-                            .fieldSetId(_Strings.nonEmpty(field.fieldSet()).orElse("details"))
+                            .fieldSet("details")
                             .sequence(field.sequence())
                             .describedAs(
-                                field.formatDescription("\n"))
-                            .multiLine(field.multiLine().orElse(0))
-                            .hiddenWhere(Optional.ofNullable(field.hiddenWhere())
-                                    .orElse(Where.NOWHERE)
-                                    )))
+                                field.formatDescription("\n")),
+                        field.propertyLayout())
+                    )
                     .build())
                 .toList();
     }

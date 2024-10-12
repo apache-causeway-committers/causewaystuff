@@ -22,14 +22,12 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.OptionalInt;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.lang.Nullable;
 
-import org.apache.causeway.applib.annotation.Where;
 import org.apache.causeway.applib.services.metamodel.objgraph.ObjectGraph;
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.functional.IndexedFunction;
@@ -75,7 +73,7 @@ public class Schema {
         boolean required();
         List<String> enumeration();
         List<String> description();
-        String fieldSet();
+        PropertyLayoutSpec propertyLayout();
 
         TypeName asJavaType();
 
@@ -132,10 +130,8 @@ public class Schema {
             @NonNull String type,
             boolean required,
             boolean plural,
-            OptionalInt multiLine,
             String elementType,
-            Where hiddenWhere,
-            String fieldSet,
+            PropertyLayoutSpec propertyLayout,
             List<String> enumeration,
             List<String> description) implements Field {
         @Override
@@ -227,10 +223,8 @@ public class Schema {
             boolean required,
             boolean unique,
             boolean plural,
-            OptionalInt multiLine,
             String elementType,
-            Where hiddenWhere,
-            String fieldSet,
+            PropertyLayoutSpec propertyLayout,
             List<String> enumeration,
             List<String> discriminator,
             List<String> foreignKeys,
@@ -315,10 +309,8 @@ public class Schema {
                     required,
                     unique,
                     plural,
-                    multiLine,
                     elementType,
-                    hiddenWhere,
-                    fieldSet,
+                    propertyLayout,
                     enumeration,
                     discriminator,
                     foreignKeys,
@@ -336,10 +328,8 @@ public class Schema {
                     required,
                     unique,
                     plural,
-                    multiLine,
                     elementType,
-                    hiddenWhere,
-                    fieldSet,
+                    propertyLayout,
                     enumeration,
                     discriminator,
                     foreignKeys,

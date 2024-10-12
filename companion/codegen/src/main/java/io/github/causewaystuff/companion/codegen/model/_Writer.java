@@ -19,6 +19,7 @@
 package io.github.causewaystuff.companion.codegen.model;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.util.StringUtils;
 
@@ -86,18 +87,14 @@ class _Writer {
         if(field.plural()) {
             yaml.ind().ind().ind().write("plural: ", "true").nl();
         }
-        if(field.multiLine().isPresent()) {
-            yaml.ind().ind().ind().write("multiLine: ", ""+field.multiLine().getAsInt()).nl();
-        }
         if(_Strings.isNotEmpty(field.elementType())) {
             yaml.ind().ind().ind().write("elementType: ", field.elementType()).nl();
         }
-        if(field.hiddenWhere()!=null) {
-            yaml.ind().ind().ind().write("hiddenWhere: ", field.hiddenWhere().name()).nl();
-        }
-        if(_Strings.isNotEmpty(field.fieldSet())) {
-            yaml.ind().ind().ind().write("fieldSet: ", field.fieldSet()).nl();
-        }
+        Optional.ofNullable(field.propertyLayout())
+            .ifPresent(propertyLayout->propertyLayout.streamAttributes()
+                    .forEach(attr->{
+                        yaml.ind().ind().ind().write(attr.name(), ": ", attr.value().toString()).nl();
+                    }));
         if(field.isEnum()) {
             yaml.ind().ind().ind().write("enum:").multiLineStartIfNotEmtpy(field.enumeration()).nl();
             field.enumeration().forEach(line->
@@ -164,18 +161,14 @@ class _Writer {
         if(field.plural()) {
             yaml.ind().ind().ind().write("plural: ", "true").nl();
         }
-        if(field.multiLine().isPresent()) {
-            yaml.ind().ind().ind().write("multiLine: ", ""+field.multiLine().getAsInt()).nl();
-        }
         if(_Strings.isNotEmpty(field.elementType())) {
             yaml.ind().ind().ind().write("elementType: ", field.elementType()).nl();
         }
-        if(field.hiddenWhere()!=null) {
-            yaml.ind().ind().ind().write("hiddenWhere: ", field.hiddenWhere().name()).nl();
-        }
-        if(_Strings.isNotEmpty(field.fieldSet())) {
-            yaml.ind().ind().ind().write("fieldSet: ", field.fieldSet()).nl();
-        }
+        Optional.ofNullable(field.propertyLayout())
+            .ifPresent(propertyLayout->propertyLayout.streamAttributes()
+                .forEach(attr->{
+                    yaml.ind().ind().ind().write(attr.name(), ": ", attr.value().toString()).nl();
+                }));
         if(field.isEnum()) {
             yaml.ind().ind().ind().write("enum:").multiLineStartIfNotEmtpy(field.enumeration()).nl();
             field.enumeration().forEach(line->

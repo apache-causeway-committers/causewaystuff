@@ -25,14 +25,6 @@ import java.util.stream.IntStream;
 
 import javax.lang.model.element.Modifier;
 
-import io.github.causewaystuff.companion.applib.services.lookup.ForeignKeyLookupService;
-import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.QualifiedType;
-import io.github.causewaystuff.companion.codegen.model.Schema;
-import io.github.causewaystuff.tooling.javapoet.ClassName;
-import io.github.causewaystuff.tooling.javapoet.MethodSpec;
-import io.github.causewaystuff.tooling.javapoet.ParameterizedTypeName;
-import io.github.causewaystuff.tooling.javapoet.TypeSpec;
-
 import org.apache.causeway.applib.annotation.Snapshot;
 import org.apache.causeway.applib.annotation.Where;
 import org.apache.causeway.commons.collections.Can;
@@ -42,6 +34,14 @@ import org.apache.causeway.commons.internal.exceptions._Exceptions;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import lombok.experimental.UtilityClass;
+
+import io.github.causewaystuff.companion.applib.services.lookup.ForeignKeyLookupService;
+import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.QualifiedType;
+import io.github.causewaystuff.companion.codegen.model.Schema;
+import io.github.causewaystuff.tooling.javapoet.ClassName;
+import io.github.causewaystuff.tooling.javapoet.MethodSpec;
+import io.github.causewaystuff.tooling.javapoet.ParameterizedTypeName;
+import io.github.causewaystuff.tooling.javapoet.TypeSpec;
 
 @UtilityClass
 class _GenAssociationMixin {
@@ -74,12 +74,14 @@ class _GenAssociationMixin {
                                 .describedAs(fieldWithForeignKeys.formatDescription("\n"))
                                 .hiddenWhere(Where.NOWHERE))
                         : _Annotations.propertyLayout(attr->attr
-                                .fieldSetId("details")
+                                .fieldSet("details")
                                 .sequence(fieldWithForeignKeys.sequence() + ".1")
                                 .describedAs(fieldWithForeignKeys.formatDescription("\n"))
                                 .hiddenWhere(useEitherPattern
                                     ? Where.NOWHERE
-                                    : Where.REFERENCES_PARENT)))
+                                    : Where.REFERENCES_PARENT),
+                            null /*no override*/)
+                )
                 .addAnnotation(RequiredArgsConstructor.class)
                 .addField(_Fields.inject(ForeignKeyLookupService.class, "foreignKeyLookup"))
                 .addField(_Fields.mixee(ClassName.get(packageName, entityModel.name()), Modifier.FINAL, Modifier.PRIVATE))
@@ -115,7 +117,7 @@ class _GenAssociationMixin {
         }
 
         final Can<Foreign> foreigners = foreignFields
-                .map((Schema.EntityField foreignField)->{
+                .map((final Schema.EntityField foreignField)->{
                     val foreignEntityClass = _Foreign.foreignClassName(field, foreignField, config);
                     var argList = Can.ofCollection(field.discriminatorFields())
                             .add(field)

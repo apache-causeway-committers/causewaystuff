@@ -10,7 +10,6 @@ import org.apache.causeway.applib.annotation.DomainObject;
 import org.apache.causeway.applib.annotation.DomainObjectLayout;
 import org.apache.causeway.applib.annotation.ObjectSupport;
 import org.apache.causeway.applib.annotation.PropertyLayout;
-import org.apache.causeway.applib.annotation.Where;
 
 /**
  * description goes here
@@ -46,8 +45,7 @@ public record ConsumptionRecord(
                 sequence = "1",
                 describedAs = "sequential\n"
                                 + "respondent\n"
-                                + "index",
-                hidden = Where.NOWHERE
+                                + "index"
         )
         int respondentOrdinal,
         @PropertyLayout(
@@ -56,8 +54,7 @@ public record ConsumptionRecord(
                 describedAs = "anonymized\n"
                                 + "respondent identifier,\n"
                                 + "unique to the\n"
-                                + "corresponding survey",
-                hidden = Where.NOWHERE
+                                + "corresponding survey"
         )
         String respondentAlias,
         @PropertyLayout(
@@ -65,8 +62,7 @@ public record ConsumptionRecord(
                 sequence = "3",
                 describedAs = "respondent's\n"
                                 + "n-th interview\n"
-                                + "(chronological)",
-                hidden = Where.NOWHERE
+                                + "(chronological)"
         )
         int interviewOrdinal,
         @PropertyLayout(
@@ -75,23 +71,20 @@ public record ConsumptionRecord(
                 describedAs = "food\n"
                                 + "consumption\n"
                                 + "occasion\n"
-                                + "code",
-                hidden = Where.NOWHERE
+                                + "code"
         )
         String fco,
         @PropertyLayout(
                 fieldSetId = "details",
                 sequence = "5",
                 describedAs = "meal happened\n"
-                                + "when and where",
-                hidden = Where.NOWHERE
+                                + "when and where"
         )
         String meal,
         @PropertyLayout(
                 fieldSetId = "details",
                 sequence = "6",
-                describedAs = "w.i.p.",
-                hidden = Where.NOWHERE
+                describedAs = "w.i.p."
         )
         BigDecimal value) {
     @ObjectSupport

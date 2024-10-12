@@ -22,13 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.OptionalInt;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.springframework.lang.Nullable;
 
-import org.apache.causeway.applib.annotation.Where;
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.functional.IndexedFunction;
 import org.apache.causeway.commons.internal.assertions._Assert;
@@ -212,10 +210,8 @@ class _Parser {
                 (String)map.get("type"),
                 (boolean)Optional.ofNullable((Boolean)map.get("required")).orElse(true),
                 (boolean)Optional.ofNullable((Boolean)map.get("plural")).orElse(false),
-                parseNullableIntegerWithBounds((Integer)map.get("multiLine"), 2, 1000),
                 (String)map.get("elementType"),
-                parseNullableWhere((String)map.get("hiddenWhere")),
-                (String)map.get("fieldSet"),
+                PropertyLayoutSpec.fromMap(map),
                 parseMultilineStringTrimmed((String)map.get("enum")),
                 parseMultilineString((String)map.get("description")));
     }
@@ -231,10 +227,8 @@ class _Parser {
                 (Boolean)map.get("required"),
                 (Boolean)map.get("unique"),
                 (boolean)Optional.ofNullable((Boolean)map.get("plural")).orElse(false),
-                parseNullableIntegerWithBounds((Integer)map.get("multiLine"), 2, 1000),
                 (String)map.get("elementType"),
-                parseNullableWhere((String)map.get("hiddenWhere")),
-                (String)map.get("fieldSet"),
+                PropertyLayoutSpec.fromMap(map),
                 parseMultilineStringTrimmed((String)map.get("enum")),
                 parseMultilineStringTrimmed((String)map.get("discriminator")),
                 parseMultilineStringTrimmed((String)map.get("foreignKeys")),
@@ -257,23 +251,8 @@ class _Parser {
 
     // -- HELPER
 
-    private static Where parseNullableWhere(final String whereLiteral) {
-        return _Strings.isNullOrEmpty(whereLiteral)
-                ? null
-                : Where.valueOf(whereLiteral);
-    }
-
     private static boolean parseNullableBoolean(final Boolean bool) {
         return Boolean.TRUE.equals(bool);
-    }
-
-    private static OptionalInt parseNullableIntegerWithBounds(
-            final @Nullable Integer value, final int lowerBound, final int upperBound) {
-        return value==null
-                || value < lowerBound
-                || value > upperBound
-                ? OptionalInt.empty()
-                : OptionalInt.of(value);
     }
 
     private static List<String> parseMultilineString(final String input) {

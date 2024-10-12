@@ -66,7 +66,7 @@ class _GenEntity_Manager {
                                 .optionality(Optionality.OPTIONAL)
                                 .editing(Editing.ENABLED)))
                         .addAnnotation(_Annotations.propertyLayout(attr->attr
-                                .fieldSetId("searchBar")))
+                                .fieldSet("searchBar"), null /*no override*/))
                         .addAnnotation(_Annotations.getter())
                         .addAnnotation(_Annotations.setter())
                         .build())
