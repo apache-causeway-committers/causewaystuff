@@ -18,6 +18,7 @@
  */
 package io.github.causewaystuff.companion.codegen.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -80,6 +81,7 @@ class _Writer {
     }
 
     void writeField(final YamlWriter yaml, final Schema.VmField field) {
+        final var writeLast = new ArrayList<Runnable>(1);
         yaml.ind().ind().write(field.name(), ":").nl();
         yaml.ind().ind().ind().write("type: ", ""+field.type()).nl();
         yaml.ind().ind().ind().write("required: ", ""+field.required()).nl();
@@ -93,7 +95,7 @@ class _Writer {
             .ifPresent(propertyLayout->propertyLayout.streamAttributes()
                     .forEach(attr->{
                         if(attr.value() instanceof Multiline ml) {
-                            yaml.write(3, "description", ml);
+                            writeLast.add(()->yaml.write(3, "description", ml));
                         } else {
                             yaml.ind().ind().ind().write(attr.name(), ": ", attr.value().toString()).nl();
                         }
@@ -103,7 +105,7 @@ class _Writer {
             field.enumeration().forEach(line->
             yaml.ind().ind().ind().ind().write(line).nl());
         }
-
+        writeLast.forEach(Runnable::run);
     }
 
     void writeEntity(final YamlWriter yaml, final Schema.Entity entity) {
@@ -152,6 +154,7 @@ class _Writer {
     }
 
     void writeField(final YamlWriter yaml, final Schema.EntityField field) {
+        final var writeLast = new ArrayList<Runnable>(1);
         yaml.ind().ind().write(field.name(), ":").nl();
         yaml.ind().ind().ind().write("column: ", field.column()).nl();
         yaml.ind().ind().ind().write("column-type: ", field.columnType()).nl();
@@ -167,7 +170,7 @@ class _Writer {
             .ifPresent(propertyLayout->propertyLayout.streamAttributes()
                     .forEach(attr->{
                         if(attr.value() instanceof Multiline ml) {
-                            yaml.write(3, "description", ml);
+                            writeLast.add(()->yaml.write(3, "description", ml));
                         } else {
                             yaml.ind().ind().ind().write(attr.name(), ": ", attr.value().toString()).nl();
                         }
@@ -187,6 +190,7 @@ class _Writer {
             field.foreignKeys().forEach(line->
             yaml.ind().ind().ind().ind().writeUpper(line).nl());
         }
+        writeLast.forEach(Runnable::run);
     }
 
     // -- HELPER
