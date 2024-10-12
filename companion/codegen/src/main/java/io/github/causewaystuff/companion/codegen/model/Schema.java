@@ -72,7 +72,8 @@ public class Schema {
         String name();
         boolean required();
         List<String> enumeration();
-        List<String> description();
+        @Deprecated
+        Multiline description();
         PropertyLayoutSpec propertyLayout();
 
         TypeName asJavaType();
@@ -82,10 +83,6 @@ public class Schema {
         }
         default TypeName asJavaEnumType() {
             return ClassName.get("", _Strings.capitalize(name()));
-        }
-
-        default String formatDescription(final String continuation, final String ... moreLines) {
-            return _Format.parseYamlMultiline(description(), "has no description", continuation, moreLines);
         }
         default String sequence() {
             return "" + (ordinal() + 1);
@@ -133,7 +130,7 @@ public class Schema {
             String elementType,
             PropertyLayoutSpec propertyLayout,
             List<String> enumeration,
-            List<String> description) implements Field {
+            Multiline description) implements Field {
         @Override
         public TypeName asJavaType() {
             return _TypeMapping.simpleNameToJava(type);
@@ -228,7 +225,7 @@ public class Schema {
             List<String> enumeration,
             List<String> discriminator,
             List<String> foreignKeys,
-            List<String> description) implements Field {
+            Multiline description) implements Field {
         public Entity parentEntity() {
             return parentRef.value();
         }

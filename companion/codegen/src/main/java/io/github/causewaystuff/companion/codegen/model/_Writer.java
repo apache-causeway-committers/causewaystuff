@@ -20,6 +20,7 @@ package io.github.causewaystuff.companion.codegen.model;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 import org.springframework.util.StringUtils;
 
@@ -100,9 +101,7 @@ class _Writer {
             field.enumeration().forEach(line->
             yaml.ind().ind().ind().ind().write(line).nl());
         }
-        yaml.ind().ind().ind().write("description:").multiLineStartIfNotEmtpy(field.description()).nl();
-        field.description().forEach(line->
-        yaml.ind().ind().ind().ind().write(line).nl());
+        yaml.write(3, "description", field.description());
     }
 
     void writeEntity(final YamlWriter yaml, final Schema.Entity entity) {
@@ -184,9 +183,7 @@ class _Writer {
             field.foreignKeys().forEach(line->
             yaml.ind().ind().ind().ind().writeUpper(line).nl());
         }
-        yaml.ind().ind().ind().write("description:").multiLineStartIfNotEmtpy(field.description()).nl();
-        field.description().forEach(line->
-        yaml.ind().ind().ind().ind().write(line).nl());
+        yaml.write(3, "description", field.description());
     }
 
     // -- HELPER
@@ -194,6 +191,16 @@ class _Writer {
     static class YamlWriter {
         final StringBuilder sb = new StringBuilder();
         @Override public String toString() { return sb.toString(); }
+        YamlWriter write(final int indentCount, final String key, final Multiline multiline) {
+            if(multiline==null) return this;
+            ind(indentCount);
+            write(key, ":").multiLineStartIfNotEmtpy(multiline.lines()).nl();
+            multiline.lines().forEach(line->{
+                ind(indentCount + 1);
+                write(line).nl();
+            });
+            return this;
+        }
         YamlWriter multiLineStartIfNotEmtpy(final List<?> list) {
             if(!_NullSafe.isEmpty(list)) sb.append(" |");
             return this;
@@ -204,6 +211,10 @@ class _Writer {
         }
         YamlWriter writeUpper(final String ...s) {
             for(val str:s) sb.append(str.toUpperCase());
+            return this;
+        }
+        YamlWriter ind(final int indentCount) {
+            IntStream.range(0, indentCount).forEach(i->sb.append("  "));
             return this;
         }
         YamlWriter ind() {

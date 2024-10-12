@@ -213,7 +213,7 @@ class _Parser {
                 (String)map.get("elementType"),
                 PropertyLayoutSpec.fromMap(map),
                 parseMultilineStringTrimmed((String)map.get("enum")),
-                parseMultilineString((String)map.get("description")));
+                Multiline.parseMultilineString((String)map.get("description")));
     }
 
     EntityField parseField(final Entity parent, final int ordinal,
@@ -232,7 +232,7 @@ class _Parser {
                 parseMultilineStringTrimmed((String)map.get("enum")),
                 parseMultilineStringTrimmed((String)map.get("discriminator")),
                 parseMultilineStringTrimmed((String)map.get("foreignKeys")),
-                parseMultilineString((String)map.get("description")));
+                Multiline.parseMultilineString((String)map.get("description")));
     }
 
     EnumConstant parseEnum(final Field field, final int ordinal, final String enumDeclarationLine) {

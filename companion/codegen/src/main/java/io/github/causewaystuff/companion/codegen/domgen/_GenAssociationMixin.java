@@ -71,12 +71,12 @@ class _GenAssociationMixin {
                 .addAnnotation(
                         isPlural
                         ? _Annotations.collectionLayout(attr->attr
-                                .describedAs(fieldWithForeignKeys.formatDescription("\n"))
+                                .describedAs(fieldWithForeignKeys.description().formatDescription("\n"))
                                 .hiddenWhere(Where.NOWHERE))
                         : _Annotations.propertyLayout(attr->attr
                                 .fieldSet("details")
                                 .sequence(fieldWithForeignKeys.sequence() + ".1")
-                                .describedAs(fieldWithForeignKeys.formatDescription("\n"))
+                                .describedAs(fieldWithForeignKeys.description().formatDescription("\n"))
                                 .hiddenWhere(useEitherPattern
                                     ? Where.NOWHERE
                                     : Where.REFERENCES_PARENT),

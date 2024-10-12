@@ -115,7 +115,7 @@ class _GenViewmodel {
                                 : field.asJavaType(),
                             field.name(),
                             modifiers)
-                    .addJavadoc(field.formatDescription("\n"))
+                    .addJavadoc(field.description().formatDescription("\n"))
                     .addAnnotation(_Annotations.property(attr->{
                         attr.optionality(field.requiredInTheUi()
                                 ? Optionality.MANDATORY
@@ -127,7 +127,7 @@ class _GenViewmodel {
                             .fieldSet("details")
                             .sequence(field.sequence())
                             .describedAs(
-                                field.formatDescription("\n")),
+                                field.description().formatDescription("\n")),
                         field.propertyLayout())
                     )
                     .addAnnotation(_Annotations.getter())
@@ -148,12 +148,12 @@ class _GenViewmodel {
                                 ? field.asJavaEnumType()
                                 : field.asJavaType(),
                             field.name())
-                    .addJavadoc(field.formatDescription("\n"))
+                    .addJavadoc(field.description().formatDescription("\n"))
                     .addAnnotation(_Annotations.propertyLayout(attr->attr
                             .fieldSet("details")
                             .sequence(field.sequence())
                             .describedAs(
-                                field.formatDescription("\n")),
+                                field.description().formatDescription("\n")),
                         field.propertyLayout())
                     )
                     .build())

@@ -67,7 +67,7 @@ class _GenEntity_Params {
                                     ? _Foreign.resolvedFieldName(field)
                                     : field.name(),
                             modifiers)
-                    .addJavadoc(field.formatDescription("\n"))
+                    .addJavadoc(field.description().formatDescription("\n"))
                     .addAnnotation(_Annotations.parameter(attr->attr
                             .precedingParamsPolicy(
                                 field.hasDiscriminator()
@@ -78,7 +78,7 @@ class _GenEntity_Params {
                                     ? Optionality.MANDATORY
                                     : Optionality.OPTIONAL)))
                     .addAnnotation(_Annotations.parameterLayout(attr->attr
-                            .describedAs(field.formatDescription("\n"))
+                            .describedAs(field.description().formatDescription("\n"))
                             .multiLine(Optional.ofNullable(field.propertyLayout()).map(pl->pl.multiLine()).orElse(0))))
                     .build())
                 .toList();

@@ -22,6 +22,8 @@ import java.util.List;
 
 import javax.lang.model.element.Modifier;
 
+import lombok.experimental.UtilityClass;
+
 import io.github.causewaystuff.companion.applib.services.lookup.ISecondaryKey;
 import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.tooling.javapoet.ClassName;
@@ -29,8 +31,6 @@ import io.github.causewaystuff.tooling.javapoet.MethodSpec;
 import io.github.causewaystuff.tooling.javapoet.ParameterSpec;
 import io.github.causewaystuff.tooling.javapoet.ParameterizedTypeName;
 import io.github.causewaystuff.tooling.javapoet.TypeSpec;
-
-import lombok.experimental.UtilityClass;
 
 @UtilityClass
 class _GenEntity_SecondaryKey {
@@ -77,7 +77,7 @@ class _GenEntity_SecondaryKey {
         return fields.stream()
                 .map(field->
                     ParameterSpec.builder(field.asJavaType(), field.name(), modifiers)
-                    .addJavadoc(field.formatDescription("\n"))
+                    .addJavadoc(field.description().formatDescription("\n"))
                     .build())
                 .toList();
     }

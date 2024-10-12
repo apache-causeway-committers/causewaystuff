@@ -28,6 +28,7 @@ import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.commons.base.types.internal.ObjectRef;
 import io.github.causewaystuff.commons.base.types.internal.SneakyRef;
+import io.github.causewaystuff.companion.codegen.model.Multiline;
 import io.github.causewaystuff.companion.codegen.model.PropertyLayoutSpec;
 import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.companion.codegen.model.Schema.Domain;
@@ -52,7 +53,7 @@ public class OrmSchemaExamples {
                     .multiLine(2)
                     .hiddenWhere(Where.ALL_TABLES)
                     .build(),
-                List.of(), List.of(), List.of(), List.of("aa", "bb", "cc"));
+                List.of(), List.of(), List.of(), new Multiline(List.of("aa", "bb", "cc")));
         entity.fields().add(field);
         return Can.of(
                 Domain.of(List.of(),List.of(entity)));
