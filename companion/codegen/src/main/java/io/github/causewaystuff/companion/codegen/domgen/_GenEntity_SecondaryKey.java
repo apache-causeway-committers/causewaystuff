@@ -77,7 +77,7 @@ class _GenEntity_SecondaryKey {
         return fields.stream()
                 .map(field->
                     ParameterSpec.builder(field.asJavaType(), field.name(), modifiers)
-                    .addJavadoc(field.description().formatDescription("\n"))
+                    .addJavadoc(field.propertyLayout().describedAs())
                     .build())
                 .toList();
     }

@@ -94,14 +94,18 @@ class _Writer {
         Optional.ofNullable(field.propertyLayout())
             .ifPresent(propertyLayout->propertyLayout.streamAttributes()
                     .forEach(attr->{
-                        yaml.ind().ind().ind().write(attr.name(), ": ", attr.value().toString()).nl();
+                        if(attr.value() instanceof Multiline ml) {
+                            yaml.write(3, "description", ml);
+                        } else {
+                            yaml.ind().ind().ind().write(attr.name(), ": ", attr.value().toString()).nl();
+                        }
                     }));
         if(field.isEnum()) {
             yaml.ind().ind().ind().write("enum:").multiLineStartIfNotEmtpy(field.enumeration()).nl();
             field.enumeration().forEach(line->
             yaml.ind().ind().ind().ind().write(line).nl());
         }
-        yaml.write(3, "description", field.description());
+
     }
 
     void writeEntity(final YamlWriter yaml, final Schema.Entity entity) {
@@ -165,9 +169,13 @@ class _Writer {
         }
         Optional.ofNullable(field.propertyLayout())
             .ifPresent(propertyLayout->propertyLayout.streamAttributes()
-                .forEach(attr->{
-                    yaml.ind().ind().ind().write(attr.name(), ": ", attr.value().toString()).nl();
-                }));
+                    .forEach(attr->{
+                        if(attr.value() instanceof Multiline ml) {
+                            yaml.write(3, "description", ml);
+                        } else {
+                            yaml.ind().ind().ind().write(attr.name(), ": ", attr.value().toString()).nl();
+                        }
+                    }));
         if(field.isEnum()) {
             yaml.ind().ind().ind().write("enum:").multiLineStartIfNotEmtpy(field.enumeration()).nl();
             field.enumeration().forEach(line->
@@ -183,7 +191,6 @@ class _Writer {
             field.foreignKeys().forEach(line->
             yaml.ind().ind().ind().ind().writeUpper(line).nl());
         }
-        yaml.write(3, "description", field.description());
     }
 
     // -- HELPER

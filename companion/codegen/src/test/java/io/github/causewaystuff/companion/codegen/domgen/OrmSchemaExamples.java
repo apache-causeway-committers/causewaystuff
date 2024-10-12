@@ -52,8 +52,9 @@ public class OrmSchemaExamples {
                 PropertyLayoutSpec.builder()
                     .multiLine(2)
                     .hiddenWhere(Where.ALL_TABLES)
+                    .description(new Multiline(List.of("aa", "bb", "cc")))
                     .build(),
-                List.of(), List.of(), List.of(), new Multiline(List.of("aa", "bb", "cc")));
+                List.of(), List.of(), List.of());
         entity.fields().add(field);
         return Can.of(
                 Domain.of(List.of(),List.of(entity)));

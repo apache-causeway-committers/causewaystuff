@@ -72,8 +72,6 @@ public class Schema {
         String name();
         boolean required();
         List<String> enumeration();
-        @Deprecated
-        Multiline description();
         PropertyLayoutSpec propertyLayout();
 
         TypeName asJavaType();
@@ -129,8 +127,7 @@ public class Schema {
             boolean plural,
             String elementType,
             PropertyLayoutSpec propertyLayout,
-            List<String> enumeration,
-            Multiline description) implements Field {
+            List<String> enumeration) implements Field {
         @Override
         public TypeName asJavaType() {
             return _TypeMapping.simpleNameToJava(type);
@@ -224,8 +221,7 @@ public class Schema {
             PropertyLayoutSpec propertyLayout,
             List<String> enumeration,
             List<String> discriminator,
-            List<String> foreignKeys,
-            Multiline description) implements Field {
+            List<String> foreignKeys) implements Field {
         public Entity parentEntity() {
             return parentRef.value();
         }
@@ -310,8 +306,7 @@ public class Schema {
                     propertyLayout,
                     enumeration,
                     discriminator,
-                    foreignKeys,
-                    description);
+                    foreignKeys);
             parentEntity().fields().replaceAll(f->f.ordinal() == this.ordinal()
                     ? copy
                     : f);
@@ -329,8 +324,7 @@ public class Schema {
                     propertyLayout,
                     enumeration,
                     discriminator,
-                    foreignKeys,
-                    description);
+                    foreignKeys);
             parentEntity().fields().replaceAll(f->f.ordinal() == this.ordinal()
                     ? copy
                     : f);

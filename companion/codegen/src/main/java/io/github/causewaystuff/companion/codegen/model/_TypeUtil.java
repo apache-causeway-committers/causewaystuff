@@ -72,4 +72,13 @@ class _TypeUtil {
     @Nullable Where override(@Nullable final Where primed, @Nullable final Where override) {
         return Optional.ofNullable(override).orElse(primed);
     }
+
+    Multiline override(@Nullable final Multiline primed, @Nullable final Multiline override) {
+        var _primed = Optional.ofNullable(primed).orElse(Multiline.empty());
+        var _override = Optional.ofNullable(override).orElse(Multiline.empty());
+        return _override.isEmpty()
+                ? _primed
+                : _override;
+    }
+
 }

@@ -193,7 +193,7 @@ class _GenEntity {
                                 : field.asJavaType(),
                             field.name(),
                             modifiers)
-                    .addJavadoc(field.description().formatDescription("\n"))
+                    .addJavadoc(field.propertyLayout().describedAs())
                     .addAnnotation(_Annotations.property(attr->{
                         attr.optionality(field.requiredInTheUi()
                                 ? Optionality.MANDATORY
@@ -210,8 +210,6 @@ class _GenEntity {
                                         ? "foreign"
                                         : "details")
                             .sequence(field.sequence())
-                            .describedAs(
-                                    field.description().formatDescription("\n"))
                             .hiddenWhere(field.hasForeignKeys()
                                             ? Where.ALL_TABLES
                                             : null),

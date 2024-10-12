@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 import org.springframework.lang.Nullable;
 
@@ -155,7 +154,7 @@ class _Parser {
                 (String)map.get("icon"),
                 parseNullableBoolean((Boolean)map.get("iconService")),
                 (String)map.get("named"),
-                parseMultilineString((String)map.get("description")),
+                Multiline.parseMultilineString((String)map.get("description")).lines(),
                 new ArrayList<>());
         fieldsAsMap.entrySet().stream()
                 .map(IndexedFunction.zeroBased((index, innerEntry)->parseField(viewmodel, index, innerEntry)))
@@ -182,13 +181,13 @@ class _Parser {
                 namespace,
                 (String)map.get("table"),
                 parseNullableStringTrimmed((String)map.get("superType")),
-                parseMultilineStringTrimmed((String)map.get("secondaryKey")),
+                Multiline.parseMultilineStringTrimmed((String)map.get("secondaryKey")).lines(),
                 parseNullableBoolean((Boolean)map.get("suppressUniqueConstraint")),
                 (String)map.get("title"),
                 (String)map.get("icon"),
                 parseNullableBoolean((Boolean)map.get("iconService")),
                 (String)map.get("named"),
-                parseMultilineString((String)map.get("description")),
+                Multiline.parseMultilineString((String)map.get("description")).lines(),
                 new ArrayList<>());
         fieldsAsMap.entrySet().stream()
                 .map(IndexedFunction.zeroBased((index, innerEntry)->parseField(entity, index, innerEntry)))
@@ -212,8 +211,7 @@ class _Parser {
                 (boolean)Optional.ofNullable((Boolean)map.get("plural")).orElse(false),
                 (String)map.get("elementType"),
                 PropertyLayoutSpec.fromMap(map),
-                parseMultilineStringTrimmed((String)map.get("enum")),
-                Multiline.parseMultilineString((String)map.get("description")));
+                Multiline.parseMultilineStringTrimmed((String)map.get("enum")).lines());
     }
 
     EntityField parseField(final Entity parent, final int ordinal,
@@ -229,10 +227,9 @@ class _Parser {
                 (boolean)Optional.ofNullable((Boolean)map.get("plural")).orElse(false),
                 (String)map.get("elementType"),
                 PropertyLayoutSpec.fromMap(map),
-                parseMultilineStringTrimmed((String)map.get("enum")),
-                parseMultilineStringTrimmed((String)map.get("discriminator")),
-                parseMultilineStringTrimmed((String)map.get("foreignKeys")),
-                Multiline.parseMultilineString((String)map.get("description")));
+                Multiline.parseMultilineStringTrimmed((String)map.get("enum")).lines(),
+                Multiline.parseMultilineStringTrimmed((String)map.get("discriminator")).lines(),
+                Multiline.parseMultilineStringTrimmed((String)map.get("foreignKeys")).lines());
     }
 
     EnumConstant parseEnum(final Field field, final int ordinal, final String enumDeclarationLine) {
@@ -253,19 +250,6 @@ class _Parser {
 
     private static boolean parseNullableBoolean(final Boolean bool) {
         return Boolean.TRUE.equals(bool);
-    }
-
-    private static List<String> parseMultilineString(final String input) {
-        return _Strings.splitThenStream(input, "\n")
-            .filter(_Strings::isNotEmpty)
-            .collect(Collectors.toList());
-    }
-
-    private static List<String> parseMultilineStringTrimmed(final String input) {
-        return _Strings.splitThenStream(input, "\n")
-            .filter(_Strings::isNotEmpty)
-            .map(String::trim)
-            .collect(Collectors.toList());
     }
 
     private static String parseNullableStringTrimmed(final String input) {

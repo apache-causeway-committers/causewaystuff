@@ -24,13 +24,19 @@ import org.apache.causeway.commons.internal.base._Strings;
 
 public record Multiline(List<String> lines) {
 
+    public static Multiline empty() {
+        return new Multiline(List.of());
+    }
+
     public boolean isEmpty() {
         return lines.isEmpty();
     }
 
-    public String formatDescription(final String continuation, final String ... moreLines) {
-        return _Format.parseYamlMultiline(lines(), "has no description", continuation, moreLines);
+    public String describedAs() {
+        return formatDescription("\n");
     }
+
+    // -- INTERNAL
 
     static Multiline parseMultilineString(final String input) {
         return new Multiline(_Strings.splitThenStream(input, "\n")
@@ -43,6 +49,10 @@ public record Multiline(List<String> lines) {
             .filter(_Strings::isNotEmpty)
             .map(String::trim)
             .toList());
+    }
+
+    private String formatDescription(final String continuation, final String ... moreLines) {
+        return _Format.parseYamlMultiline(lines(), "has no description", continuation, moreLines);
     }
 
 }

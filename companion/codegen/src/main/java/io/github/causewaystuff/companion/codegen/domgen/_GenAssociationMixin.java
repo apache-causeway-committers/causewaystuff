@@ -71,16 +71,16 @@ class _GenAssociationMixin {
                 .addAnnotation(
                         isPlural
                         ? _Annotations.collectionLayout(attr->attr
-                                .describedAs(fieldWithForeignKeys.description().formatDescription("\n"))
+                                .describedAs(fieldWithForeignKeys.propertyLayout().describedAs())
                                 .hiddenWhere(Where.NOWHERE))
                         : _Annotations.propertyLayout(attr->attr
                                 .fieldSet("details")
                                 .sequence(fieldWithForeignKeys.sequence() + ".1")
-                                .describedAs(fieldWithForeignKeys.description().formatDescription("\n"))
+                                //.described(fieldWithForeignKeys.description()) //XXX
                                 .hiddenWhere(useEitherPattern
                                     ? Where.NOWHERE
                                     : Where.REFERENCES_PARENT),
-                            null /*no override*/)
+                        fieldWithForeignKeys.propertyLayout())
                 )
                 .addAnnotation(RequiredArgsConstructor.class)
                 .addField(_Fields.inject(ForeignKeyLookupService.class, "foreignKeyLookup"))

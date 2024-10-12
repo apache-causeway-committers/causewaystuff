@@ -19,6 +19,7 @@
 package io.github.causewaystuff.companion.codegen.model;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.springframework.lang.Nullable;
@@ -34,11 +35,16 @@ public record PropertyLayoutSpec(
         @Nullable String cssClass,
         @Nullable String fieldSet,
         @Nullable String sequence,
-        @Nullable String describedAs,
+        @Nullable Multiline description,
         @Nullable Integer multiLine,
         @Nullable Where hiddenWhere,
         @Nullable Navigable navigable,
         @Nullable LabelPosition labelPosition) {
+
+    @Nullable
+    public String describedAs() {
+        return Optional.ofNullable(description).map(Multiline::describedAs).orElse(null);
+    }
 
     public PropertyLayoutSpec overrideWith(final @Nullable PropertyLayoutSpec successor) {
         if(successor == null) return this;
@@ -46,7 +52,7 @@ public record PropertyLayoutSpec(
                 .cssClass(_TypeUtil.override(successor.cssClass, cssClass))
                 .fieldSet(_TypeUtil.override(successor.fieldSet, fieldSet))
                 .sequence(_TypeUtil.override(successor.sequence, sequence))
-                .describedAs(_TypeUtil.override(successor.describedAs, describedAs))
+                .description(_TypeUtil.override(successor.description, description))
                 .multiLine(_TypeUtil.override(successor.multiLine, multiLine))
                 .hiddenWhere(_TypeUtil.override(successor.hiddenWhere, hiddenWhere))
                 .navigable(_TypeUtil.override(successor.navigable, navigable))
@@ -61,7 +67,7 @@ public record PropertyLayoutSpec(
                 .cssClass((String) map.get("cssClass"))
                 .fieldSet((String) map.get("fieldSet"))
                 .sequence((String) map.get("sequence"))
-                .describedAs((String) map.get("describedAs"))
+                .description(Multiline.parseMultilineString((String)map.get("description")))
                 .multiLine(_TypeUtil.parseNullableIntegerWithBounds((Integer)map.get("multiLine"), 2, 1000))
                 .hiddenWhere(_TypeUtil.parseNullableEnum(Where.class, (String) map.get("hiddenWhere")))
                 .navigable(_TypeUtil.parseNullableEnum(Navigable.class, (String) map.get("navigable")))
@@ -77,7 +83,7 @@ public record PropertyLayoutSpec(
                 new Attribute("cssClass", cssClass),
                 new Attribute("fieldSet", fieldSet),
                 new Attribute("sequence", sequence),
-                new Attribute("describedAs", describedAs),
+                new Attribute("described", description),
                 new Attribute("multiLine", multiLine),
                 new Attribute("hiddenWhere", hiddenWhere),
                 new Attribute("navigable", navigable),
