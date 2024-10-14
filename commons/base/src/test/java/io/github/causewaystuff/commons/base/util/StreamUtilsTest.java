@@ -37,7 +37,7 @@ class StreamUtilsTest {
             // using an iterator as element producer
             var it = list.iterator();
             while(it.hasNext()) {
-                collector.collect(it.next());
+                collector.accept(it.next());
             }
         })
         .toList();
