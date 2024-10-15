@@ -107,8 +107,20 @@ public class LocalFsBlobStore implements BlobStore {
         return Optional.ofNullable(descriptorsByPath.get(path));
     }
 
-    @Override @Synchronized
+    @Override
     public Optional<Blob> lookupBlob(final @Nullable NamedPath path) {
+        return lookupBlob(path, null);
+    }
+
+    @Override
+    public Optional<Blob> lookupBlobAndUncompress(final @Nullable NamedPath path) {
+        return lookupBlob(path, Compression.NONE);
+    }
+
+    @Synchronized
+    private Optional<Blob> lookupBlob(
+            @Nullable final NamedPath path,
+            @Nullable final Compression desiredCompression) {
         var descriptor = lookupDescriptor(path).orElse(null);
         if(descriptor==null) {
             return Optional.empty();
@@ -116,7 +128,7 @@ public class LocalFsBlobStore implements BlobStore {
         var locator = FileLocator.of(rootDirectory, descriptor);
         _Assert.assertTrue(locator.hasBlob(),
                 ()->String.format("missing blob for path %s", path));
-        return Blob.tryRead(
+        var blobAsStored =  Blob.tryRead(
                 descriptor.path().lastNameElseFail(),
                 switch (descriptor.compression()) {
                     case NONE -> descriptor.mimeType();
@@ -125,6 +137,13 @@ public class LocalFsBlobStore implements BlobStore {
                 },
                 locator.blobFile())
                 .getValue();
+        return desiredCompression!=null
+                ? blobAsStored.map(blob->CompressUtils.recompressBlob(
+                                blob,
+                                descriptor.mimeType(),
+                                descriptor.compression(),
+                                desiredCompression))
+                : blobAsStored;
     }
 
     @Override @Synchronized

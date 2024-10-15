@@ -64,6 +64,11 @@ public interface BlobStore {
      * based on existence.
      */
     Optional<Blob> lookupBlob(@Nullable NamedPath path);
+    /**
+     * Optionally returns the {@link Blob} thats stored under given {@link NamedPath},
+     * based on existence. The blob if any is also uncompressed (if required).
+     */
+    Optional<Blob> lookupBlobAndUncompress(@Nullable NamedPath path);
 
     /**
      * Deletes blob and descriptor that are associated with given {@link NamedPath} (if any).
