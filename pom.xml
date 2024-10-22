@@ -42,7 +42,7 @@
         <spring-boot.version>3.3.4</spring-boot.version>
         <causeway.version>3.0.0-SNAPSHOT</causeway.version>
 
-        <junit.version>5.11.2</junit.version>
+        <junit.version>5.11.3</junit.version>
         <lombok.version>1.18.34</lombok.version>
 
         <!-- plugins -->
