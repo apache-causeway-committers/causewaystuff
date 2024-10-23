@@ -85,8 +85,8 @@ class ListingTest {
         String expectedOutputAfterRoundtrip = """
                 # this is a regular comment
                 [a] Jeff
-                #ERROR cannot parse Customer: this is an invalid line
-                #ERROR cannot parse Customer: also an # invalid line
+                #ERROR cannot parse ‹this is an invalid line› as Customer (org.opentest4j.AssertionFailedError: expected: <true> but was: <false>)
+                #ERROR cannot parse ‹also an # invalid line› as Customer (org.opentest4j.AssertionFailedError: expected: <true> but was: <false>)
                 #[c] Henry
                 # the follwing is a blank line
 
@@ -112,8 +112,8 @@ class ListingTest {
         String expectedOutputAfterMerge = """
                 # this is a regular comment
                 [a] Jeff
-                #ERROR cannot parse Customer: this is an invalid line
-                #ERROR cannot parse Customer: also an # invalid line
+                #ERROR cannot parse ‹this is an invalid line› as Customer (org.opentest4j.AssertionFailedError: expected: <true> but was: <false>)
+                #ERROR cannot parse ‹also an # invalid line› as Customer (org.opentest4j.AssertionFailedError: expected: <true> but was: <false>)
                 #[c] Henry
                 # the follwing is a blank line
 

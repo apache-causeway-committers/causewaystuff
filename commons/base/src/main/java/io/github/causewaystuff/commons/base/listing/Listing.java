@@ -105,7 +105,7 @@ public record Listing<T>(
             return asT
                     .mapSuccessWhenPresent(object->(Line)new LineEnabled<T>(object, line))
                     .mapEmptyToFailure()
-                    .mapFailureToSuccess(e->new LineComment(String.format("#ERROR cannot parse %s as %s (%s)",
+                    .mapFailureToSuccess(e->new LineComment(String.format("#ERROR cannot parse ‹%s› as %s (%s)",
                             line, objectType().getSimpleName(), e)))
                     .valueAsNonNullElseFail();
         }
