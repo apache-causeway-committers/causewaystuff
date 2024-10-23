@@ -21,7 +21,6 @@ package io.github.causewaystuff.commons.base.listing;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
@@ -86,32 +85,35 @@ public record Listing<T>(
          * then it is commented out.
          */
         public Line parseLine(final String wholeLine) {
-            var line = wholeLine.trim();
+            final var line = wholeLine.trim();
             if(line.isBlank()) {
                 return new LineComment(line);
             }
             if(line.startsWith("#")) {
-                while(line.startsWith("#")) {
-                    line = line.substring(1).trim();
+                var trimmed = line;
+                while(trimmed.startsWith("#")) {
+                    trimmed = trimmed.substring(1).trim();
                 }
-                T object = asT(line).orElse(null);
+                T object = asT(trimmed).getValue().orElse(null);
                 return object==null
                         ? new LineComment(wholeLine)
                         : (line.startsWith("REMOVED "))
-                                ? new LineRemoved<T>(object, line.substring(8))
-                                : new LineDisabled<T>(object, line);
+                                ? new LineRemoved<T>(object, trimmed.substring(8))
+                                : new LineDisabled<T>(object, trimmed);
             }
-            T object = asT(line).orElse(null);
-            return object!=null
-                    ? new LineEnabled<T>(object, line)
-                    : new LineComment(String.format("#ERROR cannot parse %s: ", objectType().getSimpleName()) + line);
+            Try<T> asT = asT(line);
+            return asT
+                    .mapSuccessWhenPresent(object->(Line)new LineEnabled<T>(object, line))
+                    .mapEmptyToFailure()
+                    .mapFailureToSuccess(e->new LineComment(String.format("#ERROR cannot parse %s as %s (%s)",
+                            line, objectType().getSimpleName(), e)))
+                    .valueAsNonNullElseFail();
         }
 
         // -- HELPER
 
-        private Optional<T> asT(final String stringified) {
-            return Try.call(()->destringifier().apply(stringified))
-                    .getValue();
+        private Try<T> asT(final String stringified) {
+            return Try.call(()->destringifier().apply(stringified));
         }
 
     }
