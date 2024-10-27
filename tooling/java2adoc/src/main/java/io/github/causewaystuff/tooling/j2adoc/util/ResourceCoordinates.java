@@ -31,14 +31,14 @@ import org.apache.causeway.commons.io.TextUtils;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;
-import lombok.val;
+
 
 @Value @Builder
 public class ResourceCoordinates
 implements Comparable<ResourceCoordinates> {
 
     public static ResourceCoordinates fromFile(final @NonNull File file) {
-        val parts = _Lists.<String>newArrayList();
+        var parts = _Lists.<String>newArrayList();
         File next = file;
         while(next!=null) {
             if(_Strings.isNotEmpty(next.getName())) {
@@ -47,7 +47,7 @@ implements Comparable<ResourceCoordinates> {
             next = next.getParentFile();
         }
 
-        val cutter = TextUtils.cutter(file.getName());
+        var cutter = TextUtils.cutter(file.getName());
 
         final String simpleName = cutter.keepBeforeLast(".").getValue();
         final String fileNameExtension = cutter.keepAfterLast(".").getValue();

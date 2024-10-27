@@ -50,7 +50,7 @@ import static org.apache.causeway.valuetypes.asciidoc.builder.AsciiDocFactory.bl
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
+
 
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class UnitFormatterAbstract
@@ -66,7 +66,7 @@ implements UnitFormatter {
     @Override
     public Document apply(final J2AdocUnit unit, final File file) {
 
-        val doc = AsciiDocFactory.doc();
+        var doc = AsciiDocFactory.doc();
 
         // -- title
         if(!j2aContext.isSkipTitleHeader()) {
@@ -85,7 +85,7 @@ implements UnitFormatter {
         intro(unit, doc);
 
         // == API
-        val titleBlock = block(doc);
+        var titleBlock = block(doc);
         titleBlock.setSource("== API");
 
         // -- java source
@@ -188,9 +188,9 @@ implements UnitFormatter {
             final String listItemText,
             final Document listItemParagraphs) {
 
-        val li = AsciiDocFactory.listItem(ul, listItemText);
-        val openBlock = AsciiDocFactory.openBlock(li);
-        val javaDocBlock = AsciiDocFactory.block(openBlock);
+        var li = AsciiDocFactory.listItem(ul, listItemText);
+        var openBlock = AsciiDocFactory.openBlock(li);
+        var javaDocBlock = AsciiDocFactory.block(openBlock);
         javaDocBlock.getBlocks().addAll(listItemParagraphs.getBlocks());
     }
 

@@ -29,7 +29,7 @@ import org.apache.causeway.valuetypes.asciidoc.builder.include.IncludeStatement;
 import org.apache.causeway.valuetypes.asciidoc.builder.include.IncludeStatements;
 
 import lombok.NonNull;
-import lombok.val;
+
 import lombok.extern.log4j.Log4j2;
 
 import io.github.causewaystuff.tooling.cli.CliConfig;
@@ -55,15 +55,15 @@ public final class OrphanedIncludeStatementFixer {
 
         log.debug("IncludeStatementFixer: about to process {} adoc files", adocFiles.size());
 
-        val totalFixed = _Refs.intRef(0);
+        var totalFixed = _Refs.intRef(0);
 
         adocFiles.forEach(adocFile->{
             //_Probe.errOut("adoc file found: %s", adocFile);
 
-            val fixedCounter = _Refs.intRef(0);
-            val originLines = TextUtils.readLinesFromFile(adocFile, StandardCharsets.UTF_8);
+            var fixedCounter = _Refs.intRef(0);
+            var originLines = TextUtils.readLinesFromFile(adocFile, StandardCharsets.UTF_8);
 
-            val lines = IncludeStatements.rewrite(originLines, include->{
+            var lines = IncludeStatements.rewrite(originLines, include->{
                 final boolean inGlobalIndex =
                         "refguide".equals(include.getComponent())               // TODO should be reasoned from config
                         && include.getNamespace().startsWith(Can.of("index"));  // TODO should be reasoned from config
@@ -71,16 +71,16 @@ public final class OrphanedIncludeStatementFixer {
                     return null; // keep original line, don't mangle
                 }
 
-                val correctedIncludeStatement = _Refs.<IncludeStatement>objectRef(null);
-                val typeSimpleName = include.getCanonicalName();
+                var correctedIncludeStatement = _Refs.<IncludeStatement>objectRef(null);
+                var typeSimpleName = include.getCanonicalName();
 
                 j2aContext.findUnitByTypeSimpleName(typeSimpleName)
                 .ifPresent(unit->{
 
-                    val module = unit.getNamespace().stream()
+                    var module = unit.getNamespace().stream()
                             .skip(j2aContext.getNamespacePartsSkipCount())
                             .findFirst().get();
-                    val expected = IncludeStatement.builder()
+                    var expected = IncludeStatement.builder()
                     .component("refguide")
                     .module(module)
                     .type("page")
@@ -94,7 +94,7 @@ public final class OrphanedIncludeStatementFixer {
                     .options("[leveloffset=+2]")
                     .build();
 
-                    val includeLineShouldBe = expected.toAdocAsString();
+                    var includeLineShouldBe = expected.toAdocAsString();
 
                     if(!includeLineShouldBe.equals(include.getMatchingLine())) {
                         log.warn("mismatch\n {}\n {}\n", includeLineShouldBe, include.getMatchingLine());

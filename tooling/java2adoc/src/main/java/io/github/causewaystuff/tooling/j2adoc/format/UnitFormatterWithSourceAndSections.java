@@ -34,7 +34,7 @@ import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.valuetypes.asciidoc.builder.AsciiDocFactory;
 
 import lombok.NonNull;
-import lombok.val;
+
 
 import io.github.causewaystuff.tooling.j2adoc.J2AdocContext;
 import io.github.causewaystuff.tooling.j2adoc.J2AdocUnit;
@@ -62,10 +62,10 @@ extends UnitFormatterAbstract {
     @Override
     protected void memberDescriptions(final J2AdocUnit unit, final StructuralNode parent) {
 
-        val ul = AsciiDocFactory.callouts(parent);
+        var ul = AsciiDocFactory.callouts(parent);
 
         var converter = J2AdocConverterDefault.of(j2aContext);
-        val firstParaOnly = (BiFunction<Javadoc, J2AdocUnit, Document>) (javadoc, j2Unit) -> converter.javadoc(javadoc, unit, J2AdocConverter.Mode.FIRST_PARA_ONLY);
+        var firstParaOnly = (BiFunction<Javadoc, J2AdocUnit, Document>) (javadoc, j2Unit) -> converter.javadoc(javadoc, unit, J2AdocConverter.Mode.FIRST_PARA_ONLY);
 
         appendMembersToList(ul, unit,
                 unit.getTypeDeclaration().getEnumConstantDeclarations(),
@@ -107,9 +107,9 @@ extends UnitFormatterAbstract {
         //
         // now the members section
         //
-        val membersDoc = AsciiDocFactory.doc();
+        var membersDoc = AsciiDocFactory.doc();
 
-        val allJavadocStrategy = (BiFunction<Javadoc, J2AdocUnit, Document>) (javadoc, j2Unit) -> converter.javadoc(javadoc, unit, J2AdocConverter.Mode.ALL);
+        var allJavadocStrategy = (BiFunction<Javadoc, J2AdocUnit, Document>) (javadoc, j2Unit) -> converter.javadoc(javadoc, unit, J2AdocConverter.Mode.ALL);
 
         appendMemberSections(membersDoc, unit,
                 unit.getTypeDeclaration().getEnumConstantDeclarations(),
@@ -144,7 +144,7 @@ extends UnitFormatterAbstract {
 
         if (!membersDoc.getBlocks().isEmpty()) {
 
-            val titleBlock = AsciiDocFactory.block(parent);
+            var titleBlock = AsciiDocFactory.block(parent);
             titleBlock.setSource("== Members");
 
             parent.append(membersDoc);
@@ -203,7 +203,7 @@ extends UnitFormatterAbstract {
             final String sectionHeader,
             final Document sectionContent) {
 
-        val titleBlock = AsciiDocFactory.block(section);
+        var titleBlock = AsciiDocFactory.block(section);
         titleBlock.setId(sectionAnchor);
         titleBlock.setLines(Arrays.asList(
                 String.format("[#%s]", sectionAnchor),

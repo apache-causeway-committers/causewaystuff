@@ -25,15 +25,15 @@ import java.util.List;
 import org.apache.causeway.commons.internal.collections._Lists;
 import org.apache.causeway.commons.io.TextUtils;
 
-import lombok.val;
+
 
 class ExampleReferenceRewriter {
 
     static void processAdocExampleReferences(final File source) {
 
-        val lines = TextUtils.readLinesFromFile(source, StandardCharsets.UTF_8);
+        var lines = TextUtils.readLinesFromFile(source, StandardCharsets.UTF_8);
 
-        val exampleRefs = ExampleReferenceFinder.find(
+        var exampleRefs = ExampleReferenceFinder.find(
                 lines,
                 line->line.contains("refguide:applib-svc:example$services/"));
 
@@ -43,13 +43,13 @@ class ExampleReferenceRewriter {
 
         System.out.println(exampleRefs);
 
-        val fixedLines = _Lists.<String>newArrayList();
+        var fixedLines = _Lists.<String>newArrayList();
 
-        val it = lines.iterator();
+        var it = lines.iterator();
         String line;
         int i = 0;
 
-        for(val exRef : exampleRefs) {
+        for(var exRef : exampleRefs) {
 
             // seek chapter start
             while(i<exRef.chapterStart) {

@@ -32,7 +32,7 @@ import com.github.javaparser.ast.body.TypeDeclaration;
 
 import lombok.NonNull;
 import lombok.SneakyThrows;
-import lombok.val;
+
 
 public final class CompilationUnits {
 
@@ -88,7 +88,7 @@ public final class CompilationUnits {
     private static Optional<TypeDeclaration<?>> getPrimaryType(
             final @NonNull CompilationUnit compilationUnit) {
 
-        val type = compilationUnit.getPrimaryType()
+        var type = compilationUnit.getPrimaryType()
                 .orElseGet(()->
                     compilationUnit.getTypes()
                     .getFirst()

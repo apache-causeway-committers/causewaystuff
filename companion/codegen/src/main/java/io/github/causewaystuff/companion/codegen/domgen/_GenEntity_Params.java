@@ -26,7 +26,7 @@ import javax.lang.model.element.Modifier;
 import org.apache.causeway.applib.annotation.Optionality;
 import org.apache.causeway.applib.annotation.PrecedingParamsPolicy;
 
-import lombok.val;
+
 import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.companion.codegen.model.Schema;
@@ -40,7 +40,7 @@ class _GenEntity_Params {
             final DomainGenerator.Config config,
             final Schema.Entity entityModel) {
 
-        val paramsRecord = TypeSpec.recordBuilder("Params")
+        var paramsRecord = TypeSpec.recordBuilder("Params")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
                 .addJavadoc("Parameter model for @{link $1L}", entityModel.name())
                 .addAnnotation(_Annotations.generated(_GenEntity_Params.class))

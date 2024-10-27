@@ -36,7 +36,7 @@ import io.github.causewaystuff.tooling.javapoet.TypeSpec;
 import org.apache.causeway.commons.collections.Can;
 
 import lombok.RequiredArgsConstructor;
-import lombok.val;
+
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -47,9 +47,9 @@ class _GenDependants {
             final Schema.Entity entityModel,
             final Can<DependantMixinSpec> mixinSpecs) {
 
-        val packageName = config.fullPackageName(entityModel.namespace());
+        var packageName = config.fullPackageName(entityModel.namespace());
 
-        val typeModelBuilder = TypeSpec.classBuilder(entityModel.name() + "Deps")
+        var typeModelBuilder = TypeSpec.classBuilder(entityModel.name() + "Deps")
                 .addModifiers(Modifier.PUBLIC)
                 .addAnnotation(_Annotations.generated(_GenDependants.class))
                 .addAnnotation(AnnotationSpec.builder(Configuration.class)
@@ -61,9 +61,9 @@ class _GenDependants {
             Schema.EntityField fieldWithForeignKeys = mixinSpec.fieldWithForeignKeys();
             Can<Schema.EntityField> foreignFields = mixinSpec.foreignFields();
             ClassName propertyMixinClassName = mixinSpec.propertyMixinClassName();
-            val localEntity = mixinSpec.localEntity();
+            var localEntity = mixinSpec.localEntity();
 
-            val innerMixin = TypeSpec.classBuilder(mixinSpec.mixinClassName())
+            var innerMixin = TypeSpec.classBuilder(mixinSpec.mixinClassName())
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .addAnnotation(_Annotations.collection(attr->attr))
                 .addAnnotation(_Annotations.collectionLayout(attr->attr.tableDecorator(CollectionTitleDecorator.class)))
@@ -112,8 +112,8 @@ class _GenDependants {
             final ClassName associationMixinClassName,
             final Modifier ... modifiers) {
 
-        val dependantEntity = fieldWithForeignKeys.parentEntity();
-        val dependantType = config.javaPoetClassName(dependantEntity);
+        var dependantEntity = fieldWithForeignKeys.parentEntity();
+        var dependantType = config.javaPoetClassName(dependantEntity);
 
         final MethodSpec.Builder builder = MethodSpec.methodBuilder("coll")
                 .addModifiers(modifiers)

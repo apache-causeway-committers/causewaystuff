@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
 import org.apache.causeway.commons.internal.base._Text;
 import org.apache.causeway.commons.io.TextUtils;
 
-import lombok.val;
+
 
 import io.github.causewaystuff.tooling.c4.C4;
 
@@ -57,8 +57,8 @@ class C4Test {
 
         // First, we need to create a Workspace and a Model:
 
-        val workspace = new Workspace("Payment Gateway", "Payment Gateway");
-        val model = workspace.getModel();
+        var workspace = new Workspace("Payment Gateway", "Payment Gateway");
+        var model = workspace.getModel();
 
         // We also define a user and two software systems within that model:
 
@@ -73,7 +73,7 @@ class C4Test {
         // Now that our system is defined, we can create a view
         // Here we created a view that includes all software systems and persons.
 
-        val viewSet = workspace.getViews();
+        var viewSet = workspace.getViews();
 
         SystemContextView contextView = viewSet
                 .createSystemContextView(paymentTerminal, "context", "Payment Gateway Diagram");
@@ -82,10 +82,10 @@ class C4Test {
 
         // Now the view needs to be rendered.
 
-        val sb = new StringBuffer();
-        val plantUMLExporter = new StructurizrPlantUMLExporter();
+        var sb = new StringBuffer();
+        var plantUMLExporter = new StructurizrPlantUMLExporter();
         plantUMLExporter.export(workspace).forEach(diagram->sb.append(diagram.getDefinition()));
-        val plantUmlSource = sb.toString();
+        var plantUmlSource = sb.toString();
 
         dump(plantUmlSource);
 
@@ -100,7 +100,7 @@ class C4Test {
     @Test
     void testStructurizr_usingFactory() throws IOException {
 
-        val c4 = C4.of("Payment Gateway", "Payment Gateway");
+        var c4 = C4.of("Payment Gateway", "Payment Gateway");
 
         // We also define a user and two software systems within that model:
 
@@ -120,7 +120,7 @@ class C4Test {
 
         // Now the view needs to be rendered.
 
-        val plantUmlSource = c4.toPlantUML(contextView);
+        var plantUmlSource = c4.toPlantUML(contextView);
 
         dump(plantUmlSource);
 

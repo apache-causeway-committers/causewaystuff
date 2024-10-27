@@ -32,7 +32,7 @@ import org.apache.causeway.commons.internal.assertions._Assert;
 import org.apache.causeway.commons.internal.exceptions._Exceptions;
 
 import lombok.RequiredArgsConstructor;
-import lombok.val;
+
 import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.companion.applib.services.lookup.ForeignKeyLookupService;
@@ -51,18 +51,18 @@ class _GenAssociationMixin {
             final Schema.EntityField fieldWithForeignKeys,
             final Can<Schema.EntityField> foreignFields) {
 
-        val entityModel = fieldWithForeignKeys.parentEntity();
-        val packageName = config.fullPackageName(entityModel.namespace()); // shared with entity and mixin
+        var entityModel = fieldWithForeignKeys.parentEntity();
+        var packageName = config.fullPackageName(entityModel.namespace()); // shared with entity and mixin
 
-        val isPlural = fieldWithForeignKeys.plural();
-        val distinctForeignEntities = foreignFields.stream()
+        var isPlural = fieldWithForeignKeys.plural();
+        var distinctForeignEntities = foreignFields.stream()
                 .map(Schema.EntityField::parentEntity)
                 .distinct()
                 .collect(Can.toCan());
-        val useEitherPattern = foreignFields.size()==2
+        var useEitherPattern = foreignFields.size()==2
                 && distinctForeignEntities.isCardinalityMultiple();
 
-        val typeModelBuilder = TypeSpec.classBuilder(_Mixins.propertyMixinClassName(fieldWithForeignKeys))
+        var typeModelBuilder = TypeSpec.classBuilder(_Mixins.propertyMixinClassName(fieldWithForeignKeys))
                 .addAnnotation(_Annotations.generated(_GenAssociationMixin.class))
                 .addModifiers(Modifier.PUBLIC)
                 .addAnnotation(isPlural
@@ -103,8 +103,8 @@ class _GenAssociationMixin {
             final Can<Schema.EntityField> foreignFields,
             final Modifier ... modifiers) {
 
-        val isPlural = field.plural();
-        val localKeyGetter = field.getter();
+        var isPlural = field.plural();
+        var localKeyGetter = field.getter();
 
         record Foreign(
                 ClassName foreignEntity,
@@ -118,15 +118,15 @@ class _GenAssociationMixin {
 
         final Can<Foreign> foreigners = foreignFields
                 .map((final Schema.EntityField foreignField)->{
-                    val foreignEntityClass = _Foreign.foreignClassName(field, foreignField, config);
+                    var foreignEntityClass = _Foreign.foreignClassName(field, foreignField, config);
                     var argList = Can.ofCollection(field.discriminatorFields())
                             .add(field)
                             .stream()
                             .map(Schema.EntityField::getter)
                             .map(getter->String.format("mixee.%s()", getter))
                             .collect(Collectors.toCollection(ArrayList::new));
-                    val argCount = argList.size();
-                    val significantArgument = argList.get(argCount-1);
+                    var argCount = argList.size();
+                    var significantArgument = argList.get(argCount-1);
 
                     final int foreignSecondaryKeyArgCount = foreignField.parentEntity().secondaryKey().size();
 
@@ -135,7 +135,7 @@ class _GenAssociationMixin {
                     IntStream.range(0, fillSize)
                         .forEach(__->argList.add("null"));
 
-                    val strictness = field.required()
+                    var strictness = field.required()
                             ? "unique"
                             : "nullable";
 
@@ -150,7 +150,7 @@ class _GenAssociationMixin {
             return Optional.empty();
         }
 
-        val distinctForeignEntities = foreignFields.stream()
+        var distinctForeignEntities = foreignFields.stream()
                 .map(Schema.EntityField::parentEntity)
                 .distinct()
                 .collect(Can.toCan());
@@ -172,7 +172,7 @@ class _GenAssociationMixin {
             _Assert.assertTrue(distinctForeignEntities.isCardinalityOne(),
                     ()->"not implemented for multiple referenced foreign entity types");
 
-            val foreignType = foreigners.getFirstElseFail().foreignEntity();
+            var foreignType = foreigners.getFirstElseFail().foreignEntity();
             builder.addCode("""
                 return foreignKeyLookup.decodeLookupKeyList($1T.class, mixee.$2L())
                     .map(foreignKeyLookup::unique);
@@ -211,8 +211,8 @@ class _GenAssociationMixin {
 
         }
         case 2: {
-            val foreigner1 = foreigners.getElseFail(0);
-            val foreigner2 = foreigners.getElseFail(1);
+            var foreigner1 = foreigners.getElseFail(0);
+            var foreigner2 = foreigners.getElseFail(1);
             if(distinctForeignEntities.isCardinalityOne()) {
                 // SHARED FOREIGN ENTITY TYPE
                 builder.addCode("""

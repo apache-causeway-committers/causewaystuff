@@ -25,7 +25,7 @@ import java.util.Optional;
 
 import org.apache.causeway.applib.services.metamodel.objgraph.ObjectGraph;
 
-import lombok.val;
+
 
 record _ObjectGraphFactory(Schema.Domain schema) implements ObjectGraph.Factory {
 
@@ -36,13 +36,13 @@ record _ObjectGraphFactory(Schema.Domain schema) implements ObjectGraph.Factory 
         final Map<Schema.Entity, ObjectGraph.Object> objByEntity = new HashMap<>();
 
         // add objects
-        for(val entity : schema.entities().values()) {
+        for(var entity : schema.entities().values()) {
             var obj = object(entity);
             objectGraph.objects().add(obj);
             objByEntity.put(entity, obj);
         }
         // add relations
-        for(val entity : schema.entities().values()) {
+        for(var entity : schema.entities().values()) {
             var from = objByEntity.get(entity);
             if(from==null) continue;
             entity.fields().forEach(field->{
@@ -59,7 +59,7 @@ record _ObjectGraphFactory(Schema.Domain schema) implements ObjectGraph.Factory 
     private static ObjectGraph.Object object(final Schema.Entity entity) {
         final String id = entity.fqn();
         boolean isAbstract = false;
-        val obj = new ObjectGraph.Object(id,
+        var obj = new ObjectGraph.Object(id,
                 entity.namespace(),
                 entity.name(),
                 isAbstract
@@ -74,7 +74,7 @@ record _ObjectGraphFactory(Schema.Domain schema) implements ObjectGraph.Factory 
             final ObjectGraph.Object from,
             final ObjectGraph.Object to,
             final String description) {
-        val relation = new ObjectGraph.Relation(
+        var relation = new ObjectGraph.Relation(
                 ObjectGraph.RelationType.ONE_TO_ONE,
                 from, to,
                 description, "", "");

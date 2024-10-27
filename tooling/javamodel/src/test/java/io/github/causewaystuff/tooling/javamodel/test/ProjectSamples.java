@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import lombok.val;
+
 
 class ProjectSamples {
 
@@ -47,7 +47,7 @@ class ProjectSamples {
 
     static void assertHasBlobstoreApplibServices(final Stream<String> classNames) {
 
-        val components = classNames
+        var components = classNames
         .map(s->s.replace("io.github.causewaystuff.", "~."))
         //.peek(System.out::println) //debug
         .collect(Collectors.toSet());
@@ -57,7 +57,7 @@ class ProjectSamples {
 
     static void assertHasCommonsBaseSourceFiles(final Stream<String> sourcePaths) {
 
-        val sources = sourcePaths
+        var sources = sourcePaths
         .map(s->s.replace("\\", "/"))
         .map(s->s.replace("/src/main/java/io/github/causewaystuff/", "~/"))
         //.peek(System.out::println) //debug

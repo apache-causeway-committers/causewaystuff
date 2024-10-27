@@ -21,7 +21,7 @@ package io.github.causewaystuff.tooling.javamodel.ast;
 import com.github.javaparser.ast.body.CallableDeclaration;
 
 import lombok.NonNull;
-import lombok.val;
+
 
 //TODO effective public might require more context
 public final class CallableDeclarations {
@@ -35,11 +35,11 @@ public final class CallableDeclarations {
     }
 
     private static String nameAndParams(@NonNull CallableDeclaration<?> md, String openParam, String comma, String closeParam) {
-        val sb = new StringBuilder();
+        var sb = new StringBuilder();
         sb.append(md.getName());
         sb.append(openParam);
         var firstParam = true;
-        for (val param : md.getParameters()) {
+        for (var param : md.getParameters()) {
             if (firstParam) {
                 firstParam = false;
             } else {
@@ -52,9 +52,9 @@ public final class CallableDeclarations {
     }
 
     private static String sanitize(String paramType) {
-        val paramTypeNoWildcard = paramType.split("<")[0];
-        val paramTypeNoArray = paramTypeNoWildcard.split("\\[")[0];
-        val paramTypeNoDots = paramTypeNoArray.replace('.', '_');
+        var paramTypeNoWildcard = paramType.split("<")[0];
+        var paramTypeNoArray = paramTypeNoWildcard.split("\\[")[0];
+        var paramTypeNoDots = paramTypeNoArray.replace('.', '_');
         return paramTypeNoDots;
     }
 

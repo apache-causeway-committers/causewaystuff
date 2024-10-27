@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.io.FileUtils;
 
-import lombok.val;
+
 
 import io.github.causewaystuff.tooling.codeassert.config.Language;
 import io.github.causewaystuff.tooling.codeassert.model.CodeClass;
@@ -42,9 +42,9 @@ class AnalyzerTest {
     @Test
     void testSourceFileListing() {
 
-        val projDir = ProjectSamples.causewaystuffCommonsBase();
-        val analyzerConfig = AnalyzerConfigFactory.maven(projDir, Language.JAVA).main();
-        val commonPath = projDir.getAbsolutePath();
+        var projDir = ProjectSamples.causewaystuffCommonsBase();
+        var analyzerConfig = AnalyzerConfigFactory.maven(projDir, Language.JAVA).main();
+        var commonPath = projDir.getAbsolutePath();
 
         final Stream<String> sources = analyzerConfig.getSources(JAVA)
                 .stream()
@@ -57,8 +57,8 @@ class AnalyzerTest {
     @Test //work in progress, as of yet a proof of concept
     void testJavaDocMining() {
 
-        val projDir = ProjectSamples.self();
-        val analyzerConfig = AnalyzerConfigFactory.mavenTest(projDir, Language.JAVA).main();
+        var projDir = ProjectSamples.self();
+        var analyzerConfig = AnalyzerConfigFactory.mavenTest(projDir, Language.JAVA).main();
 
         analyzerConfig.getSources(JAVA)
         .stream()
@@ -91,10 +91,10 @@ class AnalyzerTest {
     //@DisabledIfRunningWithSurefire
     void testAnnotationGathering() {
 
-        val projDir = ProjectSamples.causewaystuffBlobstoreApplib();
-        val analyzerConfig = AnalyzerConfigFactory.maven(projDir, Language.JAVA).main();
+        var projDir = ProjectSamples.causewaystuffBlobstoreApplib();
+        var analyzerConfig = AnalyzerConfigFactory.maven(projDir, Language.JAVA).main();
 
-        val model = Model.from(analyzerConfig.getClasses()).read();
+        var model = Model.from(analyzerConfig.getClasses()).read();
 
         final Stream<String> components = model.getClasses()
                 .stream()

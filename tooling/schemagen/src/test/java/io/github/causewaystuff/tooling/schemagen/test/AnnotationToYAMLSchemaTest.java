@@ -31,7 +31,7 @@ import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.io.YamlUtils;
 import org.apache.causeway.testing.unittestsupport.applib.annotations.DisabledIfRunningWithSurefire;
 
-import lombok.val;
+
 
 import io.github.causewaystuff.tooling.codeassert.config.Language;
 import io.github.causewaystuff.tooling.javamodel.AnalyzerConfigFactory;
@@ -60,9 +60,9 @@ class AnnotationToYAMLSchemaTest {
     @Test
     void testAnnotationGathering() {
 
-        val projDir = new File("D:\\development\\git\\cw-main\\causeway\\api\\applib");
+        var projDir = new File("D:\\development\\git\\cw-main\\causeway\\api\\applib");
         if(!projDir.exists()) return;
-        val analyzerConfig = AnalyzerConfigFactory.maven(projDir, Language.JAVA).main();
+        var analyzerConfig = AnalyzerConfigFactory.maven(projDir, Language.JAVA).main();
 
         analyzerConfig.getSources(JAVA)
         .stream()

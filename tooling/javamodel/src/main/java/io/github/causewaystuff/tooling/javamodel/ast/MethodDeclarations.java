@@ -26,7 +26,7 @@ import com.github.javaparser.ast.type.TypeParameter;
 import org.apache.causeway.commons.collections.Can;
 
 import lombok.NonNull;
-import lombok.val;
+
 
 //TODO effective public might require more context
 public final class MethodDeclarations {
@@ -36,7 +36,7 @@ public final class MethodDeclarations {
      * Returns given {@link MethodDeclaration} as normal text, without formatting.
      */
     public static String asNormalized(final @NonNull MethodDeclaration md) {
-        val clone = md.clone();
+        var clone = md.clone();
         clone.getParameters()
         .forEach(p->p.getAnnotations().clear());
         return clone.getDeclarationAsString(false, false, true);

@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 import org.apache.causeway.commons.internal.collections._Lists;
 
 import lombok.ToString;
-import lombok.val;
+
 
 class ExampleReferenceFinder {
     
@@ -40,19 +40,19 @@ class ExampleReferenceFinder {
     }
     
     static List<ExampleReference> find(Iterable<String> lines, Predicate<String> matcher) {
-        val eRefs = _Lists.<ExampleReference>newArrayList();
+        var eRefs = _Lists.<ExampleReference>newArrayList();
         
         ExampleReference acc = new ExampleReference();
         
         int i = 0;
         
-        for(val line : lines) {
+        for(var line : lines) {
             if(matcher.test(line)) {
                 acc.exampleRef = i;
                 
-                val shortRef = line.substring(line.lastIndexOf("/")+1);
+                var shortRef = line.substring(line.lastIndexOf("/")+1);
                 
-                val name = Stream.of(
+                var name = Stream.of(
                         ".java",
                         ".adoc")
                 .filter(shortRef::contains)

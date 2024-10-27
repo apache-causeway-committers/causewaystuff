@@ -24,7 +24,7 @@ import java.util.concurrent.Callable;
 import org.apache.causeway.commons.internal.base._Lazy;
 import org.apache.causeway.commons.internal.context._Context;
 
-import lombok.val;
+
 
 import io.github.causewaystuff.tooling.cli.projdoc.ProjectDocModel;
 import picocli.CommandLine;
@@ -136,7 +136,7 @@ class Cli implements Callable<Integer> {
     // -- ENTRY POINT
 
     public static void main(String... args) {
-        val cli = new Cli();
+        var cli = new Cli();
         _Context.putSingleton(Cli.class, cli);
         int exitCode = new CommandLine(cli).execute(args);
         System.exit(exitCode);

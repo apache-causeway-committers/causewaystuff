@@ -33,7 +33,7 @@ import io.github.causewaystuff.tooling.javapoet.TypeSpec;
 
 import org.apache.causeway.applib.services.factory.FactoryService;
 
-import lombok.val;
+
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -43,7 +43,7 @@ class _GenMenu {
             final DomainGenerator.Config config,
             final Collection<Schema.Entity> entityModels) {
 
-        val typeModelBuilder = TypeSpec.classBuilder("EntitiesMenu")
+        var typeModelBuilder = TypeSpec.classBuilder("EntitiesMenu")
                 .addAnnotation(_Annotations.generated(_GenMenu.class))
                 .addAnnotation(_Annotations.named(
                         config.fullLogicalName(config.entitiesModulePackageName()) + "." + "EntitiesMenu"))
@@ -84,7 +84,7 @@ class _GenMenu {
             final Schema.Entity entityModel,
             final DomainGenerator.Config config,
             final Modifier ... modifiers) {
-        val managerName = entityModel.name() + ".Manager";
+        var managerName = entityModel.name() + ".Manager";
         return MethodSpec.methodBuilder("manage" + entityModel.name())
                     .addModifiers(modifiers)
                     .returns(ClassName.get("", managerName))

@@ -63,7 +63,7 @@ import org.apache.causeway.commons.internal.base._Strings;
 import org.apache.causeway.commons.internal.collections._Multimaps.ListMultimap;
 
 import lombok.Builder;
-import lombok.val;
+
 import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.companion.codegen.model.PropertyLayoutSpec;
@@ -219,7 +219,7 @@ class _Annotations {
      */
     AnnotationSpec domainObjectLayout(
             final DomainObjectLayoutSpec domainObjectLayoutSpec) {
-        val builder = AnnotationSpec.builder(DomainObjectLayout.class);
+        var builder = AnnotationSpec.builder(DomainObjectLayout.class);
         _Strings.nonEmpty(domainObjectLayoutSpec.named)
             .ifPresent(__->builder.addMember("named", "$1S", domainObjectLayoutSpec.named));
         _Strings.nonEmpty(domainObjectLayoutSpec.describedAs)
@@ -236,8 +236,8 @@ class _Annotations {
         SemanticsOf semantics) {
     }
     AnnotationSpec action(final UnaryOperator<ActionSpec.ActionSpecBuilder> attrProvider) {
-        val builder = AnnotationSpec.builder(Action.class);
-        val attr = attrProvider.apply(ActionSpec.builder()).build();
+        var builder = AnnotationSpec.builder(Action.class);
+        var attr = attrProvider.apply(ActionSpec.builder()).build();
         Optional.ofNullable(attr.semantics())
             .ifPresent(semantics->builder.addMember("semantics", "$1T.$2L", SemanticsOf.class, semantics.name()));
         return builder.build();
@@ -251,8 +251,8 @@ class _Annotations {
         Position position) {
     }
     AnnotationSpec actionLayout(final UnaryOperator<ActionLayoutSpec.ActionLayoutSpecBuilder> attrProvider) {
-        val builder = AnnotationSpec.builder(ActionLayout.class);
-        val attr = attrProvider.apply(ActionLayoutSpec.builder()).build();
+        var builder = AnnotationSpec.builder(ActionLayout.class);
+        var attr = attrProvider.apply(ActionLayoutSpec.builder()).build();
         _Strings.nonEmpty(attr.cssClassFa())
             .ifPresent(cssClassFa->builder.addMember("cssClassFa", "$1S", cssClassFa));
         _Strings.nonEmpty(attr.fieldSetId())
@@ -275,8 +275,8 @@ class _Annotations {
         Snapshot snapshot) {
     }
     AnnotationSpec property(final UnaryOperator<PropertySpec.PropertySpecBuilder> attrProvider) {
-        val builder = AnnotationSpec.builder(Property.class);
-        val attr = attrProvider.apply(PropertySpec.builder()).build();
+        var builder = AnnotationSpec.builder(Property.class);
+        var attr = attrProvider.apply(PropertySpec.builder()).build();
         Optional.ofNullable(attr.optionality())
             .ifPresent(optionality->builder.addMember("optionality", "$1T.$2L", Optionality.class, optionality.name()));
         Optional.ofNullable(attr.editing())
@@ -287,7 +287,7 @@ class _Annotations {
     }
 
     AnnotationSpec propertyLayout(final PropertyLayoutSpec attr) {
-        val builder = AnnotationSpec.builder(PropertyLayout.class);
+        var builder = AnnotationSpec.builder(PropertyLayout.class);
         _Strings.nonEmpty(attr.cssClass())
             .ifPresent(cssClass->builder.addMember("cssClass", "$1S", cssClass));
         _Strings.nonEmpty(attr.fieldSet())
@@ -312,7 +312,7 @@ class _Annotations {
     AnnotationSpec propertyLayout(
             final UnaryOperator<PropertyLayoutSpec.PropertyLayoutSpecBuilder> primer,
             final PropertyLayoutSpec override) {
-        val attr = primer.apply(PropertyLayoutSpec.builder()).build();
+        var attr = primer.apply(PropertyLayoutSpec.builder()).build();
         return propertyLayout(attr.overrideWith(override));
     }
 
@@ -323,8 +323,8 @@ class _Annotations {
             Class<?> typeOf) {
     }
     AnnotationSpec collection(final UnaryOperator<CollectionSpec.CollectionSpecBuilder> attrProvider) {
-        val builder = AnnotationSpec.builder(Collection.class);
-        val attr = attrProvider.apply(CollectionSpec.builder()).build();
+        var builder = AnnotationSpec.builder(Collection.class);
+        var attr = attrProvider.apply(CollectionSpec.builder()).build();
         Optional.ofNullable(attr.typeOf())
             .ifPresent(typeOf->builder.addMember("typeOf", "$1T.class", ClassName.get(typeOf)));
         return builder.build();
@@ -336,8 +336,8 @@ class _Annotations {
             Class<? extends TableDecorator> tableDecorator) {
     }
     AnnotationSpec collectionLayout(final UnaryOperator<CollectionLayoutSpec.CollectionLayoutSpecBuilder> attrProvider) {
-        val builder = AnnotationSpec.builder(CollectionLayout.class);
-        val attr = attrProvider.apply(CollectionLayoutSpec.builder()).build();
+        var builder = AnnotationSpec.builder(CollectionLayout.class);
+        var attr = attrProvider.apply(CollectionLayoutSpec.builder()).build();
         _Strings.nonEmpty(attr.describedAs())
             .ifPresent(describedAs->builder.addMember("describedAs", "$1S", describedAs));
         Optional.ofNullable(attr.hiddenWhere())
@@ -355,8 +355,8 @@ class _Annotations {
             Optionality optionality) {
     }
     AnnotationSpec parameter(final UnaryOperator<ParameterSpec.ParameterSpecBuilder> attrProvider) {
-        val builder = AnnotationSpec.builder(Parameter.class);
-        val attr = attrProvider.apply(ParameterSpec.builder()).build();
+        var builder = AnnotationSpec.builder(Parameter.class);
+        var attr = attrProvider.apply(ParameterSpec.builder()).build();
         Optional.ofNullable(attr.precedingParamsPolicy())
             .ifPresent(precedingParamsPolicy->builder.addMember(
                     "precedingParamsPolicy", "$1T.$2L",
@@ -374,8 +374,8 @@ class _Annotations {
         int multiLine) {
     }
     AnnotationSpec parameterLayout(final UnaryOperator<ParameterLayoutSpec.ParameterLayoutSpecBuilder> attrProvider) {
-        val builder = AnnotationSpec.builder(ParameterLayout.class);
-        val attr = attrProvider.apply(ParameterLayoutSpec.builder()).build();
+        var builder = AnnotationSpec.builder(ParameterLayout.class);
+        var attr = attrProvider.apply(ParameterLayoutSpec.builder()).build();
         _Strings.nonEmpty(attr.describedAs())
             .ifPresent(describedAs->builder.addMember("describedAs", "$1S", describedAs));
         Optional.ofNullable(attr.labelPosition())
@@ -437,8 +437,8 @@ class _Annotations {
             String jdbcType) {
     }
     AnnotationSpec column(final UnaryOperator<JdoColumnSpec.JdoColumnSpecBuilder> attrProvider) {
-        val annotBuilder = AnnotationSpec.builder(ClassName.get("javax.jdo.annotations", "Column"));
-        val attr = attrProvider.apply(JdoColumnSpec.builder()).build();
+        var annotBuilder = AnnotationSpec.builder(ClassName.get("javax.jdo.annotations", "Column"));
+        var attr = attrProvider.apply(JdoColumnSpec.builder()).build();
         _Strings.nonEmpty(_Strings.trim(attr.columnName))
             .ifPresent(name->annotBuilder.addMember("name", "$1S", name));
         annotBuilder.addMember("allowsNull", "$1S", "" + attr.allowsNull);

@@ -25,7 +25,7 @@ import org.asciidoctor.ast.StructuralNode;
 import org.apache.causeway.valuetypes.asciidoc.builder.AsciiDocFactory;
 
 import lombok.NonNull;
-import lombok.val;
+
 
 import io.github.causewaystuff.tooling.j2adoc.J2AdocContext;
 import io.github.causewaystuff.tooling.j2adoc.J2AdocUnit;
@@ -51,9 +51,9 @@ extends UnitFormatterAbstract {
     @Override
     protected void memberDescriptions(final J2AdocUnit unit, final StructuralNode parent) {
 
-        val ul = AsciiDocFactory.callouts(parent);
+        var ul = AsciiDocFactory.callouts(parent);
 
-        val converter = J2AdocConverterDefault.of(j2aContext);
+        var converter = J2AdocConverterDefault.of(j2aContext);
         appendMembersToList(ul, unit,
                 unit.getTypeDeclaration().getEnumConstantDeclarations(),
                 decl -> converter.enumConstantDeclaration(decl),

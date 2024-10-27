@@ -22,7 +22,7 @@ import io.github.causewaystuff.companion.codegen.model.Schema;
 
 import org.apache.causeway.commons.internal.base._Strings;
 
-import lombok.val;
+
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -40,7 +40,7 @@ class _Mixins {
     String collectionMixinClassName(
             final Schema.Entity localEntity,
             final Schema.EntityField dependantField) {
-        val dependantEntity = dependantField.parentEntity();
+        var dependantEntity = dependantField.parentEntity();
         return localEntity.name()
                 + "_dependent"
                 + _Strings.capitalize(dependantEntity.name())

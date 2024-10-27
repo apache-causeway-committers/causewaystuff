@@ -48,7 +48,7 @@ import org.apache.causeway.valuetypes.asciidoc.builder.AsciiDocFactory;
 import org.apache.causeway.valuetypes.asciidoc.builder.ast.SimpleBlock;
 
 import lombok.NonNull;
-import lombok.val;
+
 
 public final class J2AdocConverterDefault extends J2AdocConverterAbstract {
 
@@ -63,17 +63,17 @@ public final class J2AdocConverterDefault extends J2AdocConverterAbstract {
     public String annotationMemberDeclaration(
             final @NonNull AnnotationMemberDeclaration amd,
             final @NonNull J2AdocUnit unit) {
-        val isDeprecated = amd.getAnnotations().stream()
+        var isDeprecated = amd.getAnnotations().stream()
                 .anyMatch(a->a.getNameAsString().equals("Deprecated"))
                 || amd.getJavadoc()
                     .map(Javadocs::hasDeprecated)
                     .orElse(false);
 
-        val memberNameFormat = isDeprecated
+        var memberNameFormat = isDeprecated
                 ? j2aContext.getDeprecatedStaticMemberNameFormat()
                 : j2aContext.getStaticMemberNameFormat();
 
-        val annotMemberFormat =  new MemberFormatter(){}.getAnnotationMemberFormat();
+        var annotMemberFormat =  new MemberFormatter(){}.getAnnotationMemberFormat();
 
         return String.format(annotMemberFormat,
                 type(amd.getType(), unit),
@@ -82,17 +82,17 @@ public final class J2AdocConverterDefault extends J2AdocConverterAbstract {
 
     @Override
     public String enumConstantDeclaration(final @NonNull EnumConstantDeclaration ecd) {
-        val isDeprecated = ecd.getAnnotations().stream()
+        var isDeprecated = ecd.getAnnotations().stream()
                 .anyMatch(a->a.getNameAsString().equals("Deprecated"))
                 || ecd.getJavadoc()
                     .map(Javadocs::hasDeprecated)
                     .orElse(false);
 
-        val memberNameFormat = isDeprecated
+        var memberNameFormat = isDeprecated
                 ? j2aContext.getDeprecatedStaticMemberNameFormat()
                 : j2aContext.getStaticMemberNameFormat();
 
-        val enumConstFormat =  new MemberFormatter(){}.getEnumConstantFormat();
+        var enumConstFormat =  new MemberFormatter(){}.getEnumConstantFormat();
 
         return String.format(enumConstFormat,
                 String.format(memberNameFormat, EnumConstantDeclarations.asNormalized(ecd)));
@@ -103,13 +103,13 @@ public final class J2AdocConverterDefault extends J2AdocConverterAbstract {
             final @NonNull FieldDeclaration fd,
             final @NonNull J2AdocUnit unit) {
 
-        val isDeprecated = fd.getAnnotations().stream()
+        var isDeprecated = fd.getAnnotations().stream()
                 .anyMatch(a->a.getNameAsString().equals("Deprecated"))
                 || fd.getJavadoc()
                     .map(Javadocs::hasDeprecated)
                     .orElse(false);
 
-        val memberNameFormat = isDeprecated
+        var memberNameFormat = isDeprecated
                 ? fd.isStatic()
                         ? j2aContext.getDeprecatedStaticMemberNameFormat()
                         : j2aContext.getDeprecatedMemberNameFormat()
@@ -117,7 +117,7 @@ public final class J2AdocConverterDefault extends J2AdocConverterAbstract {
                         ? j2aContext.getStaticMemberNameFormat()
                         : j2aContext.getMemberNameFormat();
 
-        val fieldFormat =  new MemberFormatter(){}.getFieldFormat();
+        var fieldFormat =  new MemberFormatter(){}.getFieldFormat();
 
         return String.format(fieldFormat,
                 type(fd.getCommonType(), unit),
@@ -129,13 +129,13 @@ public final class J2AdocConverterDefault extends J2AdocConverterAbstract {
             final @NonNull ConstructorDeclaration cd,
             final @NonNull J2AdocUnit unit) {
 
-        val isDeprecated = cd.getAnnotations().stream()
+        var isDeprecated = cd.getAnnotations().stream()
                 .anyMatch(a->a.getNameAsString().equals("Deprecated"))
                 || cd.getJavadoc()
                     .map(Javadocs::hasDeprecated)
                     .orElse(false);
 
-        val memberNameFormat = isDeprecated
+        var memberNameFormat = isDeprecated
                 ? cd.isStatic()
                         ? j2aContext.getDeprecatedStaticMemberNameFormat()
                         : j2aContext.getDeprecatedMemberNameFormat()
@@ -143,15 +143,15 @@ public final class J2AdocConverterDefault extends J2AdocConverterAbstract {
                         ? j2aContext.getStaticMemberNameFormat()
                         : j2aContext.getMemberNameFormat();
 
-        val typeParams = ConstructorDeclarations.getTypeParameters(cd);
+        var typeParams = ConstructorDeclarations.getTypeParameters(cd);
 
-        val isGenericMember = !typeParams.isEmpty();
+        var isGenericMember = !typeParams.isEmpty();
 
-        val constructorFormat = isGenericMember
+        var constructorFormat = isGenericMember
                 ? new MemberFormatter(){}.getGenericConstructorFormat()
                 : new MemberFormatter(){}.getConstructorFormat();
 
-        val args = Can.<Object>of(
+        var args = Can.<Object>of(
                 isGenericMember ? typeParameters(typeParams) : null,  // Cans do ignored null
                 String.format(memberNameFormat, ConstructorDeclarations.asNormalizedName(cd)),
                 parameters(cd.getParameters().stream(), unit)
@@ -165,13 +165,13 @@ public final class J2AdocConverterDefault extends J2AdocConverterAbstract {
             final @NonNull MethodDeclaration md,
             final @NonNull J2AdocUnit unit) {
 
-        val isDeprecated = md.getAnnotations().stream()
+        var isDeprecated = md.getAnnotations().stream()
                 .anyMatch(a->a.getNameAsString().equals("Deprecated"))
                 || md.getJavadoc()
                     .map(Javadocs::hasDeprecated)
                     .orElse(false);
 
-        val memberNameFormat = isDeprecated
+        var memberNameFormat = isDeprecated
                 ? md.isStatic()
                         ? j2aContext.getDeprecatedStaticMemberNameFormat()
                         : j2aContext.getDeprecatedMemberNameFormat()
@@ -179,15 +179,15 @@ public final class J2AdocConverterDefault extends J2AdocConverterAbstract {
                         ? j2aContext.getStaticMemberNameFormat()
                         : j2aContext.getMemberNameFormat();
 
-        val typeParams = MethodDeclarations.getTypeParameters(md);
+        var typeParams = MethodDeclarations.getTypeParameters(md);
 
-        val isGenericMember = !typeParams.isEmpty();
+        var isGenericMember = !typeParams.isEmpty();
 
-        val methodFormat = isGenericMember
+        var methodFormat = isGenericMember
                 ? new MemberFormatter(){}.getGenericMethodFormat()
                 : new MemberFormatter(){}.getMethodFormat();
 
-        val args = Can.<Object>of(
+        var args = Can.<Object>of(
                 isGenericMember ? typeParameters(typeParams) : null,  // Cans do ignored null
                 type(md.getType(), unit),
                 String.format(memberNameFormat, MethodDeclarations.asNormalizedName(md)),
@@ -204,21 +204,21 @@ public final class J2AdocConverterDefault extends J2AdocConverterAbstract {
             final @NonNull J2AdocUnit unit,
             final @NonNull Mode mode) {
 
-        val doc = AsciiDocFactory.doc();
+        var doc = AsciiDocFactory.doc();
 
         Javadocs.streamTagContent(javadoc, "deprecated")
         .findFirst()
         .map(javadocDescription->javadocDescription(javadocDescription, unit))
         .ifPresent(deprecatedAdoc->{
 
-            val deprecatedBlock = AsciiDocFactory.warning(doc);
+            var deprecatedBlock = AsciiDocFactory.warning(doc);
             deprecatedBlock.setSource("[red]#_deprecated:_#");
             deprecatedBlock.getBlocks().addAll(deprecatedAdoc.getBlocks());
         });
 
-        val descriptionAdoc = javadocDescription(javadoc.getDescription(), unit);
+        var descriptionAdoc = javadocDescription(javadoc.getDescription(), unit);
 
-        val blocks = descriptionAdoc.getBlocks();
+        var blocks = descriptionAdoc.getBlocks();
         appendBlocks(mode, doc, blocks);
 
         return doc;
@@ -249,11 +249,11 @@ public final class J2AdocConverterDefault extends J2AdocConverterAbstract {
             final @NonNull JavadocInlineTag inlineTag,
             final @NonNull J2AdocUnit unit) {
 
-        val inlineContent = inlineTag.getContent().trim();
+        var inlineContent = inlineTag.getContent().trim();
 
         switch(inlineTag.getType()) {
         case LINK:
-            val referencedUnit = j2aContext.findUnit(inlineContent, unit).orElse(null);
+            var referencedUnit = j2aContext.findUnit(inlineContent, unit).orElse(null);
             if(referencedUnit!=null) {
                 return String.format(" %s ", j2aContext.xref(referencedUnit));
             }

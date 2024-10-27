@@ -32,16 +32,16 @@ import org.apache.causeway.commons.io.TextUtils;
 import org.apache.causeway.valuetypes.asciidoc.builder.include.IncludeStatements;
 
 import lombok.NonNull;
-import lombok.val;
+
 
 class IncludeStatementFixerTest {
 
     @Test @Disabled("to reinstate after changing to refguide format")
     void adocDocMining() throws IOException {
 
-        val adocFiles = ProjectSampler.adocFiles(ProjectSampler.apacheCausewayRoot());
+        var adocFiles = ProjectSampler.adocFiles(ProjectSampler.apacheCausewayRoot());
 
-        val names = _Sets.<String>newTreeSet();
+        var names = _Sets.<String>newTreeSet();
 
         Can.ofCollection(adocFiles)
         .stream()
@@ -56,7 +56,7 @@ class IncludeStatementFixerTest {
     }
 
     private void parseAdoc(final @NonNull File file, final Consumer<String> onName) {
-        val lines = TextUtils.readLinesFromFile(file, StandardCharsets.UTF_8);
+        var lines = TextUtils.readLinesFromFile(file, StandardCharsets.UTF_8);
 
         IncludeStatements.find(lines)
         .filter(include->!include.isLocal()

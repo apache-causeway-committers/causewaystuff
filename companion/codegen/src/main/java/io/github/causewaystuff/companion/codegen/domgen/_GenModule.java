@@ -29,7 +29,7 @@ import org.apache.causeway.commons.internal.collections._Multimaps;
 import org.apache.causeway.commons.internal.collections._Multimaps.ListMultimap;
 
 import lombok.NonNull;
-import lombok.val;
+
 import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.DomainModel;
@@ -45,7 +45,7 @@ class _GenModule {
             final @NonNull DomainGenerator.Config config,
             final @NonNull DomainModel domainModel) {
 
-        val packageName = config.fullPackageName(config.entitiesModulePackageName());
+        var packageName = config.fullPackageName(config.entitiesModulePackageName());
 
         final ListMultimap<String, ClassName> importsByCategory = _Multimaps
                 .newListMultimap(LinkedHashMap<String, List<ClassName>>::new, ArrayList::new);
@@ -74,7 +74,7 @@ class _GenModule {
         final ClassName nameOfClassToGenerate =
                 ClassName.get(packageName, config.entitiesModuleClassSimpleName());
 
-        val typeModelBuilder = TypeSpec.classBuilder(nameOfClassToGenerate)
+        var typeModelBuilder = TypeSpec.classBuilder(nameOfClassToGenerate)
                 .addAnnotation(_Annotations.generated(_GenModule.class))
                 .addAnnotation(_Annotations.configuration())
                 .addAnnotation(_Annotations.imports(importsByCategory))

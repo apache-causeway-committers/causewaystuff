@@ -39,7 +39,7 @@ import org.apache.causeway.commons.internal.primitives._Ints;
 import org.apache.causeway.commons.io.TextUtils;
 
 import lombok.NonNull;
-import lombok.val;
+
 import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.commons.base.types.internal.ObjectRef;
@@ -281,7 +281,7 @@ public class Schema {
         }
         public int maxLength() {
             if(_TypeMapping.isMaxLengthSuppressedFor(columnType())) return -1;
-            val lengthLiteralOrColumnType = TextUtils.cutter(columnType())
+            var lengthLiteralOrColumnType = TextUtils.cutter(columnType())
                 .keepAfter("(")
                 .keepBeforeLast(")")
                 .getValue();
@@ -367,13 +367,13 @@ public class Schema {
         public static Domain of(
                 final Iterable<Entity> viewmodels,
                 final Iterable<Entity> entities) {
-            val schema = new Domain(
+            var schema = new Domain(
                     new TreeMap<String, Schema.Viewmodel>(),
                     new TreeMap<String, Schema.Entity>());
-            for(val vm: viewmodels) {
+            for(var vm: viewmodels) {
                 schema.entities().put(vm.fqn(), vm);
             }
-            for(val entity: entities) {
+            for(var entity: entities) {
                 schema.entities().put(entity.fqn(), entity);
             }
             return schema;
@@ -381,7 +381,7 @@ public class Schema {
         public static Domain of(
                 final @Nullable Stream<Viewmodel> viewmodels,
                 final @Nullable Stream<Entity> entities) {
-            val schema = new Domain(
+            var schema = new Domain(
                     new TreeMap<String, Schema.Viewmodel>(),
                     new TreeMap<String, Schema.Entity>());
             if(entities!=null) {

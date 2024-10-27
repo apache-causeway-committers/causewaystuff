@@ -35,29 +35,29 @@ import org.apache.causeway.commons.io.TextUtils;
 import org.apache.causeway.valuetypes.asciidoc.builder.AsciiDocFactory;
 
 import lombok.SneakyThrows;
-import lombok.val;
+
 
 final class HtmlToAsciiDoc {
 
     @SneakyThrows
     public static Document body(final Element body) {
 
-        val adoc = AsciiDocFactory.doc();
+        var adoc = AsciiDocFactory.doc();
 
-        val helper = new BlockHelper(adoc);
+        var helper = new BlockHelper(adoc);
 
         NodeTraversor.traverse(new NodeVisitor() {
 
             @Override
             public void head(Node node, int depth) {
 
-                val tag = _Strings.nullToEmpty(node.nodeName()).toLowerCase();
+                var tag = _Strings.nullToEmpty(node.nodeName()).toLowerCase();
 
                 if(node instanceof TextNode) {
 
-                    val textNode = (TextNode)node;
+                    var textNode = (TextNode)node;
 
-                    val text = helper.isPreFormatted()
+                    var text = helper.isPreFormatted()
                             ? skipBlankLinesAtHeadAndTail(textNode.getWholeText())
                             : textNode.text().trim();
 
@@ -99,7 +99,7 @@ final class HtmlToAsciiDoc {
             @Override
             public void tail(Node node, int depth) {
 
-                val tag = _Strings.nullToEmpty(node.nodeName()).toLowerCase();
+                var tag = _Strings.nullToEmpty(node.nodeName()).toLowerCase();
 
                 switch(tag) {
                 case "ul":
@@ -167,14 +167,14 @@ final class HtmlToAsciiDoc {
 
         // create a new block on top of the current stack
         Block nextBlock() {
-            val block = AsciiDocFactory.block(nodeStack.peek());
+            var block = AsciiDocFactory.block(nodeStack.peek());
             nodeStack.push(block);
             return block;
         }
 
         // create a new block on top of the current stack
         Block nextListingBlock() {
-            val block = AsciiDocFactory.listingBlock(nodeStack.peek(), "");
+            var block = AsciiDocFactory.listingBlock(nodeStack.peek(), "");
             nodeStack.push(block);
             return block;
         }
@@ -187,19 +187,19 @@ final class HtmlToAsciiDoc {
         }
 
         void blockAppend(final String source) {
-            val block = getBlock();
+            var block = getBlock();
             block.setSource(block.getSource() + source);
         }
 
         org.asciidoctor.ast.List nextList() {
-            val nextList = AsciiDocFactory.list(nodeStack.peek());
+            var nextList = AsciiDocFactory.list(nodeStack.peek());
             nodeStack.push(nextList);
             listStack.push(nextList);
             return nextList;
         }
 
         void nextListItem() {
-            val list = listStack.isEmpty()
+            var list = listStack.isEmpty()
                     ? nextList()
                     : listStack.peek();
 
@@ -207,8 +207,8 @@ final class HtmlToAsciiDoc {
             while(!list.equals(nodeStack.peek())) {
                 nodeStack.pop();
             }
-            val listItem = AsciiDocFactory.listItem(list);
-            val openBlock = AsciiDocFactory.openBlock(listItem);
+            var listItem = AsciiDocFactory.listItem(list);
+            var openBlock = AsciiDocFactory.openBlock(listItem);
             nodeStack.push(openBlock);
         }
 

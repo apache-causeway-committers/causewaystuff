@@ -34,7 +34,7 @@ import com.github.javaparser.printer.configuration.PrinterConfiguration;
 import org.apache.causeway.commons.collections.Can;
 
 import lombok.NonNull;
-import lombok.val;
+
 
 //TODO effective public might require more context
 public final class FieldDeclarations {
@@ -48,7 +48,7 @@ public final class FieldDeclarations {
     public static String asNormalized(final @NonNull FieldDeclaration fd) {
 
         //suppress initializer printing (that is assignments)
-        val clone = fd.clone();
+        var clone = fd.clone();
         clone.getVariables().stream()
                 .forEach(vd->vd.setInitializer((Expression)null));
 

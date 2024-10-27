@@ -42,7 +42,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
-import lombok.val;
+
 import lombok.extern.log4j.Log4j2;
 
 @RequiredArgsConstructor
@@ -90,11 +90,11 @@ public final class J2AdocUnit {
 
             // remove 'tag::' and 'end::' lines
             // remove '// <.>' foot note references
-            val source = AsciiDocIncludeTagFilter.read(sourceFile);
+            var source = AsciiDocIncludeTagFilter.read(sourceFile);
 
-            val origin = ResourceCoordinates.fromFile(sourceFile.getAbsoluteFile());
+            var origin = ResourceCoordinates.fromFile(sourceFile.getAbsoluteFile());
 
-            val cu = StaticJavaParser.parse(source);
+            var cu = StaticJavaParser.parse(source);
 
             cu.getPackageDeclaration();
 
@@ -104,7 +104,7 @@ public final class J2AdocUnit {
             .filter(AnyTypeDeclaration::hasIndexDirective)
             .map(atd->{
 
-                val resourceCoordinates = ResourceCoordinates.builder()
+                var resourceCoordinates = ResourceCoordinates.builder()
                 .friendlyName(atd.getName().stream()
                         .collect(Collectors.joining(".")))
                 .nameAsString(atd.getName().stream()

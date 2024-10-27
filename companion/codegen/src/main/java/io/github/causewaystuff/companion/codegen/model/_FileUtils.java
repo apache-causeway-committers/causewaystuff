@@ -27,7 +27,7 @@ import org.apache.causeway.commons.io.DataSource;
 import org.apache.causeway.commons.io.FileUtils;
 import org.apache.causeway.commons.io.TextUtils;
 
-import lombok.val;
+
 import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.companion.codegen.domgen.LicenseHeader;
@@ -46,8 +46,8 @@ class _FileUtils {
     }
 
     String collectSchemaFromFolder(final File rootDirectory) {
-        val root = FileUtils.existingDirectoryElseFail(rootDirectory);
-        val domain = FileUtils.searchFiles(root, dir->true, file->file.getName().endsWith(".yaml"))
+        var root = FileUtils.existingDirectoryElseFail(rootDirectory);
+        var domain = FileUtils.searchFiles(root, dir->true, file->file.getName().endsWith(".yaml"))
             .stream()
             .map(file->{
                 var ds = DataSource.ofFile(file);
@@ -61,19 +61,19 @@ class _FileUtils {
     }
 
     void writeSchemaToFile(final Schema.Domain schema, final File file, final LicenseHeader licenseHeader) {
-        val lic = _FileUtils.licenseHeaderAsYaml(licenseHeader);
-        val yaml = TextUtils.readLines(_Writer.toYaml(schema));
+        var lic = _FileUtils.licenseHeaderAsYaml(licenseHeader);
+        var yaml = TextUtils.readLines(_Writer.toYaml(schema));
         TextUtils.writeLinesToFile(lic.addAll(yaml), file, StandardCharsets.UTF_8);
     }
 
     void writeEntitiesToIndividualFiles(final Iterable<Entity> entities, final File rootDirectory,
             final LicenseHeader licenseHeader) {
-        val dir0 = FileUtils.makeDir(rootDirectory);
-        val dir1 = FileUtils.existingDirectoryElseFail(dir0);
-        val lic = _FileUtils.licenseHeaderAsYaml(licenseHeader);
+        var dir0 = FileUtils.makeDir(rootDirectory);
+        var dir1 = FileUtils.existingDirectoryElseFail(dir0);
+        var lic = _FileUtils.licenseHeaderAsYaml(licenseHeader);
         entities.forEach(entity->{
-            val destFile = new File(dir1, entity.name() + ".yaml");
-            val yaml = TextUtils.readLines(entity.toYaml());
+            var destFile = new File(dir1, entity.name() + ".yaml");
+            var yaml = TextUtils.readLines(entity.toYaml());
             TextUtils.writeLinesToFile(lic.addAll(yaml), destFile, StandardCharsets.UTF_8);
         });
     }

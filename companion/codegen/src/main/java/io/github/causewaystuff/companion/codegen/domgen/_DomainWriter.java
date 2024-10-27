@@ -40,7 +40,7 @@ import org.apache.causeway.commons.io.TextUtils;
 
 import lombok.NonNull;
 import lombok.SneakyThrows;
-import lombok.val;
+
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -58,7 +58,7 @@ class _DomainWriter {
         .forEach(javaFileModel->{
 
                 final String className = javaFileModel.className().canonicalName();
-                val javaFile = javaFileModel.buildJavaFile();
+                var javaFile = javaFileModel.buildJavaFile();
 
                 //System.out.printf("------%s----%n", className);
                 //System.out.printf("%s%n", javaFile.toString());
@@ -105,7 +105,7 @@ class _DomainWriter {
     @SneakyThrows
     private void writeMultilineComment(final Writer writer, final String text) {
         writer.write("/*\n");
-        for(val line : TextUtils.readLines(text)) {
+        for(var line : TextUtils.readLines(text)) {
             writer.write(" * ");
             writer.write(line);
             writer.write("\n");

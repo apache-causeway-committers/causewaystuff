@@ -38,7 +38,7 @@ import org.springframework.lang.Nullable;
 import org.apache.causeway.commons.collections.Can;
 
 import lombok.NonNull;
-import lombok.val;
+
 
 import io.github.causewaystuff.tooling.j2adoc.J2AdocContext;
 import io.github.causewaystuff.tooling.j2adoc.J2AdocUnit;
@@ -85,7 +85,7 @@ public abstract class J2AdocConverterAbstract implements J2AdocConverter {
             final @NonNull ClassOrInterfaceType type,
             final @NonNull J2AdocUnit unit) {
 
-        val sb = new StringBuilder();
+        var sb = new StringBuilder();
         sb.append(xrefIfRequired(type.getNameAsString(), unit)); // type simple name, no generics
         type.getTypeArguments()
         .ifPresent(typeArgs->{
@@ -117,11 +117,11 @@ public abstract class J2AdocConverterAbstract implements J2AdocConverter {
             final @NonNull JavadocInlineTag inlineTag,
             final @NonNull J2AdocUnit unit) {
 
-        val inlineContent = inlineTag.getContent().trim();
+        var inlineContent = inlineTag.getContent().trim();
 
         switch(inlineTag.getType()) {
         case LINK:
-            val referencedUnit = j2aContext.findUnit(inlineContent, unit).orElse(null);
+            var referencedUnit = j2aContext.findUnit(inlineContent, unit).orElse(null);
             if(referencedUnit!=null) {
                 return String.format(" %s ", j2aContext.xref(referencedUnit));
             }
@@ -148,7 +148,7 @@ public abstract class J2AdocConverterAbstract implements J2AdocConverter {
             final @NonNull JavadocDescription javadocDescription,
             final @NonNull J2AdocUnit unit) {
 
-        val javadocResolved = new StringBuilder();
+        var javadocResolved = new StringBuilder();
 
         javadocDescription.getElements()
         .forEach(e->{
@@ -163,8 +163,8 @@ public abstract class J2AdocConverterAbstract implements J2AdocConverter {
 
         });
 
-        val descriptionAsHtml = Jsoup.parse(javadocResolved.toString());
-        val adoc = HtmlToAsciiDoc.body(descriptionAsHtml.selectFirst("body"));
+        var descriptionAsHtml = Jsoup.parse(javadocResolved.toString());
+        var adoc = HtmlToAsciiDoc.body(descriptionAsHtml.selectFirst("body"));
         return adoc;
     }
 

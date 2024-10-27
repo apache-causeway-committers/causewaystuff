@@ -26,7 +26,7 @@ import org.apache.causeway.commons.internal.assertions._Assert;
 import org.apache.causeway.commons.internal.base._Strings;
 import org.apache.causeway.commons.internal.exceptions._Exceptions;
 
-import lombok.val;
+
 import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.companion.codegen.model.Schema.Entity;
@@ -37,12 +37,12 @@ import io.github.causewaystuff.companion.codegen.model.Schema.Domain;
 class _Foreign {
 
     Can<Entity> findEntitiesWithoutRelations(final Domain schema){
-        val foreignKeyFields = // as table.column literal
+        var foreignKeyFields = // as table.column literal
                 schema.entities().values().stream().flatMap(fe->fe.fields().stream())
                     .flatMap(ff->ff.foreignKeys().stream())
                     .map(String::toLowerCase)
                     .collect(Collectors.toSet());
-        val entitiesWithoutRelations =  schema.entities().values().stream()
+        var entitiesWithoutRelations =  schema.entities().values().stream()
             .filter(e->!e.fields().stream().anyMatch(f->f.hasForeignKeys()))
             .filter(e->!e.fields().stream().anyMatch(f->
                 foreignKeyFields.contains(e.table().toLowerCase() + "." + f.column().toLowerCase())))
@@ -66,12 +66,12 @@ class _Foreign {
     }
 
     private Optional<Schema.EntityField> lookupForeignKeyField(final Domain schema, final String tableDotColumn) {
-        val parts = _Strings.splitThenStream(tableDotColumn, ".")
+        var parts = _Strings.splitThenStream(tableDotColumn, ".")
                 .collect(Can.toCan());
         _Assert.assertEquals(2, parts.size(), ()->String.format(
                 "could not parse foreign key '%s'", tableDotColumn));
-        val tableName = parts.getElseFail(0);
-        val columnName = parts.getElseFail(1);
+        var tableName = parts.getElseFail(0);
+        var columnName = parts.getElseFail(1);
         return schema.lookupEntityByTableName(tableName)
                 .flatMap(entity->entity.lookupFieldByColumnName(columnName));
     }

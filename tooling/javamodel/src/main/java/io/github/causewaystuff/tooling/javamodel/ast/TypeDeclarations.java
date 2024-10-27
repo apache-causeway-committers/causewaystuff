@@ -24,7 +24,7 @@ import com.github.javaparser.ast.type.TypeParameter;
 import org.apache.causeway.commons.collections.Can;
 
 import lombok.NonNull;
-import lombok.val;
+
 
 public final class TypeDeclarations {
 
@@ -38,7 +38,7 @@ public final class TypeDeclarations {
         return td.getJavadoc()
         .map(javadoc->{
 
-            val toBeIncluded = Javadocs.streamTagContent(javadoc, "since")
+            var toBeIncluded = Javadocs.streamTagContent(javadoc, "since")
             .anyMatch(since->since.toText().contains("{@index}"));
 
             return toBeIncluded;

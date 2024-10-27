@@ -24,7 +24,7 @@ import java.util.concurrent.Callable;
 import org.apache.causeway.commons.internal.context._Context;
 import io.github.causewaystuff.tooling.projectmodel.ProjectNodeFactory;
 
-import lombok.val;
+
 
 import io.github.causewaystuff.tooling.cli.projdoc.ProjectDocModel;
 
@@ -55,8 +55,8 @@ abstract class CliCommandAbstract implements Callable<Integer> {
             getConfig().getCommands().getIndex().setRootFolder(getIndexPath());
         }
 
-        val projTree = ProjectNodeFactory.maven(getProjectRoot());
-        val projectDocModel = new ProjectDocModel(projTree);
+        var projTree = ProjectNodeFactory.maven(getProjectRoot());
+        var projectDocModel = new ProjectDocModel(projTree);
         projectDocModel.generateAsciiDoc(getConfig(), mode);
     }
 

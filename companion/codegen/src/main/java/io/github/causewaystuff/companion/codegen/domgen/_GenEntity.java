@@ -30,7 +30,7 @@ import org.apache.causeway.applib.services.repository.RepositoryService;
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.internal.base._Strings;
 
-import lombok.val;
+
 import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.companion.applib.services.iconfa.IconFaService;
@@ -96,8 +96,8 @@ class _GenEntity {
         // super type
 
         if(entityModel.hasSuperType()) {
-            val packageName = config.fullPackageName(entityModel.superTypeNamespace());
-            val superTypeName = ClassName.get(packageName, entityModel.superTypeSimpleName());
+            var packageName = config.fullPackageName(entityModel.superTypeNamespace());
+            var superTypeName = ClassName.get(packageName, entityModel.superTypeSimpleName());
             typeModelBuilder.addSuperinterface(superTypeName);
         }
 
@@ -156,7 +156,7 @@ class _GenEntity {
     }
 
     private MethodSpec asToStringMethod(final Entity entityModel) {
-        val propertiesAsStrings = entityModel.fields().stream()
+        var propertiesAsStrings = entityModel.fields().stream()
             .map(field->String.format("\"%s=\" + %s()", field.name(), field.getter()))
             .collect(Collectors.joining(" + \",\"\n +"));
         return _Methods.toString(
@@ -165,7 +165,7 @@ class _GenEntity {
     }
 
     private MethodSpec asCopyMethod(final Entity entityModel) {
-        val propertiesAsAssignments = entityModel.fields().stream()
+        var propertiesAsAssignments = entityModel.fields().stream()
                 .map(field->String.format("copy.%s(%s());", field.setter(), field.getter()))
                 .collect(Collectors.joining("\n"));
         return MethodSpec.methodBuilder("copy")
@@ -198,7 +198,7 @@ class _GenEntity {
                         attr.optionality(field.requiredInTheUi()
                                 ? Optionality.MANDATORY
                                 : Optionality.OPTIONAL);
-                        val isEditingVetoed = field.hasForeignKeys()
+                        var isEditingVetoed = field.hasForeignKeys()
                                 || field.isMemberOfSecondaryKey();
                         if(!isEditingVetoed) attr.editing(Editing.ENABLED);
                         return attr;

@@ -36,7 +36,7 @@ import org.apache.causeway.applib.annotation.SemanticsOf;
 import org.apache.causeway.applib.services.repository.RepositoryService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.val;
+
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -46,9 +46,9 @@ class _GenDeleteMixin {
             final DomainGenerator.Config config,
             final Schema.Entity entityModel) {
 
-        val packageName = config.fullPackageName(entityModel.namespace());
+        var packageName = config.fullPackageName(entityModel.namespace());
 
-        val typeModelBuilder = TypeSpec.classBuilder(_Mixins.customMixinClassName(entityModel, "delete"))
+        var typeModelBuilder = TypeSpec.classBuilder(_Mixins.customMixinClassName(entityModel, "delete"))
                 .addModifiers(Modifier.PUBLIC)
                 .addAnnotation(_Annotations.generated(_GenDeleteMixin.class))
                 .addAnnotation(_Annotations.action(attr->attr.semantics(SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)))

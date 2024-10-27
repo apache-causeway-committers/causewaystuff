@@ -59,7 +59,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.val;
+
 
 import io.github.causewaystuff.tooling.c4.C4;
 import io.github.causewaystuff.tooling.cli.CliConfig;
@@ -105,7 +105,7 @@ public class ProjectDocModel {
         projTree.depthFirst(modules::add);
 
 
-        val j2aContext = J2AdocContext.builder()
+        var j2aContext = J2AdocContext.builder()
                 .formatterFactory(new Function<>() {
                     @SneakyThrows
                     @Override
@@ -122,14 +122,14 @@ public class ProjectDocModel {
                 .build();
 
         // partition modules into sections
-        val sections = new ArrayList<Section>();
+        var sections = new ArrayList<Section>();
         cliConfig.getCommands().getOverview().getSections().forEach((section, groupIdArtifactIdPattern)->{
             createSections(modules, section, groupIdArtifactIdPattern, sections::add);
         });
 
         // ensure that each module is referenced only by a single section,
         // preferring to be owned by a non-group section (ie more specific)
-        val modulesReferencedByNonGroupSections =
+        var modulesReferencedByNonGroupSections =
             sections.stream()
                 .filter(Section::isNotGroupLevelOnly)
                 .flatMap(Section::streamMatchingProjectNodes)
@@ -151,7 +151,7 @@ public class ProjectDocModel {
         // now generate the overview or index
         final SortedSet<File> asciiDocFiles = new TreeSet<>();
 
-        val overviewDoc = doc();
+        var overviewDoc = doc();
         overviewDoc.setTitle("System Overview");
 
         _Strings.nonEmpty(cliConfig.getGlobal().getLicenseHeader())
@@ -236,14 +236,14 @@ public class ProjectDocModel {
 
         public String toPlantUml(final String softwareSystemName) {
 
-            val softwareSystem = c4.softwareSystem(softwareSystemName, null);
+            var softwareSystem = c4.softwareSystem(softwareSystemName, null);
 
             final Can<ProjectAndContainerTuple> tuples = Can.<ProjectNode>ofCollection(projectNodes)
             .map(projectNode->{
-                val name = projectNode.getName();
-                val description = ""; //projectNode.getDescription() XXX needs sanitizing, potentially breaks plantuml/asciidoc syntax
-                val technology = String.format("packaging: %s", projectNode.getArtifactCoordinates().getPackaging());
-                val container = softwareSystem.addContainer(name, description, technology);
+                var name = projectNode.getName();
+                var description = ""; //projectNode.getDescription() XXX needs sanitizing, potentially breaks plantuml/asciidoc syntax
+                var technology = String.format("packaging: %s", projectNode.getArtifactCoordinates().getPackaging());
+                var container = softwareSystem.addContainer(name, description, technology);
                 return ProjectAndContainerTuple.of(projectNode, container);
             });
 
@@ -258,13 +258,13 @@ public class ProjectDocModel {
                     });
             }));
 
-            val containerView = c4.getViewSet()
+            var containerView = c4.getViewSet()
                     .createContainerView(softwareSystem, c4.getWorkspaceName(), "Artifact Hierarchy (Maven)");
             containerView.addAllContainers();
 
             containerView.enableAutomaticLayout(RankDirection.LeftRight);
 
-            val plantUmlSource = c4.toPlantUML(containerView);
+            var plantUmlSource = c4.toPlantUML(containerView);
             return plantUmlSource;
         }
 
@@ -281,7 +281,7 @@ public class ProjectDocModel {
             final @Nullable String pattern,
             final @NonNull Consumer<Section> sectionConsumer) {
 
-        val section = new Section(sectionName, pattern, true);
+        var section = new Section(sectionName, pattern, true);
 
         projectNodes.stream()
                 .filter(module->matchesGroupId(module, pattern))
@@ -309,36 +309,36 @@ public class ProjectDocModel {
             final @NonNull Mode mode,
             final @NonNull Consumer<File> onAdocFile) {
 
-        val sectionName = section.getSectionName();
-        val groupIdPattern = section.getGroupIdArtifactIdPattern();
+        var sectionName = section.getSectionName();
+        var groupIdPattern = section.getGroupIdArtifactIdPattern();
 
-        val titleBlock = block(overviewDoc);
+        var titleBlock = block(overviewDoc);
 
-        val headingLevel =
+        var headingLevel =
                 (groupIdPattern == null || !groupIdPattern.contains(":"))
                         ? "=="
                         : "===";
         titleBlock.setSource(String.format("%s %s", headingLevel, sectionName));
 
-        val sectionModules = section.getMatchingProjectNodes();
+        var sectionModules = section.getMatchingProjectNodes();
         if(sectionModules.isEmpty()) {
             return;
         }
 
-        val descriptionBlock = block(overviewDoc);
-        val groupDiagram = new GroupDiagram(C4.of(sectionName, null));
+        var descriptionBlock = block(overviewDoc);
+        var groupDiagram = new GroupDiagram(C4.of(sectionName, null));
 
-        val table = table(overviewDoc);
+        var table = table(overviewDoc);
         table.setTitle(String.format("Projects/Modules (%s)", sectionName));
         table.setAttribute("cols", "3a,5a", true);
         table.setAttribute("header-option", "", true);
 
-        val headRow = headRow(table);
+        var headRow = headRow(table);
 
         cell(table, headRow, "Coordinates");
         cell(table, headRow, "Description");
 
-        val projRoot = FileUtils.canonicalPath(projTree.getProjectDirectory())
+        var projRoot = FileUtils.canonicalPath(projTree.getProjectDirectory())
                 .orElseThrow(()->_Exceptions.unrecoverable("cannot resolve project root"));
 
         sectionModules
@@ -347,8 +347,8 @@ public class ProjectDocModel {
                         gatherAdocFiles(module.getProjectDirectory(), onAdocFile);
                     }
 
-                    val projPath = FileUtils.canonicalPath(module.getProjectDirectory()).get();
-                    val projRelativePath =
+                    var projPath = FileUtils.canonicalPath(module.getProjectDirectory()).get();
+                    var projRelativePath =
                             Optional.ofNullable(
                                     _Strings.emptyToNull(
                                             FileUtils.toRelativePath(projRoot, projPath)))
@@ -356,7 +356,7 @@ public class ProjectDocModel {
 
                     groupDiagram.collect(module);
 
-                    val row = row(table);
+                    var row = row(table);
                     cell(table, row, coordinates(module, projRelativePath));
                     cell(table, row, details(module, j2aContext));
                 });
@@ -365,7 +365,7 @@ public class ProjectDocModel {
     }
 
     private boolean matchesGroupId(final ProjectNode module, final String groupIdPattern) {
-        val moduleCoords = module.getArtifactCoordinates();
+        var moduleCoords = module.getArtifactCoordinates();
 
         if(_Strings.isNullOrEmpty(moduleCoords.getGroupId())) {
             return false; // never match on missing data
@@ -377,11 +377,11 @@ public class ProjectDocModel {
             return true; // exact match
         }
         if(groupIdPattern.endsWith(".*")) {
-            val groupIdPrefix = groupIdPattern.substring(0, groupIdPattern.length()-2);
+            var groupIdPrefix = groupIdPattern.substring(0, groupIdPattern.length()-2);
             if(groupIdPattern.contains(":")) {
                 final String[] split = groupIdPrefix.split(":");
-                val groupId = split[0];
-                val artifactIdPrefix = split[1];
+                var groupId = split[0];
+                var artifactIdPrefix = split[1];
                 if(groupId.equals(moduleCoords.getGroupId())) {
                     if(moduleCoords.getArtifactId().startsWith(artifactIdPrefix)) {
                         return true; // match on artifactId
@@ -407,7 +407,7 @@ public class ProjectDocModel {
     //    Directory: /commons
     //    ----
     private String coordinates(final ProjectNode module, final String projRelativePath) {
-        val coors = new StringBuilder();
+        var coors = new StringBuilder();
         appendKeyValue(coors, "Group", module.getArtifactCoordinates().getGroupId());
         appendKeyValue(coors, "Artifact", module.getArtifactCoordinates().getArtifactId());
         appendKeyValue(coors, "Type", module.getArtifactCoordinates().getPackaging());
@@ -423,27 +423,27 @@ public class ProjectDocModel {
     }
 
     private String details(final ProjectNode module, final J2AdocContext j2aContext) {
-        val description = sanitizeDescription(module.getDescription());
-        val dependencyList = module.getDependencies()
+        var description = sanitizeDescription(module.getDescription());
+        var dependencyList = module.getDependencies()
                 .stream()
                 .map(Dependency::getArtifactCoordinates)
                 .map(ArtifactCoordinates::toString)
                 .map(ProjectDocModel::toAdocCompactListItem)
                 .collect(Collectors.joining())
                 .trim();
-        val componentList = gatherSpringComponents(module.getProjectDirectory())
+        var componentList = gatherSpringComponents(module.getProjectDirectory())
                 .stream()
                 .map(s->s.replace("org.apache.causeway.", "o.a.i."))
                 .map(ProjectDocModel::toAdocCompactListItem)
                 .collect(Collectors.joining())
                 .trim();
 
-        val indexEntriesCompactList = gatherGlobalDocIndexXrefs(module.getProjectDirectory(), j2aContext)
+        var indexEntriesCompactList = gatherGlobalDocIndexXrefs(module.getProjectDirectory(), j2aContext)
                 .stream()
                 .collect(Collectors.joining(", "))
                 .trim();
 
-        val sb = new StringBuilder();
+        var sb = new StringBuilder();
 
         if(!description.isEmpty()) {
             sb.append(description).append("\n\n");
@@ -474,7 +474,7 @@ public class ProjectDocModel {
 
         //XXX collapsible will be supported with antora 3
         //        return AsciiDocFactory.toString(doc->{
-        //            val collapsibleBlock = AsciiDocFactory.collapsibleBlock(doc, content);
+        //            var collapsibleBlock = AsciiDocFactory.collapsibleBlock(doc, content);
         //            collapsibleBlock.setTitle(title);
         //        });
 
@@ -493,7 +493,7 @@ public class ProjectDocModel {
 
     private SortedSet<String> gatherGlobalDocIndexXrefs(final File projDir, final J2AdocContext j2aContext) {
 
-        val analyzerConfig = AnalyzerConfigFactory.maven(projDir, Language.JAVA).main();
+        var analyzerConfig = AnalyzerConfigFactory.maven(projDir, Language.JAVA).main();
 
         final SortedSet<String> docIndexXrefs = analyzerConfig.getSources(JAVA).stream()
         .filter(file->!file.getName().equals("module-info.java"))
@@ -506,9 +506,9 @@ public class ProjectDocModel {
 
     private SortedSet<String> gatherSpringComponents(final File projDir) {
 
-        val analyzerConfig = AnalyzerConfigFactory.maven(projDir, Language.JAVA).main();
+        var analyzerConfig = AnalyzerConfigFactory.maven(projDir, Language.JAVA).main();
 
-        val model = Model.from(analyzerConfig.getClasses()).read();
+        var model = Model.from(analyzerConfig.getClasses()).read();
 
         SortedSet<String> components = model.getClasses()
                 .stream()
@@ -524,7 +524,7 @@ public class ProjectDocModel {
 
     private void gatherAdocFiles(final File projDir, final Consumer<File> onFile) {
 
-        val analyzerConfig = AnalyzerConfigFactory.maven(projDir, Language.ADOC).main();
+        var analyzerConfig = AnalyzerConfigFactory.maven(projDir, Language.ADOC).main();
 
         analyzerConfig.getSources(Language.ADOC)
                 .stream()

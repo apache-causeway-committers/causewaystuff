@@ -37,7 +37,7 @@ import org.apache.causeway.commons.io.TextUtils;
 import org.apache.causeway.valuetypes.asciidoc.builder.AsciiDocWriter;
 
 import lombok.NonNull;
-import lombok.val;
+
 
 import io.github.causewaystuff.tooling.codeassert.config.Language;
 import io.github.causewaystuff.tooling.j2adoc.J2AdocContext;
@@ -52,7 +52,7 @@ class J2AdocTest {
         // javaparser.version=3.26.0 fails to parse snippet ..
         // hence we reinstated 3.25.10
 
-        val source=
+        var source=
         DataSource.ofResource(getClass(), "SampleSwitch.java.txt")
         .tryReadAsStringUtf8()
         .valueAsNonNullElseFail();
@@ -63,11 +63,11 @@ class J2AdocTest {
     @Test @Disabled
     void testJavaDoc2AsciiDoc() throws IOException {
 
-        val analyzerConfig = AnalyzerConfigFactory
+        var analyzerConfig = AnalyzerConfigFactory
                 .maven(ProjectSampler.apacheCausewayApplib(), Language.JAVA)
                 .main();
 
-        val j2aContext = J2AdocContext
+        var j2aContext = J2AdocContext
                 .builder()
 //                .javaSourceWithFootnotesFormat()
                 //.compactFormat()
@@ -100,9 +100,9 @@ class J2AdocTest {
     @Test// @Disabled
     void adocDocMining() throws IOException {
 
-        val adocFiles = ProjectSampler.adocFiles(ProjectSampler.apacheCausewayRoot());
+        var adocFiles = ProjectSampler.adocFiles(ProjectSampler.apacheCausewayRoot());
 
-        val names = _Sets.<String>newTreeSet();
+        var names = _Sets.<String>newTreeSet();
 
         Can.ofCollection(adocFiles)
         .stream()
@@ -116,7 +116,7 @@ class J2AdocTest {
     }
 
     private void parseAdoc(final @NonNull File file, final Consumer<String> onName) {
-        val lines = TextUtils.readLinesFromFile(file, StandardCharsets.UTF_8);
+        var lines = TextUtils.readLinesFromFile(file, StandardCharsets.UTF_8);
 
         ExampleReferenceFinder.find(
                 lines,
@@ -132,7 +132,7 @@ class J2AdocTest {
     @Test @Disabled("DANGER!")
     void removeAdocExampleTags() throws IOException {
 
-        val analyzerConfig = AnalyzerConfigFactory
+        var analyzerConfig = AnalyzerConfigFactory
                 .maven(ProjectSampler.apacheCausewayApplib(), Language.JAVA)
                 .main();
 
@@ -147,7 +147,7 @@ class J2AdocTest {
     @Test @Disabled("DANGER!")
     void adocExampleProcessing() throws IOException {
 
-        val adocFiles = ProjectSampler.adocFiles(ProjectSampler.apacheCausewayRoot());
+        var adocFiles = ProjectSampler.adocFiles(ProjectSampler.apacheCausewayRoot());
 
         Can.ofCollection(adocFiles)
         .stream()

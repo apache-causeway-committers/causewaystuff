@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 import org.apache.causeway.commons.io.TextUtils;
 
-import lombok.val;
+
 
 public final class AsciiDocIncludeTagFilter {
 
@@ -37,7 +37,7 @@ public final class AsciiDocIncludeTagFilter {
     }
 
     public static void removeAdocExampleTags(final File source) {
-        val fixedLines = TextUtils.readLinesFromFile(source, StandardCharsets.UTF_8)
+        var fixedLines = TextUtils.readLinesFromFile(source, StandardCharsets.UTF_8)
         .filter(line->!isIncludeTagComment(line))
         .map(AsciiDocIncludeTagFilter::removeFootNoteReference);
 

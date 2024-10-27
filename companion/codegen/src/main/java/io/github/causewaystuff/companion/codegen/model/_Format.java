@@ -25,7 +25,7 @@ import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.internal.base._NullSafe;
 import org.apache.causeway.commons.internal.base._Strings;
 
-import lombok.val;
+
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -46,7 +46,7 @@ class _Format {
                     .stream()
                     .map(String::trim)
                     .collect(Can.toCan()));
-        val more = _NullSafe.stream(moreLines)
+        var more = _NullSafe.stream(moreLines)
             .map(String::trim)
             .collect(Can.toCan());
         descriptionLines = descriptionLines.addAll(more);

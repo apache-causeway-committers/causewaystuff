@@ -25,16 +25,16 @@ import io.github.causewaystuff.tooling.javapoet.ClassName;
 
 import org.apache.causeway.commons.internal.base._Strings;
 
-import lombok.val;
+
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 class _Foreign {
 
     ClassName foreignClassName(final Schema.EntityField field, final Schema.EntityField foreignField, final DomainGenerator.Config config) {
-        val foreignEntity = foreignField.parentEntity();
-        val foreignPackageName = config.fullPackageName(foreignEntity.namespace());
-        val foreignEntityClass = field.hasElementType()
+        var foreignEntity = foreignField.parentEntity();
+        var foreignPackageName = config.fullPackageName(foreignEntity.namespace());
+        var foreignEntityClass = field.hasElementType()
                 ? ClassName.get(config.fullPackageName(field.elementTypeNamespace()), field.elementTypeSimpleName())
                 : ClassName.get(foreignPackageName, foreignEntity.name());
         return foreignEntityClass;
@@ -44,7 +44,7 @@ class _Foreign {
             "Code",
             "LookupKey");
     String resolvedFieldName(final Schema.EntityField field) {
-        val mixedInPropertyName = knownPropertyNameSuffixes.stream()
+        var mixedInPropertyName = knownPropertyNameSuffixes.stream()
                 .filter(field.name()::endsWith)
                 .findFirst()
                 .map(suffix->_Strings.substring(field.name(), 0, -suffix.length()))

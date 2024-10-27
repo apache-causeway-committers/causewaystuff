@@ -29,7 +29,7 @@ import org.apache.causeway.valuetypes.asciidoc.builder.AsciiDocWriter;
 
 import lombok.NonNull;
 import lombok.SneakyThrows;
-import lombok.val;
+
 import lombok.extern.log4j.Log4j2;
 
 import io.github.causewaystuff.tooling.cli.CliConfig;
@@ -47,9 +47,9 @@ final class ProjectDocWriter {
             final @NonNull ProjectDocModel.Mode mode) {
 
         @SuppressWarnings("unused")
-        val global = cliConfig.getGlobal();
-        val overview = cliConfig.getCommands().getOverview();
-        val index = cliConfig.getCommands().getIndex();
+        var global = cliConfig.getGlobal();
+        var overview = cliConfig.getCommands().getOverview();
+        var index = cliConfig.getCommands().getIndex();
 
         final BiConsumer<Document, File> overviewDocWriter = overview.isDryRun()
                 ? (doc, file)->AsciiDocWriter.print(doc) // print to system out only (dry run)
@@ -59,12 +59,12 @@ final class ProjectDocWriter {
                 ? (doc, file)->AsciiDocWriter.print(doc) // print to system out only (dry run)
                 : AsciiDocWriter::writeToFile;
 
-        val currentUnit = _Refs.<J2AdocUnit>objectRef(null);
+        var currentUnit = _Refs.<J2AdocUnit>objectRef(null);
 
-        val overviewPagesFolder = overview.getPagesFolder();
-        val indexRootFolder = index.getRootFolder();
+        var overviewPagesFolder = overview.getPagesFolder();
+        var indexRootFolder = index.getRootFolder();
 
-        val deleteCount = _Refs.intRef(0);
+        var deleteCount = _Refs.intRef(0);
         int writeCount = 0;
 
         try {
@@ -72,7 +72,7 @@ final class ProjectDocWriter {
             if (mode.includeOverview()) {
 
                 // write system overview
-                val overviewFile = new File(overviewPagesFolder, overview.getSystemOverviewFilename());
+                var overviewFile = new File(overviewPagesFolder, overview.getSystemOverviewFilename());
                 log.info("writing system overview: {}", overviewFile.getName());
                 overviewDocWriter.accept(overviewAdoc, overviewFile);
                 ++writeCount;
@@ -82,8 +82,8 @@ final class ProjectDocWriter {
 
                 // delete all generated documents in the index
                 FileUtils.searchFiles(indexRootFolder, dir->true, file-> {
-                    val fileName = file.getName();
-                    val fileAbsolutePath = file.getAbsolutePath();
+                    var fileName = file.getName();
+                    var fileAbsolutePath = file.getAbsolutePath();
                     return fileName.endsWith(".adoc") &&
                            !fileAbsolutePath.contains(File.separatorChar + "hooks" + File.separatorChar) &&
                            !fileName.equals(overview.getSystemOverviewFilename());
@@ -94,11 +94,11 @@ final class ProjectDocWriter {
                 .forEach(FileUtils::deleteFile);
 
                 // write document index
-                for(val unit : j2aContext.getUnitIndex().values()) {
+                for(var unit : j2aContext.getUnitIndex().values()) {
 
                     currentUnit.setValue(unit);
 
-                    val adocIndexFile = adocDestinationFileForUnit(unit, index);
+                    var adocIndexFile = adocDestinationFileForUnit(unit, index);
 
                     log.info("writing file: {}", adocIndexFile.getName());
 
@@ -133,9 +133,9 @@ final class ProjectDocWriter {
 
         // eg: antora/components/refguide-index
         final File indexRootFolder = index.getRootFolder();
-        val indexFolder = indexRootFolder;
+        var indexFolder = indexRootFolder;
 
-        val destFolderBuilder = _Refs.<File>objectRef(indexFolder);
+        var destFolderBuilder = _Refs.<File>objectRef(indexFolder);
 
         // eg org/apache/causeway/applib/annotation
         unit.getNamespace().stream()
@@ -163,7 +163,7 @@ final class ProjectDocWriter {
             destFolderBuilder.update(currentDir -> new File(currentDir, subDir));
         });
 
-        val destFolder = destFolderBuilder.getValueElseDefault(indexFolder);
+        var destFolder = destFolderBuilder.getValueElseDefault(indexFolder);
         destFolder.mkdirs();
 
         final String fileName = unit.getCanonicalName() + ".adoc";

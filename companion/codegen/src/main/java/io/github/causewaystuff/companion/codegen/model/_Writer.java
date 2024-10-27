@@ -29,27 +29,27 @@ import org.apache.causeway.commons.internal.base._NullSafe;
 import org.apache.causeway.commons.internal.base._Strings;
 import org.apache.causeway.commons.io.TextUtils;
 
-import lombok.val;
+
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 class _Writer {
 
     String toYaml(final Schema.Domain schema) {
-        val yaml = new YamlWriter();
+        var yaml = new YamlWriter();
         yaml.write("viewmodels:").nl();
-        for(val viewmodel : schema.viewmodels().values()) {
+        for(var viewmodel : schema.viewmodels().values()) {
             writeViewmodel(yaml, viewmodel);
         }
         yaml.write("entities:").nl();
-        for(val entity : schema.entities().values()) {
+        for(var entity : schema.entities().values()) {
             writeEntity(yaml, entity);
         }
         return yaml.toString();
     }
 
     String toYaml(final Schema.Entity entity) {
-        val yaml = new YamlWriter();
+        var yaml = new YamlWriter();
         writeEntity(yaml, entity);
         return yaml.toString();
     }
@@ -213,11 +213,11 @@ class _Writer {
             return this;
         }
         YamlWriter write(final String ...s) {
-            for(val str:s) sb.append(str);
+            for(var str:s) sb.append(str);
             return this;
         }
         YamlWriter writeUpper(final String ...s) {
-            for(val str:s) sb.append(str.toUpperCase());
+            for(var str:s) sb.append(str.toUpperCase());
             return this;
         }
         YamlWriter ind(final int indentCount) {

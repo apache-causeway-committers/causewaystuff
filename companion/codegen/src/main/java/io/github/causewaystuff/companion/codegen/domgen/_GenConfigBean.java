@@ -26,7 +26,7 @@ import io.github.causewaystuff.tooling.javapoet.ClassName;
 import io.github.causewaystuff.tooling.javapoet.TypeSpec;
 
 import lombok.NonNull;
-import lombok.val;
+
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -36,13 +36,13 @@ class _GenConfigBean {
             final @NonNull DomainGenerator.Config config,
             final @NonNull DomainModel domainModel) {
 
-        val packageName = config.fullPackageName(config.entitiesModulePackageName());
+        var packageName = config.fullPackageName(config.entitiesModulePackageName());
 
         final ClassName nameOfClassToGenerate =
                 ClassName.get(packageName, "ModuleConfig");
                 //ClassName.get(packageName, config.entitiesModuleClassSimpleName() + "Config");
 
-        val typeModelBuilder = TypeSpec.classBuilder(nameOfClassToGenerate)
+        var typeModelBuilder = TypeSpec.classBuilder(nameOfClassToGenerate)
                 .addAnnotation(_Annotations.generated(_GenConfigBean.class))
                 .addAnnotation(_Annotations.configuration())
                 .addModifiers(Modifier.PUBLIC)

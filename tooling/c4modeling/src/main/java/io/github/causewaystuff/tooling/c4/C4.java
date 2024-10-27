@@ -28,7 +28,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
+
 
 import io.github.causewaystuff.tooling.structurizr.Workspace;
 import io.github.causewaystuff.tooling.structurizr.export.plantuml.StructurizrPlantUMLExporter;
@@ -55,8 +55,8 @@ public class C4 {
      * @param description   a short description
      */
     public static C4 of(@NonNull final String name, @Nullable final String description) {
-        val plantUMLWriter = new StructurizrPlantUMLExporter();
-        val c4 = new C4(new Workspace(name, _Strings.nullToEmpty(description)), plantUMLWriter);
+        var plantUMLWriter = new StructurizrPlantUMLExporter();
+        var c4 = new C4(new Workspace(name, _Strings.nullToEmpty(description)), plantUMLWriter);
         c4.applyDefaultStyles();
         return c4;
     }
@@ -120,7 +120,7 @@ public class C4 {
     // -- HELPER
 
     private void applyDefaultStyles() {
-        val styles = getViewSet().getConfiguration().getStyles();
+        var styles = getViewSet().getConfiguration().getStyles();
 
         styles.addElementStyle(Tags.ELEMENT).color("#fffffe");
         //styles.addElementStyle(Tags.PERSON).background("#08427b");

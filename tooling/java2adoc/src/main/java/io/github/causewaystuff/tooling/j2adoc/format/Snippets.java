@@ -34,7 +34,7 @@ import io.github.causewaystuff.tooling.javamodel.ast.FieldDeclarations;
 import io.github.causewaystuff.tooling.javamodel.ast.Javadocs;
 import io.github.causewaystuff.tooling.javamodel.ast.MethodDeclarations;
 
-import lombok.val;
+
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -69,7 +69,7 @@ public class Snippets {
                         .replace(" final ", " ")
                 : UnaryOperator.identity();
 
-        val buf = new StringBuilder();
+        var buf = new StringBuilder();
 
         buf.append(String.format("%s %s%s {\n",
                 unit.getDeclarationKeyword(),
@@ -108,7 +108,7 @@ public class Snippets {
         declarations.stream()
         .filter(Javadocs::notExplicitlyHidden)
         .forEach(decl->{
-            val memberFormat = javaSourceMemberFormat(Callout.when(decl.getJavadoc().isPresent()));
+            var memberFormat = javaSourceMemberFormat(Callout.when(decl.getJavadoc().isPresent()));
             java.append(String.format(memberFormat, normalizer.apply(decl)));
         });
     }

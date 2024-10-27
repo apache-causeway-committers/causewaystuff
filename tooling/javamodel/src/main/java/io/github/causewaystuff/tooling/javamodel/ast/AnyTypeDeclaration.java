@@ -46,7 +46,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
+
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -191,7 +191,7 @@ public final class AnyTypeDeclaration {
     }
 
     public String getTypeParametersAsString() {
-        val typeParameters = getTypeParameters();
+        var typeParameters = getTypeParameters();
         return typeParameters.isEmpty()
                 ? ""
                 : String.format("<%s>", typeParameters.stream()
@@ -213,7 +213,7 @@ public final class AnyTypeDeclaration {
     // -- HELPER
 
     private Can<String> createName() {
-        val nameParts = _Lists.<String>newLinkedList();
+        var nameParts = _Lists.<String>newLinkedList();
         nameParts.push(td.getNameAsString());
         Node walker = td;
         while(walker.getParentNode().isPresent()) {

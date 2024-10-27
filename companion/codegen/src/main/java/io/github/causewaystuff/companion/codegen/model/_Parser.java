@@ -33,7 +33,7 @@ import org.apache.causeway.commons.internal.base._Strings;
 import org.apache.causeway.commons.io.TextUtils;
 import org.apache.causeway.commons.io.YamlUtils;
 
-import lombok.val;
+
 import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.commons.base.types.internal.ObjectRef;
@@ -69,8 +69,8 @@ class _Parser {
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     Domain parseSchema(final String yaml, final ParserHint parserHint) {
-        val viewmodels = new TreeMap<String, Schema.Viewmodel>();
-        val entities = new TreeMap<String, Schema.Entity>();
+        var viewmodels = new TreeMap<String, Schema.Viewmodel>();
+        var entities = new TreeMap<String, Schema.Entity>();
         YamlUtils.tryRead(Map.class, yaml)
         .ifFailureFail()
         .getValue()
@@ -136,8 +136,8 @@ class _Parser {
     Viewmodel parseViewmodel(
             final Map.Entry<String, Map> entry,
             final ParserHint parserHint) {
-        val map = entry.getValue();
-        val fieldsAsMap = (Map<String, Map>)map.get("fields");
+        var map = entry.getValue();
+        var fieldsAsMap = (Map<String, Map>)map.get("fields");
         final String namespace = (String)map.get("namespace");
         final String name = _Strings.nonEmpty(parserHint.name((String)map.get("name")))
                 .orElseGet(()->
@@ -145,7 +145,7 @@ class _Parser {
                         ? entry.getKey().substring(namespace.length() + 1)
                         : entry.getKey()
                 );
-        val viewmodel = new Viewmodel(
+        var viewmodel = new Viewmodel(
                 ObjectRef.empty(),
                 Optional.ofNullable((String)map.get("generator")).orElse("class"),
                 name,
@@ -166,8 +166,8 @@ class _Parser {
     Entity parseEntity(
             final Map.Entry<String, Map> entry,
             final ParserHint parserHint) {
-        val map = entry.getValue();
-        val fieldsAsMap = (Map<String, Map>)map.get("fields");
+        var map = entry.getValue();
+        var fieldsAsMap = (Map<String, Map>)map.get("fields");
         final String namespace = (String)map.get("namespace");
         final String name = _Strings.nonEmpty(parserHint.name((String)map.get("name")))
                 .orElseGet(()->
@@ -175,7 +175,7 @@ class _Parser {
                         ? entry.getKey().substring(namespace.length() + 1)
                         : entry.getKey()
                 );
-        val entity = new Entity(
+        var entity = new Entity(
                 ObjectRef.empty(),
                 name,
                 namespace,
@@ -202,7 +202,7 @@ class _Parser {
 
     VmField parseField(final Viewmodel parent, final int ordinal,
             @SuppressWarnings("rawtypes") final Map.Entry<String, Map> entry) {
-        val map = entry.getValue();
+        var map = entry.getValue();
         return new VmField(SneakyRef.of(parent),
                 ordinal,
                 entry.getKey(),
@@ -216,7 +216,7 @@ class _Parser {
 
     EntityField parseField(final Entity parent, final int ordinal,
             @SuppressWarnings("rawtypes") final Map.Entry<String, Map> entry) {
-        val map = entry.getValue();
+        var map = entry.getValue();
         return new EntityField(SneakyRef.of(parent),
                 ordinal,
                 entry.getKey(),

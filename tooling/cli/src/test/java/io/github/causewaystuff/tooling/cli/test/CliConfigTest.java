@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.apache.causeway.commons.io.DataSource;
 import org.apache.causeway.commons.io.YamlUtils;
 
-import lombok.val;
+
 
 import io.github.causewaystuff.tooling.cli.CliConfig;
 
@@ -46,7 +46,7 @@ class CliConfigTest {
 
     @Test
     void loadConfigFromYaml() {
-        val config = YamlUtils.tryRead(CliConfig.class, DataSource.ofResource(this.getClass(), "causeway-tooling.yml"))
+        var config = YamlUtils.tryRead(CliConfig.class, DataSource.ofResource(this.getClass(), "causeway-tooling.yml"))
                 .ifFailure(System.err::println)
                 .getValue()
                 .orElse(null);

@@ -43,7 +43,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Value;
-import lombok.val;
+
 import lombok.extern.log4j.Log4j2;
 
 @Value @Builder @Log4j2
@@ -85,8 +85,8 @@ public class J2AdocContext {
     private final ListMultimap<String, J2AdocUnit> unitsByTypeSimpleName = _Multimaps.newListMultimap();
 
     public J2AdocContext add(final @NonNull J2AdocUnit unit) {
-        val unitKey = LookupKey.of(unit.getResourceCoordinates());
-        val previousKey = unitIndex.put(unitKey, unit);
+        var unitKey = LookupKey.of(unit.getResourceCoordinates());
+        var previousKey = unitIndex.put(unitKey, unit);
         if(previousKey!=null) {
             throw _Exceptions.unrecoverable(
                     "J2AUnit index entries must be unique, "
@@ -120,13 +120,13 @@ public class J2AdocContext {
             return Optional.empty();
         }
 
-        val partialNameNoWhiteSpaces = partialName.split("\\s")[0];
+        var partialNameNoWhiteSpaces = partialName.split("\\s")[0];
 
 
         if(partialNameNoWhiteSpaces.contains("#")) {
             // skip member reference lookup
             //XXX reserved for future extensions ...
-            //val partialNameWithoutMember = _Refs.stringRef(partialName).cutAtIndexOf("#");
+            //var partialNameWithoutMember = _Refs.stringRef(partialName).cutAtIndexOf("#");
             return Optional.empty();
         }
 
@@ -148,9 +148,9 @@ public class J2AdocContext {
         final Can<String> nameDiscriminator = Can.ofStream(
                 _Strings.splitThenStream(partialNameNoWhiteSpaces, "."));
 
-        val nameDiscriminatorPartIterator = nameDiscriminator.reverseIterator();
+        var nameDiscriminatorPartIterator = nameDiscriminator.reverseIterator();
 
-        val typeSimpleNameCandidates = Stream.iterate(
+        var typeSimpleNameCandidates = Stream.iterate(
                 Can.ofSingleton(nameDiscriminatorPartIterator.next()),
                 parts->parts.add(nameDiscriminatorPartIterator.next()))
         .limit(nameDiscriminator.size())
@@ -165,7 +165,7 @@ public class J2AdocContext {
 
         // for performance reasons we only search the units that are hash mapped
         // by the typeSimpleNameCandidates using the unitsByTypeSimpleName map
-        val searchResult = typeSimpleNameCandidates.stream()
+        var searchResult = typeSimpleNameCandidates.stream()
         .map((final Can<String> typeSimpleNameParts)->typeSimpleNameParts.stream()
                 .collect(Collectors.joining(".")))
         .flatMap((final String typeSimpleNameCandidate)->unitsByTypeSimpleName
@@ -184,7 +184,7 @@ public class J2AdocContext {
         // what's left to do at this point is to log empty or ambiguous search results
         // while also trying to suppress cases that are of no interest
 
-        val skipLog = searchResult.isEmpty() && (
+        var skipLog = searchResult.isEmpty() && (
                 unit.getFqnParts().endsWith(nameDiscriminator) // self referential
                 // java.lang types don't need import statements
                 || nameDiscriminator.isEqualTo(Can.of("String"))
@@ -225,7 +225,7 @@ public class J2AdocContext {
             return Optional.empty();
         }
 
-        val searchResult = Can.ofCollection(unitsByTypeSimpleName.getOrElseEmpty(typeSimpleName));
+        var searchResult = Can.ofCollection(unitsByTypeSimpleName.getOrElseEmpty(typeSimpleName));
 
         logIfEmptyOrAmbiguous(searchResult,
                 String.format("searching unit by type-simple-name '%s'", typeSimpleName));
@@ -248,11 +248,11 @@ public class J2AdocContext {
 
     public String xref(final @NonNull J2AdocUnit unit) {
 
-        val xrefModule = unit.getNamespace()
+        var xrefModule = unit.getNamespace()
                 .stream()
                 .skip(getNamespacePartsSkipCount())
                 .findFirst().get();
-        val xrefCoordinates = unit.getNamespace()
+        var xrefCoordinates = unit.getNamespace()
                 .stream()
                 .skip(getNamespacePartsSkipCount() + 1)
                 .collect(Can.toCan())
@@ -260,7 +260,7 @@ public class J2AdocContext {
                 .stream()
                 .collect(Collectors.joining("/"));
 
-        val xref = String.format("xref:refguide:%s:index/%s.adoc[%s]",
+        var xref = String.format("xref:refguide:%s:index/%s.adoc[%s]",
                 xrefModule, xrefCoordinates, unit.getFriendlyName());
 
         return xref;

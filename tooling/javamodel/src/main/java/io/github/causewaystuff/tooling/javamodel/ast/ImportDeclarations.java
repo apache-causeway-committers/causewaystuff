@@ -25,7 +25,7 @@ import com.github.javaparser.ast.ImportDeclaration;
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.internal.base._Strings;
 
-import lombok.val;
+
 
 public final class ImportDeclarations {
 
@@ -60,7 +60,7 @@ public final class ImportDeclarations {
             return Stream.empty();
         }
 
-        val fqnParts = splitIntoParts(importDeclaration);
+        var fqnParts = splitIntoParts(importDeclaration);
 
         if(!importDeclaration.isAsterisk()) {
 
@@ -73,7 +73,7 @@ public final class ImportDeclarations {
 
         // handle asterisk case
 
-        val nameDiscriminatorPartIterator = nameDiscriminator.reverseIterator();
+        var nameDiscriminatorPartIterator = nameDiscriminator.reverseIterator();
 
         return Stream.iterate(
                 Can.ofSingleton(nameDiscriminatorPartIterator.next()),
