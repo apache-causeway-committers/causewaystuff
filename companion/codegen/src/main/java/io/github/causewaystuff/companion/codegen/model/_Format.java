@@ -25,7 +25,6 @@ import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.internal.base._NullSafe;
 import org.apache.causeway.commons.internal.base._Strings;
 
-
 import lombok.experimental.UtilityClass;
 
 @UtilityClass

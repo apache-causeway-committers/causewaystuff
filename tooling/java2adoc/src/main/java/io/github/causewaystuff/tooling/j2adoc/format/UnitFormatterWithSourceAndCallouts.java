@@ -26,7 +26,6 @@ import org.apache.causeway.valuetypes.asciidoc.builder.AsciiDocFactory;
 
 import lombok.NonNull;
 
-
 import io.github.causewaystuff.tooling.j2adoc.J2AdocContext;
 import io.github.causewaystuff.tooling.j2adoc.J2AdocUnit;
 import io.github.causewaystuff.tooling.j2adoc.convert.J2AdocConverter;
@@ -81,6 +80,5 @@ extends UnitFormatterAbstract {
                 (javadoc, j2Unit) -> converter.javadoc(javadoc, unit, J2AdocConverter.Mode.ALL));
 
     }
-
 
 }

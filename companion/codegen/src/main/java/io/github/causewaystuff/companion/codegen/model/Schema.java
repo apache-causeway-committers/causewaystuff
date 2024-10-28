@@ -354,7 +354,6 @@ public class Schema {
         }
     }
 
-
     public record Domain(
             /**
              * Viewmodel metadata by {@code <namespace>.<name>}.

@@ -57,7 +57,6 @@ public final class CodeClasses {
         return !hasSourceFile(codeClass);
     }
 
-
     // -- LOGGER
 
     public static void log(final @NonNull CodeClass codeClass) {
@@ -70,6 +69,5 @@ public final class CodeClasses {
     }
 
     // -- HELPER
-
 
 }

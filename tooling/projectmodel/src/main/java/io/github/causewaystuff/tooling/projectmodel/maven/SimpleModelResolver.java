@@ -142,7 +142,6 @@ public class SimpleModelResolver implements ModelResolver {
         return this;
     }
 
-
     public Model lookupCatalogForSubmoduleOf(final Model mavenProj, final String realtivePath) {
 
         final String localPath;

@@ -24,8 +24,6 @@ import java.util.concurrent.Callable;
 import org.apache.causeway.commons.internal.base._Lazy;
 import org.apache.causeway.commons.internal.context._Context;
 
-
-
 import io.github.causewaystuff.tooling.cli.projdoc.ProjectDocModel;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -132,7 +130,6 @@ class Cli implements Callable<Integer> {
 
     }
 
-
     // -- ENTRY POINT
 
     public static void main(String... args) {
@@ -141,6 +138,5 @@ class Cli implements Callable<Integer> {
         int exitCode = new CommandLine(cli).execute(args);
         System.exit(exitCode);
     }
-
 
 }

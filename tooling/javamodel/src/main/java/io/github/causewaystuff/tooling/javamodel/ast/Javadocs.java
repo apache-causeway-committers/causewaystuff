@@ -57,7 +57,6 @@ public final class Javadocs {
         return presentAndNotHidden(nwj.getJavadoc());
     }
 
-
     // -- PREDICATES FOR STREAMS (NOT EXPLICITLY HIDDEN)
 
     public static boolean notExplicitlyHidden(final @NonNull NodeWithJavadoc<?> nwj) {
@@ -109,6 +108,5 @@ public final class Javadocs {
         .map(jd->!hasHidden(jd))
         .orElse(false);
     }
-
 
 }

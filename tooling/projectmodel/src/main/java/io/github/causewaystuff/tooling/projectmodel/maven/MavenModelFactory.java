@@ -64,7 +64,6 @@ public class MavenModelFactory {
 
     }
 
-
     /** non interpolated read */
     public static Model readModel(File pomFile) {
         val reader = new MavenXpp3Reader();

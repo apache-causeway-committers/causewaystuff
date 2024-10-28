@@ -26,7 +26,6 @@ import org.apache.causeway.commons.internal.assertions._Assert;
 import org.apache.causeway.commons.internal.base._Strings;
 import org.apache.causeway.commons.internal.exceptions._Exceptions;
 
-
 import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.companion.codegen.model.Schema.Entity;

@@ -49,7 +49,6 @@ import org.apache.causeway.valuetypes.asciidoc.builder.ast.SimpleBlock;
 
 import lombok.NonNull;
 
-
 public final class J2AdocConverterDefault extends J2AdocConverterAbstract {
 
     public static J2AdocConverter of(final J2AdocContext j2AdocContext) {

@@ -130,7 +130,6 @@ final class ProjectDocWriter {
             final @NonNull J2AdocUnit unit,
             final @NonNull CliConfig.Commands.Index index) {
 
-
         // eg: antora/components/refguide-index
         final File indexRootFolder = index.getRootFolder();
         var indexFolder = indexRootFolder;
@@ -170,6 +169,5 @@ final class ProjectDocWriter {
         return new File(destFolder, fileName);
 
     }
-
 
 }

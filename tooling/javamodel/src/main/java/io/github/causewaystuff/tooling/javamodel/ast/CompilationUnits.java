@@ -33,7 +33,6 @@ import com.github.javaparser.ast.body.TypeDeclaration;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 
-
 public final class CompilationUnits {
 
     @SneakyThrows
@@ -102,6 +101,5 @@ public final class CompilationUnits {
 
         return Optional.of(type);
     }
-
 
 }

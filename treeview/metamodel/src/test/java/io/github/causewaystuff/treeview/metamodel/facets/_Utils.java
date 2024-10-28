@@ -34,7 +34,6 @@ import org.apache.causeway.commons.internal.reflection._GenericResolver;
 import org.apache.causeway.commons.internal.reflection._GenericResolver.ResolvedMethod;
 import org.apache.causeway.core.metamodel.facetapi.FeatureType;
 
-
 import lombok.experimental.UtilityClass;
 
 //copied over from Apache Causeway

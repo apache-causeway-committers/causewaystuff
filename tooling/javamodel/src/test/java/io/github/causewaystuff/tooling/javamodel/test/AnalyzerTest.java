@@ -28,8 +28,6 @@ import org.junit.jupiter.api.Test;
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.io.FileUtils;
 
-
-
 import io.github.causewaystuff.tooling.codeassert.config.Language;
 import io.github.causewaystuff.tooling.codeassert.model.CodeClass;
 import io.github.causewaystuff.tooling.codeassert.model.Model;

@@ -25,7 +25,6 @@ import io.github.causewaystuff.tooling.javapoet.ClassName;
 
 import org.apache.causeway.commons.internal.base._Strings;
 
-
 import lombok.experimental.UtilityClass;
 
 @UtilityClass

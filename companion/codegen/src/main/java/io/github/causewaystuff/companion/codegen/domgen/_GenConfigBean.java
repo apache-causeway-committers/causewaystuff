@@ -52,5 +52,4 @@ class _GenConfigBean {
                 typeModelBuilder.build());
     }
     
-
 }

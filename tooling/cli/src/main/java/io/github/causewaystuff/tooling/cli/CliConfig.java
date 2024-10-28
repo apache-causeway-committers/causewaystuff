@@ -90,7 +90,6 @@ public class CliConfig {
 
         }
 
-
         private Index index = new Index();
 
         @Data
@@ -129,7 +128,6 @@ public class CliConfig {
 
     }
 
-
     // -- LOADING
 
     public static CliConfig read(final @NonNull File file) {
@@ -144,6 +142,5 @@ public class CliConfig {
         })
         .getValue().orElseGet(CliConfig::new);
     }
-
 
 }

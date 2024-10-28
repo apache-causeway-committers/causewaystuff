@@ -35,7 +35,6 @@ import org.apache.causeway.valuetypes.asciidoc.builder.AsciiDocFactory;
 
 import lombok.NonNull;
 
-
 import io.github.causewaystuff.tooling.j2adoc.J2AdocContext;
 import io.github.causewaystuff.tooling.j2adoc.J2AdocUnit;
 import io.github.causewaystuff.tooling.j2adoc.convert.J2AdocConverter;
@@ -102,7 +101,6 @@ extends UnitFormatterAbstract {
                         CallableDeclarations.asAnchor(decl),
                         CallableDeclarations.asMethodSignature(decl)),
                 firstParaOnly);
-
 
         //
         // now the members section
@@ -188,7 +186,6 @@ extends UnitFormatterAbstract {
                             });
                 });
     }
-
 
     /**
      * Helper method called by {@link #appendMembersToList(List, J2AdocUnit, Can, Function, BiFunction)}.

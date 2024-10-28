@@ -31,8 +31,6 @@ import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.io.YamlUtils;
 import org.apache.causeway.testing.unittestsupport.applib.annotations.DisabledIfRunningWithSurefire;
 
-
-
 import io.github.causewaystuff.tooling.codeassert.config.Language;
 import io.github.causewaystuff.tooling.javamodel.AnalyzerConfigFactory;
 import io.github.causewaystuff.tooling.javamodel.ast.AnnotationMemberDeclarations;
@@ -54,7 +52,6 @@ class AnnotationToYAMLSchemaTest {
         //System.err.printf("%s%n", jsonSchema);
         System.err.printf("%s%n", YamlUtils.toStringUtf8(jsonSchema));
     }
-
 
     @DisabledIfRunningWithSurefire // WIP - gather annotation member's java-doc
     @Test
@@ -84,6 +81,5 @@ class AnnotationToYAMLSchemaTest {
         });
 
     }
-
 
 }

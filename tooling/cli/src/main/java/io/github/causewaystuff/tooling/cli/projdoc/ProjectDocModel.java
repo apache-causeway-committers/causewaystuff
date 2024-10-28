@@ -60,7 +60,6 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
-
 import io.github.causewaystuff.tooling.c4.C4;
 import io.github.causewaystuff.tooling.cli.CliConfig;
 import io.github.causewaystuff.tooling.cli.adocfix.OrphanedIncludeStatementFixer;
@@ -103,7 +102,6 @@ public class ProjectDocModel {
 
         modules = new TreeSet<ProjectNode>();
         projTree.depthFirst(modules::add);
-
 
         var j2aContext = J2AdocContext.builder()
                 .formatterFactory(new Function<>() {
@@ -531,6 +529,4 @@ public class ProjectDocModel {
                 .forEach(onFile::accept);
     }
 
-
 }
-

@@ -30,8 +30,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.apache.causeway.commons.io.DataSource;
 import org.apache.causeway.commons.io.YamlUtils;
 
-
-
 import io.github.causewaystuff.tooling.cli.CliConfig;
 
 class CliConfigTest {

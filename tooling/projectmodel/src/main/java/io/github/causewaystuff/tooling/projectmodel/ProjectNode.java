@@ -87,6 +87,4 @@ public class ProjectNode implements Comparable<ProjectNode> {
         return this.getArtifactCoordinates().compareTo(other.getArtifactCoordinates());
     }
 
-
-
 }

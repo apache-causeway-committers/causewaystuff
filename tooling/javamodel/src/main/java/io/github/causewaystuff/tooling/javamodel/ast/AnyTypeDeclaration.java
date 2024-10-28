@@ -47,7 +47,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class AnyTypeDeclaration {
@@ -79,9 +78,7 @@ public final class AnyTypeDeclaration {
     private final Can<ConstructorDeclaration> publicConstructorDeclarations;
     private final Can<MethodDeclaration> publicMethodDeclarations;
 
-
     // -- FACTORIES
-
 
     public static AnyTypeDeclaration of(
             final @NonNull AnnotationDeclaration annotationDeclaration,
@@ -224,6 +221,5 @@ public final class AnyTypeDeclaration {
         }
         return Can.ofCollection(nameParts);
     }
-
 
 }

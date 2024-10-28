@@ -51,7 +51,6 @@ import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class UnitFormatterAbstract
 implements UnitFormatter {
@@ -79,7 +78,6 @@ implements UnitFormatter {
         _Strings.nonEmpty(j2aContext.getLicenseHeader())
         .ifPresent(notice->AsciiDocFactory.attrNotice(doc, notice));
 
-
         // -- intro
 
         intro(unit, doc);
@@ -96,7 +94,6 @@ implements UnitFormatter {
         // -- member descriptions
 
         memberDescriptions(unit, doc);
-
 
         // -- inclusions
 
@@ -175,7 +172,6 @@ implements UnitFormatter {
         });
     }
 
-
     /**
      * Helper method called by {@link #appendMembersToList(List, J2AdocUnit, Can, Function, BiFunction)}.
      *
@@ -193,7 +189,6 @@ implements UnitFormatter {
         var javaDocBlock = AsciiDocFactory.block(openBlock);
         javaDocBlock.getBlocks().addAll(listItemParagraphs.getBlocks());
     }
-
 
     /**
      * Hook method (with empty default implementation)

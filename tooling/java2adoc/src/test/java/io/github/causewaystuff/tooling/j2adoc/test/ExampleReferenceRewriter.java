@@ -25,8 +25,6 @@ import java.util.List;
 import org.apache.causeway.commons.internal.collections._Lists;
 import org.apache.causeway.commons.io.TextUtils;
 
-
-
 class ExampleReferenceRewriter {
 
     static void processAdocExampleReferences(final File source) {

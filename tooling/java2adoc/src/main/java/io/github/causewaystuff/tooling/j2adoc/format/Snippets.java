@@ -34,7 +34,6 @@ import io.github.causewaystuff.tooling.javamodel.ast.FieldDeclarations;
 import io.github.causewaystuff.tooling.javamodel.ast.Javadocs;
 import io.github.causewaystuff.tooling.javamodel.ast.MethodDeclarations;
 
-
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -123,6 +122,5 @@ public class Snippets {
                 ? "  %s     // <.>\n"
                 : "  %s\n";
     }
-
 
 }

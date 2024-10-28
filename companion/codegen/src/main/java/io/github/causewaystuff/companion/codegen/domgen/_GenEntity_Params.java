@@ -26,7 +26,6 @@ import javax.lang.model.element.Modifier;
 import org.apache.causeway.applib.annotation.Optionality;
 import org.apache.causeway.applib.annotation.PrecedingParamsPolicy;
 
-
 import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.companion.codegen.model.Schema;

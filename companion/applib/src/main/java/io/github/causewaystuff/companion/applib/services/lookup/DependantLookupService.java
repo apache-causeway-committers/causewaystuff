@@ -41,7 +41,6 @@ public interface DependantLookupService {
             Function<M, L> dependantAssociationMixinGetter,
             L localEntity);
 
-
     Can<?> findAllDependants(Object entity);
 
     default String findAllDependantsAsMultilineString(final Object entity) {

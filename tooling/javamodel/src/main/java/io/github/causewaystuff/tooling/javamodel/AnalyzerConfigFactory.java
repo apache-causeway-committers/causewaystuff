@@ -85,8 +85,6 @@ public class AnalyzerConfigFactory {
                     path(packages, canonicalPath("target/test-classes/")));
         }
 
-
     }
-
 
 }

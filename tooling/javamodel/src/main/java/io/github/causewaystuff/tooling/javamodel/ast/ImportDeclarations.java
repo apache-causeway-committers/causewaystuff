@@ -25,8 +25,6 @@ import com.github.javaparser.ast.ImportDeclaration;
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.internal.base._Strings;
 
-
-
 public final class ImportDeclarations {
 
     /**
@@ -87,6 +85,5 @@ public final class ImportDeclarations {
     private static Can<String> splitIntoParts(final ImportDeclaration importDeclaration) {
         return Can.ofStream(_Strings.splitThenStream(importDeclaration.getNameAsString(), "."));
     }
-
 
 }

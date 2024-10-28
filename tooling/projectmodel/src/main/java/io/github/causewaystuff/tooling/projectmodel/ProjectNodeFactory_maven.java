@@ -167,7 +167,4 @@ class ProjectNodeFactory_maven {
         .collect(Collectors.toList());
     }
 
-
-
-
 }

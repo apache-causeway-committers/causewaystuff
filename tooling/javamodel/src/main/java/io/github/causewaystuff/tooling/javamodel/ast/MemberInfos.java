@@ -46,5 +46,4 @@ public final class MemberInfos {
         return String.format("%s(...)", memberInfo.getName());
     }
 
-
 }

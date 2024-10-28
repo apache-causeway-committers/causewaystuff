@@ -26,7 +26,6 @@ import org.apache.causeway.commons.internal.collections._Lists;
 
 import lombok.ToString;
 
-
 class ExampleReferenceFinder {
     
     @ToString(doNotUseGetters = true)

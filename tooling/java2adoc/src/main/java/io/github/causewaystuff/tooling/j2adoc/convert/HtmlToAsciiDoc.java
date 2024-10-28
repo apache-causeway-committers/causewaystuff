@@ -36,7 +36,6 @@ import org.apache.causeway.valuetypes.asciidoc.builder.AsciiDocFactory;
 
 import lombok.SneakyThrows;
 
-
 final class HtmlToAsciiDoc {
 
     @SneakyThrows
@@ -95,7 +94,6 @@ final class HtmlToAsciiDoc {
                 }
             }
 
-
             @Override
             public void tail(Node node, int depth) {
 
@@ -126,7 +124,6 @@ final class HtmlToAsciiDoc {
 
             }
 
-
         }, body);
 
         return adoc;
@@ -149,7 +146,6 @@ final class HtmlToAsciiDoc {
 
         private final Stack<StructuralNode> nodeStack = new Stack<>();
         private final Stack<org.asciidoctor.ast.List> listStack = new Stack<>();
-
 
         // first element on the stack is the document, that is the the root of the adoc abstract syntax tree
         BlockHelper(final Document adoc){

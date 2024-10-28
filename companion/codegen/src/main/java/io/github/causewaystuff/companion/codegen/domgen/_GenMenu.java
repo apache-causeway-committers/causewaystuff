@@ -33,7 +33,6 @@ import io.github.causewaystuff.tooling.javapoet.TypeSpec;
 
 import org.apache.causeway.applib.services.factory.FactoryService;
 
-
 import lombok.experimental.UtilityClass;
 
 @UtilityClass

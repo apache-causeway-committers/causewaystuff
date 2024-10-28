@@ -27,7 +27,6 @@ import org.apache.causeway.commons.io.DataSource;
 import org.apache.causeway.commons.io.FileUtils;
 import org.apache.causeway.commons.io.TextUtils;
 
-
 import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.companion.codegen.domgen.LicenseHeader;

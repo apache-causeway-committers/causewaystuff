@@ -25,8 +25,6 @@ import java.util.Optional;
 
 import org.apache.causeway.applib.services.metamodel.objgraph.ObjectGraph;
 
-
-
 record _ObjectGraphFactory(Schema.Domain schema) implements ObjectGraph.Factory {
 
     @Override

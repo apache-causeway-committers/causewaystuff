@@ -22,7 +22,6 @@ import com.github.javaparser.ast.body.CallableDeclaration;
 
 import lombok.NonNull;
 
-
 //TODO effective public might require more context
 public final class CallableDeclarations {
 

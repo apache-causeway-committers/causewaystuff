@@ -25,7 +25,6 @@ import io.github.causewaystuff.companion.codegen.model.Schema.Entity;
 import io.github.causewaystuff.tooling.javapoet.ClassName;
 import io.github.causewaystuff.tooling.javapoet.TypeSpec;
 
-
 import lombok.experimental.UtilityClass;
 
 @UtilityClass

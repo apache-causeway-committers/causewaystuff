@@ -34,12 +34,9 @@ import org.junit.jupiter.api.Test;
 import org.apache.causeway.commons.internal.base._Text;
 import org.apache.causeway.commons.io.TextUtils;
 
-
-
 import io.github.causewaystuff.tooling.c4.C4;
 
 class C4Test {
-
 
     @BeforeEach
     void setUp() throws Exception {

@@ -24,8 +24,6 @@ import java.util.stream.Collectors;
 
 import org.apache.causeway.commons.io.TextUtils;
 
-
-
 public final class AsciiDocIncludeTagFilter {
 
     public static String read(final File source) {

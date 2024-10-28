@@ -29,7 +29,6 @@ import org.apache.causeway.commons.internal.base._NullSafe;
 import org.apache.causeway.commons.internal.base._Strings;
 import org.apache.causeway.commons.io.TextUtils;
 
-
 import lombok.experimental.UtilityClass;
 
 @UtilityClass

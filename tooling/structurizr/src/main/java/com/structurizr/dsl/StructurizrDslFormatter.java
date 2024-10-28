@@ -154,7 +154,6 @@ public final class StructurizrDslFormatter extends StructurizrDslTokens {
             });
         }
 
-
         end();
 
         boolean hasViews = !workspace.getViews().isEmpty();

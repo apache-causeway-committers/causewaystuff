@@ -59,5 +59,4 @@ public interface J2AdocConverter {
         return J2AdocConverterDefault.of(context);
     }
 
-
 }

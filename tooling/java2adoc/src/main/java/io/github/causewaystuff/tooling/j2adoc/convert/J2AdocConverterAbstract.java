@@ -39,7 +39,6 @@ import org.apache.causeway.commons.collections.Can;
 
 import lombok.NonNull;
 
-
 import io.github.causewaystuff.tooling.j2adoc.J2AdocContext;
 import io.github.causewaystuff.tooling.j2adoc.J2AdocUnit;
 
@@ -101,7 +100,6 @@ public abstract class J2AdocConverterAbstract implements J2AdocConverter {
 
         return sb.toString();
     }
-
 
     protected String parameterDeclaration(
             final @NonNull Parameter p,

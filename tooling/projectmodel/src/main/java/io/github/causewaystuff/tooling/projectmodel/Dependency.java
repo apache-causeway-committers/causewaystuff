@@ -42,17 +42,14 @@ public class Dependency implements Comparable<Dependency> {
      */
     private final String shortName;
 
-
     // -- COMPARATOR
 
     private final static Comparator<Dependency> comparator = Comparator
             .comparing(Dependency::getArtifactCoordinates);
 
-
     @Override
     public int compareTo(Dependency o) {
         return comparator.compare(this, o);
     }
-
 
 }

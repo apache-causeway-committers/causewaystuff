@@ -24,8 +24,6 @@ import java.util.concurrent.Callable;
 import org.apache.causeway.commons.internal.context._Context;
 import io.github.causewaystuff.tooling.projectmodel.ProjectNodeFactory;
 
-
-
 import io.github.causewaystuff.tooling.cli.projdoc.ProjectDocModel;
 
 abstract class CliCommandAbstract implements Callable<Integer> {

@@ -30,7 +30,6 @@ import org.apache.causeway.applib.services.repository.RepositoryService;
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.internal.base._Strings;
 
-
 import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.companion.applib.services.iconfa.IconFaService;

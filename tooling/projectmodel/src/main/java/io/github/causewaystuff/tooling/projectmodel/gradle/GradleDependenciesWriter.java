@@ -62,13 +62,10 @@ public class GradleDependenciesWriter extends WriterAbstract {
                     shortNameWithPadding,
                     dependency.getArtifactCoordinates().toStringWithGroupAndIdAndVersion());
 
-
         });
 
         writeWithFormat(writer, "    ]\n");
         writeWithFormat(writer, "}\n");
     }
-
-
 
 }

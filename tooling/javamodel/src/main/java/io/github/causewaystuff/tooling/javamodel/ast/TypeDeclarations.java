@@ -25,7 +25,6 @@ import org.apache.causeway.commons.collections.Can;
 
 import lombok.NonNull;
 
-
 public final class TypeDeclarations {
 
     /**

@@ -73,5 +73,4 @@ public class GradleSettingsFactory {
         return _Strings.prefix(relativePath.replace('\\', '/'), "/");
     }
 
-
 }

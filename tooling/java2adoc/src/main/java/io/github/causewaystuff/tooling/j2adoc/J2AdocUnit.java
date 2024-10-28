@@ -98,7 +98,6 @@ public final class J2AdocUnit {
 
             cu.getPackageDeclaration();
 
-
             return Stream.of(cu)
             .flatMap(CompilationUnits::streamTypeDeclarations)
             .filter(AnyTypeDeclaration::hasIndexDirective)

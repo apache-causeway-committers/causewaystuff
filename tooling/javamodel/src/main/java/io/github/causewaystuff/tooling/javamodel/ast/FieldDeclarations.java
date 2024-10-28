@@ -35,7 +35,6 @@ import org.apache.causeway.commons.collections.Can;
 
 import lombok.NonNull;
 
-
 //TODO effective public might require more context
 public final class FieldDeclarations {
 

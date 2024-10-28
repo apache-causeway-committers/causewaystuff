@@ -122,7 +122,6 @@ public class J2AdocContext {
 
         var partialNameNoWhiteSpaces = partialName.split("\\s")[0];
 
-
         if(partialNameNoWhiteSpaces.contains("#")) {
             // skip member reference lookup
             //XXX reserved for future extensions ...
@@ -245,7 +244,6 @@ public class J2AdocContext {
         return Optional.ofNullable(unitIndex.get(key));
     }
 
-
     public String xref(final @NonNull J2AdocUnit unit) {
 
         var xrefModule = unit.getNamespace()
@@ -276,6 +274,5 @@ public class J2AdocContext {
             units.forEach(unit->log.warn("\t{}", unit.toString()));
         }
     }
-
 
 }

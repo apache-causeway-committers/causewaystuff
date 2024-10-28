@@ -33,7 +33,6 @@ import org.apache.causeway.valuetypes.asciidoc.builder.include.IncludeStatements
 
 import lombok.NonNull;
 
-
 class IncludeStatementFixerTest {
 
     @Test @Disabled("to reinstate after changing to refguide format")

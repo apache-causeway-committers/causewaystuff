@@ -29,7 +29,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-
 import io.github.causewaystuff.tooling.structurizr.Workspace;
 import io.github.causewaystuff.tooling.structurizr.export.plantuml.StructurizrPlantUMLExporter;
 import io.github.causewaystuff.tooling.structurizr.model.Element;
@@ -126,15 +125,10 @@ public class C4 {
         //styles.addElementStyle(Tags.PERSON).background("#08427b");
         styles.addElementStyle(Tags.CONTAINER).background("#438dd5");
 
-
         //        styles.addElementStyle(Tags.SOFTWARE_SYSTEM)
         //        .color("#ffffff")
         //        .background("#1168bd");
         styles.addElementStyle(Tags.PERSON).background("#08427b").color("#ffffff").shape(Shape.Person);
     }
-
-
-
-
 
 }

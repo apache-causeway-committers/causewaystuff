@@ -38,7 +38,6 @@ import org.apache.causeway.valuetypes.asciidoc.builder.AsciiDocWriter;
 
 import lombok.NonNull;
 
-
 import io.github.causewaystuff.tooling.codeassert.config.Language;
 import io.github.causewaystuff.tooling.j2adoc.J2AdocContext;
 import io.github.causewaystuff.tooling.j2adoc.util.AsciiDocIncludeTagFilter;
@@ -154,6 +153,5 @@ class J2AdocTest {
         //.filter(source->source.toString().contains("FactoryService"))
         .forEach(ExampleReferenceRewriter::processAdocExampleReferences);
     }
-
 
 }

@@ -22,7 +22,6 @@ import io.github.causewaystuff.companion.codegen.model.Schema;
 
 import org.apache.causeway.commons.internal.base._Strings;
 
-
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
