@@ -32,6 +32,7 @@ import lombok.Builder;
 
 @Builder(toBuilder = true)
 public record PropertyLayoutSpec(
+        @Nullable String named,
         @Nullable String cssClass,
         @Nullable String fieldSet,
         @Nullable String sequence,
@@ -49,6 +50,7 @@ public record PropertyLayoutSpec(
     public PropertyLayoutSpec overrideWith(final @Nullable PropertyLayoutSpec successor) {
         if(successor == null) return this;
         return this.toBuilder()
+                .named(_TypeUtil.override(named, successor.named))
                 .cssClass(_TypeUtil.override(cssClass, successor.cssClass))
                 .fieldSet(_TypeUtil.override(fieldSet, successor.fieldSet))
                 .sequence(_TypeUtil.override(sequence, successor.sequence))
@@ -64,6 +66,7 @@ public record PropertyLayoutSpec(
 
     static PropertyLayoutSpec fromMap(@SuppressWarnings("rawtypes") final Map map) {
         return builder()
+                .named((String) map.get("named"))
                 .cssClass((String) map.get("cssClass"))
                 .fieldSet((String) map.get("fieldSet"))
                 .sequence((String) map.get("sequence"))
@@ -80,6 +83,7 @@ public record PropertyLayoutSpec(
      */
     Stream<Attribute> streamAttributes() {
         return Stream.of(
+                new Attribute("named", named),
                 new Attribute("cssClass", cssClass),
                 new Attribute("fieldSet", fieldSet),
                 new Attribute("sequence", sequence),

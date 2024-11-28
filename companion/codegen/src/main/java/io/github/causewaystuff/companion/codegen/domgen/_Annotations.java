@@ -63,7 +63,6 @@ import org.apache.causeway.commons.internal.base._Strings;
 import org.apache.causeway.commons.internal.collections._Multimaps.ListMultimap;
 
 import lombok.Builder;
-
 import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.companion.codegen.model.PropertyLayoutSpec;
@@ -288,6 +287,8 @@ class _Annotations {
 
     AnnotationSpec propertyLayout(final PropertyLayoutSpec attr) {
         var builder = AnnotationSpec.builder(PropertyLayout.class);
+        _Strings.nonEmpty(attr.named())
+            .ifPresent(named->builder.addMember("named", "$1S", named));
         _Strings.nonEmpty(attr.cssClass())
             .ifPresent(cssClass->builder.addMember("cssClass", "$1S", cssClass));
         _Strings.nonEmpty(attr.fieldSet())
