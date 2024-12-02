@@ -58,7 +58,7 @@
         <javaparser.version>3.26.2</javaparser.version>
         <javapoet.version>1.13.0</javapoet.version>
         <jsonschema-generator.version>4.37.0</jsonschema-generator.version>
-        <jsoup.version>1.18.2</jsoup.version>
+        <jsoup.version>1.18.3</jsoup.version>
         <maven-model-builder.version>3.9.9</maven-model-builder.version>
         <picocli.version>4.7.6</picocli.version>
         <structurizr-dsl.version>3.1.0</structurizr-dsl.version>
