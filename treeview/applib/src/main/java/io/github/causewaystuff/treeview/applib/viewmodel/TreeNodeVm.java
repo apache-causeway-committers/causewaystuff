@@ -76,25 +76,16 @@ public abstract class TreeNodeVm<T, V extends TreeNodeVm<T, V>> implements ViewM
     }
 
     private @NonNull TreeAdapter<V> getTreeAdapterV() {
-        return new TreeAdapterWithConverter<T, V>() {
+        return new TreeAdapterWithConverter<T, V>(getTreeAdapter(), new TreeConverter<T, V>() {
             @Override
-            protected TreeAdapter<T> underlyingAdapter() {
-                return getTreeAdapter();
+            public V fromUnderlyingNode(final T value, final V parentNode, final int siblingIndex) {
+                return getViewModel(value, parentNode, siblingIndex);
             }
             @Override
-            protected TreeConverter<T, V> converter() {
-                return new TreeConverter<T, V>() {
-                    @Override
-                    public V fromUnderlyingNode(final T value, final V parentNode, final int siblingIndex) {
-                        return getViewModel(value, parentNode, siblingIndex);
-                    }
-                    @Override
-                    public T toUnderlyingNode(final V value) {
-                        return value.activeNode();
-                    }
-                };
+            public T toUnderlyingNode(final V value) {
+                return value.activeNode();
             }
-        };
+        });
     }
 
     protected abstract V getViewModel(T node, V parentNode, int siblingIndex);
