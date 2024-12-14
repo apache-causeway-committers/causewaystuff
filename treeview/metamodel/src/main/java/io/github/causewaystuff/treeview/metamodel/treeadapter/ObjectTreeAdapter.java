@@ -26,9 +26,8 @@ import jakarta.inject.Inject;
 import org.apache.causeway.applib.graph.tree.TreeAdapter;
 import org.apache.causeway.commons.internal.base._Casts;
 import org.apache.causeway.core.metamodel.context.MetaModelContext;
+import org.apache.causeway.core.metamodel.facets.object.navchild.NavigableSubtreeFacet;
 import org.apache.causeway.core.metamodel.specloader.SpecificationLoader;
-
-import io.github.causewaystuff.treeview.metamodel.facets.TreeNodeFacet;
 
 public class ObjectTreeAdapter 
 implements 
@@ -52,11 +51,10 @@ implements
 
     // -- HELPER
 
-    private <T> Optional<TreeNodeFacet<T>> treeNodeFacet(final T node) {
+    private <T> Optional<NavigableSubtreeFacet> treeNodeFacet(final T node) {
         return specLoader().loadSpecification(node.getClass())
-                .lookupFacet(TreeNodeFacet.class)
-                .filter(treeNodeFacet->treeNodeFacet.isHandlingNodeTypeWarnIfNot(node)) 
-                .map(treeNodeFacet->_Casts.<TreeNodeFacet<T>>uncheckedCast(treeNodeFacet));
+                .lookupFacet(NavigableSubtreeFacet.class)
+                .map(treeNodeFacet->_Casts.<NavigableSubtreeFacet>uncheckedCast(treeNodeFacet));
     }
     
     // fallback, if injection did not work

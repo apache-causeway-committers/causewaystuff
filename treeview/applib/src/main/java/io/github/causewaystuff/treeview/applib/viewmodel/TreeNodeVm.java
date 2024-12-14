@@ -24,7 +24,6 @@ import org.apache.causeway.applib.annotation.Programmatic;
 import org.apache.causeway.applib.annotation.Property;
 import org.apache.causeway.applib.annotation.PropertyLayout;
 import org.apache.causeway.applib.graph.tree.TreeAdapter;
-import org.apache.causeway.applib.graph.tree.TreeAdapterWithConverter;
 import org.apache.causeway.applib.graph.tree.TreeConverter;
 import org.apache.causeway.applib.graph.tree.TreeNode;
 import org.apache.causeway.applib.graph.tree.TreePath;
@@ -76,7 +75,7 @@ public abstract class TreeNodeVm<T, V extends TreeNodeVm<T, V>> implements ViewM
     }
 
     private @NonNull TreeAdapter<V> getTreeAdapterV() {
-        return new TreeAdapterWithConverter<T, V>(getTreeAdapter(), new TreeConverter<T, V>() {
+        return getTreeAdapter().convert(new TreeConverter<T, V>() {
             @Override
             public V fromUnderlyingNode(final T value, final V parentNode, final int siblingIndex) {
                 return getViewModel(value, parentNode, siblingIndex);
