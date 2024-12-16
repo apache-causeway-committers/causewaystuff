@@ -38,7 +38,6 @@
 
     <modules>
         <module>applib</module>
-        <module>metamodel</module>
     </modules>
 
 </project>
