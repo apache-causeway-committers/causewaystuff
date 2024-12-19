@@ -31,10 +31,6 @@ _Causeway Stuff_ modules and sub-modules.
 *** javapoet¹ 
 *** structurizr¹ 
 
-** TreeView
-*** applib
-*** metamodel
-
 @endwbs
 ----
 
