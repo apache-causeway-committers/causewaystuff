@@ -520,7 +520,6 @@
         <module>blobstore</module>
         <module>companion</module>
         <module>tooling</module>
-        <module>treeview</module>
     </modules>
 
     <!-- META DATA -->
