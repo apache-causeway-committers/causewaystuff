@@ -20,10 +20,7 @@ package io.github.causewaystuff.tooling.javamodel.ast;
 
 import java.util.stream.Collectors;
 
-import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
-import com.github.javaparser.ast.body.EnumDeclaration;
-import com.github.javaparser.ast.body.FieldDeclaration;
-import com.github.javaparser.ast.body.VariableDeclarator;
+import com.github.javaparser.ast.body.*;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.type.TypeParameter;
 import com.github.javaparser.printer.configuration.DefaultConfigurationOption;
@@ -85,6 +82,19 @@ public final class FieldDeclarations {
             final @NonNull EnumDeclaration context) {
 
         if(!EnumDeclarations.isEffectivePublic(context)) {
+            return false;
+        }
+
+        return !fd.isPrivate()
+                && !fd.isProtected()
+                ;
+    }
+
+    public static boolean isEffectivePublic(
+            final @NonNull FieldDeclaration fd,
+            final @NonNull RecordDeclaration context) {
+
+        if(!RecordDeclarations.isEffectivePublic(context)) {
             return false;
         }
 

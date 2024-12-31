@@ -25,15 +25,7 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.PackageDeclaration;
-import com.github.javaparser.ast.body.AnnotationDeclaration;
-import com.github.javaparser.ast.body.AnnotationMemberDeclaration;
-import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
-import com.github.javaparser.ast.body.ConstructorDeclaration;
-import com.github.javaparser.ast.body.EnumConstantDeclaration;
-import com.github.javaparser.ast.body.EnumDeclaration;
-import com.github.javaparser.ast.body.FieldDeclaration;
-import com.github.javaparser.ast.body.MethodDeclaration;
-import com.github.javaparser.ast.body.TypeDeclaration;
+import com.github.javaparser.ast.body.*;
 import com.github.javaparser.ast.nodeTypes.NodeWithSimpleName;
 import com.github.javaparser.ast.type.TypeParameter;
 import com.github.javaparser.javadoc.Javadoc;
@@ -55,12 +47,14 @@ public final class AnyTypeDeclaration {
     public static enum Kind {
         ANNOTATION("@interface"),
         CLASS("class"),
+        RECORD("record"),
         ENUM("enum"),
         INTERFACE("interface")
         ;
         @Getter private final String javaKeyword;
         public boolean isAnnotation() { return this == ANNOTATION; }
         public boolean isClass() { return this == CLASS; }
+        public boolean isRecord() { return this == RECORD; }
         public boolean isEnum() { return this == ENUM; }
         public boolean isInterface() { return this == INTERFACE; }
     }
@@ -70,6 +64,7 @@ public final class AnyTypeDeclaration {
     private final TypeDeclaration<?> td;
     private final AnnotationDeclaration annotationDeclaration;
     private final ClassOrInterfaceDeclaration classOrInterfaceDeclaration;
+    private final RecordDeclaration recordDeclaration;
     private final EnumDeclaration enumDeclaration;
 
     private final Can<AnnotationMemberDeclaration> annotationMemberDeclarations;
@@ -89,6 +84,7 @@ public final class AnyTypeDeclaration {
                 Kind.ANNOTATION,
                 annotationDeclaration,
                 annotationDeclaration,
+                null,
                 null,
                 null,
                 //members
@@ -113,6 +109,7 @@ public final class AnyTypeDeclaration {
                         null,
                         classOrInterfaceDeclaration,
                         null,
+                        null,
                         //members
                         Can.empty(),
                         Can.empty(),
@@ -126,12 +123,36 @@ public final class AnyTypeDeclaration {
     }
 
     public static AnyTypeDeclaration of(
+            final @NonNull RecordDeclaration recordDeclaration,
+            final @NonNull CompilationUnit cu) {
+        return new AnyTypeDeclaration(
+                cu,
+                Kind.RECORD,
+                        recordDeclaration,
+                        null,
+                        null,
+                        recordDeclaration,
+                        null,
+                        //members
+                        Can.empty(),
+                        Can.empty(),
+                        RecordDeclarations.streamPublicFieldDeclarations(recordDeclaration)
+                        .collect(Can.toCan()),
+                        RecordDeclarations.streamPublicConstructorDeclarations(recordDeclaration)
+                        .collect(Can.toCan()),
+                        RecordDeclarations.streamPublicMethodDeclarations(recordDeclaration)
+                        .collect(Can.toCan())
+                );
+    }
+
+    public static AnyTypeDeclaration of(
             final @NonNull EnumDeclaration enumDeclaration,
             final @NonNull CompilationUnit cu) {
         return new AnyTypeDeclaration(
                 cu,
                 Kind.ENUM,
                 enumDeclaration,
+                null,
                 null,
                 null,
                 enumDeclaration,
@@ -160,6 +181,9 @@ public final class AnyTypeDeclaration {
         }
         if(td instanceof AnnotationDeclaration) {
             return of((AnnotationDeclaration)td, cu);
+        }
+        if(td instanceof RecordDeclaration) {
+            return of((RecordDeclaration)td, cu);
         }
         throw _Exceptions.unsupportedOperation("unsupported TypeDeclaration %s", td.getClass());
     }

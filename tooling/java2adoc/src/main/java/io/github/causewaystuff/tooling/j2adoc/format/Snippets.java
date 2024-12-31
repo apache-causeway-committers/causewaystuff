@@ -54,6 +54,8 @@ public class Snippets {
                 return "%s";
             case ENUM:
                 return "%s _(enum)_";
+            case RECORD:
+                return "%s _(record)_";
             default:
                 throw new IllegalArgumentException(String.format(
                         "unknown kind: %s", unit.getTypeDeclaration().getKind()));

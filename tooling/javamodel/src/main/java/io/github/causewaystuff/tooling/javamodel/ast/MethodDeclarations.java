@@ -21,6 +21,7 @@ package io.github.causewaystuff.tooling.javamodel.ast;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.EnumDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.body.RecordDeclaration;
 import com.github.javaparser.ast.type.TypeParameter;
 
 import org.apache.causeway.commons.collections.Can;
@@ -70,6 +71,20 @@ public final class MethodDeclarations {
             final @NonNull EnumDeclaration context) {
 
         if(!EnumDeclarations.isEffectivePublic(context)) {
+            return false;
+        }
+
+        return !md.isPrivate()
+                && !md.isAbstract()
+                && !md.isProtected()
+                ;
+    }
+
+    public static boolean isEffectivePublic(
+            final @NonNull MethodDeclaration md,
+            final @NonNull RecordDeclaration context) {
+
+        if(!RecordDeclarations.isEffectivePublic(context)) {
             return false;
         }
 

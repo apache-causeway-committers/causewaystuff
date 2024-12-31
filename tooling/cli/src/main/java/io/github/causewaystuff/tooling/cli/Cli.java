@@ -19,6 +19,7 @@
 package io.github.causewaystuff.tooling.cli;
 
 import java.io.File;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 
 import org.apache.causeway.commons.internal.base._Lazy;
@@ -28,6 +29,10 @@ import io.github.causewaystuff.tooling.cli.projdoc.ProjectDocModel;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
+
+import com.github.javaparser.JavaParser;
+import com.github.javaparser.ParserConfiguration;
+import com.github.javaparser.StaticJavaParser;
 
 @Command(
         name = "cli",
@@ -135,6 +140,12 @@ class Cli implements Callable<Integer> {
     public static void main(String... args) {
         var cli = new Cli();
         _Context.putSingleton(Cli.class, cli);
+
+        StaticJavaParser.setConfiguration(
+                new ParserConfiguration()
+                        .setLanguageLevel(ParserConfiguration.LanguageLevel.JAVA_17)
+        );
+
         int exitCode = new CommandLine(cli).execute(args);
         System.exit(exitCode);
     }
