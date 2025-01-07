@@ -19,7 +19,6 @@
 package io.github.causewaystuff.tooling.cli;
 
 import java.io.File;
-import java.util.Optional;
 import java.util.concurrent.Callable;
 
 import org.apache.causeway.commons.internal.base._Lazy;
@@ -30,7 +29,6 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
-import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParserConfiguration;
 import com.github.javaparser.StaticJavaParser;
 
