@@ -46,6 +46,10 @@ class _TypeMapping {
                     ? ClassName.get("java.lang", "Integer")
                     : TypeName.INT;
         }
+        if(typeName.equals("bigint")
+                || typeName.equals("bigint(20)")) {
+            return ClassName.get("java.lang", "Long");
+        }
         if(typeName.startsWith("float")) {
             return nullable
                     ? ClassName.get("java.lang", "Double")

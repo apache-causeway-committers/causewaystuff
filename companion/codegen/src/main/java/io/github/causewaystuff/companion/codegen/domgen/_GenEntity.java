@@ -65,9 +65,19 @@ class _GenEntity {
                             .describedAs(entityModel.description().describedAs())
                             .cssClassFa(entityModel.icon())
                             .build()
-                        ))
-                .addAnnotation(_Annotations.persistenceCapable(entityModel.table()))
-                .addAnnotation(_Annotations.datastoreIdentity())
+                        ));
+
+        switch (config.persistence()) {
+            case JPA -> typeModelBuilder
+                .addAnnotation(_Annotations.jpaEntity())
+                .addAnnotation(_Annotations.jpaTable(attr->attr.tableName(entityModel.table())));
+            case JDO -> typeModelBuilder
+                .addAnnotation(_Annotations.jdoPersistenceCapable(entityModel.table()))
+                .addAnnotation(_Annotations.jdoDatastoreIdentity());
+            case NONE -> {}
+        }
+
+        typeModelBuilder
                 .addModifiers(Modifier.PUBLIC)
                 .addSuperinterface(ParameterizedTypeName.get(
                         ClassName.get(io.github.causewaystuff.companion.applib.services.lookup.Cloneable.class),
@@ -77,8 +87,8 @@ class _GenEntity {
                 .addMethod(asTitleMethod(entityModel, Modifier.PUBLIC))
                 .addMethod(asToStringMethod(entityModel))
                 .addMethod(asCopyMethod(entityModel))
-                .addMethod(_Methods.navigableParent(entityModel.name()))
-                .addFields(asFields(entityModel.fields(), Modifier.PRIVATE))
+                .addMethod(_Methods.navigableParent(config.persistence(), entityModel.name()))
+                .addFields(asFields(config.persistence(), entityModel.fields(), Modifier.PRIVATE))
                 ;
 
         if(entityModel.iconService()) {
@@ -116,9 +126,14 @@ class _GenEntity {
         if(entityModel.hasSecondaryKey()) {
 
             if(!entityModel.suppressUniqueConstraint()) {
-                typeModelBuilder.addAnnotation(_Annotations.unique(
-                        String.format("SEC_KEY_UNQ_%s", entityModel.name()),
-                        Can.ofCollection(entityModel.secondaryKeyFields()).map(EntityField::name)));
+
+                switch (config.persistence()) {
+                    case JDO -> typeModelBuilder.addAnnotation(_Annotations.jdoUnique(
+                            String.format("SEC_KEY_UNQ_%s", entityModel.name()),
+                            Can.ofCollection(entityModel.secondaryKeyFields()).map(EntityField::name)));
+                    case JPA, NONE -> {}
+                }
+
             }
 
             typeModelBuilder.addSuperinterface(ParameterizedTypeName.get(
@@ -182,8 +197,10 @@ class _GenEntity {
     }
 
     private Iterable<FieldSpec> asFields(
+            final Persistence persistence,
             final List<Schema.EntityField> fields,
             final Modifier ... modifiers) {
+
         return fields.stream()
                 .map(field->{
                     var fieldBuilder = FieldSpec.builder(
@@ -213,14 +230,27 @@ class _GenEntity {
                                             ? Where.ALL_TABLES
                                             : null),
                             field.propertyLayout())
-                    )
-                    .addAnnotation(_Annotations.column(col->col
-                            .columnName(field.column())
-                            .jdbcType(_TypeMapping.dbTypeToJdbcColumnExplicitType(field.columnType()))
-                            .allowsNull(!field.required())
-                            .maxLength(field.maxLength())))
-                    .addAnnotation(_Annotations.getter())
-                    .addAnnotation(_Annotations.setter());
+                    );
+
+                    switch (persistence) {
+                        case JPA -> fieldBuilder.addAnnotation(_Annotations.jpaColumn(col->col
+                                .columnName(field.column())
+                                .columnDefinition(_TypeMapping.dbTypeToJdbcColumnExplicitType(field.columnType()))
+                                .nullable(!field.required())
+                                .length(field.maxLength())));
+                        case JDO -> fieldBuilder.addAnnotation(_Annotations.jdoColumn(col->col
+                                .columnName(field.column())
+                                .jdbcType(_TypeMapping.dbTypeToJdbcColumnExplicitType(field.columnType()))
+                                .allowsNull(!field.required())
+                                .maxLength(field.maxLength())));
+                        case NONE -> {}
+                    }
+
+
+
+                    fieldBuilder
+                        .addAnnotation(_Annotations.getter())
+                        .addAnnotation(_Annotations.setter());
 
                     if(field.isEnum()) {
                         fieldBuilder

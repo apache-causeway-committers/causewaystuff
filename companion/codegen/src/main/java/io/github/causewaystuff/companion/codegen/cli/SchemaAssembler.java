@@ -41,7 +41,6 @@ record SchemaAssembler(LicenseHeader licenseHeader, Schema.Domain domain) {
     void writeJavaFiles(
             final UnaryOperator<DomainGenerator.Config.ConfigBuilder> customizer) {
         var config = customizer.apply(DomainGenerator.Config.builder()
-                //.datastore("store2") // DN Data Federation
                 .domain(domain))
                 .licenseHeader(licenseHeader)
                 .build();

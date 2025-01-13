@@ -88,8 +88,10 @@ class _Methods {
             .build();
     }
 
-    MethodSpec navigableParent(final String entityName) {
-        return MethodSpec.methodBuilder("getNavigableParent")
+    MethodSpec navigableParent(
+            final Persistence persistence,
+            final String entityName) {
+        var builder = MethodSpec.methodBuilder("getNavigableParent")
             .addModifiers(Modifier.PUBLIC)
             .addAnnotation(_Annotations.property(attr->attr
                     .snapshot(Snapshot.EXCLUDED)))
@@ -97,12 +99,18 @@ class _Methods {
                     .hiddenWhere(Where.EVERYWHERE)
                     .navigable(Navigable.PARENT), null /*no override*/)
             )
-            .addAnnotation(_Annotations.notPersistent())
             .returns(ClassName.get("", entityName + ".Manager"))
             .addCode("""
                     return new $1L.Manager(searchService, "");""",
-                    entityName)
-            .build();
+                    entityName);
+
+            switch (persistence) {
+                case JPA -> builder.addAnnotation(_Annotations.jpaTransient());
+                case JDO -> builder.addAnnotation(_Annotations.jdoNotPersistent());
+                case NONE -> {}
+            }
+
+            return builder.build();
     }
 
     // public static DataSource schemaSource() {

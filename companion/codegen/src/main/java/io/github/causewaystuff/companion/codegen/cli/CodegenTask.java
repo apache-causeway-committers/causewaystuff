@@ -23,6 +23,7 @@ import java.util.List;
 
 import io.github.causewaystuff.commons.base.types.ResourceFolder;
 import io.github.causewaystuff.companion.codegen.domgen.LicenseHeader;
+import io.github.causewaystuff.companion.codegen.domgen.Persistence;
 import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.tooling.projectmodel.ProjectNode;
 
@@ -36,6 +37,7 @@ record CodegenTask(
             String include,
             String logicalNamespacePrefix,
             String packageNamePrefix,
+            String entitiesGenerator,
             String entitiesModulePackageName,
             String entitiesModuleClassSimpleName
             ) {
@@ -59,6 +61,7 @@ record CodegenTask(
                             .logicalNamespacePrefix(codegenResource.logicalNamespacePrefix())
                             .packageNamePrefix(codegenResource.packageNamePrefix())
                             .onPurgeKeep(FileKeepStrategy.nonGenerated())
+                            .persistence(Persistence.parse(codegenResource.entitiesGenerator))
                             .entitiesModulePackageName(codegenResource.entitiesModulePackageName())
                             .entitiesModuleClassSimpleName(codegenResource.entitiesModuleClassSimpleName()));
                 });

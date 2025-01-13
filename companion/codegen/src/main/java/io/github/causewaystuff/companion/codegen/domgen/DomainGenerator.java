@@ -56,6 +56,8 @@ public record DomainGenerator(@NonNull DomainGenerator.Config config) {
         @Builder.Default
         private final @NonNull String packageNamePrefix = "";
         @Builder.Default
+        private final @NonNull Persistence persistence = Persistence.NONE;
+        @Builder.Default
         private final @NonNull LicenseHeader licenseHeader = LicenseHeader.NONE;
         private final @NonNull Schema.Domain domain;
         @Builder.Default
