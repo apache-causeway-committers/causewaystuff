@@ -39,6 +39,7 @@
 
     <modules>
         <module>applib</module>
+        <module>schema</module>
         <module>codegen</module>
     </modules>
 

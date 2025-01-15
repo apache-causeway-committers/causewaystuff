@@ -16,34 +16,38 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package io.github.causewaystuff.companion.codegen.domgen;
+package io.github.causewaystuff.companion.codegen.appgen;
 
-import org.junit.jupiter.api.Test;
+import java.io.File;
+import java.util.List;
 
+import io.github.causewaystuff.companion.schema.CoApplication;
 import io.github.causewaystuff.companion.schema.LicenseHeader;
+import io.github.causewaystuff.companion.schema.Persistence;
 
-class OrmEntityGeneratorTest {
-
-    @Test
-    void entityGen() {
-        var domain = OrmSchemaExamples.examples().getElseFail(0);
-
-        var config = DomainGenerator.Config.builder()
-                .logicalNamespacePrefix("test.logical")
-                .packageNamePrefix("test.actual")
-                .licenseHeader(LicenseHeader.ASF_V2)
-                .domain(domain)
-                .entitiesModulePackageName("mod")
-                .entitiesModuleClassSimpleName("MyEntitiesModule")
-                .build();
-
-        var entityGen = new DomainGenerator(config);
-
-        entityGen.createDomainModel().streamJavaModels()
-            .forEach(sample->{
-                System.err.println("---------------------------------------");
-                System.err.printf("%s%n", sample.buildJavaFile().toString());
-            });
+public record CoAppGenerator(
+    CoGenerator.Context context,
+    List<CoGenerator> generators) {
+    
+    public CoAppGenerator(
+        CoApplication appModel,
+        File projectRoot,
+        Persistence persistence,
+        LicenseHeader license) {
+        this(
+            new CoGenerator.Context(appModel, projectRoot, persistence, license), 
+            List.of(
+                new MakeDirGen(),
+                new MavenPomGen()));
     }
-
+    
+    public void generate() {
+        generators.forEach(gen->{
+            gen.onApplication(context);
+            context.appModel().modules().forEach(mod->{
+                gen.onModule(context, mod);
+            });
+        });
+    }
+    
 }

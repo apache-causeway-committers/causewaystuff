@@ -29,9 +29,9 @@ import org.apache.causeway.commons.io.TextUtils;
 
 import lombok.experimental.UtilityClass;
 
-import io.github.causewaystuff.companion.codegen.domgen.LicenseHeader;
 import io.github.causewaystuff.companion.codegen.model.Schema.Entity;
 import io.github.causewaystuff.companion.codegen.model._Parser.ParserHint;
+import io.github.causewaystuff.companion.schema.LicenseHeader;
 
 @UtilityClass
 class _FileUtils {

@@ -32,9 +32,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import io.github.causewaystuff.commons.base.types.ResourceFolder;
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator;
-import io.github.causewaystuff.companion.codegen.domgen.LicenseHeader;
-import io.github.causewaystuff.companion.codegen.domgen.Persistence;
 import io.github.causewaystuff.companion.codegen.model.Schema;
+import io.github.causewaystuff.companion.schema.LicenseHeader;
+import io.github.causewaystuff.companion.schema.Persistence;
 
 class SchemaAssemblerTest {
 

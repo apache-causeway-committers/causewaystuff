@@ -1,5 +1,5 @@
 /*
-v *  Licensed to the Apache Software Foundation (ASF) under one
+ *  Licensed to the Apache Software Foundation (ASF) under one
  *  or more contributor license agreements.  See the NOTICE file
  *  distributed with this work for additional information
  *  regarding copyright ownership.  The ASF licenses this file
@@ -16,29 +16,11 @@ v *  Licensed to the Apache Software Foundation (ASF) under one
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package io.github.causewaystuff.companion.codegen.domgen;
+module io.github.causewaystuff.companion.schema {
+    exports io.github.causewaystuff.companion.schema;
 
-import org.springframework.util.StringUtils;
-
-import lombok.NonNull;
-
-//@Getter @Accessors(fluent=true)
-//@RequiredArgsConstructor
-public enum Persistence {
-    NONE,
-    JPA,
-    JDO;
-    public boolean isNone() { return this==NONE; }
-    public boolean isJpa() { return this==JPA; }
-    public boolean isJdo() { return this==JDO; }
-    @NonNull
-    public static
-    Persistence parse(final String value) {
-        if(!StringUtils.hasLength(value)) return NONE;
-        return switch (value.toLowerCase()) {
-            case "jpa" -> JPA;
-            case "jdo" -> JDO;
-            default -> NONE;
-        };
-    }
+    requires static lombok;
+    
+    requires org.apache.causeway.commons;
+    
 }

@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package io.github.causewaystuff.companion.codegen.domgen;
+package io.github.causewaystuff.companion.schema;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -46,4 +46,5 @@ public enum LicenseHeader {
 
     private final String text;
 
+    public static int MAX_LINES = 15; 
 }

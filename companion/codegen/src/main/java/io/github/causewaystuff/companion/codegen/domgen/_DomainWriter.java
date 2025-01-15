@@ -29,6 +29,7 @@ import java.nio.file.Path;
 import java.util.stream.Stream;
 
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.JavaFileModel;
+import io.github.causewaystuff.companion.schema.LicenseHeader;
 import io.github.causewaystuff.tooling.javapoet.JavaFile;
 import org.springframework.lang.Nullable;
 

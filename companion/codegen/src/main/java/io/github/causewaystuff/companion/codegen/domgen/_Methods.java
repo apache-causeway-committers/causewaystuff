@@ -31,6 +31,7 @@ import org.apache.causeway.commons.io.DataSource;
 
 import lombok.experimental.UtilityClass;
 
+import io.github.causewaystuff.companion.schema.Persistence;
 import io.github.causewaystuff.tooling.javapoet.ClassName;
 import io.github.causewaystuff.tooling.javapoet.CodeBlock;
 import io.github.causewaystuff.tooling.javapoet.MethodSpec;

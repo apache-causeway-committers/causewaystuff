@@ -24,15 +24,17 @@ module io.github.causewaystuff.companion.codegen {
     requires lombok;
     requires jakarta.inject;
     requires java.compiler;
+    requires transitive org.apache.causeway.applib;
+    requires transitive org.apache.causeway.commons;
     requires transitive io.github.causewaystuff.tooling.javapoet;
     requires transitive io.github.causewaystuff.tooling.structurizr;
     requires transitive io.github.causewaystuff.tooling.projectmodel;
-    requires transitive org.apache.causeway.applib;
-    requires org.apache.causeway.commons;
-    requires io.github.causewaystuff.commons.base;
-    requires io.github.causewaystuff.companion.applib;
+    requires transitive io.github.causewaystuff.commons.base;
+    requires transitive io.github.causewaystuff.companion.applib;
+    requires transitive io.github.causewaystuff.companion.schema;
     requires spring.context;
     requires spring.core;
+    requires maven.model;
 
     opens io.github.causewaystuff.companion.codegen.cli to com.fasterxml.jackson.databind;
 }

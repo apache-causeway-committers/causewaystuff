@@ -28,16 +28,15 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>causewaystuff-companion-codegen</artifactId>
-    <name>Causeway Stuff - Companion (Code Gen)</name>
+    <artifactId>causewaystuff-companion-schema</artifactId>
+    <name>Causeway Stuff - Companion (Schema)</name>
     <description>
-        Code Generation for the Apache Causeway Programming Model
+        Schema for Code Generation of the Apache Causeway Programming Model
     </description>
 
     <properties>
         <maven.compiler.release>21</maven.compiler.release>
-        <jar-plugin.automaticModuleName>
-            io.github.causewaystuff.companion.codegen</jar-plugin.automaticModuleName>
+        <jar-plugin.automaticModuleName>io.github.causewaystuff.companion.schema</jar-plugin.automaticModuleName>
     </properties>
 
     <dependencies>
@@ -48,40 +47,8 @@
         </dependency>
 
         <dependency>
-            <groupId>io.github.causewaystuff</groupId>
-            <artifactId>causewaystuff-tooling-javapoet</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.github.causewaystuff</groupId>
-            <artifactId>causewaystuff-tooling-structurizr</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.github.causewaystuff</groupId>
-            <artifactId>causewaystuff-tooling-projectmodel</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.github.causewaystuff</groupId>
-            <artifactId>causewaystuff-companion-applib</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.github.causewaystuff</groupId>
-            <artifactId>causewaystuff-companion-schema</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.causeway.core</groupId>
-            <artifactId>causeway-applib</artifactId>
-        </dependency>
-
-        <!-- TESTING -->
-
-        <dependency>
-            <!-- required by com.approvaltests:test
-                (version manged by spring boot) -->
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <scope>test</scope>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
 
     </dependencies>

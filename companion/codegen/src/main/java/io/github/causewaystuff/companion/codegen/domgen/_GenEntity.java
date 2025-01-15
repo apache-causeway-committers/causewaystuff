@@ -40,6 +40,7 @@ import io.github.causewaystuff.companion.codegen.domgen._Annotations.DomainObjec
 import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.companion.codegen.model.Schema.Entity;
 import io.github.causewaystuff.companion.codegen.model.Schema.EntityField;
+import io.github.causewaystuff.companion.schema.Persistence;
 import io.github.causewaystuff.tooling.javapoet.ClassName;
 import io.github.causewaystuff.tooling.javapoet.CodeBlock;
 import io.github.causewaystuff.tooling.javapoet.FieldSpec;

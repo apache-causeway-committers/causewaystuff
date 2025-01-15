@@ -37,11 +37,12 @@ import org.apache.causeway.commons.internal.collections._Multimaps;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;
-
 import lombok.experimental.Accessors;
 
 import io.github.causewaystuff.commons.base.types.ResourceFolder;
 import io.github.causewaystuff.companion.codegen.model.Schema;
+import io.github.causewaystuff.companion.schema.LicenseHeader;
+import io.github.causewaystuff.companion.schema.Persistence;
 import io.github.causewaystuff.tooling.javapoet.ClassName;
 import io.github.causewaystuff.tooling.javapoet.JavaFile;
 import io.github.causewaystuff.tooling.javapoet.TypeSpec;

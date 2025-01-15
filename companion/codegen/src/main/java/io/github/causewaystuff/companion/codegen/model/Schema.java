@@ -44,8 +44,8 @@ import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.commons.base.types.internal.ObjectRef;
 import io.github.causewaystuff.commons.base.types.internal.SneakyRef;
-import io.github.causewaystuff.companion.codegen.domgen.LicenseHeader;
 import io.github.causewaystuff.companion.codegen.model._Parser.ParserHint;
+import io.github.causewaystuff.companion.schema.LicenseHeader;
 import io.github.causewaystuff.tooling.javapoet.ClassName;
 import io.github.causewaystuff.tooling.javapoet.TypeName;
 

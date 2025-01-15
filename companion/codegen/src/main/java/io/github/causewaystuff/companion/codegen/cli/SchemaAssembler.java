@@ -24,8 +24,8 @@ import java.util.function.UnaryOperator;
 import org.apache.causeway.commons.io.FileUtils;
 
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator;
-import io.github.causewaystuff.companion.codegen.domgen.LicenseHeader;
 import io.github.causewaystuff.companion.codegen.model.Schema;
+import io.github.causewaystuff.companion.schema.LicenseHeader;
 
 record SchemaAssembler(LicenseHeader licenseHeader, Schema.Domain domain) {
     static SchemaAssembler assemble(final File yamlFolder) {
