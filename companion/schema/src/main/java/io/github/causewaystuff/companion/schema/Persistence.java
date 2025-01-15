@@ -22,15 +22,19 @@ import org.springframework.util.StringUtils;
 
 public enum Persistence {
     NONE,
+    JDBC,
     JPA,
     JDO;
+    
     public boolean isNone() { return this==NONE; }
+    public boolean isJdbc() { return this==JDBC; }
     public boolean isJpa() { return this==JPA; }
     public boolean isJdo() { return this==JDO; }
     
     public static Persistence parse(final String value) {
         if(!StringUtils.hasLength(value)) return NONE;
         return switch (value.toLowerCase()) {
+            case "jdbc" -> JDBC;
             case "jpa" -> JPA;
             case "jdo" -> JDO;
             default -> NONE;

@@ -22,6 +22,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import org.junit.jupiter.api.Test;
+
+import org.apache.causeway.testing.unittestsupport.applib.annotations.DisabledIfRunningWithSurefire;
+
 import io.github.causewaystuff.commons.base.types.ResourceFolder;
 import io.github.causewaystuff.companion.schema.CoApplication;
 import io.github.causewaystuff.companion.schema.LicenseHeader;
@@ -29,8 +33,8 @@ import io.github.causewaystuff.companion.schema.Persistence;
 
 class CodegenAppTest {
 
-    //TODO WIP
-    //@Test
+    @DisabledIfRunningWithSurefire // WIP
+    @Test
     //@UseReporter(DiffReporter.class)
     void appGenerator() throws IOException {
         

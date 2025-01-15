@@ -40,8 +40,8 @@ import io.github.causewaystuff.tooling.schemagen.SchemaGeneratorUtils;
 
 class AnnotationToYAMLSchemaTest {
 
-    //@DisabledIfRunningWithSurefire // WIP
-    //@Test
+    @DisabledIfRunningWithSurefire // WIP
+    @Test
     void propertyLayout()  {
         var generator = SchemaGeneratorUtils.schemaGeneratorWithAnnotationTypeSupport();
         //JsonNode jsonSchema = generator.generateSchema(Customer.class);
@@ -53,8 +53,8 @@ class AnnotationToYAMLSchemaTest {
         System.err.printf("%s%n", YamlUtils.toStringUtf8(jsonSchema));
     }
 
-    //@DisabledIfRunningWithSurefire // WIP - gather annotation member's java-doc
-    //@Test
+    @DisabledIfRunningWithSurefire // WIP - gather annotation member's java-doc
+    @Test
     void testAnnotationGathering() {
 
         var projDir = new File("D:\\development\\git\\cw-main\\causeway\\api\\applib");

@@ -20,9 +20,13 @@ package io.github.causewaystuff.companion.schema;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.apache.causeway.commons.io.YamlUtils;
 
 public record CoApplication(
+    @JsonProperty("$schema") 
+    String schema,
     String groupId,
     String artifactId,
     String version,
@@ -31,6 +35,19 @@ public record CoApplication(
     String packageName,
     Persistence persistence,
     List<CoModule> modules) {
+    
+    public CoApplication(
+        String groupId,
+        String artifactId,
+        String version,
+        String name, 
+        String description,
+        String packageName,
+        Persistence persistence,
+        List<CoModule> modules) {
+        this("https://apache-causeway-committers.github.io/causewaystuff/schema/companion/v1.0.0/companion.json", 
+            groupId, artifactId, version, name, description, packageName, persistence, modules);
+    }
 
     public static CoApplication fromYaml(String yaml) {
         return YamlUtils.tryRead(CoApplication.class, yaml)

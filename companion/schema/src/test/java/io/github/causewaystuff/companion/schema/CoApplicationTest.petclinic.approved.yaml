@@ -1,3 +1,4 @@
+$schema: "https://apache-causeway-committers.github.io/causewaystuff/schema/companion/v1.0.0/companion.json"
 groupId: "io.example.petclinic"
 artifactId: "petclinic"
 version: "1.0.0-SNAPSHOT"

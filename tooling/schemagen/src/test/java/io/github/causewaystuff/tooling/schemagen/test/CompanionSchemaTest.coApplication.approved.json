@@ -77,7 +77,10 @@
     },
     "persistence" : {
       "type" : "string",
-      "enum" : [ "NONE", "JPA", "JDO" ]
+      "enum" : [ "NONE", "JDBC", "JPA", "JDO" ]
+    },
+    "schema" : {
+      "type" : "string"
     },
     "version" : {
       "type" : "string"
