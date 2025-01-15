@@ -18,12 +18,17 @@
  */
 package io.github.causewaystuff.tooling.schemagen.test;
 
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.approvaltests.Approvals;
+import org.approvaltests.core.Options;
 import org.approvaltests.reporters.DiffReporter;
 import org.approvaltests.reporters.UseReporter;
 import org.junit.jupiter.api.Test;
+
+import org.apache.causeway.commons.io.TextUtils;
 
 import io.github.causewaystuff.companion.schema.CoApplication;
 import io.github.causewaystuff.tooling.schemagen.SchemaGeneratorUtils;
@@ -36,7 +41,8 @@ class CompanionSchemaTest {
         var generator = SchemaGeneratorUtils.schemaGeneratorDefault();
         var jsonSchema = generator.generateSchema(CoApplication.class);
         var json = SchemaGeneratorUtils.prettyPrint(jsonSchema);
-        Approvals.verify(json);
+        Approvals.verify(json, new Options()
+            .withScrubber(s -> TextUtils.readLines(s).join("\n"))); // UNIX style line endings
     }
 
 }
