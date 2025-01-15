@@ -59,7 +59,7 @@
         <javapoet.version>1.13.0</javapoet.version>
         <jsonschema-generator.version>4.37.0</jsonschema-generator.version>
         <jsoup.version>1.18.3</jsoup.version>
-        <maven-model-builder.version>3.9.9</maven-model-builder.version>
+        <maven-model.version>4.0.0-rc-2</maven-model.version>
         <picocli.version>4.7.6</picocli.version>
         <structurizr-dsl.version>3.2.1</structurizr-dsl.version>
         <structurizr-export.version>3.2.1</structurizr-export.version>
@@ -79,7 +79,7 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <causeway.version>3.2.0.20250109-0611-086ef0bc</causeway.version>
+                <causeway.version>3.2.0.20250115-0620-6f74215c</causeway.version>
             </properties>
             <repositories>
                 <repository>
@@ -450,9 +450,14 @@
             <dependency>
                 <groupId>org.apache.maven</groupId>
                 <artifactId>maven-model-builder</artifactId>
-                <version>${maven-model-builder.version}</version>
+                <version>${maven-model.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-artifact</artifactId>
+                <version>${maven-model.version}</version>
+            </dependency>
+            
             <!-- TESTING -->
 
             <dependency>
