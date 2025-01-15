@@ -18,27 +18,32 @@
  */
 package io.github.causewaystuff.tooling.schemagen.test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import java.io.IOException;
 
-import org.approvaltests.Approvals;
-import org.approvaltests.reporters.DiffReporter;
-import org.approvaltests.reporters.UseReporter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.junit.jupiter.api.Test;
 
-import org.apache.causeway.testing.unittestsupport.applib.util.ApprovalUtils;
+import org.apache.causeway.commons.internal.assertions._Assert;
 
+import io.github.causewaystuff.commons.base.types.ResourceFolder;
 import io.github.causewaystuff.companion.schema.CoApplication;
 import io.github.causewaystuff.tooling.schemagen.SchemaGeneratorUtils;
 
 class CompanionSchemaTest {
 
     @Test
-    @UseReporter(DiffReporter.class)
-    void coApplication() throws JsonProcessingException  {
+    //@UseReporter(DiffReporter.class)
+    void coApplication() throws IOException  {
         var generator = SchemaGeneratorUtils.schemaGeneratorDefault();
         var jsonSchema = generator.generateSchema(CoApplication.class);
         var json = SchemaGeneratorUtils.prettyPrint(jsonSchema);
-        Approvals.verify(json, ApprovalUtils.ignoreLineEndings());
+        System.out.println(json);
+        
+        //Approvals.verify(json, ApprovalUtils.ignoreLineEndings());
+        
+        var approvedJsonFile = ResourceFolder.testResourceRoot().relativeFile("companion/companion-meta-schema.json");
+        _Assert.assertEquals(new ObjectMapper().readTree(approvedJsonFile), jsonSchema);
     }
 
 }

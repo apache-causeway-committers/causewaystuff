@@ -164,9 +164,6 @@
             },
             "getFormat()" : {
               "type" : "string"
-            },
-            "getParams()" : {
-              "type" : "object"
             }
           }
         },
@@ -606,6 +603,9 @@
           "type" : "boolean"
         },
         "isTopLevelClass()" : {
+          "type" : "boolean"
+        },
+        "isUnnamedClass()" : {
           "type" : "boolean"
         },
         "newInstance()" : {
@@ -1084,6 +1084,9 @@
           "type" : "boolean"
         },
         "isTopLevelClass()" : {
+          "type" : "boolean"
+        },
+        "isUnnamedClass()" : {
           "type" : "boolean"
         },
         "newInstance()" : { },
