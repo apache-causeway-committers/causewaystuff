@@ -18,11 +18,12 @@
  */
 package io.github.causewaystuff.companion.schema;
 
-import java.util.List;
+import java.util.EnumSet;
 
-public record CoEntity(
-    /**
-     * namespace relative to this entity's module namespace
-     */
-    String namespace, String name, String description, List<CoField> fields) {
+public record CoField(String name, String description, String typeFqn, EnumSet<CoFieldFlag> flags) {
+    
+    public CoField(String name, String description, Class<?> type, EnumSet<CoFieldFlag> flags) {
+        this(name, description, type.getName(), flags);
+    }
+    
 }

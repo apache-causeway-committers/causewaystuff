@@ -18,11 +18,7 @@
  */
 package io.github.causewaystuff.companion.schema;
 
-import java.util.List;
-
-public record CoEntity(
-    /**
-     * namespace relative to this entity's module namespace
-     */
-    String namespace, String name, String description, List<CoField> fields) {
+public enum CoFieldFlag {
+    PRIMARY_KEY,
+    SECONDARY_KEY
 }

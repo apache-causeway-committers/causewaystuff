@@ -20,28 +20,27 @@ package io.github.causewaystuff.tooling.schemagen.test;
 
 import java.io.IOException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.approvaltests.Approvals;
+import org.approvaltests.reporters.DiffReporter;
+import org.approvaltests.reporters.UseReporter;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.apache.causeway.testing.unittestsupport.applib.util.ApprovalUtils;
 
-import io.github.causewaystuff.commons.base.types.ResourceFolder;
 import io.github.causewaystuff.companion.schema.CoApplication;
 import io.github.causewaystuff.tooling.schemagen.SchemaGeneratorUtils;
 
 class CompanionSchemaTest {
 
-    //@Test
-    //@UseReporter(DiffReporter.class)
+    @Test
+    @UseReporter(DiffReporter.class)
     void coApplication() throws IOException  {
-        var generator = SchemaGeneratorUtils.schemaGeneratorDefault();
+        var generator = SchemaGeneratorUtils.schemaGeneratorWithRecordTypeSupport();
         var jsonSchema = generator.generateSchema(CoApplication.class);
         var json = SchemaGeneratorUtils.prettyPrint(jsonSchema);
-        System.out.println(json);
         
-        //Approvals.verify(json, ApprovalUtils.ignoreLineEndings());
-        
-        var approvedJsonFile = ResourceFolder.testResourceRoot().relativeFile("companion/companion-meta-schema.json");
-        assertEquals(new ObjectMapper().readTree(approvedJsonFile), jsonSchema);
+        Approvals.verify(json, ApprovalUtils.ignoreLineEndings()
+            .forFile().withExtension(".json"));
     }
 
 }

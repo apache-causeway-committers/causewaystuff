@@ -24,7 +24,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.github.victools.jsonschema.generator.Option;
 import com.github.victools.jsonschema.generator.OptionPreset;
 import com.github.victools.jsonschema.generator.SchemaGenerator;
-import com.github.victools.jsonschema.generator.SchemaGeneratorConfig;
 import com.github.victools.jsonschema.generator.SchemaGeneratorConfigBuilder;
 import com.github.victools.jsonschema.generator.SchemaVersion;
 import com.github.victools.jsonschema.generator.impl.TypeContextFactory;
@@ -37,15 +36,20 @@ import lombok.experimental.UtilityClass;
 public class SchemaGeneratorUtils {
 
     @SneakyThrows
-    public SchemaGenerator schemaGeneratorDefault() {
-        var config = defaultConfig();
+    public SchemaGenerator schemaGeneratorWithRecordTypeSupport() {
+        var config = defaultConfigBuilder()
+            //.with(Option.NONSTATIC_NONVOID_NONGETTER_METHODS)
+            .build();
         var typeContext = TypeContextFactory.createDefaultTypeContext(config);
         return new SchemaGenerator(config, typeContext);
     }
     
     @SneakyThrows
     public SchemaGenerator schemaGeneratorWithAnnotationTypeSupport() {
-        var config = defaultConfig();
+        var config = defaultConfigBuilder()
+            .with(Option.NONSTATIC_NONVOID_NONGETTER_METHODS)
+            .without(Option.FLATTENED_ENUMS_FROM_TOSTRING)
+            .build();
         var typeContext = TypeContextFactory.createDefaultTypeContext(config);
         return new SchemaGenerator(config, SchemaGeneratorPatcher.patch(typeContext));
     }
@@ -62,17 +66,13 @@ public class SchemaGeneratorUtils {
     
     // -- HELPER
     
-    private SchemaGeneratorConfig defaultConfig() {
-        var configBuilder = new SchemaGeneratorConfigBuilder(SchemaVersion.DRAFT_2020_12, OptionPreset.PLAIN_JSON);
-        var config = configBuilder
+    private SchemaGeneratorConfigBuilder defaultConfigBuilder() {
+        return new SchemaGeneratorConfigBuilder(SchemaVersion.DRAFT_2020_12, OptionPreset.PLAIN_JSON)
                 .with(new MethodExclusionModule(methodScope->
                         methodScope.getRawMember().getName().equals("toString")
+                        || methodScope.getRawMember().getName().equals("hashCode")
                         || methodScope.getRawMember().getParameterCount()>0))
-                .with(Option.NONSTATIC_NONVOID_NONGETTER_METHODS)
-                .with(Option.EXTRA_OPEN_API_FORMAT_VALUES)
-                .without(Option.FLATTENED_ENUMS_FROM_TOSTRING)
-                .build();
-        return config;
+                .with(Option.EXTRA_OPEN_API_FORMAT_VALUES);
     }
 
 }
