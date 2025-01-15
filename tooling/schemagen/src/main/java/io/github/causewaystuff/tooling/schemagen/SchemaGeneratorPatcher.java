@@ -39,7 +39,6 @@ class SchemaGeneratorPatcher {
 
     /**
      * Patch the type resolver with our own, to support annotation types.
-     * @return
      */
     @SneakyThrows
     TypeContext patch(final TypeContext typeContext) {

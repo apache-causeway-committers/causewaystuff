@@ -61,24 +61,25 @@ class AnnotationToYAMLSchemaTest {
         if(!projDir.exists()) return;
         var analyzerConfig = AnalyzerConfigFactory.maven(projDir, Language.JAVA).main();
 
-        analyzerConfig.getSources(JAVA)
-        .stream()
-        .filter(source->source.toString().contains("annotation"))
-        //.peek(source->System.out.println("parsing source: " + source))
-        .map(CompilationUnits::parse)
-        .flatMap(CompilationUnits::streamTypeDeclarations)
-        .filter(anyT->anyT.getKind().isAnnotation())
-        .peek(td->{
-            System.out.println("@" + td.getSimpleName());
-            System.out.println("properties:");
-        })
-        .map(AnyTypeDeclaration::getAnnotationMemberDeclarations)
-        .flatMap(Can::stream)
-        .forEach(amd->{
-            System.out.println("  " + AnnotationMemberDeclarations.asNormalizedName(amd) + ":");
-            System.out.println("    type: " + amd.getTypeAsString());
-            System.out.println("    description: " + amd.getJavadocComment());
-        });
+        analyzerConfig
+            .getSources(JAVA)
+            .stream()
+            .filter(source->source.toString().contains("annotation"))
+            //.peek(source->System.out.println("parsing source: " + source))
+            .map(CompilationUnits::parse)
+            .flatMap(CompilationUnits::streamTypeDeclarations)
+            .filter(anyT->anyT.getKind().isAnnotation())
+            .peek(td->{
+                System.out.println("@" + td.getSimpleName());
+                System.out.println("properties:");
+            })
+            .map(AnyTypeDeclaration::getAnnotationMemberDeclarations)
+            .flatMap(Can::stream)
+            .forEach(amd->{
+                System.out.println("  " + AnnotationMemberDeclarations.asNormalizedName(amd) + ":");
+                System.out.println("    type: " + amd.getTypeAsString());
+                System.out.println("    description: " + amd.getJavadocComment());
+            });
 
     }
 

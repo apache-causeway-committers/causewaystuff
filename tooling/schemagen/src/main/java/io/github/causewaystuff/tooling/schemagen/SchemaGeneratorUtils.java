@@ -18,9 +18,13 @@
  */
 package io.github.causewaystuff.tooling.schemagen;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.github.victools.jsonschema.generator.Option;
 import com.github.victools.jsonschema.generator.OptionPreset;
 import com.github.victools.jsonschema.generator.SchemaGenerator;
+import com.github.victools.jsonschema.generator.SchemaGeneratorConfig;
 import com.github.victools.jsonschema.generator.SchemaGeneratorConfigBuilder;
 import com.github.victools.jsonschema.generator.SchemaVersion;
 import com.github.victools.jsonschema.generator.impl.TypeContextFactory;
@@ -33,7 +37,32 @@ import lombok.experimental.UtilityClass;
 public class SchemaGeneratorUtils {
 
     @SneakyThrows
+    public SchemaGenerator schemaGeneratorDefault() {
+        var config = defaultConfig();
+        var typeContext = TypeContextFactory.createDefaultTypeContext(config);
+        return new SchemaGenerator(config, typeContext);
+    }
+    
+    @SneakyThrows
     public SchemaGenerator schemaGeneratorWithAnnotationTypeSupport() {
+        var config = defaultConfig();
+        var typeContext = TypeContextFactory.createDefaultTypeContext(config);
+        return new SchemaGenerator(config, SchemaGeneratorPatcher.patch(typeContext));
+    }
+    
+    @SneakyThrows
+    public String prettyPrint(JsonNode jsonSchema) {
+        var objectMapper = new ObjectMapper()
+            .enable(SerializationFeature.INDENT_OUTPUT); // pretty-printing
+        var prettyJsonString = objectMapper
+            .writerWithDefaultPrettyPrinter()
+            .writeValueAsString(jsonSchema);
+        return prettyJsonString;
+    }
+    
+    // -- HELPER
+    
+    private SchemaGeneratorConfig defaultConfig() {
         var configBuilder = new SchemaGeneratorConfigBuilder(SchemaVersion.DRAFT_2020_12, OptionPreset.PLAIN_JSON);
         var config = configBuilder
                 .with(new MethodExclusionModule(methodScope->
@@ -43,9 +72,7 @@ public class SchemaGeneratorUtils {
                 .with(Option.EXTRA_OPEN_API_FORMAT_VALUES)
                 .without(Option.FLATTENED_ENUMS_FROM_TOSTRING)
                 .build();
-
-        var typeContext = TypeContextFactory.createDefaultTypeContext(config);
-        return new SchemaGenerator(config, SchemaGeneratorPatcher.patch(typeContext));
+        return config;
     }
 
 }

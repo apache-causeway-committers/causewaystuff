@@ -66,6 +66,14 @@
             <artifactId>jsonschema-module-jakarta-validation</artifactId>
         </dependency>
         
+        <!-- TESTING -->
+        
+        <dependency>
+            <groupId>io.github.causewaystuff</groupId>
+            <artifactId>causewaystuff-companion-schema</artifactId>
+            <scope>test</scope>
+        </dependency>
+        
     </dependencies>
 
 </project>
