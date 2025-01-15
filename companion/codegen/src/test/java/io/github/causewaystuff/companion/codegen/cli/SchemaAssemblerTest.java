@@ -30,6 +30,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.apache.causeway.testing.unittestsupport.applib.util.ApprovalUtils;
+
 import io.github.causewaystuff.commons.base.types.ResourceFolder;
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator;
 import io.github.causewaystuff.companion.codegen.model.Schema;
@@ -55,7 +57,8 @@ class SchemaAssemblerTest {
     @MethodSource("javaSource")
     @UseReporter(DiffReporter.class)
     void javaGenerator(final String name, final String source) {
-        Approvals.verify(source, Approvals.NAMES.withParameters(name));
+        Approvals.verify(source, Approvals.NAMES.withParameters(name)
+            .withScrubber(ApprovalUtils.ignoreLineEndings()::scrub));
     }
 
     private static Stream<Arguments> javaSource() {

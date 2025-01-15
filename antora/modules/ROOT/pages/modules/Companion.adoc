@@ -12,3 +12,8 @@ Companion to the _Apache Causeway_ framework, offering supplementary types and s
 | A *Java code generator* utilizing _Apache Causeway's_ programming model
 
 |===
+
+== Schema
+
+In support of code completion, the meta schema can be found at: 
+https://apache-causeway-committers.github.io/causewaystuff/schema/companion/v1.0.0/companion.json[Companion Schema (1.0.0 JSON)]
