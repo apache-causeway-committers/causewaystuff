@@ -41,6 +41,7 @@
         <module>applib</module>
         <module>schema</module>
         <module>codegen</module>
+        <module>cli</module>
     </modules>
 
 </project>

@@ -35,6 +35,8 @@ module io.github.causewaystuff.companion.codegen {
     requires spring.context;
     requires spring.core;
     requires maven.model;
+    requires maven.impl;
+    requires maven.api.model;
 
     opens io.github.causewaystuff.companion.codegen.cli to com.fasterxml.jackson.databind;
 }
