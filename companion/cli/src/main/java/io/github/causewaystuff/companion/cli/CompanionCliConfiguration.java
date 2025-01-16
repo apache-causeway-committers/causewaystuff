@@ -21,6 +21,7 @@ package io.github.causewaystuff.companion.cli;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -32,7 +33,6 @@ import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.io.SimpleIndentStrategy;
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.packaging.Packaging;
-import io.spring.initializr.generator.project.DefaultProjectAssetGenerator;
 import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectAssetGenerator;
 import io.spring.initializr.generator.project.ProjectDescription;
@@ -63,8 +63,10 @@ class CompanionCliConfiguration {
     }
     
     @Bean(name = "projectAssetGenerator") 
-    public ProjectAssetGenerator<Path> projectAssetGenerator() {
-        return new DefaultProjectAssetGenerator();
+    public ProjectAssetGenerator<Path> projectAssetGenerator(ProjectDirectoryFactory projectDirectoryFactory) {
+        return new CoProjectAssetGenerator(projectDirectoryFactory, 
+            // exclusions
+            Set.of("MavenWrapperContributor", "MavenBuildProjectContributor"));
     }
     
     static interface ProjectDescriptionFactory {
@@ -87,7 +89,7 @@ class CompanionCliConfiguration {
                 description.setLanguage(Language.forId("java", "21"));
                 description.setName(appModel.name());
                 description.setPackageName(appModel.packageName());
-                description.setPackaging(Packaging.forId("jar"));
+                description.setPackaging(Packaging.forId("pom"));
                 description.setPlatformVersion(Version.parse("3.4.1"));
                 description.setVersion(appModel.version());
                 //TODO allow for dependencies to be declared

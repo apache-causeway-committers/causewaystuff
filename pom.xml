@@ -40,6 +40,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <spring-boot.version>3.4.1</spring-boot.version>
+        <spring-initializr.version>0.21.0</spring-initializr.version>
         <causeway.version>3.0.0-SNAPSHOT</causeway.version>
 
         <junit.version>5.11.4</junit.version>
@@ -265,6 +266,11 @@
                 <artifactId>causewaystuff-companion-schema</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
+            <dependency>
+                <groupId>io.github.causewaystuff</groupId>
+                <artifactId>causewaystuff-companion-assets</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
 
             <dependency>
                 <groupId>io.github.causewaystuff</groupId>
@@ -369,6 +375,14 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            
+            <dependency>
+                <groupId>io.spring.initializr</groupId>
+                <artifactId>initializr-bom</artifactId>
+                <version>${spring-initializr.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
 
             <!-- JAVAPOET -->
 
@@ -457,7 +471,7 @@
                 <artifactId>maven-artifact</artifactId>
                 <version>${maven-model.version}</version>
             </dependency>
-            
+
             <!-- TESTING -->
 
             <dependency>

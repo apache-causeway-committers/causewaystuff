@@ -28,23 +28,36 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>causewaystuff-companion-cli</artifactId>
-    <name>Causeway Stuff - Companion (CLI)</name>
+    <artifactId>causewaystuff-companion-assets</artifactId>
+    <name>Causeway Stuff - Companion (Assets)</name>
     <description>
-        Code Generation CLI for the Apache Causeway Programming Model
+        Code Generation Assets for the Apache Causeway Programming Model
     </description>
 
     <properties>
         <maven.compiler.release>21</maven.compiler.release>
         <jar-plugin.automaticModuleName>
-            io.github.causewaystuff.companion.cli</jar-plugin.automaticModuleName>
+            io.github.causewaystuff.companion.assets</jar-plugin.automaticModuleName>
     </properties>
 
     <dependencies>
 
         <dependency>
             <groupId>io.github.causewaystuff</groupId>
-            <artifactId>causewaystuff-companion-assets</artifactId>
+            <artifactId>causewaystuff-commons-base</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.causewaystuff</groupId>
+            <artifactId>causewaystuff-companion-applib</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.causewaystuff</groupId>
+            <artifactId>causewaystuff-companion-schema</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.spring.initializr</groupId>
+            <artifactId>initializr-generator-spring</artifactId>
         </dependency>
 
         <!-- TESTING -->

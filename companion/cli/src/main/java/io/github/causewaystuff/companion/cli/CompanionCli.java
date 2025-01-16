@@ -60,7 +60,6 @@ public class CompanionCli implements ApplicationRunner, ApplicationContextAware 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         springContextRef.set(applicationContext);
-        System.out.println("new context");
     }
     
     @Override
