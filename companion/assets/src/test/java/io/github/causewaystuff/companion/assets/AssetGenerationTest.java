@@ -44,13 +44,17 @@ class AssetGenerationTest {
     
     @BeforeEach
     void setup() throws IOException {
-        this.indentingWriterFactory = new CaAssetGenerationConfiguration().indentingWriterFactory();
+        
+        this.indentingWriterFactory = new CoAssetGenerationConfiguration().indentingWriterFactory();
         
         var schemaFile = ResourceFolder.testResourceRoot().relativeFile("petclinic/companion-app-petclinic.yaml").toPath();
         var yaml = Files.readString(schemaFile);
-        this.projDescription = new CoMutableProjectDescription(projdir, CoApplication.fromYaml(yaml));
+        this.projDescription = new CoMutableProjectDescription(
+            projdir, 
+            CoApplication.fromYaml(yaml), 
+            _Initializr.initializrMetadata());
         
-        this.makedirProjectContributor = new CaAssetGenerationConfiguration().makedirProjectContributor(projDescription);
+        this.makedirProjectContributor = new CoAssetGenerationConfiguration().makedirProjectContributor(projDescription);
         this.mavenBuildProjectContributor = new MavenProjectGenerationConfiguration()
             .mavenMultiModuleBuildProjectContributor(projDescription, new MavenMultiModuleBuild(), indentingWriterFactory);
     }

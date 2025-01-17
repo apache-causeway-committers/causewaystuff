@@ -26,7 +26,7 @@ module io.github.causewaystuff.companion.assets {
     requires java.xml;
     
     requires io.github.causewaystuff.commons.base;
-    requires io.github.causewaystuff.companion.schema;
+    requires transitive io.github.causewaystuff.companion.schema;
     
     requires org.apache.causeway.commons;
     
@@ -34,10 +34,14 @@ module io.github.causewaystuff.companion.assets {
     requires spring.context;
     requires spring.core;
     
-    requires initializr.generator;
-    requires initializr.generator.spring;
+    requires transitive initializr.metadata;
+    requires transitive initializr.generator;
+    requires transitive initializr.generator.spring;
     
     requires maven.api.model;
     requires maven.impl;
     requires maven.model;
+    
+    // make io.github.causewaystuff.companion.assets.build.maven.PomPackagingFactory accessible 
+    opens io.github.causewaystuff.companion.assets.build.maven to spring.core;
 }

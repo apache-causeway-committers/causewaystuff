@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package io.github.causewaystuff.companion.cli;
+package io.github.causewaystuff.companion.assets;
 
 import java.io.IOException;
 import java.nio.file.Files;

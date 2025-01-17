@@ -16,36 +16,24 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package io.github.causewaystuff.companion.cli;
+package io.github.causewaystuff.companion.assets;
 
-import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Set;
 
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 
-import io.github.causewaystuff.companion.assets.CoAssetConfiguration;
+import io.spring.initializr.generator.project.ProjectAssetGenerator;
 import io.spring.initializr.generator.project.ProjectDirectoryFactory;
-import io.spring.initializr.metadata.InitializrMetadata;
-import io.spring.initializr.metadata.InitializrMetadataBuilder;
-import io.spring.initializr.metadata.InitializrProperties;
 
-@Configuration(proxyBeanMethods = false)
-@EnableConfigurationProperties(InitializrProperties.class)
-@Import({
-    CoAssetConfiguration.class
-})
-class CompanionCliConfiguration {
-
-    @Bean
-    public ProjectDirectoryFactory projectDirectoryFactory() {
-        return (description) -> Files.createTempDirectory("project-");
-    }
+@Configuration
+public class CoAssetConfiguration {
     
-    @Bean(name = "initializrMetadata")
-    public InitializrMetadata initializrMetadata(InitializrProperties properties) {
-        return InitializrMetadataBuilder.fromInitializrProperties(properties).build();
+    @Bean(name = "companionAssetGenerator")
+    public ProjectAssetGenerator<Path> companionAssetGenerator(ProjectDirectoryFactory projectDirectoryFactory) {
+        return new CoProjectAssetGenerator(projectDirectoryFactory, 
+            // exclusions
+            Set.of("MavenWrapperContributor", "MavenBuildProjectContributor"));
     }
-    
 }

@@ -41,11 +41,12 @@ import org.apache.causeway.commons.internal.base._Strings;
 import lombok.SneakyThrows;
 
 import io.github.causewaystuff.commons.base.types.ResourceFolder;
-import io.github.causewaystuff.companion.cli.CompanionCliConfiguration.ProjectDescriptionFactory;
+import io.github.causewaystuff.companion.assets.CoMutableProjectDescription;
 import io.github.causewaystuff.companion.schema.CoApplication;
 import io.spring.initializr.generator.project.ProjectAssetGenerator;
 import io.spring.initializr.generator.project.ProjectGenerationContext;
 import io.spring.initializr.generator.project.ProjectGenerator;
+import io.spring.initializr.metadata.InitializrMetadata;
 
 @SpringBootApplication
 @Import({
@@ -70,10 +71,14 @@ public class CompanionCli implements ApplicationRunner, ApplicationContextAware 
         var projectGenerator = new ProjectGenerator(
             projectGenerationContext -> customizeProjectGenerationContext(projectGenerationContext, argsModel));
         
-        var projectDescription = springContext.getBean(ProjectDescriptionFactory.class)
-            .create(argsModel);
+        var initializrMetadata = springContext.getBean(InitializrMetadata.class);
+        
+        var projectDescription = new CoMutableProjectDescription(
+            argsModel.projectRoot().root().toPath(), 
+            argsModel.appModel(),
+            initializrMetadata);
             
-        var assetGenerator = _Casts.<ProjectAssetGenerator<Path>>uncheckedCast(springContext.getBean("projectAssetGenerator"));
+        var assetGenerator = _Casts.<ProjectAssetGenerator<Path>>uncheckedCast(springContext.getBean("companionAssetGenerator"));
         projectGenerator.generate(projectDescription, assetGenerator);
     }
     

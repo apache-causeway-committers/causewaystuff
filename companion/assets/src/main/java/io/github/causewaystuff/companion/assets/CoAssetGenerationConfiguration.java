@@ -11,7 +11,7 @@ import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
  * @see io.spring.initializr.generator.spring.build.BuildProjectGenerationConfiguration
  */
 @ProjectGenerationConfiguration
-public class CaAssetGenerationConfiguration {
+public class CoAssetGenerationConfiguration {
     
     @Bean
     public IndentingWriterFactory indentingWriterFactory() {

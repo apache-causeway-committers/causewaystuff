@@ -19,16 +19,19 @@
 package io.github.causewaystuff.companion.assets;
 
 import java.nio.file.Path;
+import java.util.Map;
 
 import lombok.Getter;
 
 import io.github.causewaystuff.companion.schema.CoApplication;
 import io.github.causewaystuff.companion.schema.LicenseHeader;
 import io.github.causewaystuff.companion.schema.Persistence;
+import io.spring.initializr.generator.buildsystem.BuildSystem;
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.packaging.Packaging;
 import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.version.Version;
+import io.spring.initializr.metadata.InitializrMetadata;
 
 public class CoMutableProjectDescription 
 extends MutableProjectDescription 
@@ -38,7 +41,7 @@ implements CoProjectDescription {
     @Getter private final Path projectRoot;
     @Getter private final LicenseHeader licenseHeader;
 
-    public CoMutableProjectDescription(Path projectRoot, CoApplication appModel) {
+    public CoMutableProjectDescription(Path projectRoot, CoApplication appModel, InitializrMetadata metadata) {
         this.applicationModel = appModel;
         this.projectRoot = projectRoot;
         this.licenseHeader = appModel.license();
@@ -46,7 +49,7 @@ implements CoProjectDescription {
         super.setApplicationName(appModel.name()); //TODO not uniquely mapped
         super.setArtifactId(appModel.artifactId());
         super.setBaseDirectory(projectRoot.toAbsolutePath().toString());
-        //super.setBuildSystem(getBuildSystem("maven-project", metadata));
+        super.setBuildSystem(getBuildSystem("maven-project", metadata));
         super.setDescription(appModel.description());
         super.setGroupId(appModel.groupId());
         super.setLanguage(Language.forId("java", "21"));
@@ -56,14 +59,24 @@ implements CoProjectDescription {
         super.setPlatformVersion(Version.parse("3.4.1"));
         super.setVersion(appModel.version());
         
+        
         //TODO allow for dependencies to be declared
 //        resolvedDependencies.forEach((dependency) -> description.addDependency(dependency.getId(),
 //                MetadataBuildItemMapper.toDependency(dependency)));
     }
-
+    
     @Override
     public Persistence getPersistenceMechanism() {
         return applicationModel.persistence();
+    }
+    
+    // -- HELPER
+    
+    private BuildSystem getBuildSystem(String buildSystemId, InitializrMetadata metadata) {
+        Map<String, String> typeTags = metadata.getTypes().get(buildSystemId).getTags();
+        String id = typeTags.get("build");
+        String dialect = typeTags.get("dialect");
+        return BuildSystem.forIdAndDialect(id, dialect);
     }
     
 }
