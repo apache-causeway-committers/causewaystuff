@@ -71,9 +71,7 @@ public class CompanionCli implements ApplicationRunner, ApplicationContextAware 
             projectGenerationContext -> customizeProjectGenerationContext(projectGenerationContext, argsModel));
         
         var projectDescription = springContext.getBean(ProjectDescriptionFactory.class)
-            .create(
-                argsModel.projectRoot().root().toPath(),
-                argsModel.appModel());
+            .create(argsModel);
             
         var assetGenerator = _Casts.<ProjectAssetGenerator<Path>>uncheckedCast(springContext.getBean("projectAssetGenerator"));
         projectGenerator.generate(projectDescription, assetGenerator);
@@ -89,7 +87,7 @@ public class CompanionCli implements ApplicationRunner, ApplicationContextAware 
     
     final AtomicReference<ApplicationContext> springContextRef = new AtomicReference<>();
 
-    private record ArgsModel(
+    record ArgsModel(
         ResourceFolder projectRoot,
         CoApplication appModel) {
         

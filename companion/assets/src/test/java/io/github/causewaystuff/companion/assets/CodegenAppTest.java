@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package io.github.causewaystuff.companion.codegen.appgen;
+package io.github.causewaystuff.companion.assets;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,16 +40,16 @@ class CodegenAppTest {
         
         var schemaFile = ResourceFolder.testResourceRoot().relativeFile("petclinic/companion-app-petclinic.yaml").toPath();
         var yaml = Files.readString(schemaFile);
-        var projdir = new File("d:/tmp/petclinic"); 
+        var projdir = new File("d:/tmp/companion/petclinic"); 
             //FileUtils.tempDir("causewaystuff-companion-test");
+        var projDescription = new CoMutableProjectDescription(projdir.toPath(), CoApplication.fromYaml(yaml))
+            .setLicenseHeader(LicenseHeader.ASF_V2)
+            .setPersistenceMechanism(Persistence.JPA);
         
-        var generator = new CoAppGenerator(CoApplication.fromYaml(yaml), projdir, Persistence.JPA, LicenseHeader.ASF_V2);
-        
+        var generator = new CoAppGenerator(projDescription);
         generator.generate();
         
         //Approvals.verify(source);
     }
-
-
 
 }

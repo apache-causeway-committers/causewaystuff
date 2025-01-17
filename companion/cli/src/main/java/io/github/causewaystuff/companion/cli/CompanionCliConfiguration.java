@@ -17,7 +17,6 @@
  *  under the License.
  */
 package io.github.causewaystuff.companion.cli;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
@@ -27,17 +26,14 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import io.github.causewaystuff.companion.schema.CoApplication;
+import io.github.causewaystuff.companion.assets.CoMutableProjectDescription;
+import io.github.causewaystuff.companion.assets.CoProjectDescription;
+import io.github.causewaystuff.companion.cli.CompanionCli.ArgsModel;
 import io.spring.initializr.generator.buildsystem.BuildSystem;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
 import io.spring.initializr.generator.io.SimpleIndentStrategy;
-import io.spring.initializr.generator.language.Language;
-import io.spring.initializr.generator.packaging.Packaging;
-import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectAssetGenerator;
-import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectDirectoryFactory;
-import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataBuilder;
 import io.spring.initializr.metadata.InitializrProperties;
@@ -70,7 +66,7 @@ class CompanionCliConfiguration {
     }
     
     static interface ProjectDescriptionFactory {
-        ProjectDescription create(Path baseDirectory, CoApplication appModel);
+        CoProjectDescription create(ArgsModel argsModel);
     }
     
     @Bean 
@@ -78,23 +74,11 @@ class CompanionCliConfiguration {
         return new ProjectDescriptionFactory() {
 
             @Override
-            public ProjectDescription create(Path baseDirectory, CoApplication appModel) {
-                var description = new MutableProjectDescription();
-                description.setApplicationName(appModel.name()); //TODO not uniquely mapped
-                description.setArtifactId(appModel.artifactId());
-                description.setBaseDirectory(baseDirectory.toAbsolutePath().toString());
+            public CoProjectDescription create(ArgsModel argsModel) {
+                var description = new CoMutableProjectDescription(
+                    argsModel.projectRoot().root().toPath(), 
+                    argsModel.appModel());
                 description.setBuildSystem(getBuildSystem("maven-project", metadata));
-                description.setDescription(appModel.description());
-                description.setGroupId(appModel.groupId());
-                description.setLanguage(Language.forId("java", "21"));
-                description.setName(appModel.name());
-                description.setPackageName(appModel.packageName());
-                description.setPackaging(Packaging.forId("pom"));
-                description.setPlatformVersion(Version.parse("3.4.1"));
-                description.setVersion(appModel.version());
-                //TODO allow for dependencies to be declared
-//                resolvedDependencies.forEach((dependency) -> description.addDependency(dependency.getId(),
-//                        MetadataBuildItemMapper.toDependency(dependency)));
                 return description;
             }
             
@@ -104,7 +88,6 @@ class CompanionCliConfiguration {
                 String dialect = typeTags.get("dialect");
                 return BuildSystem.forIdAndDialect(id, dialect);
             }
-            
         };
     }
     

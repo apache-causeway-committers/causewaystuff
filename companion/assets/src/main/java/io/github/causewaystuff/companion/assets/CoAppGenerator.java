@@ -16,29 +16,25 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package io.github.causewaystuff.companion.codegen.appgen;
+package io.github.causewaystuff.companion.assets;
 
-import java.io.File;
+import java.util.List;
 
-import io.github.causewaystuff.companion.schema.CoApplication;
-import io.github.causewaystuff.companion.schema.CoModule;
-import io.github.causewaystuff.companion.schema.LicenseHeader;
-import io.github.causewaystuff.companion.schema.Persistence;
-
-public interface CoGenerator {
+public record CoAppGenerator(
+    CoProjectDescription context,
+    List<CoGenerator> generators) {
     
-    public record Context(
-        CoApplication appModel,
-        File projectRoot,
-        Persistence persistence,
-        LicenseHeader license) {
-
-        public File moduleRoot(CoModule coModule) {
-            return new File(projectRoot(), coModule.id());
-        }
+    CoAppGenerator(CoProjectDescription context) {
+        this(context, List.of(new MakeDirGen(), new MavenPomGen()));
     }
     
-    void onApplication(Context context);
-    void onModule(Context context, CoModule coModule);
+    public void generate() {
+        generators.forEach(gen->{
+            gen.onApplication(context);
+            context.getApplicationModel().modules().forEach(mod->{
+                gen.onModule(context, mod);
+            });
+        });
+    }
     
 }

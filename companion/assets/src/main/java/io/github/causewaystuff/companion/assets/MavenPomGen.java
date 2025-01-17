@@ -16,17 +16,17 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package io.github.causewaystuff.companion.codegen.appgen;
+package io.github.causewaystuff.companion.assets;
 
-import java.io.File;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Properties;
 
 import org.apache.maven.model.v4.MavenStaxWriter;
 
-import org.apache.causeway.commons.io.FileUtils;
 import org.apache.causeway.commons.io.TextUtils;
 
 import lombok.SneakyThrows;
@@ -41,18 +41,17 @@ import io.github.causewaystuff.companion.schema.LicenseHeader;
 public record MavenPomGen() implements CoGenerator{
 
     @Override
-    public void onApplication(Context context) {
-        var mavenModel = createRootModel(context.appModel());
-        new PomWriter(mavenModel).write(context.license(), context.projectRoot());
+    public void onApplication(CoProjectDescription context) {
+        var mavenModel = createRootModel(context.getApplicationModel());
+        new PomWriter(mavenModel).write(context.getLicenseHeader(), context.getProjectRoot());
     }
 
-    @Override
-    public void onModule(Context context, CoModule coModule) {
+    @Override @SneakyThrows
+    public void onModule(CoProjectDescription context, CoModule coModule) {
         var modRoot = context.moduleRoot(coModule);
-        FileUtils.makeDir(new File(modRoot, "src/main/java"));
-            
-        var mavenModel = createModuleModel(context.appModel(), coModule);
-        new PomWriter(mavenModel).write(context.license(), modRoot);
+        Files.createDirectories(modRoot.resolve("src/main/java"));
+        var mavenModel = createModuleModel(context.getApplicationModel(), coModule);
+        new PomWriter(mavenModel).write(context.getLicenseHeader(), modRoot);
     }
     
     // -- HELPER
@@ -115,8 +114,8 @@ public record MavenPomGen() implements CoGenerator{
         }
         
         @SneakyThrows
-        void write(LicenseHeader license, File destinationDir) {
-            var destFile = new File(destinationDir, "pom.xml");
+        void write(LicenseHeader license, Path destinationDir) {
+            var destFile = destinationDir.resolve("pom.xml").toFile();
             
             var isVetoOverride = destFile.exists()
                 && !TextUtils.readLinesFromFile(destFile, StandardCharsets.UTF_8)

@@ -16,26 +16,25 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package io.github.causewaystuff.companion.codegen.appgen;
+package io.github.causewaystuff.companion.assets;
 
-import org.apache.causeway.commons.io.FileUtils;
+import java.nio.file.Path;
 
+import io.github.causewaystuff.companion.schema.CoApplication;
 import io.github.causewaystuff.companion.schema.CoModule;
+import io.github.causewaystuff.companion.schema.LicenseHeader;
+import io.github.causewaystuff.companion.schema.Persistence;
+import io.spring.initializr.generator.project.ProjectDescription;
 
-/**
- * Generates the application's project folders.
- */
-public record MakeDirGen() implements CoGenerator{
-
-    @Override
-    public void onApplication(Context context) {
-        FileUtils.makeDir(context.projectRoot());
+public interface CoProjectDescription extends ProjectDescription {
+    
+    CoApplication getApplicationModel();
+    Path getProjectRoot();
+    Persistence getPersistenceMechanism();
+    LicenseHeader getLicenseHeader();
+    
+    default Path moduleRoot(CoModule coModule) {
+        return getProjectRoot().resolve(coModule.id());
     }
-
-    @Override
-    public void onModule(Context context, CoModule coModule) {
-        var modRoot = context.moduleRoot(coModule);
-        FileUtils.makeDir(modRoot);
-    }
-
+    
 }
