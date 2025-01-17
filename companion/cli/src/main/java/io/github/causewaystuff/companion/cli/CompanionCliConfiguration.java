@@ -30,8 +30,6 @@ import io.github.causewaystuff.companion.assets.CoMutableProjectDescription;
 import io.github.causewaystuff.companion.assets.CoProjectDescription;
 import io.github.causewaystuff.companion.cli.CompanionCli.ArgsModel;
 import io.spring.initializr.generator.buildsystem.BuildSystem;
-import io.spring.initializr.generator.io.IndentingWriterFactory;
-import io.spring.initializr.generator.io.SimpleIndentStrategy;
 import io.spring.initializr.generator.project.ProjectAssetGenerator;
 import io.spring.initializr.generator.project.ProjectDirectoryFactory;
 import io.spring.initializr.metadata.InitializrMetadata;
@@ -45,12 +43,6 @@ class CompanionCliConfiguration {
     @Bean
     public ProjectDirectoryFactory projectDirectoryFactory() {
         return (description) -> Files.createTempDirectory("project-");
-    }
-    
-    @Bean
-    public IndentingWriterFactory indentingWriterFactory() {
-        return IndentingWriterFactory.create(new SimpleIndentStrategy("    "),
-                (builder) -> builder.indentingStrategy("yaml", new SimpleIndentStrategy("  ")));
     }
     
     @Bean(name = "initializrMetadata")

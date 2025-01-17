@@ -18,24 +18,27 @@
  */
 package io.github.causewaystuff.companion.assets;
 
-import org.apache.causeway.commons.io.FileUtils;
+import java.io.IOException;
+import java.nio.file.Path;
+
+import org.apache.causeway.commons.internal.assertions._Assert;
 
 import io.github.causewaystuff.companion.schema.CoModule;
+import io.spring.initializr.generator.project.contributor.ProjectContributor;
 
-/**
- * Generates the application's project folders.
- */
-public record MakeDirGen() implements CoGenerator{
-
+public interface CoProjectContributor extends ProjectContributor {
+    
+    CoProjectDescription projectDescription();
+    
+    void contributeRoot();
+    void contributeModule(CoModule coModule);
+    
     @Override
-    public void onApplication(CoProjectDescription context) {
-        FileUtils.makeDir(context.getProjectRoot().toFile());
+    default void contribute(Path projectRoot) throws IOException {
+        _Assert.assertEquals(projectDescription().getProjectRoot(), projectRoot);
+        contributeRoot();
+        projectDescription().getApplicationModel().modules().forEach(mod->{
+            contributeModule(mod);
+        });
     }
-
-    @Override
-    public void onModule(CoProjectDescription context, CoModule coModule) {
-        var modRoot = context.moduleRoot(coModule);
-        FileUtils.makeDir(modRoot.toFile());
-    }
-
 }

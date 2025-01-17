@@ -18,23 +18,34 @@
  */
 package io.github.causewaystuff.companion.assets;
 
-import java.util.List;
+import java.nio.file.Files;
 
-public record CoAppGenerator(
-    CoProjectDescription context,
-    List<CoGenerator> generators) {
-    
-    CoAppGenerator(CoProjectDescription context) {
-        this(context, List.of(new MakeDirGen(), new MavenPomGen()));
+import org.springframework.core.Ordered;
+
+import lombok.SneakyThrows;
+
+import io.github.causewaystuff.companion.schema.CoModule;
+
+/**
+ * Generates the application's project folders.
+ */
+record MakedirProjectContributor(CoProjectDescription projectDescription) implements CoProjectContributor {
+
+    @Override @SneakyThrows
+    public void contributeRoot() {
+        Files.createDirectories(projectDescription.getProjectRoot());
+    }
+
+    @Override @SneakyThrows
+    public void contributeModule(CoModule coModule) {
+        var modRoot = projectDescription.moduleRoot(coModule);
+        Files.createDirectories(modRoot);
     }
     
-    public void generate() {
-        generators.forEach(gen->{
-            gen.onApplication(context);
-            context.getApplicationModel().modules().forEach(mod->{
-                gen.onModule(context, mod);
-            });
-        });
+    // directory structure needs to come first
+    @Override
+    public int getOrder() {
+        return Ordered.HIGHEST_PRECEDENCE;
     }
-    
+
 }

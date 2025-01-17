@@ -30,10 +30,11 @@ public record CoApplication(
     String groupId,
     String artifactId,
     String version,
-    String name, 
+    String name,
     String description,
     String packageName,
     Persistence persistence,
+    LicenseHeader license,
     List<CoModule> modules) {
     
     public CoApplication(
@@ -44,9 +45,10 @@ public record CoApplication(
         String description,
         String packageName,
         Persistence persistence,
+        LicenseHeader license,
         List<CoModule> modules) {
         this("https://apache-causeway-committers.github.io/causewaystuff/schema/companion/v1.0.0/companion.json", 
-            groupId, artifactId, version, name, description, packageName, persistence, modules);
+            groupId, artifactId, version, name, description, packageName, persistence, license, modules);
     }
 
     public static CoApplication fromYaml(String yaml) {

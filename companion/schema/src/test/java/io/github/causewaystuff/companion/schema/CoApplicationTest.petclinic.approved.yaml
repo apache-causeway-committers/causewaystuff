@@ -6,6 +6,7 @@ name: "Petclinic"
 description: "Petclinic sample application."
 packageName: "io.example.petclinic"
 persistence: "JPA"
+license: "ASF_V2"
 modules:
 - id: "petowner"
   name: "Pet Owner Module"

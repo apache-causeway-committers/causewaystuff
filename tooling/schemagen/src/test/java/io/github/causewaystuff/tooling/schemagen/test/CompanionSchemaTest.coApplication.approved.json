@@ -11,6 +11,10 @@
     "groupId" : {
       "type" : "string"
     },
+    "license" : {
+      "type" : "string",
+      "enum" : [ "NONE", "ASF_V2" ]
+    },
     "modules" : {
       "type" : "array",
       "items" : {

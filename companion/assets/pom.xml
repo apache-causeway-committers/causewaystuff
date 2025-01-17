@@ -54,14 +54,19 @@
             <groupId>io.github.causewaystuff</groupId>
             <artifactId>causewaystuff-companion-schema</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.github.causewaystuff</groupId>
-            <artifactId>causewaystuff-tooling-projectmodel</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>io.spring.initializr</groupId>
             <artifactId>initializr-generator-spring</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-model-builder</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-artifact</artifactId>
         </dependency>
 
         <!-- TESTING -->

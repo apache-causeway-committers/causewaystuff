@@ -11,6 +11,10 @@
     "groupId" : {
       "type" : "string"
     },
+    "license" : {
+      "type" : "string",
+      "enum" : [ "NONE", "ASF_V2" ]
+    },
     "modules" : {
       "type" : "array",
       "items" : {
@@ -77,7 +81,10 @@
     },
     "persistence" : {
       "type" : "string",
-      "enum" : [ "NONE", "JPA", "JDO" ]
+      "enum" : [ "NONE", "JDBC", "JPA", "JDO" ]
+    },
+    "schema" : {
+      "type" : "string"
     },
     "version" : {
       "type" : "string"

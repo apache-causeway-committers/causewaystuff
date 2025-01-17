@@ -21,8 +21,6 @@ package io.github.causewaystuff.companion.assets;
 import java.nio.file.Path;
 
 import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 
 import io.github.causewaystuff.companion.schema.CoApplication;
 import io.github.causewaystuff.companion.schema.LicenseHeader;
@@ -38,12 +36,12 @@ implements CoProjectDescription {
 
     @Getter private final CoApplication applicationModel;
     @Getter private final Path projectRoot;
-    @Getter @Setter @Accessors(chain = true) private Persistence persistenceMechanism;
-    @Getter @Setter @Accessors(chain = true) private LicenseHeader licenseHeader;
+    @Getter private final LicenseHeader licenseHeader;
 
     public CoMutableProjectDescription(Path projectRoot, CoApplication appModel) {
         this.applicationModel = appModel;
         this.projectRoot = projectRoot;
+        this.licenseHeader = appModel.license();
         
         super.setApplicationName(appModel.name()); //TODO not uniquely mapped
         super.setArtifactId(appModel.artifactId());
@@ -57,9 +55,15 @@ implements CoProjectDescription {
         super.setPackaging(Packaging.forId("pom"));
         super.setPlatformVersion(Version.parse("3.4.1"));
         super.setVersion(appModel.version());
+        
         //TODO allow for dependencies to be declared
 //        resolvedDependencies.forEach((dependency) -> description.addDependency(dependency.getId(),
 //                MetadataBuildItemMapper.toDependency(dependency)));
+    }
+
+    @Override
+    public Persistence getPersistenceMechanism() {
+        return applicationModel.persistence();
     }
     
 }
