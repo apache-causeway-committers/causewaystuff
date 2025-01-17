@@ -28,7 +28,6 @@ vaadin.ts
 gradlew
 gradlew.*
 /.gradle/
-**/build/
 
 #Asciidoctor Plugins
 .asciidoctorconfig.adoc
