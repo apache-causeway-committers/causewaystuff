@@ -37,7 +37,6 @@ class AssetGenerationTest {
     private Path projdir = Path.of("d:/tmp/companion/petclinic"); //TODO use FileUtils.tempDir("causewaystuff-companion-test")
     
     private IndentingWriterFactory indentingWriterFactory;
-    private MavenMultiModuleBuild mavenMultiModuleBuild;
     
     private CoProjectDescription projDescription;
     private CoProjectContributor makedirProjectContributor;
@@ -46,7 +45,6 @@ class AssetGenerationTest {
     @BeforeEach
     void setup() throws IOException {
         this.indentingWriterFactory = new CaAssetGenerationConfiguration().indentingWriterFactory();
-        this.mavenMultiModuleBuild = new MavenMultiModuleBuild();
         
         var schemaFile = ResourceFolder.testResourceRoot().relativeFile("petclinic/companion-app-petclinic.yaml").toPath();
         var yaml = Files.readString(schemaFile);
@@ -54,7 +52,7 @@ class AssetGenerationTest {
         
         this.makedirProjectContributor = new CaAssetGenerationConfiguration().makedirProjectContributor(projDescription);
         this.mavenBuildProjectContributor = new MavenProjectGenerationConfiguration()
-            .mavenMultiModuleBuildProjectContributor(projDescription, mavenMultiModuleBuild, indentingWriterFactory);
+            .mavenMultiModuleBuildProjectContributor(projDescription, new MavenMultiModuleBuild(), indentingWriterFactory);
     }
     
     @DisabledIfRunningWithSurefire // WIP
