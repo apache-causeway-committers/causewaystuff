@@ -46,5 +46,4 @@ public enum LicenseHeader {
 
     private final String text;
 
-    public static int MAX_LINES = 15; 
 }

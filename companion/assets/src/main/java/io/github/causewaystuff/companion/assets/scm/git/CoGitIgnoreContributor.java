@@ -19,11 +19,9 @@
 package io.github.causewaystuff.companion.assets.scm.git;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
-import lombok.SneakyThrows;
-
+import io.github.causewaystuff.companion.assets.AssetUtils;
 import io.spring.initializr.generator.project.contributor.SingleResourceProjectContributor;
 import io.spring.initializr.generator.spring.scm.git.GitIgnore;
 import io.spring.initializr.generator.spring.scm.git.GitIgnoreContributor;
@@ -44,24 +42,10 @@ class CoGitIgnoreContributor extends GitIgnoreContributor {
     
     @Override
     public void contribute(Path projectRoot) throws IOException {
-        
-        var file = projectRoot.resolve(".gitignore");
-        
-        // override strategy: only override if is generated
-        if(Files.exists(file)) {
-            if(isGenerated(file)) {
-                Files.delete(file);
-            } else {
-                return; // keep
-            }
-        }
-
-        super.contribute(projectRoot);
+        AssetUtils.override(
+            projectRoot.resolve(".gitignore"), 
+            AssetUtils.anyLineContains(GENERATED_NOTICE), 
+            file->super.contribute(projectRoot));
     }
 
-    @SneakyThrows
-    private boolean isGenerated(Path file) {
-        return Files.readAllLines(file).stream()
-            .anyMatch(line->line.contains(GENERATED_NOTICE));
-    }
 }
