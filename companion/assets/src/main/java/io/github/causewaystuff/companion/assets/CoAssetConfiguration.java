@@ -30,10 +30,22 @@ import io.spring.initializr.generator.project.ProjectDirectoryFactory;
 @Configuration
 public class CoAssetConfiguration {
     
+    /**
+     * Excludes some contributors from the initializr-spring artifact, so we can provide our own.
+     * 
+     * @see io.spring.initializr.generator.spring.scm.git.GitIgnoreContributor
+     * @see io.spring.initializr.generator.spring.build.maven.MavenWrapperContributor
+     * @see io.spring.initializr.generator.spring.build.maven.MavenBuildProjectContributor
+     * @see io.spring.initializr.generator.spring.code.MainSourceCodeProjectContributor
+     * @see io.spring.initializr.generator.spring.code.TestSourceCodeProjectContributor
+     */
     @Bean(name = "companionAssetGenerator")
     public ProjectAssetGenerator<Path> companionAssetGenerator(ProjectDirectoryFactory projectDirectoryFactory) {
         return new CoProjectAssetGenerator(projectDirectoryFactory, 
             // exclusions
-            Set.of("MavenWrapperContributor", "MavenBuildProjectContributor"));
+            Set.of(
+                "GitIgnoreContributor",
+                "MavenWrapperContributor", "MavenBuildProjectContributor",
+                "MainSourceCodeProjectContributor", "TestSourceCodeProjectContributor"));
     }
 }

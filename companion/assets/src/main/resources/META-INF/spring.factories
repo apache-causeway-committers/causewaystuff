@@ -1,7 +1,8 @@
 io.spring.initializr.generator.project.ProjectGenerationConfiguration=\
 io.github.causewaystuff.companion.assets.CoAssetGenerationConfiguration,\
 io.github.causewaystuff.companion.assets.build.maven.MavenProjectGenerationConfiguration,\
-io.github.causewaystuff.companion.assets.code.java.JavaProjectGenerationConfiguration
+io.github.causewaystuff.companion.assets.code.java.JavaProjectGenerationConfiguration,\
+io.github.causewaystuff.companion.assets.scm.git.GitProjectGenerationConfiguration
 
 io.spring.initializr.generator.packaging.PackagingFactory=\
 io.github.causewaystuff.companion.assets.build.maven.PomPackagingFactory
