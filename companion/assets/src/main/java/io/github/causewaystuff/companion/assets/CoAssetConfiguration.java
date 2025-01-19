@@ -33,6 +33,7 @@ public class CoAssetConfiguration {
     /**
      * Excludes some contributors from the initializr-spring artifact, so we can provide our own.
      * 
+     * @see io.spring.initializr.generator.spring.properties.ApplicationPropertiesContributor
      * @see io.spring.initializr.generator.spring.scm.git.GitIgnoreContributor
      * @see io.spring.initializr.generator.spring.build.maven.MavenWrapperContributor
      * @see io.spring.initializr.generator.spring.build.maven.MavenBuildProjectContributor
@@ -44,7 +45,7 @@ public class CoAssetConfiguration {
         return new CoProjectAssetGenerator(projectDirectoryFactory, 
             // exclusions
             Set.of(
-                "GitIgnoreContributor",
+                "ApplicationPropertiesContributor", "GitIgnoreContributor",
                 "MavenWrapperContributor", "MavenBuildProjectContributor",
                 "MainSourceCodeProjectContributor", "TestSourceCodeProjectContributor"));
     }

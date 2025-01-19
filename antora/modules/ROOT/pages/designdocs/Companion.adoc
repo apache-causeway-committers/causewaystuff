@@ -1,3 +1,45 @@
 = Companion (Design Document)
 
-TODO
+Companion comes with a _Schema_ and CLI, such that given a YAML file as input, 
+we can create an entire Causeway application.
+
+[plantuml,fig-cli,svg]
+.Companion CLI
+----
+@startuml
+
+:companion-app.yaml;
+
+:root
+└── module 1
+    └── entities
+    └── viewmodels
+└── module 2
+    └── entities
+    └── viewmodels
+..
+└── webapp
+└── test;
+
+@enduml
+----
+
+== Companion Schema
+
+Various aspects of the resulting application can be configured.
+
+=== Entities and Viewmodels
+ 
+Auto generates _entities_ and _viewmodels_ from provided _Companion Schema_.  
+
+=== Docker
+ 
+JIB support.
+
+=== Documentation
+ 
+Using _Antora_.
+
+=== CI 
+ 
+Support for Github and Gitlab.
