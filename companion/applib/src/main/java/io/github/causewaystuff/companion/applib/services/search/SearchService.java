@@ -21,9 +21,9 @@ package io.github.causewaystuff.companion.applib.services.search;
 import java.util.List;
 import java.util.function.Function;
 
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 
 public interface SearchService {
 

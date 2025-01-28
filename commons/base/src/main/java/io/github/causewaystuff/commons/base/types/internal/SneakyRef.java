@@ -21,7 +21,7 @@ package io.github.causewaystuff.commons.base.types.internal;
 import org.springframework.util.ClassUtils;
 
 import lombok.Getter;
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 

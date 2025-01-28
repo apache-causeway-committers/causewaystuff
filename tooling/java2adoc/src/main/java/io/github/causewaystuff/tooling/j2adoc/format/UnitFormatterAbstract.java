@@ -48,7 +48,7 @@ import org.apache.causeway.valuetypes.asciidoc.builder.AsciiDocFactory;
 import static org.apache.causeway.valuetypes.asciidoc.builder.AsciiDocFactory.block;
 
 import lombok.AccessLevel;
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)

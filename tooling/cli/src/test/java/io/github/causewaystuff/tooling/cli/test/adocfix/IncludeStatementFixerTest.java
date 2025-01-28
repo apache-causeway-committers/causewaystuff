@@ -31,7 +31,7 @@ import org.apache.causeway.commons.internal.collections._Sets;
 import org.apache.causeway.commons.io.TextUtils;
 import org.apache.causeway.valuetypes.asciidoc.builder.include.IncludeStatements;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 
 class IncludeStatementFixerTest {
 

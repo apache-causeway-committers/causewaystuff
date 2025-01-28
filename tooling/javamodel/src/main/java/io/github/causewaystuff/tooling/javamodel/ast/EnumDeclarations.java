@@ -26,7 +26,7 @@ import com.github.javaparser.ast.body.EnumDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 
 public final class EnumDeclarations {
 

@@ -36,7 +36,7 @@ import org.apache.causeway.commons.internal.exceptions._Exceptions;
 
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @Getter

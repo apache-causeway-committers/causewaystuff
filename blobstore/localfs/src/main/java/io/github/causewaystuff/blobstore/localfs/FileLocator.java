@@ -20,11 +20,11 @@ package io.github.causewaystuff.blobstore.localfs;
 
 import java.io.File;
 
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import org.apache.causeway.commons.io.FileUtils;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import io.github.causewaystuff.blobstore.applib.BlobDescriptor;
 import io.github.causewaystuff.blobstore.localfs.LocalFsBlobStore.DescriptorDto;
@@ -108,7 +108,7 @@ record FileLocator(
 
     private static File honorCompressionExtension(
             final File manifestFile,
-            final @Nullable BlobDescriptor.Compression compressionIfAny) {
+            final BlobDescriptor.@Nullable Compression compressionIfAny) {
         var compression = compressionIfAny!=null
                 ? compressionIfAny
                 : DescriptorDto.readFrom(manifestFile).compression();

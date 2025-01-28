@@ -27,7 +27,7 @@ import org.apache.causeway.commons.internal.base._Refs;
 import org.apache.causeway.commons.io.FileUtils;
 import org.apache.causeway.valuetypes.asciidoc.builder.AsciiDocWriter;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 import lombok.SneakyThrows;
 
 import lombok.extern.log4j.Log4j2;
@@ -44,7 +44,7 @@ final class ProjectDocWriter {
             final @NonNull CliConfig cliConfig,
             final @NonNull Document overviewAdoc,
             final @NonNull J2AdocContext j2aContext,
-            final @NonNull ProjectDocModel.Mode mode) {
+            final ProjectDocModel.@NonNull Mode mode) {
 
         @SuppressWarnings("unused")
         var global = cliConfig.getGlobal();
@@ -128,7 +128,7 @@ final class ProjectDocWriter {
     // generate output file based on unit's namespace and unit's name
     private static File adocDestinationFileForUnit(
             final @NonNull J2AdocUnit unit,
-            final @NonNull CliConfig.Commands.Index index) {
+            final CliConfig.Commands.@NonNull Index index) {
 
         // eg: antora/components/refguide-index
         final File indexRootFolder = index.getRootFolder();

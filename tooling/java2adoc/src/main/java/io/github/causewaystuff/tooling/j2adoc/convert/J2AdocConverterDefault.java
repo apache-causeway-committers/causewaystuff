@@ -47,7 +47,7 @@ import io.github.causewaystuff.tooling.javamodel.ast.MethodDeclarations;
 import org.apache.causeway.valuetypes.asciidoc.builder.AsciiDocFactory;
 import org.apache.causeway.valuetypes.asciidoc.builder.ast.SimpleBlock;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 
 public final class J2AdocConverterDefault extends J2AdocConverterAbstract {
 

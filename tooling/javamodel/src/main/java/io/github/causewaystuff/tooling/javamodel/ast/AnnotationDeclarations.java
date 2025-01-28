@@ -25,7 +25,7 @@ import com.github.javaparser.ast.body.AnnotationMemberDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 
 public final class AnnotationDeclarations {
 

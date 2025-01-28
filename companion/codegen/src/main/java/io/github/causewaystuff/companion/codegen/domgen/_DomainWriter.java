@@ -31,7 +31,7 @@ import java.util.stream.Stream;
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.JavaFileModel;
 import io.github.causewaystuff.companion.schema.LicenseHeader;
 import io.github.causewaystuff.tooling.javapoet.JavaFile;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import org.apache.causeway.commons.internal.assertions._Assert;
 import org.apache.causeway.commons.internal.base._Strings;
@@ -39,7 +39,7 @@ import org.apache.causeway.commons.internal.exceptions._Exceptions;
 import org.apache.causeway.commons.io.FileUtils;
 import org.apache.causeway.commons.io.TextUtils;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 import lombok.SneakyThrows;
 
 import lombok.experimental.UtilityClass;

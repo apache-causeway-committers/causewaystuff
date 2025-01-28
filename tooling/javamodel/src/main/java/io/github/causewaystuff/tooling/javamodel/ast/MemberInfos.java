@@ -21,7 +21,7 @@ package io.github.causewaystuff.tooling.javamodel.ast;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import io.github.causewaystuff.tooling.codeassert.model.MemberInfo;
 

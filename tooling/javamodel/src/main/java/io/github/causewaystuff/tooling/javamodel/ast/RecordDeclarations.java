@@ -18,7 +18,7 @@
  */
 package io.github.causewaystuff.tooling.javamodel.ast;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.stream.Stream;
 

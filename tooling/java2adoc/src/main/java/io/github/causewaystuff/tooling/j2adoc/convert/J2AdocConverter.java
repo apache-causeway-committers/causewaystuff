@@ -27,7 +27,7 @@ import com.github.javaparser.javadoc.Javadoc;
 
 import org.asciidoctor.ast.Document;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import io.github.causewaystuff.tooling.j2adoc.J2AdocContext;
 import io.github.causewaystuff.tooling.j2adoc.J2AdocUnit;

@@ -20,7 +20,7 @@ package io.github.causewaystuff.tooling.javamodel.ast;
 
 import com.github.javaparser.ast.body.CallableDeclaration;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 
 //TODO effective public might require more context
 public final class CallableDeclarations {

@@ -23,7 +23,7 @@ import org.apache.commons.compress.archivers.sevenz.SevenZMethod;
 import org.apache.causeway.applib.value.Blob;
 import org.apache.causeway.applib.value.NamedWithMimeType.CommonMimeType;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.blobstore.applib.BlobDescriptor;
@@ -35,8 +35,8 @@ class CompressUtils {
     Blob recompressBlob(
             final @NonNull Blob blob,
             final @NonNull CommonMimeType mimeForUncompressed,
-            final @NonNull BlobDescriptor.Compression compressionIn,
-            final @NonNull BlobDescriptor.Compression compressionOut) {
+            final BlobDescriptor.@NonNull Compression compressionIn,
+            final BlobDescriptor.@NonNull Compression compressionOut) {
         if(compressionIn == compressionOut) return blob;
         final Blob base = switch (compressionIn) {
             case NONE -> blob;

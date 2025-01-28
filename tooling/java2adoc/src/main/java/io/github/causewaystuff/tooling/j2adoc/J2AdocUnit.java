@@ -39,7 +39,7 @@ import io.github.causewaystuff.tooling.javamodel.ast.CompilationUnits;
 import io.github.causewaystuff.tooling.javamodel.ast.PackageDeclarations;
 
 import lombok.Getter;
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 

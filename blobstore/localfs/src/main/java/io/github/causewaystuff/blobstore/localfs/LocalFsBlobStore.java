@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Repository;
 
 import org.apache.causeway.applib.value.Blob;
@@ -40,7 +40,7 @@ import org.apache.causeway.commons.io.DataSource;
 import org.apache.causeway.commons.io.FileUtils;
 import org.apache.causeway.commons.io.YamlUtils;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 import lombok.SneakyThrows;
 import lombok.Synchronized;
 import lombok.extern.log4j.Log4j2;
@@ -168,7 +168,7 @@ public class LocalFsBlobStore implements BlobStore {
     @Override
     public BlobDescriptor compress(
             final @NonNull BlobDescriptor blobDescriptor,
-            final @NonNull BlobDescriptor.Compression compression) {
+            final BlobDescriptor.@NonNull Compression compression) {
         var oldCompression = blobDescriptor.compression();
         if(oldCompression.equals(compression)) {
             return blobDescriptor;

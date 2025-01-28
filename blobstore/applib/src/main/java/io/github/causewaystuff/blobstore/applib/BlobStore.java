@@ -20,12 +20,12 @@ package io.github.causewaystuff.blobstore.applib;
 
 import java.util.Optional;
 
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import org.apache.causeway.applib.value.Blob;
 import org.apache.causeway.commons.collections.Can;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import io.github.causewaystuff.commons.base.types.NamedPath;
 
@@ -84,6 +84,6 @@ public interface BlobStore {
      * @param compression
      * @return new {@link BlobDescriptor} with new compression value from given compression parameter.
      */
-    BlobDescriptor compress(@NonNull BlobDescriptor blobDescriptor, @NonNull BlobDescriptor.Compression compression);
+    BlobDescriptor compress(@NonNull BlobDescriptor blobDescriptor, BlobDescriptor.@NonNull Compression compression);
 
 }

@@ -28,7 +28,7 @@ import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.internal.collections._Multimaps;
 import org.apache.causeway.commons.internal.collections._Multimaps.ListMultimap;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import lombok.experimental.UtilityClass;
 
@@ -42,7 +42,7 @@ import io.github.causewaystuff.tooling.javapoet.TypeSpec;
 class _GenModule {
 
     public QualifiedType qualifiedType(
-            final @NonNull DomainGenerator.Config config,
+            final DomainGenerator.@NonNull Config config,
             final @NonNull DomainModel domainModel) {
 
         var packageName = config.fullPackageName(config.entitiesModulePackageName());

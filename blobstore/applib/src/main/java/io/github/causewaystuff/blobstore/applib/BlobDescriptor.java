@@ -24,7 +24,7 @@ import java.util.Map;
 
 import jakarta.activation.MimeType;
 
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import org.apache.causeway.applib.value.NamedWithMimeType.CommonMimeType;
 import org.apache.causeway.commons.collections.Can;

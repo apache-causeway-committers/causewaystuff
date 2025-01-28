@@ -26,7 +26,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.util.ReflectionUtils;
 
 import org.apache.causeway.commons.collections.Can;
@@ -35,7 +35,7 @@ import org.apache.causeway.commons.internal.base._Strings;
 import org.apache.causeway.commons.internal.collections._Multimaps;
 
 import lombok.Builder;
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 import lombok.Value;
 import lombok.experimental.Accessors;
 
@@ -47,7 +47,7 @@ import io.github.causewaystuff.tooling.javapoet.ClassName;
 import io.github.causewaystuff.tooling.javapoet.JavaFile;
 import io.github.causewaystuff.tooling.javapoet.TypeSpec;
 
-public record DomainGenerator(@NonNull DomainGenerator.Config config) {
+public record DomainGenerator(DomainGenerator.@NonNull Config config) {
 
     @Value @Builder @Accessors(fluent=true)
     public static class Config {
@@ -60,7 +60,7 @@ public record DomainGenerator(@NonNull DomainGenerator.Config config) {
         private final @NonNull Persistence persistence = Persistence.NONE;
         @Builder.Default
         private final @NonNull LicenseHeader licenseHeader = LicenseHeader.NONE;
-        private final @NonNull Schema.Domain domain;
+        private final Schema.@NonNull Domain domain;
         @Builder.Default
         private final @NonNull String entitiesModulePackageName = "";
         @Builder.Default
@@ -129,7 +129,7 @@ public record DomainGenerator(@NonNull DomainGenerator.Config config) {
     }
 
     public record DomainModel(
-            @NonNull Schema.Domain schema,
+            Schema.@NonNull Domain schema,
             @NonNull List<JavaFileModel> configBeans,
             @NonNull List<JavaFileModel> modules,
             @NonNull List<JavaFileModel> viewmodels,

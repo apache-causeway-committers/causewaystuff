@@ -29,7 +29,7 @@ import org.apache.causeway.commons.io.YamlUtils;
 
 import lombok.Data;
 import lombok.Getter;
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import io.github.causewaystuff.tooling.j2adoc.format.UnitFormatter;
 import io.github.causewaystuff.tooling.j2adoc.format.UnitFormatterCompact;

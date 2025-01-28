@@ -28,7 +28,7 @@ import org.apache.causeway.commons.io.TextUtils;
 import org.apache.causeway.valuetypes.asciidoc.builder.include.IncludeStatement;
 import org.apache.causeway.valuetypes.asciidoc.builder.include.IncludeStatements;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import lombok.extern.log4j.Log4j2;
 

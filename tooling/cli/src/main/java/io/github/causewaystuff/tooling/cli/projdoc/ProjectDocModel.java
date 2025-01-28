@@ -37,7 +37,7 @@ import java.util.stream.Stream;
 
 import org.asciidoctor.ast.Document;
 
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.functional.IndexedConsumer;
@@ -56,7 +56,7 @@ import static org.apache.causeway.valuetypes.asciidoc.builder.AsciiDocFactory.ta
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 

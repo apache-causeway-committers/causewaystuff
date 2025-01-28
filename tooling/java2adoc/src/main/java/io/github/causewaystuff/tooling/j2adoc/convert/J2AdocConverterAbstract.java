@@ -33,11 +33,11 @@ import com.github.javaparser.javadoc.description.JavadocSnippet;
 import org.asciidoctor.ast.Document;
 import org.jsoup.Jsoup;
 
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import org.apache.causeway.commons.collections.Can;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import io.github.causewaystuff.tooling.j2adoc.J2AdocContext;
 import io.github.causewaystuff.tooling.j2adoc.J2AdocUnit;

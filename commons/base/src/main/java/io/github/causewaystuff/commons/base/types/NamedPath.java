@@ -25,14 +25,14 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.internal.assertions._Assert;
 import org.apache.causeway.commons.internal.base._Strings;
 import org.apache.causeway.commons.internal.exceptions._Exceptions;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Wraps a collection of non-null {@link String}(s) which represents the names of a (general purpose) path.
@@ -49,7 +49,7 @@ public record NamedPath(@NonNull Can<String> names) implements Iterable<String> 
         return new NamedPath(Can.ofArray(names));
     }
 
-    public static NamedPath of(final @Nullable java.nio.file.Path path) {
+    public static NamedPath of(final java.nio.file.@Nullable Path path) {
         if(path==null
                 || path.getNameCount()==0) {
             return empty();

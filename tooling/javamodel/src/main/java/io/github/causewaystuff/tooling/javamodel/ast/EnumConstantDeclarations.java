@@ -20,7 +20,7 @@ package io.github.causewaystuff.tooling.javamodel.ast;
 
 import com.github.javaparser.ast.body.EnumConstantDeclaration;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 
 public final class EnumConstantDeclarations {
 

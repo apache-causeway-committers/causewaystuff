@@ -33,7 +33,7 @@ import org.asciidoctor.ast.StructuralNode;
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.valuetypes.asciidoc.builder.AsciiDocFactory;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import io.github.causewaystuff.tooling.j2adoc.J2AdocContext;
 import io.github.causewaystuff.tooling.j2adoc.J2AdocUnit;

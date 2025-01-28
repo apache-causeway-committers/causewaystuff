@@ -22,7 +22,7 @@ import java.util.function.Predicate;
 
 import org.apache.causeway.commons.internal.base._Strings;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 import lombok.extern.log4j.Log4j2;
 
 import io.github.causewaystuff.tooling.codeassert.model.CodeClass;

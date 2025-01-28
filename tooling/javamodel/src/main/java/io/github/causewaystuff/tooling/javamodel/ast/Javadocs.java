@@ -31,7 +31,7 @@ import com.github.javaparser.javadoc.Javadoc;
 import com.github.javaparser.javadoc.JavadocBlockTag;
 import com.github.javaparser.javadoc.description.JavadocDescription;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 
 public final class Javadocs {
 

@@ -25,7 +25,7 @@ import com.github.javaparser.ast.PackageDeclaration;
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.internal.base._Strings;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 
 public final class PackageDeclarations {
 

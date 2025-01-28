@@ -24,7 +24,7 @@ import com.github.javaparser.printer.configuration.DefaultPrinterConfiguration;
 import com.github.javaparser.printer.configuration.DefaultPrinterConfiguration.ConfigOption;
 import com.github.javaparser.printer.configuration.PrinterConfiguration;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 
 public final class AnnotationMemberDeclarations {
 

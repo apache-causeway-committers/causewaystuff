@@ -18,7 +18,7 @@
  */
 package io.github.causewaystuff.companion.applib.services.iconfa;
 
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import org.apache.causeway.applib.fa.FontAwesomeLayers;
 

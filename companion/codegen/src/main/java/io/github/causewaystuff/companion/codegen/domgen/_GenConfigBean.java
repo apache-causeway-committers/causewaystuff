@@ -25,7 +25,7 @@ import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.Qualifie
 import io.github.causewaystuff.tooling.javapoet.ClassName;
 import io.github.causewaystuff.tooling.javapoet.TypeSpec;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import lombok.experimental.UtilityClass;
 
@@ -33,7 +33,7 @@ import lombok.experimental.UtilityClass;
 class _GenConfigBean {
 
     public QualifiedType qualifiedType(
-            final @NonNull DomainGenerator.Config config,
+            final DomainGenerator.@NonNull Config config,
             final @NonNull DomainModel domainModel) {
 
         var packageName = config.fullPackageName(config.entitiesModulePackageName());

@@ -26,7 +26,7 @@ import com.github.javaparser.ast.type.TypeParameter;
 
 import org.apache.causeway.commons.collections.Can;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 
 //TODO effective public might require more context
 public final class ConstructorDeclarations {

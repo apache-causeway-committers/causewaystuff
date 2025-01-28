@@ -23,7 +23,7 @@ import com.github.javaparser.ast.type.TypeParameter;
 
 import org.apache.causeway.commons.collections.Can;
 
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 
 public final class TypeDeclarations {
 
