@@ -75,7 +75,7 @@ public class CompanionCli {
             var map = new HashMap<String, ResourceFolder>();
             Can.ofArray(args).stream()
                 .map(kv->_Strings.parseKeyValuePair(kv, '=').orElseThrow())
-                .forEach(kvp->map.put(kvp.getKey(), ResourceFolder.ofFileName(kvp.getValue()) ));
+                .forEach(kvp->map.put(kvp.key(), ResourceFolder.ofFileName(kvp.value()) ));
             var projectRoot = map.get("projectRoot");
             if(projectRoot==null) {
                 printUsageAndExit();

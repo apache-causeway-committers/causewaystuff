@@ -54,48 +54,48 @@ import io.spring.initializr.metadata.InitializrMetadata;
 })
 public class CompanionCli implements ApplicationRunner, ApplicationContextAware  {
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         SpringApplication.run(CompanionCli.class, args);
     }
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
         springContextRef.set(applicationContext);
     }
-    
+
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(final ApplicationArguments args) throws Exception {
         var argsModel = ArgsModel.parse(args.getSourceArgs());
         var springContext = springContextRef.get();
-        
+
         var projectGenerator = new ProjectGenerator(
             projectGenerationContext -> customizeProjectGenerationContext(projectGenerationContext, argsModel));
-        
+
         var initializrMetadata = springContext.getBean(InitializrMetadata.class);
-        
+
         var projectDescription = new CoMutableProjectDescription(
-            argsModel.projectRoot().root().toPath(), 
+            argsModel.projectRoot().root().toPath(),
             argsModel.appModel(),
             initializrMetadata);
-            
+
         var assetGenerator = _Casts.<ProjectAssetGenerator<Path>>uncheckedCast(springContext.getBean("companionAssetGenerator"));
         projectGenerator.generate(projectDescription, assetGenerator);
     }
-    
+
     private void customizeProjectGenerationContext(
-            ProjectGenerationContext projectGenerationContext,
-            ArgsModel argsModel) {
+            final ProjectGenerationContext projectGenerationContext,
+            final ArgsModel argsModel) {
         projectGenerationContext.setParent(springContextRef.get());
     }
 
     // -- HELPER
-    
+
     final AtomicReference<ApplicationContext> springContextRef = new AtomicReference<>();
 
     record ArgsModel(
         ResourceFolder projectRoot,
         CoApplication appModel) {
-        
+
         @SneakyThrows
         static ArgsModel parse(final String[] args) {
             if(args.length==0) {
@@ -105,7 +105,7 @@ public class CompanionCli implements ApplicationRunner, ApplicationContextAware 
             var map = new HashMap<String, String>();
             Can.ofArray(args).stream()
                 .map(kv->_Strings.parseKeyValuePair(kv, '=').orElseThrow())
-                .forEach(kvp->map.put(kvp.getKey(), kvp.getValue() ));
+                .forEach(kvp->map.put(kvp.key(), kvp.value() ));
             var projectRoot = ResourceFolder.ofFileName(map.get("projectRoot"));
             if(projectRoot==null) {
                 printUsageAndExit();
@@ -118,10 +118,10 @@ public class CompanionCli implements ApplicationRunner, ApplicationContextAware 
                 return null;
             }
             return new ArgsModel(
-                projectRoot, 
+                projectRoot,
                 CoApplication.fromYaml(Files.readString(schema.toPath(), StandardCharsets.UTF_8)));
         }
-        
+
         static void printUsageAndExit() {
             System.err.println(
                     """
