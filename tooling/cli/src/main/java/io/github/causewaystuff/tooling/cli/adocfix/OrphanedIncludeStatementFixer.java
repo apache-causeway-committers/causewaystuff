@@ -65,14 +65,14 @@ public final class OrphanedIncludeStatementFixer {
 
             var lines = IncludeStatements.rewrite(originLines, include->{
                 final boolean inGlobalIndex =
-                        "refguide".equals(include.getComponent())               // TODO should be reasoned from config
-                        && include.getNamespace().startsWith(Can.of("index"));  // TODO should be reasoned from config
+                        "refguide".equals(include.component())               // TODO should be reasoned from config
+                        && include.namespace().startsWith(Can.of("index"));  // TODO should be reasoned from config
                 if(include.isLocal() || !inGlobalIndex) {
                     return null; // keep original line, don't mangle
                 }
 
                 var correctedIncludeStatement = _Refs.<IncludeStatement>objectRef(null);
-                var typeSimpleName = include.getCanonicalName();
+                var typeSimpleName = include.canonicalName();
 
                 j2aContext.findUnitByTypeSimpleName(typeSimpleName)
                 .ifPresent(unit->{
@@ -96,8 +96,8 @@ public final class OrphanedIncludeStatementFixer {
 
                     var includeLineShouldBe = expected.toAdocAsString();
 
-                    if(!includeLineShouldBe.equals(include.getMatchingLine())) {
-                        log.warn("mismatch\n {}\n {}\n", includeLineShouldBe, include.getMatchingLine());
+                    if(!includeLineShouldBe.equals(include.matchingLine())) {
+                        log.warn("mismatch\n {}\n {}\n", includeLineShouldBe, include.matchingLine());
                         correctedIncludeStatement.setValue(expected);
                         fixedCounter.incAndGet();
                     }

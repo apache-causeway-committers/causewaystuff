@@ -59,8 +59,8 @@ class IncludeStatementFixerTest {
 
         IncludeStatements.find(lines)
         .filter(include->!include.isLocal()
-                && "system".equals(include.getComponent())
-                && "generated".equals(include.getModule()))
+                && "system".equals(include.component())
+                && "generated".equals(include.module()))
         .forEach(include->{
             onName.accept(include.toString());
         });
