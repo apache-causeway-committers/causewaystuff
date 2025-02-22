@@ -21,7 +21,7 @@ module io.github.causewaystuff.companion.codegen {
     exports io.github.causewaystuff.companion.codegen.model;
     exports io.github.causewaystuff.companion.codegen.structgen;
 
-    requires lombok;
+    requires static lombok;
     requires jakarta.inject;
     requires java.compiler;
     requires transitive org.apache.causeway.applib;
@@ -37,6 +37,7 @@ module io.github.causewaystuff.companion.codegen {
     requires maven.model;
     requires maven.impl;
     requires maven.api.model;
+    requires org.codehaus.stax2;
 
     opens io.github.causewaystuff.companion.codegen.cli to com.fasterxml.jackson.databind;
 }
