@@ -20,9 +20,9 @@ package io.github.causewaystuff.companion.codegen.domgen;
 
 import javax.lang.model.element.Modifier;
 
-import io.github.causewaystuff.tooling.javapoet.ClassName;
-import io.github.causewaystuff.tooling.javapoet.FieldSpec;
-import io.github.causewaystuff.tooling.javapoet.TypeName;
+import io.micronaut.sourcegen.javapoet.ClassName;
+import io.micronaut.sourcegen.javapoet.FieldSpec;
+import io.micronaut.sourcegen.javapoet.TypeName;
 
 import lombok.experimental.UtilityClass;
 

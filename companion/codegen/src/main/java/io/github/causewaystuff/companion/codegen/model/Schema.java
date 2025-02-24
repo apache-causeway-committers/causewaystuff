@@ -46,8 +46,8 @@ import io.github.causewaystuff.commons.base.types.internal.ObjectRef;
 import io.github.causewaystuff.commons.base.types.internal.SneakyRef;
 import io.github.causewaystuff.companion.codegen.model._Parser.ParserHint;
 import io.github.causewaystuff.companion.schema.LicenseHeader;
-import io.github.causewaystuff.tooling.javapoet.ClassName;
-import io.github.causewaystuff.tooling.javapoet.TypeName;
+import io.micronaut.sourcegen.javapoet.ClassName;
+import io.micronaut.sourcegen.javapoet.TypeName;
 
 /**
  * Read and write schema model from and to YAML format.

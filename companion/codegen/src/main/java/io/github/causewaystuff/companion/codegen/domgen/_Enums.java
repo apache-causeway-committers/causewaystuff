@@ -23,10 +23,10 @@ import java.util.List;
 import javax.lang.model.element.Modifier;
 
 import io.github.causewaystuff.companion.codegen.model.Schema;
-import io.github.causewaystuff.tooling.javapoet.ClassName;
-import io.github.causewaystuff.tooling.javapoet.FieldSpec;
-import io.github.causewaystuff.tooling.javapoet.TypeName;
-import io.github.causewaystuff.tooling.javapoet.TypeSpec;
+import io.micronaut.sourcegen.javapoet.ClassName;
+import io.micronaut.sourcegen.javapoet.FieldSpec;
+import io.micronaut.sourcegen.javapoet.TypeName;
+import io.micronaut.sourcegen.javapoet.TypeSpec;
 
 import org.apache.causeway.commons.internal.assertions._Assert;
 import org.apache.causeway.commons.internal.base._NullSafe;

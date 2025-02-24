@@ -43,8 +43,7 @@ public class Survey_delete {
     private final Survey mixee;
 
     @MemberSupport
-    public Survey.Manager act(
-            @ParameterLayout(labelPosition = LabelPosition.TOP, multiLine = 12) String dependants) {
+    public Survey.Manager act(@ParameterLayout(labelPosition = LabelPosition.TOP, multiLine = 12) String dependants) {
         repositoryService.remove(mixee);
         foreignKeyLookup.clearCache(mixee.getClass());
         return new Survey.Manager(searchService, "");

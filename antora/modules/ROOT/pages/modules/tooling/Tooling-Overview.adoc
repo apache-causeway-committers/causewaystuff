@@ -51,12 +51,6 @@ and patched them with support for adoc files, also defining a stable JPMS module
 
 See also https://github.com/nidi3/code-assert/pull/47
 
-| tooling-javapoet 
-| _Javapoet_ is a library for Java source file generation.
-
-We relocated its packages to `io.github.causewaystuff.tooling.javapoet.*`
-and patched them with support for Java records, also defining a stable JPMS module name. 
-
 | tooling-structurizr 
 | _Structurizr_ is a library for system diagram generation.
 

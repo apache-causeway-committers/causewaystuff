@@ -192,35 +192,26 @@ public class Survey implements Cloneable<Survey>, HasSecondaryKey<Survey> {
 
     /**
      * Parameter model for @{link Survey}
+     *
      * @param code Unique (application scoped) survey identifier.
      * @param name Descriptive survey name.
      */
     @Generated("io.github.causewaystuff.companion.codegen.domgen._GenEntity_Params")
     public final record Params(
-            @Parameter(
-                    precedingParamsPolicy = PrecedingParamsPolicy.PRESERVE_CHANGES,
-                    optionality = Optionality.MANDATORY
-            )
-            @ParameterLayout(
-                    describedAs = "Unique (application scoped) survey identifier."
-            )
-            String code,
-            @Parameter(
-                    precedingParamsPolicy = PrecedingParamsPolicy.PRESERVE_CHANGES,
-                    optionality = Optionality.MANDATORY
-            )
-            @ParameterLayout(
-                    describedAs = "Descriptive survey name."
-            )
-            String name) {
+            @Parameter(precedingParamsPolicy = PrecedingParamsPolicy.PRESERVE_CHANGES, optionality = Optionality.MANDATORY) @ParameterLayout(describedAs = "Unique (application scoped) survey identifier.") String code,
+            @Parameter(precedingParamsPolicy = PrecedingParamsPolicy.PRESERVE_CHANGES, optionality = Optionality.MANDATORY) @ParameterLayout(describedAs = "Descriptive survey name.") String name
+    ) {
     }
 
     /**
      * SecondaryKey for @{link Survey}
+     *
      * @param code Unique (application scoped) survey identifier.
      */
     @Generated("io.github.causewaystuff.companion.codegen.domgen._GenEntity_SecondaryKey")
-    public final record SecondaryKey(String code) implements ISecondaryKey<Survey> {
+    public final record SecondaryKey(
+            String code
+    ) implements ISecondaryKey<Survey> {
         @Override
         public Class<Survey> correspondingClass() {
             return Survey.class;

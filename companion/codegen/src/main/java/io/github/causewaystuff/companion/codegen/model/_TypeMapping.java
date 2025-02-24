@@ -23,8 +23,8 @@ import org.apache.causeway.commons.io.TextUtils;
 
 import lombok.experimental.UtilityClass;
 
-import io.github.causewaystuff.tooling.javapoet.ClassName;
-import io.github.causewaystuff.tooling.javapoet.TypeName;
+import io.micronaut.sourcegen.javapoet.ClassName;
+import io.micronaut.sourcegen.javapoet.TypeName;
 
 @UtilityClass
 class _TypeMapping {

@@ -21,7 +21,7 @@ package io.github.causewaystuff.companion.codegen.domgen;
 import java.util.List;
 
 import io.github.causewaystuff.companion.codegen.model.Schema;
-import io.github.causewaystuff.tooling.javapoet.ClassName;
+import io.micronaut.sourcegen.javapoet.ClassName;
 
 import org.apache.causeway.commons.internal.base._Strings;
 

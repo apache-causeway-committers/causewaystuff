@@ -43,8 +43,7 @@ public class Campaign_delete {
     private final Campaign mixee;
 
     @MemberSupport
-    public Campaign.Manager act(
-            @ParameterLayout(labelPosition = LabelPosition.TOP, multiLine = 12) String dependants) {
+    public Campaign.Manager act(@ParameterLayout(labelPosition = LabelPosition.TOP, multiLine = 12) String dependants) {
         repositoryService.remove(mixee);
         foreignKeyLookup.clearCache(mixee.getClass());
         return new Campaign.Manager(searchService, "");

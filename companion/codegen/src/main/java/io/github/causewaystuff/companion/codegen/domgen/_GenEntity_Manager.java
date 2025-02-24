@@ -31,10 +31,10 @@ import lombok.experimental.UtilityClass;
 import io.github.causewaystuff.companion.applib.services.search.SearchService;
 import io.github.causewaystuff.companion.codegen.domgen._Annotations.DomainObjectLayoutSpec;
 import io.github.causewaystuff.companion.codegen.model.Schema;
-import io.github.causewaystuff.tooling.javapoet.ClassName;
-import io.github.causewaystuff.tooling.javapoet.CodeBlock;
-import io.github.causewaystuff.tooling.javapoet.FieldSpec;
-import io.github.causewaystuff.tooling.javapoet.TypeSpec;
+import io.micronaut.sourcegen.javapoet.ClassName;
+import io.micronaut.sourcegen.javapoet.CodeBlock;
+import io.micronaut.sourcegen.javapoet.FieldSpec;
+import io.micronaut.sourcegen.javapoet.TypeSpec;
 
 @UtilityClass
 class _GenEntity_Manager {

@@ -25,10 +25,10 @@ import io.github.causewaystuff.companion.applib.services.lookup.ForeignKeyLookup
 import io.github.causewaystuff.companion.applib.services.search.SearchService;
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.QualifiedType;
 import io.github.causewaystuff.companion.codegen.model.Schema;
-import io.github.causewaystuff.tooling.javapoet.ClassName;
-import io.github.causewaystuff.tooling.javapoet.MethodSpec;
-import io.github.causewaystuff.tooling.javapoet.ParameterSpec;
-import io.github.causewaystuff.tooling.javapoet.TypeSpec;
+import io.micronaut.sourcegen.javapoet.ClassName;
+import io.micronaut.sourcegen.javapoet.MethodSpec;
+import io.micronaut.sourcegen.javapoet.ParameterSpec;
+import io.micronaut.sourcegen.javapoet.TypeSpec;
 
 import org.apache.causeway.applib.annotation.ActionLayout.Position;
 import org.apache.causeway.applib.annotation.LabelPosition;

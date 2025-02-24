@@ -13,6 +13,7 @@ import org.apache.causeway.applib.annotation.PropertyLayout;
 
 /**
  * description goes here
+ *
  * @param respondentOrdinal sequential
  * respondent
  * index
@@ -40,53 +41,24 @@ import org.apache.causeway.applib.annotation.PropertyLayout;
 )
 @Builder
 public record ConsumptionRecord(
-        @PropertyLayout(
-                fieldSetId = "details",
-                sequence = "1",
-                describedAs = "sequential\n"
-                                + "respondent\n"
-                                + "index"
-        )
-        int respondentOrdinal,
-        @PropertyLayout(
-                fieldSetId = "details",
-                sequence = "2",
-                describedAs = "anonymized\n"
-                                + "respondent identifier,\n"
-                                + "unique to the\n"
-                                + "corresponding survey"
-        )
-        String respondentAlias,
-        @PropertyLayout(
-                fieldSetId = "details",
-                sequence = "3",
-                describedAs = "respondent's\n"
-                                + "n-th interview\n"
-                                + "(chronological)"
-        )
-        int interviewOrdinal,
-        @PropertyLayout(
-                fieldSetId = "details",
-                sequence = "4",
-                describedAs = "food\n"
-                                + "consumption\n"
-                                + "occasion\n"
-                                + "code"
-        )
-        String fco,
-        @PropertyLayout(
-                fieldSetId = "details",
-                sequence = "5",
-                describedAs = "meal happened\n"
-                                + "when and where"
-        )
-        String meal,
-        @PropertyLayout(
-                fieldSetId = "details",
-                sequence = "6",
-                describedAs = "w.i.p."
-        )
-        BigDecimal value) {
+        @PropertyLayout(fieldSetId = "details", sequence = "1", describedAs = "sequential\n"
+                        + "respondent\n"
+                        + "index") int respondentOrdinal,
+        @PropertyLayout(fieldSetId = "details", sequence = "2", describedAs = "anonymized\n"
+                        + "respondent identifier,\n"
+                        + "unique to the\n"
+                        + "corresponding survey") String respondentAlias,
+        @PropertyLayout(fieldSetId = "details", sequence = "3", describedAs = "respondent's\n"
+                        + "n-th interview\n"
+                        + "(chronological)") int interviewOrdinal,
+        @PropertyLayout(fieldSetId = "details", sequence = "4", describedAs = "food\n"
+                        + "consumption\n"
+                        + "occasion\n"
+                        + "code") String fco,
+        @PropertyLayout(fieldSetId = "details", sequence = "5", describedAs = "meal happened\n"
+                        + "when and where") String meal,
+        @PropertyLayout(fieldSetId = "details", sequence = "6", describedAs = "w.i.p.") BigDecimal value
+) {
     @ObjectSupport
     public String title() {
         return this.toString();

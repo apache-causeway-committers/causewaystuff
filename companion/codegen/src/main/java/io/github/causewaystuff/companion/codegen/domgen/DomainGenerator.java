@@ -43,9 +43,9 @@ import io.github.causewaystuff.commons.base.types.ResourceFolder;
 import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.companion.schema.LicenseHeader;
 import io.github.causewaystuff.companion.schema.Persistence;
-import io.github.causewaystuff.tooling.javapoet.ClassName;
-import io.github.causewaystuff.tooling.javapoet.JavaFile;
-import io.github.causewaystuff.tooling.javapoet.TypeSpec;
+import io.micronaut.sourcegen.javapoet.ClassName;
+import io.micronaut.sourcegen.javapoet.JavaFile;
+import io.micronaut.sourcegen.javapoet.TypeSpec;
 
 public record DomainGenerator(DomainGenerator.@NonNull Config config) {
 

@@ -39,7 +39,6 @@
     <modules>
         <!-- relocated libraries -->
         <module>codeassert</module>
-        <module>javapoet</module>
         <module>structurizr</module>
         <!-- our code --> 
         <module>c4modeling</module>

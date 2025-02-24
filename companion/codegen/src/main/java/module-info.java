@@ -26,7 +26,6 @@ module io.github.causewaystuff.companion.codegen {
     requires java.compiler;
     requires transitive org.apache.causeway.applib;
     requires transitive org.apache.causeway.commons;
-    requires transitive io.github.causewaystuff.tooling.javapoet;
     requires transitive io.github.causewaystuff.tooling.structurizr;
     requires transitive io.github.causewaystuff.tooling.projectmodel;
     requires transitive io.github.causewaystuff.commons.base;
@@ -38,6 +37,7 @@ module io.github.causewaystuff.companion.codegen {
     requires maven.impl;
     requires maven.api.model;
     requires org.codehaus.stax2;
+    requires io.micronaut.sourcegen.sourcegen_generator_java;
 
     opens io.github.causewaystuff.companion.codegen.cli to com.fasterxml.jackson.databind;
 }

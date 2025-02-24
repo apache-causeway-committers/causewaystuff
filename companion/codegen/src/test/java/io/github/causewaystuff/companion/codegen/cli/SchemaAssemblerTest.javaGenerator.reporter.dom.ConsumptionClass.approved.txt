@@ -39,8 +39,8 @@ public class ConsumptionClass {
             fieldSetId = "details",
             sequence = "1",
             describedAs = "sequential\n"
-                            + "respondent\n"
-                            + "index"
+                    + "respondent\n"
+                    + "index"
     )
     @Getter
     @Setter
@@ -60,9 +60,9 @@ public class ConsumptionClass {
             fieldSetId = "details",
             sequence = "2",
             describedAs = "anonymized\n"
-                            + "respondent identifier,\n"
-                            + "unique to the\n"
-                            + "corresponding survey"
+                    + "respondent identifier,\n"
+                    + "unique to the\n"
+                    + "corresponding survey"
     )
     @Getter
     @Setter
@@ -81,8 +81,8 @@ public class ConsumptionClass {
             fieldSetId = "details",
             sequence = "3",
             describedAs = "respondent's\n"
-                            + "n-th interview\n"
-                            + "(chronological)"
+                    + "n-th interview\n"
+                    + "(chronological)"
     )
     @Getter
     @Setter
@@ -102,9 +102,9 @@ public class ConsumptionClass {
             fieldSetId = "details",
             sequence = "4",
             describedAs = "food\n"
-                            + "consumption\n"
-                            + "occasion\n"
-                            + "code"
+                    + "consumption\n"
+                    + "occasion\n"
+                    + "code"
     )
     @Getter
     @Setter
@@ -122,7 +122,7 @@ public class ConsumptionClass {
             fieldSetId = "details",
             sequence = "5",
             describedAs = "meal happened\n"
-                            + "when and where"
+                    + "when and where"
     )
     @Getter
     @Setter

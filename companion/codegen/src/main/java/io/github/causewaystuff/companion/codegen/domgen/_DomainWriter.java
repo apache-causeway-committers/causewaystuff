@@ -30,7 +30,7 @@ import java.util.stream.Stream;
 
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.JavaFileModel;
 import io.github.causewaystuff.companion.schema.LicenseHeader;
-import io.github.causewaystuff.tooling.javapoet.JavaFile;
+import io.micronaut.sourcegen.javapoet.JavaFile;
 import org.jspecify.annotations.Nullable;
 
 import org.apache.causeway.commons.internal.assertions._Assert;

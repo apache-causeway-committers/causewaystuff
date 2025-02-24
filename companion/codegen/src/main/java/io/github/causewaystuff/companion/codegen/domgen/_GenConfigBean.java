@@ -22,8 +22,8 @@ import javax.lang.model.element.Modifier;
 
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.DomainModel;
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.QualifiedType;
-import io.github.causewaystuff.tooling.javapoet.ClassName;
-import io.github.causewaystuff.tooling.javapoet.TypeSpec;
+import io.micronaut.sourcegen.javapoet.ClassName;
+import io.micronaut.sourcegen.javapoet.TypeSpec;
 
 import org.jspecify.annotations.NonNull;
 

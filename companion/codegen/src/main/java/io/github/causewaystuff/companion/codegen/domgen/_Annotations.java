@@ -35,9 +35,10 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.persistence.UniqueConstraint;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.jspecify.annotations.Nullable;
 
 import org.apache.causeway.applib.annotation.Action;
 import org.apache.causeway.applib.annotation.ActionLayout;
@@ -72,9 +73,9 @@ import lombok.Builder;
 import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.companion.codegen.model.PropertyLayoutSpec;
-import io.github.causewaystuff.tooling.javapoet.AnnotationSpec;
-import io.github.causewaystuff.tooling.javapoet.ClassName;
-import io.github.causewaystuff.tooling.javapoet.CodeBlock;
+import io.micronaut.sourcegen.javapoet.AnnotationSpec;
+import io.micronaut.sourcegen.javapoet.ClassName;
+import io.micronaut.sourcegen.javapoet.CodeBlock;
 
 @UtilityClass
 class _Annotations {

@@ -32,10 +32,10 @@ import org.apache.causeway.commons.io.DataSource;
 import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.companion.schema.Persistence;
-import io.github.causewaystuff.tooling.javapoet.ClassName;
-import io.github.causewaystuff.tooling.javapoet.CodeBlock;
-import io.github.causewaystuff.tooling.javapoet.MethodSpec;
-import io.github.causewaystuff.tooling.javapoet.ParameterizedTypeName;
+import io.micronaut.sourcegen.javapoet.ClassName;
+import io.micronaut.sourcegen.javapoet.CodeBlock;
+import io.micronaut.sourcegen.javapoet.MethodSpec;
+import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 
 @UtilityClass
 class _Methods {
