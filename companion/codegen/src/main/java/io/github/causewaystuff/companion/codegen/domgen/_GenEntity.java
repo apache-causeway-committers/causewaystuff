@@ -23,6 +23,8 @@ import java.util.stream.Collectors;
 
 import javax.lang.model.element.Modifier;
 
+import jakarta.persistence.GenerationType;
+
 import org.apache.causeway.applib.annotation.Editing;
 import org.apache.causeway.applib.annotation.Optionality;
 import org.apache.causeway.applib.annotation.Where;
@@ -32,6 +34,7 @@ import org.apache.causeway.commons.internal.base._Strings;
 
 import lombok.experimental.UtilityClass;
 
+import io.github.causewaystuff.companion.applib.jpa.Persistable;
 import io.github.causewaystuff.companion.applib.services.iconfa.IconFaService;
 import io.github.causewaystuff.companion.applib.services.lookup.HasSecondaryKey;
 import io.github.causewaystuff.companion.applib.services.search.SearchService;
@@ -82,7 +85,9 @@ class _GenEntity {
                             ));
                     }
                     return attr;
-                }));
+                }))
+                .addSuperinterface(ClassName.get(Persistable.class))
+                ;
             case JDO -> typeModelBuilder
                 .addAnnotation(_Annotations.jdo.persistenceCapable(entityModel.table()))
                 .addAnnotation(_Annotations.jdo.datastoreIdentity());
@@ -100,6 +105,7 @@ class _GenEntity {
                 .addMethod(asToStringMethod(entityModel))
                 .addMethod(asCopyMethod(entityModel))
                 .addMethod(_Methods.navigableParent(config.persistence(), entityModel.name()))
+                .addFields(idFields(config.persistence(), entityModel.fields(), Modifier.PRIVATE))
                 .addFields(asFields(config.persistence(), entityModel.fields(), Modifier.PRIVATE))
                 ;
 
@@ -221,6 +227,21 @@ class _GenEntity {
                         entityModel.name(),
                         propertiesAsAssignments))
                 .build();
+    }
+
+    private Iterable<FieldSpec> idFields(
+        final Persistence persistence,
+        final List<Schema.EntityField> fields,
+        final Modifier ... modifiers) {
+
+        return switch (persistence) {
+            case JPA -> // add id field (long)
+                List.of(FieldSpec.builder(long.class, "id", modifiers)
+                    .addAnnotation(_Annotations.jpa.id())
+                    .addAnnotation(_Annotations.jpa.generatedValue(GenerationType.IDENTITY))
+                    .build());
+            case JDO, JDBC, NONE -> List.of();
+        };
     }
 
     private Iterable<FieldSpec> asFields(

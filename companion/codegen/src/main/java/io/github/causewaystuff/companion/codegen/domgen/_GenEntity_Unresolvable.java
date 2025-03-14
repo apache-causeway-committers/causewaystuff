@@ -37,7 +37,7 @@ class _GenEntity_Unresolvable {
     TypeSpec generate(
             final DomainGenerator.Config config,
             final Schema.Entity entityModel) {
-        var unresolvableClass = TypeSpec.classBuilder("Unresolvable")
+        var builder = TypeSpec.classBuilder("Unresolvable")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
                 .superclass(ClassName.get("", entityModel.name()))
                 .addJavadoc("Placeholder @{link ViewModel} for @{link $1L} "
@@ -53,7 +53,14 @@ class _GenEntity_Unresolvable {
                             .build()
                         ))
                 .addAnnotation(_Annotations.named(config.fullLogicalName(entityModel.namespace())
-                        + "." + entityModel.name() + ".Unresolvable"))
+                        + "." + entityModel.name() + ".Unresolvable"));
+
+        if(config.persistence().isJpa()) {
+            builder
+                    .addAnnotation(_Annotations.jpa.embeddable());
+        }
+
+        builder
                 .addAnnotation(_Annotations.requiredArgsConstructor())
                 .addField(FieldSpec.builder(ClassName.get(String.class), "viewModelMemento", Modifier.PRIVATE, Modifier.FINAL)
                         .addAnnotation(_Annotations.getterWithOverride())
@@ -64,9 +71,9 @@ class _GenEntity_Unresolvable {
                         .addAnnotation(_Annotations.override())
                         .returns(ClassName.get(String.class))
                         .addCode("return viewModelMemento;")
-                        .build())
-                .build();
-        return unresolvableClass;
+                        .build());
+
+        return builder.build();
     }
 
 }

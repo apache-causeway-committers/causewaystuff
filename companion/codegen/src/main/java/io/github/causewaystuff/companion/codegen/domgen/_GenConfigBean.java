@@ -44,12 +44,12 @@ class _GenConfigBean {
 
         var typeModelBuilder = TypeSpec.classBuilder(nameOfClassToGenerate)
                 .addAnnotation(_Annotations.generated(_GenConfigBean.class))
-                .addAnnotation(_Annotations.configuration())
+                .addAnnotation(_Annotations.spring.configuration())
                 .addModifiers(Modifier.PUBLIC)
                 ;
         return new QualifiedType(
                 packageName,
                 typeModelBuilder.build());
     }
-    
+
 }

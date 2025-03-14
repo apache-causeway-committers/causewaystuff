@@ -32,6 +32,9 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.persistence.UniqueConstraint;
@@ -165,33 +168,44 @@ class _Annotations {
 
     // -- SPRING
 
-    AnnotationSpec configuration() {
-        return AnnotationSpec.builder(Configuration.class)
+    @UtilityClass
+    class spring {
+        AnnotationSpec configuration() {
+            return AnnotationSpec.builder(Configuration.class)
+                    .build();
+        }
+        AnnotationSpec imports(final ListMultimap<String, ClassName> importsByCategory) {
+
+            var importEntries = new ArrayList<CodeBlock>();
+
+            importsByCategory.entrySet().stream()
+            .forEach(entry->{
+
+                // category comment
+                importEntries.add(CodeBlock.of("\n// $1L", entry.getKey()));
+
+                entry.getValue().stream()
+                    .sorted((a, b)->a.simpleName().compareTo(b.simpleName()))
+                    .map(classToImport->CodeBlock.of("$1T.class,", classToImport))
+                    .forEach(importEntries::add);
+            });
+
+            return AnnotationSpec.builder(Import.class)
+                    .addMember("value", CodeBlock.join(List.of(
+                            CodeBlock.of("{"),
+                            CodeBlock.join(importEntries, "\n"),
+                            CodeBlock.of("}")),
+                            "\n"))
+                    .build();
+        }
+        AnnotationSpec entityScan() {
+            return AnnotationSpec.builder(ClassName.get("org.springframework.boot.autoconfigure.domain", "EntityScan"))
                 .build();
-    }
-    AnnotationSpec imports(final ListMultimap<String, ClassName> importsByCategory) {
-
-        var importEntries = new ArrayList<CodeBlock>();
-
-        importsByCategory.entrySet().stream()
-        .forEach(entry->{
-
-            // category comment
-            importEntries.add(CodeBlock.of("\n// $1L", entry.getKey()));
-
-            entry.getValue().stream()
-                .sorted((a, b)->a.simpleName().compareTo(b.simpleName()))
-                .map(classToImport->CodeBlock.of("$1T.class,", classToImport))
-                .forEach(importEntries::add);
-        });
-
-        return AnnotationSpec.builder(Import.class)
-                .addMember("value", CodeBlock.join(List.of(
-                        CodeBlock.of("{"),
-                        CodeBlock.join(importEntries, "\n"),
-                        CodeBlock.of("}")),
-                        "\n"))
+        }
+        AnnotationSpec enableJpaRepositories() {
+            return AnnotationSpec.builder(ClassName.get("org.springframework.data.jpa.repository.config", "EnableJpaRepositories"))
                 .build();
+        }
     }
 
     // -- CAUSEWAY - DOMAIN OBJECT
@@ -421,6 +435,11 @@ class _Annotations {
                     .build();
         }
 
+        AnnotationSpec id() {
+            return AnnotationSpec.builder(Id.class)
+                    .build();
+        }
+
         AnnotationSpec _transient() {
             return AnnotationSpec.builder(Transient.class)
                     .build();
@@ -600,6 +619,23 @@ class _Annotations {
         AnnotationSpec convert(final String converterClass) {
             return AnnotationSpec.builder(jakarta.persistence.Convert.class)
                 .addMember("converter", "$1L.class", converterClass)
+                .build();
+        }
+        AnnotationSpec converter() {
+            return AnnotationSpec.builder(jakarta.persistence.Converter.class)
+                .build();
+        }
+        AnnotationSpec generatedValue(final GenerationType generationType) {
+            return AnnotationSpec.builder(GeneratedValue.class)
+                .addMember("strategy", "$1T.$2L", GenerationType.class, generationType.name())
+                .build();
+        }
+        AnnotationSpec mappedSuperclass() {
+            return AnnotationSpec.builder(jakarta.persistence.MappedSuperclass.class)
+                .build();
+        }
+        AnnotationSpec embeddable() {
+            return AnnotationSpec.builder(jakarta.persistence.Embeddable.class)
                 .build();
         }
     }

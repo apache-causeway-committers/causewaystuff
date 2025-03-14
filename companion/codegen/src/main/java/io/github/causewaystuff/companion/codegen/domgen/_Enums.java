@@ -95,6 +95,7 @@ class _Enums {
     TypeSpec jpaConverter(final TypeName enumType, final TypeName columnType) {
         return TypeSpec.classBuilder("Converter")
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+            .addAnnotation(_Annotations.jpa.converter())
             .addSuperinterface(ParameterizedTypeName.get(
                 ClassName.get(EnumConverter.class),
                 enumType,

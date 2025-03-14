@@ -24,11 +24,11 @@ import java.util.List;
 
 import javax.lang.model.element.Modifier;
 
+import org.jspecify.annotations.NonNull;
+
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.internal.collections._Multimaps;
 import org.apache.causeway.commons.internal.collections._Multimaps.ListMultimap;
-
-import org.jspecify.annotations.NonNull;
 
 import lombok.experimental.UtilityClass;
 
@@ -76,8 +76,14 @@ class _GenModule {
 
         var typeModelBuilder = TypeSpec.classBuilder(nameOfClassToGenerate)
                 .addAnnotation(_Annotations.generated(_GenModule.class))
-                .addAnnotation(_Annotations.configuration())
-                .addAnnotation(_Annotations.imports(importsByCategory))
+                .addAnnotation(_Annotations.spring.configuration())
+                .addAnnotation(_Annotations.spring.imports(importsByCategory));
+        if(config.persistence().isJpa()) {
+            typeModelBuilder
+                //.addAnnotation(_Annotations.spring.enableJpaRepositories())
+                .addAnnotation(_Annotations.spring.entityScan());
+        }
+        typeModelBuilder
                 .addModifiers(Modifier.PUBLIC)
                 // public final static String NAMESPACE = "my.module";
                 .addField(_Fields.namespaceConstant(config.logicalNamespacePrefix()
