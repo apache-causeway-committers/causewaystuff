@@ -30,7 +30,8 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.persistence.UniqueConstraint;
@@ -413,248 +414,293 @@ class _Annotations {
 
     // -- JPA
 
-    AnnotationSpec jpaEntity() {
-        return AnnotationSpec.builder(Entity.class)
-                .build();
-    }
+    @UtilityClass
+    class jpa {
+        AnnotationSpec entity() {
+            return AnnotationSpec.builder(Entity.class)
+                    .build();
+        }
 
-    AnnotationSpec jpaTransient() {
-        return AnnotationSpec.builder(Transient.class)
-                .build();
-    }
+        AnnotationSpec _transient() {
+            return AnnotationSpec.builder(Transient.class)
+                    .build();
+        }
 
-    @Builder
-    static record JpaTableSpec(
-        /**
-         * (Optional) The name of the table.
-         * <p> Defaults to the entity name.
-         */
-        String tableName, // default "";
-
-        /** (Optional) The catalog of the table.
-         * <p> Defaults to the default catalog.
-         */
-        String catalog, // default "";
-
-        /** (Optional) The schema of the table.
-         * <p> Defaults to the default schema for user.
-         */
-        String schema, // default "";
-
-        /**
-         * (Optional) Unique constraints that are to be placed on
-         * the table. These are only used if table generation is in
-         * effect. These constraints apply in addition to any constraints
-         * specified by the <code>Column</code> and <code>JoinColumn</code>
-         * annotations and constraints entailed by primary key mappings.
-         * <p> Defaults to no additional constraints.
-         */
-        UniqueConstraint[] uniqueConstraints, // default {};
-
-        /**
-         * (Optional) Indexes for the table.  These are only used if
-         * table generation is in effect.  Note that it is not necessary
-         * to specify an index for a primary key, as the primary key
-         * index will be created automatically.
-         */
-        Index[] indexes // default {};
-        ) {
-    }
-    AnnotationSpec jpaTable(final UnaryOperator<JpaTableSpec.JpaTableSpecBuilder> attrProvider) {
-        var annotBuilder = AnnotationSpec.builder(Table.class);
-        var attr = attrProvider.apply(JpaTableSpec.builder()).build();
-        _Strings.nonEmpty(_Strings.trim(attr.tableName))
-            .ifPresent(name->annotBuilder.addMember("name", "$1S", name));
-        _Strings.nonEmpty(_Strings.trim(attr.tableName))
-            .ifPresent(catalog->annotBuilder.addMember("catalog", "$1S", catalog));
-        _Strings.nonEmpty(_Strings.trim(attr.tableName))
-            .ifPresent(schema->annotBuilder.addMember("schema", "$1S", schema));
-        return annotBuilder.build();
-    }
-
-    @Builder
-    static record JpaColumnSpec(
+        @Builder
+        static record JpaTableSpec(
             /**
-             * (Optional) The name of the column. Defaults to
-             * the property or field name.
+             * (Optional) The name of the table.
+             * <p> Defaults to the entity name.
              */
-            String columnName,
+            String tableName, // default "";
+
+            /** (Optional) The catalog of the table.
+             * <p> Defaults to the default catalog.
+             */
+            String catalog, // default "";
+
+            /** (Optional) The schema of the table.
+             * <p> Defaults to the default schema for user.
+             */
+            String schema, // default "";
 
             /**
-             * (Optional) Whether the column is a unique key.  This is a
-             * shortcut for the <code>UniqueConstraint</code> annotation at the table
-             * level and is useful for when the unique key constraint
-             * corresponds to only a single column. This constraint applies
-             * in addition to any constraint entailed by primary key mapping and
-             * to constraints specified at the table level.
+             * (Optional) Unique constraints that are to be placed on
+             * the table. These are only used if table generation is in
+             * effect. These constraints apply in addition to any constraints
+             * specified by the <code>Column</code> and <code>JoinColumn</code>
+             * annotations and constraints entailed by primary key mappings.
+             * <p> Defaults to no additional constraints.
              */
-            boolean unique, // default false;
+            Can<UniqueConstraintSpec> uniqueConstraints // default {};
 
-            /**
-             * (Optional) Whether the database column is nullable.
-             */
-            boolean nullable, // default true;
-
-            /**
-             * (Optional) Whether the column is included in SQL INSERT
-             * statements generated by the persistence provider.
-             */
-            boolean insertable, // default true;
-
-            /**
-             * (Optional) Whether the column is included in SQL UPDATE
-             * statements generated by the persistence provider.
-             */
-            boolean updatable, // default true;
-
-            /**
-             * (Optional) The SQL fragment that is used when
-             * generating the DDL for the column.
-             * <p> Defaults to the generated SQL to create a
-             * column of the inferred type.
-             */
-            String columnDefinition, // default "";
-
-            /**
-             * (Optional) The name of the table that contains the column.
-             * If absent the column is assumed to be in the primary table.
-             */
-            String table, // default "";
-
-            /**
-             * (Optional) The column length. (Applies only if a
-             * string-valued column is used.)
-             */
-            int length, // default 255;
-
-            /**
-             * (Optional) The precision for a decimal (exact numeric)
-             * column. (Applies only if a decimal column is used.)
-             * Value must be set by developer if used when generating
-             * the DDL for the column.
-             */
-            int precision, // default 0;
-
-            /**
-             * (Optional) The scale for a decimal (exact numeric) column.
-             * (Applies only if a decimal column is used.)
-             */
-            int scale // default 0;
+//            /**
+//             * (Optional) Indexes for the table.  These are only used if
+//             * table generation is in effect.  Note that it is not necessary
+//             * to specify an index for a primary key, as the primary key
+//             * index will be created automatically.
+//             */
+//            Index[] indexes // default {};
             ) {
-    }
-    AnnotationSpec jpaColumn(final UnaryOperator<JpaColumnSpec.JpaColumnSpecBuilder> attrProvider) {
-        var annotBuilder = AnnotationSpec.builder(Column.class);
-        var attr = attrProvider.apply(JpaColumnSpec.builder()).build();
-        _Strings.nonEmpty(_Strings.trim(attr.columnName))
-            .ifPresent(name->annotBuilder.addMember("name", "$1S", name));
-        annotBuilder.addMember("nullable", "$1L", "" + attr.nullable);
-        if(attr.length>0) {
-            annotBuilder.addMember("length", "$1L", Math.min(attr.length, 1024*4)); // upper bound = 4k
         }
-        if(attr.columnDefinition!=null) {
-            annotBuilder.addMember("columnDefinition", "$1S", attr.columnDefinition);
+        AnnotationSpec table(final UnaryOperator<JpaTableSpec.JpaTableSpecBuilder> attrProvider) {
+            var annotBuilder = AnnotationSpec.builder(Table.class);
+            var attr = attrProvider.apply(JpaTableSpec.builder()).build();
+            _Strings.nonEmpty(_Strings.trim(attr.tableName))
+                .ifPresent(name->annotBuilder.addMember("name", "$1S", name));
+            _Strings.nonEmpty(_Strings.trim(attr.tableName))
+                .ifPresent(catalog->annotBuilder.addMember("catalog", "$1S", catalog));
+            _Strings.nonEmpty(_Strings.trim(attr.tableName))
+                .ifPresent(schema->annotBuilder.addMember("schema", "$1S", schema));
+            return annotBuilder.build();
         }
-        return annotBuilder.build();
+
+        @Builder
+        static record JpaColumnSpec(
+                /**
+                 * (Optional) The name of the column. Defaults to
+                 * the property or field name.
+                 */
+                String columnName,
+
+                /**
+                 * (Optional) Whether the column is a unique key.  This is a
+                 * shortcut for the <code>UniqueConstraint</code> annotation at the table
+                 * level and is useful for when the unique key constraint
+                 * corresponds to only a single column. This constraint applies
+                 * in addition to any constraint entailed by primary key mapping and
+                 * to constraints specified at the table level.
+                 */
+                boolean unique, // default false;
+
+                /**
+                 * (Optional) Whether the database column is nullable.
+                 */
+                boolean nullable, // default true;
+
+                /**
+                 * (Optional) Whether the column is included in SQL INSERT
+                 * statements generated by the persistence provider.
+                 */
+                boolean insertable, // default true;
+
+                /**
+                 * (Optional) Whether the column is included in SQL UPDATE
+                 * statements generated by the persistence provider.
+                 */
+                boolean updatable, // default true;
+
+                /**
+                 * (Optional) The SQL fragment that is used when
+                 * generating the DDL for the column.
+                 * <p> Defaults to the generated SQL to create a
+                 * column of the inferred type.
+                 */
+                String columnDefinition, // default "";
+
+                /**
+                 * (Optional) The name of the table that contains the column.
+                 * If absent the column is assumed to be in the primary table.
+                 */
+                String table, // default "";
+
+                /**
+                 * (Optional) The column length. (Applies only if a
+                 * string-valued column is used.)
+                 */
+                int length, // default 255;
+
+                /**
+                 * (Optional) The precision for a decimal (exact numeric)
+                 * column. (Applies only if a decimal column is used.)
+                 * Value must be set by developer if used when generating
+                 * the DDL for the column.
+                 */
+                int precision, // default 0;
+
+                /**
+                 * (Optional) The scale for a decimal (exact numeric) column.
+                 * (Applies only if a decimal column is used.)
+                 */
+                int scale // default 0;
+                ) {
+        }
+        AnnotationSpec column(final UnaryOperator<JpaColumnSpec.JpaColumnSpecBuilder> attrProvider) {
+            var annotBuilder = AnnotationSpec.builder(Column.class);
+            var attr = attrProvider.apply(JpaColumnSpec.builder()).build();
+            _Strings.nonEmpty(_Strings.trim(attr.columnName))
+                .ifPresent(name->annotBuilder.addMember("name", "$1S", name));
+            annotBuilder.addMember("nullable", "$1L", "" + attr.nullable);
+            if(attr.length>0) {
+                annotBuilder.addMember("length", "$1L", Math.min(attr.length, 1024*4)); // upper bound = 4k
+            }
+            if(attr.columnDefinition!=null) {
+                annotBuilder.addMember("columnDefinition", "$1S", attr.columnDefinition);
+            }
+            return annotBuilder.build();
+        }
+
+
+        static record UniqueConstraintSpec(
+            String name,
+            Can<String> columnNames) {
+        }
+        /**
+         * <pre>
+         * @Table(
+                    name = "CAMPAIGN",
+                    catalog = "CAMPAIGN",
+                    schema = "CAMPAIGN",
+                    uniqueConstraints = {
+                            @UniqueConstraint(
+                                name = "SEC_KEY_UNQ_Campaign",
+                                columnNames = {"surveyCode", "code"}
+                        )
+                    }
+            )
+         * </pre>
+         */
+        AnnotationSpec uniqueConstraint(final UniqueConstraintSpec spec) {
+            return AnnotationSpec.builder(UniqueConstraint.class)
+                .addMember("name", "$1S", spec.name())
+                .addMember("columnNames", "{$1L}", spec.columnNames()
+                        .stream()
+                        .map(fieldName->String.format("\"%s\"", fieldName)) // double quote
+                        .collect(Collectors.joining(", ")))
+                .build();
+        }
+
+        /** <pre> @Enumerated(value = EnumType.STRING) </pre>*/
+        AnnotationSpec enumerated(final EnumType enumType) {
+            return AnnotationSpec.builder(Enumerated.class)
+                .addMember("value", "$1T.$2L", EnumType.class, enumType.name())
+                .build();
+        }
+        /** <pre> @Convert(converter = ColorConverter.class) </pre>*/
+        AnnotationSpec convert(final String converterClass) {
+            return AnnotationSpec.builder(jakarta.persistence.Convert.class)
+                .addMember("converter", "$1L.class", converterClass)
+                .build();
+        }
     }
 
     // -- JDO
 
-    AnnotationSpec jdoNotPersistent() {
-        return AnnotationSpec.builder(ClassName.get("javax.jdo.annotations", "NotPersistent"))
-                .build();
-    }
-
-    AnnotationSpec jdoPersistenceCapable() {
-        return AnnotationSpec.builder(ClassName.get("javax.jdo.annotations", "PersistenceCapable"))
-                .build();
-    }
-    AnnotationSpec jdoPersistenceCapable(final String tableName) {
-        return AnnotationSpec.builder(ClassName.get("javax.jdo.annotations", "PersistenceCapable"))
-                .addMember("table", "$1S", tableName)
-                .build();
-    }
-    AnnotationSpec jdoDatastoreIdentity() {
-        return AnnotationSpec.builder(ClassName.get("javax.jdo.annotations", "DatastoreIdentity"))
-                .addMember("strategy", "$1L", "javax.jdo.annotations.IdGeneratorStrategy.IDENTITY")
-                .addMember("column", "$1S", "id")
-                .build();
-    }
-
-    @Builder
-    static record JdoColumnSpec(
-            /** name of the db column, if null or empty uses default name */
-            String columnName,
-            /** whether null is allowed as database value for this column */
-            boolean allowsNull,
-            /** ignored if less than one */
-            int maxLength,
-            String jdbcType) {
-    }
-    AnnotationSpec jdoColumn(final UnaryOperator<JdoColumnSpec.JdoColumnSpecBuilder> attrProvider) {
-        var annotBuilder = AnnotationSpec.builder(ClassName.get("javax.jdo.annotations", "Column"));
-        var attr = attrProvider.apply(JdoColumnSpec.builder()).build();
-        _Strings.nonEmpty(_Strings.trim(attr.columnName))
-            .ifPresent(name->annotBuilder.addMember("name", "$1S", name));
-        annotBuilder.addMember("allowsNull", "$1S", "" + attr.allowsNull);
-        if(attr.maxLength>0) {
-            annotBuilder.addMember("length", "$1L", Math.min(attr.maxLength, 1024*4)); // upper bound = 4k
+    @UtilityClass
+    class jdo {
+        AnnotationSpec notPersistent() {
+            return AnnotationSpec.builder(ClassName.get("javax.jdo.annotations", "NotPersistent"))
+                    .build();
         }
-        if(attr.jdbcType!=null) {
-            annotBuilder.addMember("jdbcType", "$1S", attr.jdbcType);
+        AnnotationSpec persistenceCapable() {
+            return AnnotationSpec.builder(ClassName.get("javax.jdo.annotations", "PersistenceCapable"))
+                    .build();
         }
-        return annotBuilder.build();
+        AnnotationSpec persistenceCapable(final String tableName) {
+            return AnnotationSpec.builder(ClassName.get("javax.jdo.annotations", "PersistenceCapable"))
+                    .addMember("table", "$1S", tableName)
+                    .build();
+        }
+        AnnotationSpec datastoreIdentity() {
+            return AnnotationSpec.builder(ClassName.get("javax.jdo.annotations", "DatastoreIdentity"))
+                    .addMember("strategy", "$1L", "javax.jdo.annotations.IdGeneratorStrategy.IDENTITY")
+                    .addMember("column", "$1S", "id")
+                    .build();
+        }
+
+        @Builder
+        static record JdoColumnSpec(
+                /** name of the db column, if null or empty uses default name */
+                String columnName,
+                /** whether null is allowed as database value for this column */
+                boolean allowsNull,
+                /** ignored if less than one */
+                int maxLength,
+                String jdbcType) {
+        }
+        AnnotationSpec column(final UnaryOperator<JdoColumnSpec.JdoColumnSpecBuilder> attrProvider) {
+            var annotBuilder = AnnotationSpec.builder(ClassName.get("javax.jdo.annotations", "Column"));
+            var attr = attrProvider.apply(JdoColumnSpec.builder()).build();
+            _Strings.nonEmpty(_Strings.trim(attr.columnName))
+                .ifPresent(name->annotBuilder.addMember("name", "$1S", name));
+            annotBuilder.addMember("allowsNull", "$1S", "" + attr.allowsNull);
+            if(attr.maxLength>0) {
+                annotBuilder.addMember("length", "$1L", Math.min(attr.maxLength, 1024*4)); // upper bound = 4k
+            }
+            if(attr.jdbcType!=null) {
+                annotBuilder.addMember("jdbcType", "$1S", attr.jdbcType);
+            }
+            return annotBuilder.build();
+        }
+
+        /**
+         * <pre>{@code @Unique(name="MY_COMPOSITE_IDX", members={"field1", "field2"})}</pre>
+         */
+        AnnotationSpec unique(final String name, final Can<String> members) {
+            return AnnotationSpec.builder(ClassName.get("javax.jdo.annotations", "Unique"))
+                .addMember("name", "$1S", name)
+                .addMember("members", "{$1L}", members
+                        .stream()
+                        .map(fieldName->String.format("\"%s\"", fieldName)) // double quote
+                        .collect(Collectors.joining(", ")))
+                .build();
+        }
     }
 
-    /**
-     * <pre>{@code @Unique(name="MY_COMPOSITE_IDX", members={"field1", "field2"})}</pre>
-     */
-    AnnotationSpec jdoUnique(final String name, final Can<String> members) {
-        return AnnotationSpec.builder(ClassName.get("javax.jdo.annotations", "Unique"))
-            .addMember("name", "$1S", name)
-            .addMember("members", "{$1L}", members
-                    .stream()
-                    .map(fieldName->String.format("\"%s\"", fieldName)) // double quote
-                    .collect(Collectors.joining(", ")))
-            .build();
-    }
-    /**
-     * <pre>{@code @Unique(name="MY_COMPOSITE_IDX", members={"field1", "field2"})}</pre>
-     */
-    AnnotationSpec jdoUunique(final String name, final String ...members) {
-        return jdoUnique(name, Can.ofArray(members));
-    }
+    @UtilityClass
+    class datanucleus {
+        /**
+         * <pre>{@code @Extension(vendorName="datanucleus", key="datastore", value="store2")}</pre>
+         */
+        AnnotationSpec datastore(final String datastore) {
+            return AnnotationSpec.builder(ClassName.get("javax.jdo.annotations", "Extension"))
+                .addMember("vendorName", "$1S", "datanucleus")
+                .addMember("key", "$1S", "datastore")
+                .addMember("value", "$1S", datastore)
+                .build();
+        }
 
-    /**
-     * <pre>{@code @Extension(vendorName="datanucleus", key="datastore", value="store2")}</pre>
-     */
-    AnnotationSpec datanucleusDatastore(final String datastore) {
-        return AnnotationSpec.builder(ClassName.get("javax.jdo.annotations", "Extension"))
-            .addMember("vendorName", "$1S", "datanucleus")
-            .addMember("key", "$1S", "datastore")
-            .addMember("value", "$1S", datastore)
-            .build();
-    }
+        /**
+         * <pre>{@code @Extension(vendorName="datanucleus", key="enum-value-getter", value="getValue")}</pre>
+         */
+        AnnotationSpec enumValueGetter(final String enumValueGetter) {
+            return AnnotationSpec.builder(ClassName.get("javax.jdo.annotations", "Extension"))
+                .addMember("vendorName", "$1S", "datanucleus")
+                .addMember("key", "$1S", "enum-value-getter")
+                .addMember("value", "$1S", enumValueGetter)
+                .build();
+        }
 
-    /**
-     * <pre>{@code @Extension(vendorName="datanucleus", key="enum-value-getter", value="getValue")}</pre>
-     */
-    AnnotationSpec datanucleusEnumValueGetter(final String enumValueGetter) {
-        return AnnotationSpec.builder(ClassName.get("javax.jdo.annotations", "Extension"))
-            .addMember("vendorName", "$1S", "datanucleus")
-            .addMember("key", "$1S", "enum-value-getter")
-            .addMember("value", "$1S", enumValueGetter)
-            .build();
-    }
-
-    /**
-     * <pre>{@code @Extension(vendorName="datanucleus", key="enum-check-constraint", value="true")}</pre>
-     */
-    AnnotationSpec datanucleusCheckEnumConstraint(final boolean checkEnumConstraint) {
-        return AnnotationSpec.builder(ClassName.get("javax.jdo.annotations", "Extension"))
-            .addMember("vendorName", "$1S", "datanucleus")
-            .addMember("key", "$1S", "enum-check-constraint")
-            .addMember("value", "$1S", checkEnumConstraint)
-            .build();
+        /**
+         * <pre>{@code @Extension(vendorName="datanucleus", key="enum-check-constraint", value="true")}</pre>
+         */
+        AnnotationSpec checkEnumConstraint(final boolean checkEnumConstraint) {
+            return AnnotationSpec.builder(ClassName.get("javax.jdo.annotations", "Extension"))
+                .addMember("vendorName", "$1S", "datanucleus")
+                .addMember("key", "$1S", "enum-check-constraint")
+                .addMember("value", "$1S", checkEnumConstraint)
+                .build();
+        }
     }
 
 }

@@ -16,15 +16,12 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-module io.github.causewaystuff.companion.applib {
-    exports io.github.causewaystuff.companion.applib.decorate;
-    exports io.github.causewaystuff.companion.applib.jpa;
-    exports io.github.causewaystuff.companion.applib.services.iconfa;
-    exports io.github.causewaystuff.companion.applib.services.lookup;
-    exports io.github.causewaystuff.companion.applib.services.search;
+package io.github.causewaystuff.companion.applib.jpa;
 
-    requires static lombok;
-    requires transitive org.apache.causeway.applib;
-    requires org.apache.causeway.commons;
-    requires spring.core;
+@FunctionalInterface
+public interface EnumWithCode<T> {
+
+    /** Enum's code that is persisted as T. */
+    T code();
+
 }

@@ -70,11 +70,22 @@ class _GenEntity {
 
         switch (config.persistence()) {
             case JPA -> typeModelBuilder
-                .addAnnotation(_Annotations.jpaEntity())
-                .addAnnotation(_Annotations.jpaTable(attr->attr.tableName(entityModel.table())));
+                .addAnnotation(_Annotations.jpa.entity())
+                .addAnnotation(_Annotations.jpa.table(attr->{
+                    attr.tableName(entityModel.table());
+                    if(entityModel.hasSecondaryKey()
+                            && !entityModel.suppressUniqueConstraint()) {
+                        attr.uniqueConstraints(Can.of(
+                            new _Annotations.jpa.UniqueConstraintSpec(
+                                String.format("SEC_KEY_UNQ_%s", entityModel.name()),
+                                Can.ofCollection(entityModel.secondaryKeyFields()).map(EntityField::name))
+                            ));
+                    }
+                    return attr;
+                }));
             case JDO -> typeModelBuilder
-                .addAnnotation(_Annotations.jdoPersistenceCapable(entityModel.table()))
-                .addAnnotation(_Annotations.jdoDatastoreIdentity());
+                .addAnnotation(_Annotations.jdo.persistenceCapable(entityModel.table()))
+                .addAnnotation(_Annotations.jdo.datastoreIdentity());
             case JDBC, NONE -> {}
         }
 
@@ -98,9 +109,12 @@ class _GenEntity {
                 .addMethod(_Methods.iconFaLayers(Modifier.PUBLIC));
         }
 
-        // data federation support
+        // data federation support (experimental)
         if(_Strings.isNotEmpty(config.datastore())) {
-            typeModelBuilder.addAnnotation(_Annotations.datanucleusDatastore(config.datastore()));
+            switch (config.persistence()) {
+                case JDO -> typeModelBuilder.addAnnotation(_Annotations.datanucleus.datastore(config.datastore()));
+                case JPA, JDBC, NONE -> {}
+            }
         }
 
         // super type
@@ -115,9 +129,18 @@ class _GenEntity {
 
         entityModel.fields().stream()
                 .filter(Schema.EntityField::isEnum)
-                .forEach(field->
-                    typeModelBuilder.addType(
-                            _Enums.enumForColumn(field.asJavaType(), field.enumConstants())));
+                .forEach(field->{
+                    switch (config.persistence()) {
+                        case JPA ->
+                            typeModelBuilder.addType(
+                                _Enums.enumForJpaColumn(field.asJavaType(), field.enumConstants()));
+                        case JDO -> {
+                            typeModelBuilder.addType(
+                                _Enums.enumForJdoColumn(field.asJavaType(), field.enumConstants()));
+                        }
+                        case JDBC, NONE -> {}
+                    }
+                });
 
         // inner manager view model
 
@@ -129,10 +152,13 @@ class _GenEntity {
             if(!entityModel.suppressUniqueConstraint()) {
 
                 switch (config.persistence()) {
-                    case JDO -> typeModelBuilder.addAnnotation(_Annotations.jdoUnique(
+                    case JDO -> typeModelBuilder.addAnnotation(_Annotations.jdo.unique(
                             String.format("SEC_KEY_UNQ_%s", entityModel.name()),
                             Can.ofCollection(entityModel.secondaryKeyFields()).map(EntityField::name)));
-                    case JPA, JDBC, NONE -> {}
+                    case JPA -> {
+                        // not here, already done within the Table annotation
+                    }
+                    case JDBC, NONE -> {}
                 }
 
             }
@@ -234,12 +260,12 @@ class _GenEntity {
                     );
 
                     switch (persistence) {
-                        case JPA -> fieldBuilder.addAnnotation(_Annotations.jpaColumn(col->col
+                        case JPA -> fieldBuilder.addAnnotation(_Annotations.jpa.column(col->col
                                 .columnName(field.column())
                                 .columnDefinition(_TypeMapping.dbTypeToJdbcColumnExplicitType(field.columnType()))
                                 .nullable(!field.required())
                                 .length(field.maxLength())));
-                        case JDO -> fieldBuilder.addAnnotation(_Annotations.jdoColumn(col->col
+                        case JDO -> fieldBuilder.addAnnotation(_Annotations.jdo.column(col->col
                                 .columnName(field.column())
                                 .jdbcType(_TypeMapping.dbTypeToJdbcColumnExplicitType(field.columnType()))
                                 .allowsNull(!field.required())
@@ -247,16 +273,20 @@ class _GenEntity {
                         case JDBC, NONE -> {}
                     }
 
-
-
                     fieldBuilder
                         .addAnnotation(_Annotations.getter())
                         .addAnnotation(_Annotations.setter());
 
                     if(field.isEnum()) {
-                        fieldBuilder
-                            .addAnnotation(_Annotations.datanucleusCheckEnumConstraint(true))
-                            .addAnnotation(_Annotations.datanucleusEnumValueGetter("getMatchOn"));
+                        switch (persistence) {
+                            case JPA -> fieldBuilder
+                                .addAnnotation(_Annotations.jpa.convert("%s.Converter".formatted(field.asJavaEnumType())));
+                                //.addAnnotation(_Annotations.jpa.enumerated(EnumType.STRING));
+                            case JDO -> fieldBuilder
+                                .addAnnotation(_Annotations.datanucleus.checkEnumConstraint(true))
+                                .addAnnotation(_Annotations.datanucleus.enumValueGetter("code"));
+                            case JDBC, NONE -> {}
+                        }
                     }
 
                     return fieldBuilder.build();
@@ -279,7 +309,7 @@ class _GenEntity {
     private String asArgList(final List<EntityField> fields) {
         return fields.stream()
                 .map(field->field.isEnum()
-                        ? String.format("%s()!=null ? %s().matchOn : null", field.getter(), field.getter())
+                        ? String.format("%s()!=null ? %s().code : null", field.getter(), field.getter())
                         : String.format("%s()", field.getter()))
                 .collect(Collectors.joining(", \n"));
     }

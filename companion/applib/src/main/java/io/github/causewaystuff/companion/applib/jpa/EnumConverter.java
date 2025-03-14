@@ -16,15 +16,27 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-module io.github.causewaystuff.companion.applib {
-    exports io.github.causewaystuff.companion.applib.decorate;
-    exports io.github.causewaystuff.companion.applib.jpa;
-    exports io.github.causewaystuff.companion.applib.services.iconfa;
-    exports io.github.causewaystuff.companion.applib.services.lookup;
-    exports io.github.causewaystuff.companion.applib.services.search;
+package io.github.causewaystuff.companion.applib.jpa;
 
-    requires static lombok;
-    requires transitive org.apache.causeway.applib;
-    requires org.apache.causeway.commons;
-    requires spring.core;
+import java.util.stream.Stream;
+
+import jakarta.persistence.AttributeConverter;
+
+@FunctionalInterface
+public interface EnumConverter<E extends EnumWithCode<T>, T> extends AttributeConverter<E, T> {
+
+    E[] values();
+
+    @Override default T convertToDatabaseColumn(final E _enum) {
+        if (_enum == null)  return null;
+        return _enum.code();
+    }
+
+    @Override default E convertToEntityAttribute(final T code) {
+        if (code == null) return null;
+        return Stream.of(values())
+          .filter(_enum -> _enum.code().equals(code))
+          .findFirst()
+          .orElseThrow(IllegalArgumentException::new);
+    }
 }
