@@ -69,7 +69,7 @@ public class LocalFsBlobStore implements BlobStore {
     public void putBlob(final @NonNull BlobDescriptor blobDescriptor, final @NonNull Blob blob) {
 
         var blobCompression =
-                BlobDescriptor.Compression.valueOf(blob.getMimeType());
+                BlobDescriptor.Compression.valueOf(blob.mimeType());
         _Assert.assertEquals(
                 blobDescriptor.compression(),
                 blobCompression);

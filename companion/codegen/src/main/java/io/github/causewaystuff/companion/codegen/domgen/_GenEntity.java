@@ -75,7 +75,7 @@ class _GenEntity {
             case JDO -> typeModelBuilder
                 .addAnnotation(_Annotations.jdoPersistenceCapable(entityModel.table()))
                 .addAnnotation(_Annotations.jdoDatastoreIdentity());
-            case NONE -> {}
+            case JDBC, NONE -> {}
         }
 
         typeModelBuilder
@@ -132,7 +132,7 @@ class _GenEntity {
                     case JDO -> typeModelBuilder.addAnnotation(_Annotations.jdoUnique(
                             String.format("SEC_KEY_UNQ_%s", entityModel.name()),
                             Can.ofCollection(entityModel.secondaryKeyFields()).map(EntityField::name)));
-                    case JPA, NONE -> {}
+                    case JPA, JDBC, NONE -> {}
                 }
 
             }
@@ -244,7 +244,7 @@ class _GenEntity {
                                 .jdbcType(_TypeMapping.dbTypeToJdbcColumnExplicitType(field.columnType()))
                                 .allowsNull(!field.required())
                                 .maxLength(field.maxLength())));
-                        case NONE -> {}
+                        case JDBC, NONE -> {}
                     }
 
 

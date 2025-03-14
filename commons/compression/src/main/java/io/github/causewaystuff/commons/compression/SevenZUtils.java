@@ -66,7 +66,7 @@ public class SevenZUtils {
     @Nullable
     public Blob decompress(final @Nullable Blob inputBlob, final @NonNull CommonMimeType resultingMimeType) {
         if(inputBlob==null) return null;
-        return Blob.of(inputBlob.getName(), resultingMimeType, decompress(inputBlob.getBytes()));
+        return Blob.of(inputBlob.name(), resultingMimeType, decompress(inputBlob.bytes()));
     }
 
     // -- COMPRESSION
@@ -104,7 +104,7 @@ public class SevenZUtils {
     @Nullable
     public Blob compress(final @Nullable Blob inputBlob, final SevenZMethod method) {
         if(inputBlob==null) return null;
-        return Blob.of(inputBlob.getName(), CommonMimeType._7Z, compress(inputBlob.getBytes(), inputBlob.getName(), method));
+        return Blob.of(inputBlob.name(), CommonMimeType._7Z, compress(inputBlob.bytes(), inputBlob.name(), method));
     }
 
 }

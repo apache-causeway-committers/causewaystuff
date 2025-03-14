@@ -108,7 +108,7 @@ class _Methods {
             switch (persistence) {
                 case JPA -> builder.addAnnotation(_Annotations.jpaTransient());
                 case JDO -> builder.addAnnotation(_Annotations.jdoNotPersistent());
-                case NONE -> {}
+                case JDBC, NONE -> {}
             }
 
             return builder.build();
