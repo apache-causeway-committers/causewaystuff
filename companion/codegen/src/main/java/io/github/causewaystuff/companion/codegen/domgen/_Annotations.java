@@ -487,9 +487,9 @@ class _Annotations {
             var attr = attrProvider.apply(JpaTableSpec.builder()).build();
             _Strings.nonEmpty(_Strings.trim(attr.tableName))
                 .ifPresent(name->annotBuilder.addMember("name", "$1S", name));
-            _Strings.nonEmpty(_Strings.trim(attr.tableName))
+            _Strings.nonEmpty(_Strings.trim(attr.catalog))
                 .ifPresent(catalog->annotBuilder.addMember("catalog", "$1S", catalog));
-            _Strings.nonEmpty(_Strings.trim(attr.tableName))
+            _Strings.nonEmpty(_Strings.trim(attr.schema))
                 .ifPresent(schema->annotBuilder.addMember("schema", "$1S", schema));
             return annotBuilder.build();
         }
@@ -568,7 +568,8 @@ class _Annotations {
             var annotBuilder = AnnotationSpec.builder(Column.class);
             var attr = attrProvider.apply(JpaColumnSpec.builder()).build();
             _Strings.nonEmpty(_Strings.trim(attr.columnName))
-                .ifPresent(name->annotBuilder.addMember("name", "$1S", name));
+                //https://stackoverflow.com/questions/2224503/how-to-map-an-entity-field-whose-name-is-a-reserved-word-in-jpa#3463189
+                .ifPresent(name->annotBuilder.addMember("name", "$1S", "\"%s\"".formatted(name)));
             annotBuilder.addMember("nullable", "$1L", "" + attr.nullable);
             if(attr.length>0) {
                 annotBuilder.addMember("length", "$1L", Math.min(attr.length, 1024*4)); // upper bound = 4k

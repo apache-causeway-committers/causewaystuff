@@ -18,6 +18,7 @@
  */
 package io.github.causewaystuff.companion.codegen.domgen;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,6 +41,7 @@ import io.github.causewaystuff.companion.applib.services.lookup.HasSecondaryKey;
 import io.github.causewaystuff.companion.applib.services.search.SearchService;
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.QualifiedType;
 import io.github.causewaystuff.companion.codegen.domgen._Annotations.DomainObjectLayoutSpec;
+import io.github.causewaystuff.companion.codegen.domgen._Fields.FieldOption;
 import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.companion.codegen.model.Schema.Entity;
 import io.github.causewaystuff.companion.codegen.model.Schema.EntityField;
@@ -94,13 +96,18 @@ class _GenEntity {
             case JDBC, NONE -> {}
         }
 
+        EnumSet<FieldOption> injectedFieldOptions = switch (config.persistence()) {
+            case JPA -> EnumSet.of(FieldOption.JPA_TRANSIENT);
+            case JDO, JDBC, NONE -> EnumSet.noneOf(FieldOption.class);
+        };
+
         typeModelBuilder
                 .addModifiers(Modifier.PUBLIC)
                 .addSuperinterface(ParameterizedTypeName.get(
                         ClassName.get(io.github.causewaystuff.companion.applib.services.lookup.Cloneable.class),
                         ClassName.get("", entityModel.name())))
-                .addField(_Fields.inject(RepositoryService.class, "repositoryService"))
-                .addField(_Fields.inject(SearchService.class, "searchService"))
+                .addField(_Fields.inject(RepositoryService.class, "repositoryService", injectedFieldOptions))
+                .addField(_Fields.inject(SearchService.class, "searchService", injectedFieldOptions))
                 .addMethod(asTitleMethod(entityModel, Modifier.PUBLIC))
                 .addMethod(asToStringMethod(entityModel))
                 .addMethod(asCopyMethod(entityModel))
@@ -111,7 +118,7 @@ class _GenEntity {
 
         if(entityModel.iconService()) {
             typeModelBuilder
-                .addField(_Fields.inject(IconFaService.class, "iconFaService"))
+                .addField(_Fields.inject(IconFaService.class, "iconFaService", injectedFieldOptions))
                 .addMethod(_Methods.iconFaLayers(Modifier.PUBLIC));
         }
 
