@@ -83,7 +83,7 @@ class _GenEntity {
                         attr.uniqueConstraints(Can.of(
                             new _Annotations.jpa.UniqueConstraintSpec(
                                 String.format("SEC_KEY_UNQ_%s", entityModel.name()),
-                                Can.ofCollection(entityModel.secondaryKeyFields()).map(EntityField::name))
+                                Can.ofCollection(entityModel.secondaryKeyFields()).map(EntityField::column))
                             ));
                     }
                     return attr;

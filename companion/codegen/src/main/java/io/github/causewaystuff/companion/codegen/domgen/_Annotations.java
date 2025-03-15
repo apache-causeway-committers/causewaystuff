@@ -430,6 +430,7 @@ class _Annotations {
 
     @UtilityClass
     class jpa {
+
         AnnotationSpec entity() {
             return AnnotationSpec.builder(Entity.class)
                     .build();
@@ -494,13 +495,8 @@ class _Annotations {
 
             if(attr.uniqueConstraints!=null) {
                 attr.uniqueConstraints
-                    //@UniqueConstraint(columnNames = { "" }}
-                    .map(constraintSpec->{
-                        var builder = AnnotationSpec.builder(UniqueConstraint.class);
-                        constraintSpec.columnNames.forEach(columnName->builder.addMember("columnNames", "$1S", columnName));
-                        return builder.build();
-                    })
-                    .forEach(c->annotBuilder.addMember("uniqueConstraints", c));
+                    .map(jpa::uniqueConstraint)
+                    .forEach(uc->annotBuilder.addMember("uniqueConstraints", uc));
             }
             return annotBuilder.build();
         }
@@ -579,8 +575,7 @@ class _Annotations {
             var annotBuilder = AnnotationSpec.builder(Column.class);
             var attr = attrProvider.apply(JpaColumnSpec.builder()).build();
             _Strings.nonEmpty(_Strings.trim(attr.columnName))
-                //https://stackoverflow.com/questions/2224503/how-to-map-an-entity-field-whose-name-is-a-reserved-word-in-jpa#3463189
-                .ifPresent(name->annotBuilder.addMember("name", "$1S", "\"%s\"".formatted(name)));
+                .ifPresent(name->annotBuilder.addMember("name", "$1S", escapeColumnName(name)));
             annotBuilder.addMember("nullable", "$1L", "" + attr.nullable);
             if(attr.length>0) {
                 annotBuilder.addMember("length", "$1L", Math.min(attr.length, 1024*4)); // upper bound = 4k
@@ -591,34 +586,16 @@ class _Annotations {
             return annotBuilder.build();
         }
 
-
         static record UniqueConstraintSpec(
             String name,
             Can<String> columnNames) {
         }
-        /**
-         * <pre>
-         * @Table(
-                    name = "CAMPAIGN",
-                    catalog = "CAMPAIGN",
-                    schema = "CAMPAIGN",
-                    uniqueConstraints = {
-                            @UniqueConstraint(
-                                name = "SEC_KEY_UNQ_Campaign",
-                                columnNames = {"surveyCode", "code"}
-                        )
-                    }
-            )
-         * </pre>
-         */
         AnnotationSpec uniqueConstraint(final UniqueConstraintSpec spec) {
-            return AnnotationSpec.builder(UniqueConstraint.class)
-                .addMember("name", "$1S", spec.name())
-                .addMember("columnNames", "{$1L}", spec.columnNames()
-                        .stream()
-                        .map(fieldName->String.format("\"%s\"", fieldName)) // double quote
-                        .collect(Collectors.joining(", ")))
-                .build();
+            var builder = AnnotationSpec.builder(UniqueConstraint.class)
+                .addMember("name", "$1S", spec.name());
+            spec.columnNames
+                .forEach(colName->builder.addMember("columnNames", "$1S", escapeColumnName2(colName)));
+            return builder.build();
         }
 
         /** <pre> @Enumerated(value = EnumType.STRING) </pre>*/
@@ -649,6 +626,16 @@ class _Annotations {
         AnnotationSpec embeddable() {
             return AnnotationSpec.builder(jakarta.persistence.Embeddable.class)
                 .build();
+        }
+
+        /**
+         * https://stackoverflow.com/questions/2224503/how-to-map-an-entity-field-whose-name-is-a-reserved-word-in-jpa#3463189
+         */
+        private String escapeColumnName(final String columnName) {
+            return "\"%s\"".formatted(columnName);
+        }
+        private String escapeColumnName2(final String columnName) {
+            return "`%s`".formatted(columnName);
         }
     }
 
@@ -709,7 +696,7 @@ class _Annotations {
                 .addMember("name", "$1S", name)
                 .addMember("members", "{$1L}", members
                         .stream()
-                        .map(fieldName->String.format("\"%s\"", fieldName)) // double quote
+                        .map(fieldName->"\"%s\"".formatted(fieldName)) // double quote
                         .collect(Collectors.joining(", ")))
                 .build();
         }
