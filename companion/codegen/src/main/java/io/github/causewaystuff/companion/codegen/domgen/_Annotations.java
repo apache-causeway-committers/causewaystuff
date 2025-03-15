@@ -491,6 +491,17 @@ class _Annotations {
                 .ifPresent(catalog->annotBuilder.addMember("catalog", "$1S", catalog));
             _Strings.nonEmpty(_Strings.trim(attr.schema))
                 .ifPresent(schema->annotBuilder.addMember("schema", "$1S", schema));
+
+            if(attr.uniqueConstraints!=null) {
+                attr.uniqueConstraints
+                    //@UniqueConstraint(columnNames = { "" }}
+                    .map(constraintSpec->{
+                        var builder = AnnotationSpec.builder(UniqueConstraint.class);
+                        constraintSpec.columnNames.forEach(columnName->builder.addMember("columnNames", "$1S", columnName));
+                        return builder.build();
+                    })
+                    .forEach(c->annotBuilder.addMember("uniqueConstraints", c));
+            }
             return annotBuilder.build();
         }
 

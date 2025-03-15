@@ -88,8 +88,7 @@ class _GenEntity {
                     }
                     return attr;
                 }))
-                .addSuperinterface(ClassName.get(Persistable.class))
-                ;
+                .addSuperinterface(ClassName.get(Persistable.class));
             case JDO -> typeModelBuilder
                 .addAnnotation(_Annotations.jdo.persistenceCapable(entityModel.table()))
                 .addAnnotation(_Annotations.jdo.datastoreIdentity());
