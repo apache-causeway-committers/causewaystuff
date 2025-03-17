@@ -60,7 +60,7 @@
         <javapoet.version>1.13.0</javapoet.version>
         <jsonschema-generator.version>4.37.0</jsonschema-generator.version>
         <jsoup.version>1.19.1</jsoup.version>
-        <maven-model.version>4.0.0-rc-2</maven-model.version>
+        <maven-model.version>4.0.0-rc-3</maven-model.version>
         <micronaut-sourcegen.version>1.7.1</micronaut-sourcegen.version>
         <picocli.version>4.7.6</picocli.version>
         <structurizr-dsl.version>3.2.1</structurizr-dsl.version>
