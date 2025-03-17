@@ -325,12 +325,6 @@
             </dependency>
 
             <dependency>
-                <groupId>org.apache.causeway.persistence</groupId>
-                <artifactId>causeway-persistence-jdo-applib</artifactId>
-                <version>${causeway.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>org.apache.causeway.valuetypes</groupId>
                 <artifactId>causeway-valuetypes-asciidoc-builder</artifactId>
                 <version>${causeway.version}</version>

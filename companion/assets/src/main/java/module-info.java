@@ -39,8 +39,8 @@ module io.github.causewaystuff.companion.assets {
     requires transitive initializr.generator.spring;
     
     requires maven.api.model;
-    requires maven.impl;
     requires maven.model;
+    requires maven.support;
     
     // make io.github.causewaystuff.companion.assets.build.maven.PomPackagingFactory accessible 
     opens io.github.causewaystuff.companion.assets.build.maven to spring.core;

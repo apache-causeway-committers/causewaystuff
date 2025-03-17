@@ -34,7 +34,6 @@ module io.github.causewaystuff.companion.codegen {
     requires spring.context;
     requires spring.core;
     requires maven.model;
-    requires maven.impl;
     requires maven.api.model;
     requires org.codehaus.stax2;
     requires io.micronaut.sourcegen.sourcegen_generator_java;
