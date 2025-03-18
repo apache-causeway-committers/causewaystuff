@@ -97,6 +97,16 @@ class _GenAssociationMixin {
 
     // -- HELPER
 
+    private record Foreign(
+            ClassName foreignEntity,
+            String strictness,
+            String foreignKeyGetter,
+            int secondaryKeyCardinality,
+            String significantArgument,
+            boolean isSignificantArgumentReguired,
+            String argList) {
+    }
+    
     private Optional<MethodSpec> mixedInAssociation(
             final DomainGenerator.Config config,
             final Schema.EntityField field,
@@ -105,16 +115,6 @@ class _GenAssociationMixin {
 
         var isPlural = field.plural();
         var localKeyGetter = field.getter();
-
-        record Foreign(
-                ClassName foreignEntity,
-                String strictness,
-                String foreignKeyGetter,
-                int secondaryKeyCardinality,
-                String significantArgument,
-                boolean isSignificantArgumentReguired,
-                String argList) {
-        }
 
         final Can<Foreign> foreigners = foreignFields
                 .map((final Schema.EntityField foreignField)->{
