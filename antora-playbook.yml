@@ -1,7 +1,7 @@
 site:
   title: Causeway Stuff Docs
   url: https://apache-causeway-committers.github.io/causewaystuff
-  start_page: main::About.adoc
+  start_page: main::index.adoc
 content:
   sources:
   - url: https://github.com/apache-causeway-committers/causewaystuff.git 

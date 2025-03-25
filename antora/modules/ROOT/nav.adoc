@@ -1,4 +1,3 @@
-* xref:About.adoc[About]
 * xref:Modules.adoc[Modules]
 ** xref:modules/Commons.adoc[Commons]
 ** xref:modules/BlobStore.adoc[BlobStore]
