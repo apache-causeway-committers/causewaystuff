@@ -64,7 +64,7 @@
         <micronaut-sourcegen.version>1.7.1</micronaut-sourcegen.version>
         <picocli.version>4.7.6</picocli.version>
         <structurizr-dsl.version>3.2.1</structurizr-dsl.version>
-        <structurizr-export.version>3.2.1</structurizr-export.version>
+        <structurizr-export.version>4.0.0</structurizr-export.version>
         <tukaani-xz.version>1.10</tukaani-xz.version>
 
         <!-- testing -->
