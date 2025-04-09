@@ -131,7 +131,7 @@ record MavenMultiModuleBuildProjectContributor(
         props.put("maven.compiler.release", "23");
         props.put("maven.compiler.arg", "-parameters");
         
-        props.put("causeway.version", "3.0.0-SNAPSHOT");
+        props.put("causeway.version", "3.4.0-SNAPSHOT");
         props.put("causewaystuff.version", "1.0.0-SNAPSHOT");
         return props;
     }
