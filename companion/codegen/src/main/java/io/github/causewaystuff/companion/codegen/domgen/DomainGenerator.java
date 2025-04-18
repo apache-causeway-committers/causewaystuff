@@ -69,12 +69,6 @@ public record DomainGenerator(DomainGenerator.@NonNull Config config) {
         @Builder.Default
         private final @NonNull Predicate<File> onPurgeKeep = file->true; // safety net
 
-        /**
-         * Data Federation Support
-         * @see <a href="https://www.datanucleus.org/products/accessplatform_6_0/jdo/persistence.html#data_federationv">Data Federation</a>
-         */
-        private final @Nullable String datastore;
-
         public String prefixed(final String prefix, final String realativeName) {
             return Can.of(
                     _Strings.emptyToNull(prefix),
@@ -253,6 +247,11 @@ public record DomainGenerator(DomainGenerator.@NonNull Config config) {
                         _GenModule.qualifiedType(config(), domainModel)));
 
         if(!entityModels.isEmpty()) {
+            // persistence.xml
+            if(config().persistence().isJpa()) {
+                _GenPersistenceXml.create(config(), entityModels);
+            }
+            
             // menu entries
             domainModel.menus().add(
                     JavaFileModel.create(config(),

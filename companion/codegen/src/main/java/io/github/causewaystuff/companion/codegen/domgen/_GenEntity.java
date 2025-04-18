@@ -121,14 +121,6 @@ class _GenEntity {
                 .addMethod(_Methods.iconFaLayers(Modifier.PUBLIC));
         }
 
-        // data federation support (experimental)
-        if(_Strings.isNotEmpty(config.datastore())) {
-            switch (config.persistence()) {
-                case JDO -> typeModelBuilder.addAnnotation(_Annotations.datanucleus.datastore(config.datastore()));
-                case JPA, JDBC, NONE -> {}
-            }
-        }
-
         // super type
 
         if(entityModel.hasSuperType()) {
