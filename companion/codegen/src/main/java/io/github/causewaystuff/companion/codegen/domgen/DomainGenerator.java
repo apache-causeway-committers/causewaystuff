@@ -26,7 +26,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.jspecify.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+
 import org.springframework.util.ReflectionUtils;
 
 import org.apache.causeway.commons.collections.Can;
@@ -35,7 +36,6 @@ import org.apache.causeway.commons.internal.base._Strings;
 import org.apache.causeway.commons.internal.collections._Multimaps;
 
 import lombok.Builder;
-import org.jspecify.annotations.NonNull;
 import lombok.Value;
 import lombok.experimental.Accessors;
 
@@ -251,7 +251,7 @@ public record DomainGenerator(DomainGenerator.@NonNull Config config) {
             if(config().persistence().isJpa()) {
                 _GenPersistenceXml.create(config(), entityModels);
             }
-            
+
             // menu entries
             domainModel.menus().add(
                     JavaFileModel.create(config(),
