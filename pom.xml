@@ -81,7 +81,7 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <causeway.version>3.4.0-SNAPSHOT.20250420-0302-a464c48f</causeway.version>
+                <causeway.version>3.4.0-SNAPSHOT.20250506-0303-b637563c</causeway.version>
             </properties>
             <repositories>
                 <repository>
