@@ -31,7 +31,11 @@ class _TypeMapping {
 
     TypeName dbToJava(final String typeName, final boolean nullable) {
         if(typeName.startsWith("nvarchar")
-                || typeName.equals("clob")) {
+                || typeName.equals("clob")
+                || typeName.equals("text")
+                || typeName.equals("tinytext")
+                || typeName.equals("mediumtext")
+                || typeName.equals("longtext")) {
             return ClassName.get("java.lang", "String");
         }
         if(typeName.equals("bit(1)")) {
