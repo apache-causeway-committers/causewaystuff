@@ -20,7 +20,6 @@ package io.github.causewaystuff.companion.codegen.domgen;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,22 +34,22 @@ import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.Config;
 import io.github.causewaystuff.companion.codegen.model.Schema.Entity;
 
 /**
- * Given a list of entities, creates a JPA persistence.xml file under src/main/resources/META-INF, 
+ * Given a list of entities, creates a JPA persistence.xml file under src/main/resources/META-INF,
  * not including any JDBC specific configuration.
  */
 @UtilityClass
 class _GenPersistenceXml {
 
     @SneakyThrows
-    void create(@NonNull Config config, @NonNull List<Entity> entities) {
+    void create(@NonNull final Config config, @NonNull final List<Entity> entities) {
         var unitName = config.entitiesModuleClassSimpleName();
-        
+
         var classes = entities.stream()
                 .map(Entity::fqn)
                 .map(config::fullPackageName)
                 .map("        <class>%s</class>"::formatted)
                 .collect(Collectors.joining("\n"));
-        
+
         var metaInfFolder = new ResourceFolder(config.destinationFolder().root().getParentFile())
                 .makeDir(NamedPath.of("resources", "META-INF"));
         var dest = metaInfFolder.relativeFile("persistence.xml");
@@ -66,6 +65,6 @@ class _GenPersistenceXml {
                     </persistence-unit>
                 </persistence>
                 """.formatted(_GenPersistenceXml.class.getName(), unitName, classes);
-        Files.writeString(dest.toPath(), xml.toString(), StandardCharsets.UTF_8, StandardOpenOption.CREATE);
+        Files.writeString(dest.toPath(), xml.toString(), StandardCharsets.UTF_8);
     }
 }
