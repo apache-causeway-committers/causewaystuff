@@ -222,7 +222,7 @@ public class Schema {
         static Entity parse(@SuppressWarnings("rawtypes") final Map.Entry<String, Map> entry) {
             return _Parser.parseEntity(entry, ParserHint.empty());
         }
-        String toYaml() {
+        public String toYaml() {
             return _Writer.toYaml(this);
         }
     }
