@@ -19,8 +19,6 @@
 package io.github.causewaystuff.companion.codegen.cli;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import io.github.causewaystuff.companion.codegen.cli.CodegenModel.SubProject;
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator;
@@ -31,47 +29,32 @@ import io.github.causewaystuff.companion.schema.Persistence;
 record Emitter(
     LicenseHeader licenseHeader) {
 
-    void emitCode(final SubProject subProject) {
+    void emit(final SubProject subProject) {
 
-        var domains = new ArrayList<Schema.Domain>();
+        var domain = DomainAssembler.assemble(subProject)
+            .orElse(null);
+        if(domain==null) return;
 
-        subProject.includes().forEach(fragmentFolder->{
-            subProject.resourcesRoot().relative(fragmentFolder.include())
-                .ifPresent(includedFolder->{
+        var moduleDto = subProject.moduleDto();
+        emitJavaFiles(DomainGenerator.Config.builder()
+            .domain(domain)
+            .licenseHeader(licenseHeader)
+            .destinationFolder(subProject.javaRoot())
+            .logicalNamespacePrefix(moduleDto.logicalNamespacePrefix())
+            .packageNamePrefix(moduleDto.packageNamePrefix())
+            .onPurgeKeep(FileKeepStrategy.nonGenerated())
+            .persistence(Persistence.parse(moduleDto.entitiesGenerator()))
+            .entitiesModulePackageName(moduleDto.entitiesModulePackageName())
+            .entitiesModuleClassSimpleName(moduleDto.entitiesModuleClassSimpleName())
+            .build());
 
-                    System.out.printf("CodegenTask: including %s:%s%n", subProject, includedFolder);
-
-                    var domain = SchemaAssembler.assemble(includedFolder.root());
-                    domains.add(domain);
-
-                    emitJavaFiles(DomainGenerator.Config.builder()
-                            .domain(domain)
-                            .licenseHeader(licenseHeader)
-                            .destinationFolder(subProject.javaRoot())
-                            .logicalNamespacePrefix(fragmentFolder.logicalNamespacePrefix())
-                            .packageNamePrefix(fragmentFolder.packageNamePrefix())
-                            .onPurgeKeep(FileKeepStrategy.nonGenerated())
-                            .persistence(Persistence.parse(fragmentFolder.entitiesGenerator()))
-                            .entitiesModulePackageName(fragmentFolder.entitiesModulePackageName())
-                            .entitiesModuleClassSimpleName(fragmentFolder.entitiesModuleClassSimpleName())
-                            .build());
-                });
-        });
-
-        emitCombinedDomainAsYaml(domains, subProject.resourcesRoot().relativeFile("companion-schema.yaml"));
+        emitDomainAsYaml(domain, subProject.resourcesRoot().relativeFile("companion-schema.yaml"));
     }
 
-    void emitCombinedDomainAsYaml(
-            final List<Schema.Domain> domains,
+    void emitDomainAsYaml(
+            final Schema.Domain domain,
             final File destFile) {
-
-        domains.stream()
-            .reduce(Schema.Domain::concat)
-            .ifPresent(combinedDomain->{
-                combinedDomain.writeToFileAsYaml(
-                    destFile,
-                    licenseHeader);
-            });
+        domain.writeToFileAsYaml(destFile, licenseHeader);
     }
 
     void emitJavaFiles(final DomainGenerator.Config config) {

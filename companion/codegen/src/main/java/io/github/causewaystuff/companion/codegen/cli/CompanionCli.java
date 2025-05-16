@@ -33,7 +33,7 @@ public class CompanionCli {
         var argsModel = ArgsModel.parse(args);
         var projTree = ProjectNodeFactory.maven(argsModel.projectRoot().root());
         projTree.depthFirst(projModel -> CodegenModel.readSubProject(projModel)
-            .ifPresent(new Emitter(LicenseHeader.ASF_V2)::emitCode)); //TODO make LicenseHeader an argument option
+            .ifPresent(new Emitter(LicenseHeader.ASF_V2)::emit)); //TODO make LicenseHeader an argument option
     }
 
     // -- HELPER
@@ -59,7 +59,11 @@ public class CompanionCli {
             System.err.println(
                     """
                     please provide the project root directory as input parameter like e.g.
-                    projectRoot=/path/to/project""");
+                    projectRoot=/path/to/project
+
+                    other options are
+                    license=ASF_V2 | NONE
+                    """);
             System.exit(1);
         }
     }

@@ -19,16 +19,29 @@
 package io.github.causewaystuff.companion.codegen.cli;
 
 import java.io.File;
+import java.util.Optional;
 
 import org.apache.causeway.commons.io.FileUtils;
 
+import io.github.causewaystuff.companion.codegen.cli.CodegenModel.SubProject;
 import io.github.causewaystuff.companion.codegen.model.Schema;
+import io.github.causewaystuff.companion.codegen.model.Schema.Domain;
 
-record SchemaAssembler() {
+record DomainAssembler() {
+
+    static Optional<Domain> assemble(final SubProject subProject) {
+        return subProject.streamFragments()
+            .map(includedFolder->{
+                System.out.printf("DomainAssembler: including %s:%s%n", subProject, includedFolder);
+                return assemble(includedFolder.root());
+            })
+            .reduce(Schema.Domain::concat);
+    }
 
     static Schema.Domain assemble(final File yamlFolder) {
         FileUtils.existingDirectoryElseFail(yamlFolder);
         return Schema.Domain.fromYamlFolder(yamlFolder);
     }
+
 }
 

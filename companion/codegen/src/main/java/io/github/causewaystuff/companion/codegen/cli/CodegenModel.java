@@ -18,9 +18,10 @@
  */
 package io.github.causewaystuff.companion.codegen.cli;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
+import org.apache.causeway.commons.internal.base._NullSafe;
 import org.apache.causeway.commons.io.DataSource;
 import org.apache.causeway.commons.io.YamlUtils;
 
@@ -33,23 +34,16 @@ import io.github.causewaystuff.tooling.projectmodel.ProjectNode;
 class CodegenModel {
 
     /**
-     * A folder with fragments that contribute to the sub-project's domain.
+     * Module configuration including fragment locations that contribute to the sub-project's domain.
+     * @implNote used as DTO
      */
-    record ResourceFragmentFolder (
-        String include,
+    record ModuleDto (
         String logicalNamespacePrefix,
         String packageNamePrefix,
         String entitiesGenerator,
         String entitiesModulePackageName,
-        String entitiesModuleClassSimpleName) {
-    }
-
-    /**
-     * All the fragments, that contribute to a single sub-project domain.
-     * @implNote used as DTO
-     */
-    record ResourceFragmentFolders(
-        List<ResourceFragmentFolder> codegen) {
+        String entitiesModuleClassSimpleName,
+        String[] fragments) {
     }
 
     /**
@@ -59,7 +53,13 @@ class CodegenModel {
         ProjectNode projectNode,
         ResourceFolder javaRoot,
         ResourceFolder resourcesRoot,
-        List<ResourceFragmentFolder> includes) {
+        ModuleDto moduleDto) {
+
+        Stream<ResourceFolder> streamFragments() {
+            return _NullSafe.stream(moduleDto.fragments())
+                .map(it->resourcesRoot().relative(it))
+                .flatMap(Optional::stream);
+        }
     }
 
     Optional<SubProject> readSubProject(final ProjectNode projectNode) {
@@ -72,13 +72,13 @@ class CodegenModel {
                 || resourcesRoot==null) {
             return Optional.empty();
         }
-        var companionYaml = resourcesRoot.relativeFile("companion.yaml");
+        var companionYaml = resourcesRoot.relativeFile("companion-module.yaml");
         if(!companionYaml.exists()) {
             return Optional.empty();
         }
-        return YamlUtils.tryRead(ResourceFragmentFolders.class, DataSource.ofFile(companionYaml))
+        return YamlUtils.tryRead(ModuleDto.class, DataSource.ofFile(companionYaml))
                 .getValue()
-                .map(resourceFragmentFolders->new SubProject(projectNode, javaRoot, resourcesRoot, resourceFragmentFolders.codegen()));
+                .map(moduleDto->new SubProject(projectNode, javaRoot, resourcesRoot, moduleDto));
     }
 
 }
