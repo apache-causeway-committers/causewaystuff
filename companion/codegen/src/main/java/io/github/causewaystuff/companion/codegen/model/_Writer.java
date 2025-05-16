@@ -31,11 +31,16 @@ import org.apache.causeway.commons.io.TextUtils;
 
 import lombok.experimental.UtilityClass;
 
+import io.github.causewaystuff.companion.codegen.model.Schema.ModuleNaming;
+
 @UtilityClass
 class _Writer {
 
-    String toYaml(final Schema.Domain schema) {
+    String toYaml(final ModuleNaming naming, final Schema.Domain schema) {
         var yaml = new YamlWriter();
+        yaml.write("module:").nl();
+        yaml.ind().write("namespace: ", naming.namespace()).nl();
+        yaml.ind().write("package: ", naming.javaPackage()).nl();
         yaml.write("viewmodels:").nl();
         for(var viewmodel : schema.viewmodels().values()) {
             writeViewmodel(yaml, viewmodel);
@@ -54,7 +59,7 @@ class _Writer {
     }
 
     void writeViewmodel(final YamlWriter yaml, final Schema.Viewmodel viewmodel) {
-        yaml.write("- fqn: ", viewmodel.id()).nl();
+        yaml.write("- id: ", viewmodel.id()).nl();
         yaml.ind().write("generator: ", viewmodel.generator()).nl();
         yaml.ind().write("name: ", viewmodel.name()).nl();
         yaml.ind().write("namespace: ", viewmodel.namespace()).nl();
@@ -108,7 +113,7 @@ class _Writer {
     }
 
     void writeEntity(final YamlWriter yaml, final Schema.Entity entity) {
-        yaml.write("- fqn: ", entity.id()).nl();
+        yaml.write("- id: ", entity.id()).nl();
         yaml.ind().write("name: ", entity.name()).nl();
         yaml.ind().write("namespace: ", entity.namespace()).nl();
         yaml.ind().write("table: ", entity.table()).nl();

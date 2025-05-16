@@ -19,10 +19,13 @@
 package io.github.causewaystuff.companion.codegen.cli;
 
 import java.io.File;
+
+import io.github.causewaystuff.commons.base.types.NamedPath;
 import io.github.causewaystuff.companion.codegen.cli.CodegenModel.SubProject;
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator;
 import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.companion.codegen.model.Schema.Domain;
+import io.github.causewaystuff.companion.codegen.model.Schema.ModuleNaming;
 
 record Emitter(
     CodegenModel.Project project) {
@@ -47,13 +50,17 @@ record Emitter(
             .moduleClassSimpleName(moduleDto.moduleClassSimpleName())
             .build());
 
-        emitDomainAsYaml(domain, subProject.resourcesRoot().relativeFile("companion-schema.yaml"));
+        emitDomainAsYaml(
+            new ModuleNaming(subProject.moduleDto().javaPackage(), subProject.namespace()),
+            domain, subProject.javaRoot()
+                .relativeFile(NamedPath.of(moduleDto.javaPackage().split("\\.")).add("companion-schema.yaml")));
     }
 
     void emitDomainAsYaml(
+            final ModuleNaming naming,
             final Schema.Domain domain,
             final File destFile) {
-        domain.writeToFileAsYaml(destFile, project.dto().license());
+        domain.writeToFileAsYaml(naming, destFile, project.dto().license());
     }
 
     void emitJavaFiles(final DomainGenerator.Config config) {

@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+import java.util.function.Consumer;
 
 import org.jspecify.annotations.Nullable;
 
@@ -63,21 +64,23 @@ class _Parser {
         }
     }
 
-    Domain parseSchema(final ModuleNaming naming, final String yaml) {
-        return parseSchema(naming, yaml, ParserHint.empty());
+    Domain parseSchema(final String yaml) {
+        return parseSchema(yaml, ParserHint.empty());
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    Domain parseSchema(final ModuleNaming naming, final String yaml, final ParserHint parserHint) {
+    @SuppressWarnings({ "unchecked" })
+    Domain parseSchema(final String yaml, final ParserHint parserHint) {
+        var moduleNaming = new ArrayList<Schema.ModuleNaming>();
+        moduleNaming.add(new ModuleNaming("", ""));
         var viewmodels = new TreeMap<String, Schema.Viewmodel>();
         var entities = new TreeMap<String, Schema.Entity>();
         YamlUtils.tryRead(Map.class, yaml)
             .ifFailureFail()
             .getValue()
-            .map(map->(Map<String, Map>)map)
+            .map(map->(Map<String, ?>)map)
             .ifPresent(map->{
                 map.entrySet().stream()
-                .map(entry->_Parser.parseDomainObjects(entry, parserHint))
+                .map(entry->_Parser.parseDomainObjects(entry, parserHint, moduleNaming::add))
                 .flatMap(Can::stream)
                 .forEach(domainObj->{
                     switch (domainObj) {
@@ -88,17 +91,19 @@ class _Parser {
                     }
                 });
             });
-        var domain = new Domain(naming, viewmodels, entities);
+        var domain = new Domain(moduleNaming.getLast(), viewmodels, entities);
         return domain;
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     Can<Schema.DomainObject> parseDomainObjects(
-            final Map.Entry<String, Map> entry,
-            final ParserHint parserHint) {
+            final Map.Entry<String, ?> entry,
+            final ParserHint parserHint,
+            final Consumer<Schema.ModuleNaming> onModuleNaming) {
         return switch (entry.getKey()) {
-            case "viewmodel" -> Can.of(parseViewmodel(entry, parserHint));
-            case "entity" -> Can.of(parseEntity(entry, parserHint));
+            case "module" -> { onModuleNaming.accept(parseModuleNaming((Map<String, ?>)entry.getValue())); yield Can.empty(); }
+            case "viewmodel" -> Can.of(parseViewmodel((Map.Entry<String, Map>)entry, parserHint));
+            case "entity" -> Can.of(parseEntity((Map.Entry<String, Map>)entry, parserHint));
             case "viewmodels" ->
                 String.class.isInstance(entry.getValue())
                     ? Can.empty()
@@ -110,6 +115,11 @@ class _Parser {
             default ->
                 throw new IllegalArgumentException("Unexpected domain-object type: " + entry.getKey());
         };
+    }
+
+    private Schema.ModuleNaming parseModuleNaming(
+            final Map<String, ?> data) {
+        return new Schema.ModuleNaming((String)data.get("namespace"), (String)data.get("package"));
     }
 
     @SuppressWarnings("rawtypes")

@@ -45,14 +45,14 @@ class _FileUtils {
                 .add("");
     }
 
-    String collectSchemaFromFolder(final ModuleNaming naming, final File rootDirectory) {
+    String collectSchemaFromFolder(final File rootDirectory) {
         var root = FileUtils.existingDirectoryElseFail(rootDirectory);
         var domain = FileUtils.searchFiles(root, dir->true, file->file.getName().endsWith(".yaml"))
             .stream()
             .map(file->{
                 var ds = DataSource.ofFile(file);
                 var yaml = ds.tryReadAsStringUtf8().valueAsNonNullElseFail();
-                return _Parser.parseSchema(naming, yaml,
+                return _Parser.parseSchema(yaml,
                         new ParserHint(_Strings.substring(file.getName(), 0, -5)));
             })
             .reduce((a, b)->a.concat(b))
@@ -60,9 +60,9 @@ class _FileUtils {
         return domain.toYaml();
     }
 
-    void writeSchemaToFile(final Schema.Domain schema, final File file, final LicenseHeader licenseHeader) {
+    void writeSchemaToFile(final ModuleNaming naming, final Schema.Domain schema, final File file, final LicenseHeader licenseHeader) {
         var lic = _FileUtils.licenseHeaderAsYaml(licenseHeader);
-        var yaml = TextUtils.readLines(_Writer.toYaml(schema));
+        var yaml = TextUtils.readLines(_Writer.toYaml(naming, schema));
         TextUtils.writeLinesToFile(lic.addAll(yaml), file, StandardCharsets.UTF_8);
     }
 

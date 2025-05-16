@@ -91,7 +91,7 @@ class _GenModule {
                 // static method that provides the schema source
                 .addMethod(_Methods.schemaSource("schemaSource",
                         nameOfClassToGenerate,
-                        "/companion-schema.yaml",
+                        "companion-schema.yaml",
                         Modifier.PUBLIC, Modifier.STATIC))
 
                 // static method that provides all entity classes we listed above

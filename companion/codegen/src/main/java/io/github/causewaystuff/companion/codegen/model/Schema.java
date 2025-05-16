@@ -442,7 +442,7 @@ public class Schema {
                 final Map<String, Viewmodel> viewmodels,
                 final Map<String, Entity> entities){
             this(naming, viewmodels, entities, new ArrayList<Domain>());
-            entities.values().forEach(e->e.domainRef.setValue(this));
+            normalized();
         }
         public Optional<Schema.Entity> lookupEntityByTableName(final String tableName) {
             return entities().values()
@@ -465,17 +465,23 @@ public class Schema {
             return new _ObjectGraphFactory(this).create();
         }
         // -- YAML IO
-        public static Domain fromYaml(final ModuleNaming naming, final String yaml) {
-            return _Parser.parseSchema(naming, yaml);
+        public static Domain fromYaml(final String yaml) {
+            return _Parser.parseSchema(yaml);
         }
         public static Domain fromYamlFolder(final ModuleNaming naming, final File rootDirectory) {
-            return fromYaml(naming, _FileUtils.collectSchemaFromFolder(naming, rootDirectory));
+            var fragmented = fromYaml(_FileUtils.collectSchemaFromFolder(rootDirectory));
+            return new Domain(naming, fragmented.viewmodels(), fragmented.entities());
+        }
+        private Domain normalized() {
+            viewmodels().forEach((k, v)->v.domainRef().setValue(this));
+            entities().forEach((k, v)->v.domainRef().setValue(this));
+            return this;
         }
         public String toYaml() {
-            return _Writer.toYaml(this);
+            return _Writer.toYaml(naming, this);
         }
-        public void writeToFileAsYaml(final File file, final LicenseHeader licenseHeader) {
-            _FileUtils.writeSchemaToFile(this, file, licenseHeader);
+        public void writeToFileAsYaml(final ModuleNaming naming, final File file, final LicenseHeader licenseHeader) {
+            _FileUtils.writeSchemaToFile(naming, this, file, licenseHeader);
         }
         public void writeEntitiesToIndividualFiles(final File rootDirectory, final LicenseHeader licenseHeader) {
             _FileUtils.writeEntitiesToIndividualFiles(entities().values(), rootDirectory, licenseHeader);

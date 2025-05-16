@@ -41,7 +41,7 @@ public class MyModule {
     public static final String NAMESPACE = "";
 
     public static DataSource schemaSource() {
-        return DataSource.ofResource(MyModule.class, "/companion-schema.yaml");
+        return DataSource.ofResource(MyModule.class, "companion-schema.yaml");
     }
 
     public static Can<Class<?>> entityClasses() {

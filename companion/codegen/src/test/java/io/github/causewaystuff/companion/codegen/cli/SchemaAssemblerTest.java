@@ -40,16 +40,20 @@ import io.github.causewaystuff.companion.schema.Persistence;
 
 class SchemaAssemblerTest {
 
+    static Schema.ModuleNaming naming() {
+        return new Schema.ModuleNaming("ns", "pkg");
+    }
+
     @Test
     void assembleAndRoundtrip() {
         var schemaTestFileFolder = ResourceFolder.testResourceRoot().relativeFile("schema-test-files");
-        var domain = DomainAssembler.assemble(new Schema.ModuleNaming("ns", "pkg"), schemaTestFileFolder);
+        var domain = DomainAssembler.assemble(naming(), schemaTestFileFolder);
 
         // test round-trip
         var yaml = domain.toYaml();
         assertEquals(
                 domain,
-                Schema.Domain.fromYaml(new Schema.ModuleNaming("ns", "pkg"), yaml));
+                Schema.Domain.fromYaml(yaml));
     }
 
     @ParameterizedTest(name = "{index}: {0}")
@@ -62,7 +66,8 @@ class SchemaAssemblerTest {
 
     private static Stream<Arguments> javaSource() {
         var schemaTestFileFolder = ResourceFolder.testResourceRoot().relativeFile("schema-test-files");
-        var domain = DomainAssembler.assemble(new Schema.ModuleNaming("ns", "pkg"), schemaTestFileFolder);
+        var domain = DomainAssembler.assemble(naming(), schemaTestFileFolder);
+        assertEquals(naming(), domain.naming());
 
         var config = DomainGenerator.Config.builder()
                 .domain(domain)
