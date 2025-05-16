@@ -19,10 +19,11 @@
 package io.github.causewaystuff.companion.codegen.cli;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.stream.Stream;
 
 import org.apache.causeway.commons.internal.base._NullSafe;
@@ -61,13 +62,18 @@ class CodegenModel {
         String namespace,
         String javaPackage,
         String moduleClassSimpleName,
-        String[] fragments,
-        String[] moduleImports) {
+        List<String> fragments,
+        List<String> imports) {
 
         ModuleDto normalized() {
-            return javaPackage==null
-                ? new ModuleDto(namespace, namespace, moduleClassSimpleName, fragments, moduleImports)
-                : this;
+            return new ModuleDto(
+                namespace,
+                javaPackage!=null
+                    ? javaPackage
+                    : namespace,
+                moduleClassSimpleName,
+                _NullSafe.stream(fragments).toList(),
+                _NullSafe.stream(imports).toList());
         }
     }
 
@@ -80,6 +86,10 @@ class CodegenModel {
         ResourceFolder resourcesRoot,
         ModuleDto moduleDto) {
 
+        String namespace() {
+            return moduleDto.namespace();
+        }
+
         Stream<ResourceFolder> streamFragments() {
             return _NullSafe.stream(moduleDto.fragments())
                 .map(it->resourcesRoot().relative(it))
@@ -89,7 +99,7 @@ class CodegenModel {
 
     record Project(
         ProjectDto dto,
-        List<SubProject> subProjects) {
+        Map<String, SubProject> subProjectsByNamespace) {
     }
 
     Optional<Project> readProject(final ResourceFolder projectFolder) {
@@ -110,12 +120,12 @@ class CodegenModel {
         YamlUtils.write(ProjectDto.template(), DataSink.ofFile(projectYaml));
     }
 
-    private List<SubProject> readSubProjects(final ResourceFolder projectFolder) {
-        var subProjects = new ArrayList<SubProject>();
+    private Map<String, SubProject> readSubProjects(final ResourceFolder projectFolder) {
+        var subProjects = new TreeMap<String, SubProject>();
         ProjectNodeFactory.maven(projectFolder.root())
             .depthFirst(projModel -> CodegenModel.readSubProject(projModel)
-                .ifPresent(subProjects::add));
-        return Collections.unmodifiableList(subProjects);
+                .ifPresent(subProject->subProjects.put(subProject.namespace(), subProject)));
+        return Collections.unmodifiableMap(subProjects);
     }
 
     private Optional<SubProject> readSubProject(final ProjectNode projectNode) {

@@ -42,6 +42,7 @@ import io.github.causewaystuff.companion.codegen.model.Schema.Entity;
 import io.github.causewaystuff.companion.codegen.model.Schema.EntityField;
 import io.github.causewaystuff.companion.codegen.model.Schema.EnumConstant;
 import io.github.causewaystuff.companion.codegen.model.Schema.Field;
+import io.github.causewaystuff.companion.codegen.model.Schema.ModuleNaming;
 import io.github.causewaystuff.companion.codegen.model.Schema.Viewmodel;
 import io.github.causewaystuff.companion.codegen.model.Schema.VmField;
 
@@ -62,32 +63,32 @@ class _Parser {
         }
     }
 
-    Domain parseSchema(final String yaml) {
-        return parseSchema(yaml, ParserHint.empty());
+    Domain parseSchema(final ModuleNaming naming, final String yaml) {
+        return parseSchema(naming, yaml, ParserHint.empty());
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    Domain parseSchema(final String yaml, final ParserHint parserHint) {
+    Domain parseSchema(final ModuleNaming naming, final String yaml, final ParserHint parserHint) {
         var viewmodels = new TreeMap<String, Schema.Viewmodel>();
         var entities = new TreeMap<String, Schema.Entity>();
         YamlUtils.tryRead(Map.class, yaml)
-        .ifFailureFail()
-        .getValue()
-        .map(map->(Map<String, Map>)map)
-        .ifPresent(map->{
-            map.entrySet().stream()
-            .map(entry->_Parser.parseDomainObjects(entry, parserHint))
-            .flatMap(Can::stream)
-            .forEach(domainObj->{
-                switch (domainObj) {
-                case Schema.Viewmodel viewmodel ->
-                    viewmodels.put(viewmodel.fqn(), viewmodel);
-                case Schema.Entity entity ->
-                    entities.put(entity.fqn(), entity);
-                }
+            .ifFailureFail()
+            .getValue()
+            .map(map->(Map<String, Map>)map)
+            .ifPresent(map->{
+                map.entrySet().stream()
+                .map(entry->_Parser.parseDomainObjects(entry, parserHint))
+                .flatMap(Can::stream)
+                .forEach(domainObj->{
+                    switch (domainObj) {
+                    case Schema.Viewmodel viewmodel ->
+                        viewmodels.put(viewmodel.id(), viewmodel);
+                    case Schema.Entity entity ->
+                        entities.put(entity.id(), entity);
+                    }
+                });
             });
-        });
-        var domain = new Domain(viewmodels, entities);
+        var domain = new Domain(naming, viewmodels, entities);
         return domain;
     }
 

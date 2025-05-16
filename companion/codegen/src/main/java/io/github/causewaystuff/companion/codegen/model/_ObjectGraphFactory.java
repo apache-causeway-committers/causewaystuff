@@ -55,7 +55,7 @@ record _ObjectGraphFactory(Schema.Domain schema) implements ObjectGraph.Factory 
     }
 
     private static ObjectGraph.Object object(final Schema.Entity entity) {
-        final String id = entity.fqn();
+        final String id = entity.id();
         boolean isAbstract = false;
         var obj = new ObjectGraph.Object(id,
                 entity.namespace(),

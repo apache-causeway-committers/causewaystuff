@@ -19,28 +19,56 @@
 package io.github.causewaystuff.companion.codegen.cli;
 
 import java.io.File;
-import java.util.Optional;
+import java.util.Map;
+import java.util.Objects;
+import java.util.TreeMap;
 
 import org.apache.causeway.commons.io.FileUtils;
 
-import io.github.causewaystuff.companion.codegen.cli.CodegenModel.SubProject;
+import io.github.causewaystuff.commons.base.types.ResourceFolder;
 import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.companion.codegen.model.Schema.Domain;
+import io.github.causewaystuff.companion.codegen.model.Schema.ModuleNaming;
 
 record DomainAssembler() {
 
-    static Optional<Domain> assemble(final SubProject subProject) {
-        return subProject.streamFragments()
-            .map(includedFolder->{
-                System.out.printf("DomainAssembler: including %s:%s%n", subProject, includedFolder);
-                return assemble(includedFolder.root());
-            })
-            .reduce(Schema.Domain::concat);
+    static Map<String, Domain> assemble(final CodegenModel.Project project) {
+        var domainsByNamespace = new TreeMap<String, Domain>();
+        project.subProjectsByNamespace().forEach((namespace, subProject)->{
+            var naming = new ModuleNaming(namespace, subProject.moduleDto().javaPackage());
+            var domain = subProject.streamFragments()
+                .map(f->assemble(naming, f))
+                .reduce(Schema.Domain::concat)
+                .orElse(null);
+            if(domain==null) return;
+            domainsByNamespace.put(namespace, domain);
+        });
+
+        // resolve dependencies
+        project.subProjectsByNamespace().forEach((namespace, subProject)->{
+            var imports = subProject.moduleDto().imports();
+            if(imports.isEmpty()) return;
+
+            var domain = domainsByNamespace.get(namespace);
+            if(domain==null) return;
+
+            imports.stream()
+                .map(domainsByNamespace::get)
+                .filter(Objects::nonNull)
+                .forEach(domain.dependencies()::add);
+        });
+
+        return domainsByNamespace;
     }
 
-    static Schema.Domain assemble(final File yamlFolder) {
+    static Schema.Domain assemble(final ModuleNaming naming, final ResourceFolder fragmentFolder) {
+        System.out.printf("DomainAssembler: including %s%n", fragmentFolder);
+        return assemble(naming, fragmentFolder.root());
+    }
+
+    static Schema.Domain assemble(final ModuleNaming naming, final File yamlFolder) {
         FileUtils.existingDirectoryElseFail(yamlFolder);
-        return Schema.Domain.fromYamlFolder(yamlFolder);
+        return Schema.Domain.fromYamlFolder(naming, yamlFolder);
     }
 
 }

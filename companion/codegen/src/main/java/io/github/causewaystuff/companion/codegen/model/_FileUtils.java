@@ -30,6 +30,7 @@ import org.apache.causeway.commons.io.TextUtils;
 import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.companion.codegen.model.Schema.Entity;
+import io.github.causewaystuff.companion.codegen.model.Schema.ModuleNaming;
 import io.github.causewaystuff.companion.codegen.model._Parser.ParserHint;
 import io.github.causewaystuff.companion.schema.LicenseHeader;
 
@@ -44,14 +45,14 @@ class _FileUtils {
                 .add("");
     }
 
-    String collectSchemaFromFolder(final File rootDirectory) {
+    String collectSchemaFromFolder(final ModuleNaming naming, final File rootDirectory) {
         var root = FileUtils.existingDirectoryElseFail(rootDirectory);
         var domain = FileUtils.searchFiles(root, dir->true, file->file.getName().endsWith(".yaml"))
             .stream()
             .map(file->{
                 var ds = DataSource.ofFile(file);
                 var yaml = ds.tryReadAsStringUtf8().valueAsNonNullElseFail();
-                return _Parser.parseSchema(yaml,
+                return _Parser.parseSchema(naming, yaml,
                         new ParserHint(_Strings.substring(file.getName(), 0, -5)));
             })
             .reduce((a, b)->a.concat(b))
@@ -76,4 +77,6 @@ class _FileUtils {
             TextUtils.writeLinesToFile(lic.addAll(yaml), destFile, StandardCharsets.UTF_8);
         });
     }
+
+
 }

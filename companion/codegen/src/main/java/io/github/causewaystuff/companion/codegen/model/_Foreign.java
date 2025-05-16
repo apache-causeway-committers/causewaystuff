@@ -37,11 +37,11 @@ class _Foreign {
 
     Can<Entity> findEntitiesWithoutRelations(final Domain schema){
         var foreignKeyFields = // as table.column literal
-                schema.entities().values().stream().flatMap(fe->fe.fields().stream())
-                    .flatMap(ff->ff.foreignKeys().stream())
-                    .map(String::toLowerCase)
-                    .collect(Collectors.toSet());
-        var entitiesWithoutRelations =  schema.entities().values().stream()
+            schema.entities().values().stream().flatMap(fe->fe.fields().stream())
+                .flatMap(ff->ff.foreignKeys().stream())
+                .map(String::toLowerCase)
+                .collect(Collectors.toSet());
+        var entitiesWithoutRelations = schema.entities().values().stream()
             .filter(e->!e.fields().stream().anyMatch(f->f.hasForeignKeys()))
             .filter(e->!e.fields().stream().anyMatch(f->
                 foreignKeyFields.contains(e.table().toLowerCase() + "." + f.column().toLowerCase())))
@@ -51,10 +51,9 @@ class _Foreign {
     }
 
     Can<EntityField> foreignFields(final EntityField field) {
-        final Domain schema = field.parentEntity().parentSchema();
         return field.foreignKeys().stream()
-                .map(tableDotCom->lookupForeignKeyFieldElseFail(schema, tableDotCom))
-                .collect(Can.toCan());
+            .map(tableDotCom->lookupForeignKeyFieldElseFail(field.parentEntity().domain(), tableDotCom))
+            .collect(Can.toCan());
     }
 
     // -- HELPER
@@ -66,13 +65,20 @@ class _Foreign {
 
     private Optional<Schema.EntityField> lookupForeignKeyField(final Domain schema, final String tableDotColumn) {
         var parts = _Strings.splitThenStream(tableDotColumn, ".")
-                .collect(Can.toCan());
+            .collect(Can.toCan());
         _Assert.assertEquals(2, parts.size(), ()->String.format(
-                "could not parse foreign key '%s'", tableDotColumn));
+            "could not parse foreign key '%s'", tableDotColumn));
         var tableName = parts.getElseFail(0);
         var columnName = parts.getElseFail(1);
-        return schema.lookupEntityByTableName(tableName)
-                .flatMap(entity->entity.lookupFieldByColumnName(columnName));
+        var fieldOptional = schema.lookupEntityByTableName(tableName)
+            .flatMap(entity->entity.lookupFieldByColumnName(columnName));
+        if(fieldOptional.isPresent()) return fieldOptional;
+
+        for(var depDomain : schema.dependencies()) {
+            var depField = lookupForeignKeyField(depDomain, tableDotColumn);
+            if(depField.isPresent()) return depField;
+        }
+        return Optional.empty();
     }
 
 }

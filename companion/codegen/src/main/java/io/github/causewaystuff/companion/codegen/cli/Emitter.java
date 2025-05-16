@@ -19,22 +19,20 @@
 package io.github.causewaystuff.companion.codegen.cli;
 
 import java.io.File;
-
 import io.github.causewaystuff.companion.codegen.cli.CodegenModel.SubProject;
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator;
 import io.github.causewaystuff.companion.codegen.model.Schema;
+import io.github.causewaystuff.companion.codegen.model.Schema.Domain;
 
 record Emitter(
     CodegenModel.Project project) {
 
     void emitAll() {
-        project.subProjects().forEach(this::emit);
+        var domainsByNamespace = DomainAssembler.assemble(project);
+        project.subProjectsByNamespace().values().forEach(subProject->emit(subProject, domainsByNamespace.get(subProject.namespace())));
     }
 
-    void emit(final SubProject subProject) {
-
-        var domain = DomainAssembler.assemble(subProject)
-            .orElse(null);
+    void emit(final SubProject subProject, final Domain domain) {
         if(domain==null) return;
 
         var moduleDto = subProject.moduleDto();

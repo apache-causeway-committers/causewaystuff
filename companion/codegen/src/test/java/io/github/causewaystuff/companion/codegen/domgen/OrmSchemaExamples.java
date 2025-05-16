@@ -57,7 +57,7 @@ public class OrmSchemaExamples {
                 List.of(), List.of(), List.of());
         entity.fields().add(field);
         return Can.of(
-                Domain.of(List.of(),List.of(entity)));
+                Domain.of(new Schema.ModuleNaming("ns", "pkg"), List.of(),List.of(entity)));
     }
 
 }

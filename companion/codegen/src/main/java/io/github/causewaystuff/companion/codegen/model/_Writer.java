@@ -54,7 +54,7 @@ class _Writer {
     }
 
     void writeViewmodel(final YamlWriter yaml, final Schema.Viewmodel viewmodel) {
-        yaml.write("- fqn: ", viewmodel.fqn()).nl();
+        yaml.write("- fqn: ", viewmodel.id()).nl();
         yaml.ind().write("generator: ", viewmodel.generator()).nl();
         yaml.ind().write("name: ", viewmodel.name()).nl();
         yaml.ind().write("namespace: ", viewmodel.namespace()).nl();
@@ -108,7 +108,7 @@ class _Writer {
     }
 
     void writeEntity(final YamlWriter yaml, final Schema.Entity entity) {
-        yaml.write("- fqn: ", entity.fqn()).nl();
+        yaml.write("- fqn: ", entity.id()).nl();
         yaml.ind().write("name: ", entity.name()).nl();
         yaml.ind().write("namespace: ", entity.namespace()).nl();
         yaml.ind().write("table: ", entity.table()).nl();

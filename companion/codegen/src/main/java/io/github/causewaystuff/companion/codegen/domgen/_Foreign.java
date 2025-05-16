@@ -32,10 +32,9 @@ class _Foreign {
 
     ClassName foreignClassName(final Schema.EntityField field, final Schema.EntityField foreignField, final DomainGenerator.Config config) {
         var foreignEntity = foreignField.parentEntity();
-        var foreignPackageName = config.fullPackageName(foreignEntity.namespace());
         var foreignEntityClass = field.hasElementType()
                 ? ClassName.get(config.fullPackageName(field.elementTypeNamespace()), field.elementTypeSimpleName())
-                : ClassName.get(foreignPackageName, foreignEntity.name());
+                : ClassName.get(foreignEntity.packageNameResolved(), foreignEntity.name());
         return foreignEntityClass;
     }
 

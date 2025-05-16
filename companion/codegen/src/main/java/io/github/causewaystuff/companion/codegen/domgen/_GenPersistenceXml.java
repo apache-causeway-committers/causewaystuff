@@ -45,8 +45,7 @@ class _GenPersistenceXml {
         var unitName = config.moduleClassSimpleName();
 
         var classes = entities.stream()
-                .map(Entity::fqn)
-                .map(config::fullPackageName)
+                .map(Entity::fqcn)
                 .map("        <class>%s</class>"::formatted)
                 .collect(Collectors.joining("\n"));
 

@@ -43,13 +43,13 @@ class SchemaAssemblerTest {
     @Test
     void assembleAndRoundtrip() {
         var schemaTestFileFolder = ResourceFolder.testResourceRoot().relativeFile("schema-test-files");
-        var domain = DomainAssembler.assemble(schemaTestFileFolder);
+        var domain = DomainAssembler.assemble(new Schema.ModuleNaming("ns", "pkg"), schemaTestFileFolder);
 
         // test round-trip
         var yaml = domain.toYaml();
         assertEquals(
                 domain,
-                Schema.Domain.fromYaml(yaml));
+                Schema.Domain.fromYaml(new Schema.ModuleNaming("ns", "pkg"), yaml));
     }
 
     @ParameterizedTest(name = "{index}: {0}")
@@ -62,7 +62,7 @@ class SchemaAssemblerTest {
 
     private static Stream<Arguments> javaSource() {
         var schemaTestFileFolder = ResourceFolder.testResourceRoot().relativeFile("schema-test-files");
-        var domain = DomainAssembler.assemble(schemaTestFileFolder);
+        var domain = DomainAssembler.assemble(new Schema.ModuleNaming("ns", "pkg"), schemaTestFileFolder);
 
         var config = DomainGenerator.Config.builder()
                 .domain(domain)

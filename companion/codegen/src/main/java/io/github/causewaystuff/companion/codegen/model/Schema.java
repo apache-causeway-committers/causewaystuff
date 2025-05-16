@@ -19,13 +19,16 @@
 package io.github.causewaystuff.companion.codegen.model;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import org.apache.causeway.applib.services.metamodel.objgraph.ObjectGraph;
@@ -37,8 +40,6 @@ import org.apache.causeway.commons.internal.base._Strings;
 import org.apache.causeway.commons.internal.exceptions._Exceptions;
 import org.apache.causeway.commons.internal.primitives._Ints;
 import org.apache.causeway.commons.io.TextUtils;
-
-import org.jspecify.annotations.NonNull;
 
 import lombok.experimental.UtilityClass;
 
@@ -56,12 +57,23 @@ import io.micronaut.sourcegen.javapoet.TypeName;
 public class Schema {
 
     public sealed interface DomainObject permits Viewmodel, Entity {
+        Domain domain();
+        String relativeNamespace();
         String name();
-        String namespace();
         Multiline description();
-        default String fqn() {
-            return String.format("%s.%s", namespace(), name());
+        default String id() {
+            return String.format("%s.%s", relativeNamespace(), name());
         }
+        default String fqcn() {
+            return String.format("%s.%s", packageNameResolved(), name());
+        }
+        default String namespaceResolved() {
+            return domain().naming().namespaced(relativeNamespace());
+        }
+        default String packageNameResolved() {
+            return domain().naming().javaPackaged(relativeNamespace());
+        }
+
     }
 
     public sealed interface Field permits VmField, EntityField {
@@ -97,7 +109,7 @@ public class Schema {
     }
 
     public record Viewmodel(
-            ObjectRef<Domain> parentRef,
+            ObjectRef<Domain> domainRef,
             String generator,
             String name,
             String namespace,
@@ -110,8 +122,13 @@ public class Schema {
             String named,
             Multiline description,
             List<VmField> fields) implements DomainObject {
-        public Domain parentSchema() {
-            return parentRef.getValue();
+        @Override
+        public Domain domain() {
+            return domainRef.getValue();
+        }
+        @Override
+        public String relativeNamespace() {
+            return namespace;
         }
     }
 
@@ -132,9 +149,9 @@ public class Schema {
     }
 
     public record Entity(
-            ObjectRef<Domain> parentRef,
+            ObjectRef<Domain> domainRef,
             String name,
-            String namespace,
+            String namespace, // relative
             String table,
             String superType,
             List<String> secondaryKey,
@@ -149,8 +166,13 @@ public class Schema {
             String named,
             Multiline description,
             List<EntityField> fields)  implements DomainObject {
-        public Domain parentSchema() {
-            return parentRef.getValue();
+        @Override
+        public Domain domain() {
+            return domainRef.getValue();
+        }
+        @Override
+        public String relativeNamespace() {
+            return namespace;
         }
         public boolean hasSuperType() {
             return _Strings.isNotEmpty(superType);
@@ -178,7 +200,7 @@ public class Schema {
                             .findAny()
                             .orElseThrow(()->_Exceptions
                                     .noSuchElement("secondary-key field not found by column name '%s' in %s",
-                                            fieldId, fqn())))
+                                            fieldId, id())))
                     .collect(Collectors.toList());
         }
         public Optional<Schema.EntityField> lookupFieldByColumnName(final String columnName) {
@@ -190,11 +212,11 @@ public class Schema {
         public boolean equals(final Object o) {
             if (this == o) return true;
             if (!(o instanceof Entity)) return false;
-            return this.fqn().equals(((Entity) o).fqn());
+            return this.id().equals(((Entity) o).id());
         }
         @Override
         public int hashCode() {
-            return fqn().hashCode();
+            return id().hashCode();
         }
         // -- YAML IO
         static Entity parse(@SuppressWarnings("rawtypes") final Map.Entry<String, Map> entry) {
@@ -259,7 +281,7 @@ public class Schema {
                         .findAny()
                         .orElseThrow(()->_Exceptions
                                 .noSuchElement("secondary-key field not found by column name '%s' in %s",
-                                        fieldId, parentEntity().fqn())))
+                                        fieldId, parentEntity().id())))
                 .collect(Collectors.toList());
         }
         public boolean hasForeignKeys() {
@@ -354,7 +376,26 @@ public class Schema {
         }
     }
 
+    public record ModuleNaming (
+        String namespace,
+        String javaPackage) {
+        public String namespaced(final String suffix) {
+            return prefixed(namespace, suffix);
+        }
+        public String javaPackaged(final String suffix) {
+            return prefixed(javaPackage, suffix);
+        }
+        private String prefixed(final String prefix, final String realativeName) {
+            return Stream.of(
+                    _Strings.emptyToNull(prefix),
+                    _Strings.emptyToNull(realativeName))
+                .filter(Objects::nonNull)
+                .collect(Collectors.joining("."));
+        }
+    }
+
     public record Domain(
+            ModuleNaming naming,
             /**
              * Viewmodel metadata by {@code <namespace>.<name>}.
              */
@@ -362,41 +403,46 @@ public class Schema {
             /**
              * Entity metadata by {@code <namespace>.<name>}.
              */
-            Map<String, Entity> entities) {
+            Map<String, Entity> entities,
+            List<Domain> dependencies) {
         public static Domain of(
+                final ModuleNaming naming,
                 final Iterable<Entity> viewmodels,
                 final Iterable<Entity> entities) {
             var schema = new Domain(
+                    naming,
                     new TreeMap<String, Schema.Viewmodel>(),
                     new TreeMap<String, Schema.Entity>());
             for(var vm: viewmodels) {
-                schema.entities().put(vm.fqn(), vm);
+                schema.entities().put(vm.id(), vm);
             }
             for(var entity: entities) {
-                schema.entities().put(entity.fqn(), entity);
+                schema.entities().put(entity.id(), entity);
             }
             return schema;
         }
         public static Domain of(
+                final ModuleNaming naming,
                 final @Nullable Stream<Viewmodel> viewmodels,
                 final @Nullable Stream<Entity> entities) {
             var schema = new Domain(
+                    naming,
                     new TreeMap<String, Schema.Viewmodel>(),
                     new TreeMap<String, Schema.Entity>());
             if(entities!=null) {
-                entities.forEach(entity->schema.entities().put(entity.fqn(), entity));
+                entities.forEach(entity->schema.entities().put(entity.id(), entity));
             }
             if(entities!=null) {
-                viewmodels.forEach(vm->schema.viewmodels().put(vm.fqn(), vm));
+                viewmodels.forEach(vm->schema.viewmodels().put(vm.id(), vm));
             }
             return schema;
         }
         public Domain(
+                final ModuleNaming naming,
                 final Map<String, Viewmodel> viewmodels,
                 final Map<String, Entity> entities){
-            this.viewmodels = viewmodels;
-            this.entities = entities;
-            entities.values().forEach(e->e.parentRef.setValue(this));
+            this(naming, viewmodels, entities, new ArrayList<Domain>());
+            entities.values().forEach(e->e.domainRef.setValue(this));
         }
         public Optional<Schema.Entity> lookupEntityByTableName(final String tableName) {
             return entities().values()
@@ -405,7 +451,9 @@ public class Schema {
                     .findFirst();
         }
         public Domain concat(final Domain other) {
+            _Assert.assertEquals(this.naming(), other.naming());
             return Domain.of(
+                    naming(),
                     Stream.concat(
                         this.viewmodels().values().stream(),
                         other.viewmodels().values().stream()),
@@ -417,11 +465,11 @@ public class Schema {
             return new _ObjectGraphFactory(this).create();
         }
         // -- YAML IO
-        public static Domain fromYaml(final String yaml) {
-            return _Parser.parseSchema(yaml);
+        public static Domain fromYaml(final ModuleNaming naming, final String yaml) {
+            return _Parser.parseSchema(naming, yaml);
         }
-        public static Domain fromYamlFolder(final File rootDirectory) {
-            return fromYaml(_FileUtils.collectSchemaFromFolder(rootDirectory));
+        public static Domain fromYamlFolder(final ModuleNaming naming, final File rootDirectory) {
+            return fromYaml(naming, _FileUtils.collectSchemaFromFolder(naming, rootDirectory));
         }
         public String toYaml() {
             return _Writer.toYaml(this);
