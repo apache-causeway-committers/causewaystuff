@@ -18,10 +18,15 @@
  */
 package io.github.causewaystuff.companion.codegen.cli;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apache.causeway.commons.internal.base._NullSafe;
+import org.apache.causeway.commons.io.DataSink;
 import org.apache.causeway.commons.io.DataSource;
 import org.apache.causeway.commons.io.YamlUtils;
 
@@ -31,6 +36,7 @@ import io.github.causewaystuff.commons.base.types.ResourceFolder;
 import io.github.causewaystuff.companion.schema.LicenseHeader;
 import io.github.causewaystuff.companion.schema.Persistence;
 import io.github.causewaystuff.tooling.projectmodel.ProjectNode;
+import io.github.causewaystuff.tooling.projectmodel.ProjectNodeFactory;
 
 @UtilityClass
 class CodegenModel {
@@ -40,8 +46,11 @@ class CodegenModel {
      * @implNote used as DTO
      */
     record ProjectDto(
-        String license,
-        String persistence) {
+        LicenseHeader license,
+        Persistence persistence) {
+        static ProjectDto template() {
+            return new ProjectDto(LicenseHeader.NONE, Persistence.JPA);
+        }
     }
 
     /**
@@ -73,23 +82,37 @@ class CodegenModel {
     }
 
     record Project(
-        LicenseHeader licenseHeader,
-        Persistence persistence) {
+        ProjectDto dto,
+        List<SubProject> subProjects) {
     }
 
     Optional<Project> readProject(final ResourceFolder projectFolder) {
-        var companionYaml = projectFolder.relativeFile("companion-project.yaml");
-        if(!companionYaml.exists()) {
+        var projectYaml = projectFolder.relativeFile("companion-project.yaml");
+        if(!projectYaml.exists()) {
+            createTemplate(projectYaml);
             return Optional.empty();
         }
-        return YamlUtils.tryRead(ProjectDto.class, DataSource.ofFile(companionYaml))
+        var projectOptional = YamlUtils.tryRead(ProjectDto.class, DataSource.ofFile(projectYaml))
             .getValue()
-            .map(projectDto->new Project(
-                LicenseHeader.valueOf(projectDto.license()),
-                Persistence.parse(projectDto.persistence())));
+            .map(projectDto-> new Project(projectDto, readSubProjects(projectFolder)));
+        return projectOptional;
     }
 
-    Optional<SubProject> readSubProject(final ProjectNode projectNode) {
+    // -- HELPER
+
+    private void createTemplate(final File projectYaml) {
+        YamlUtils.write(ProjectDto.template(), DataSink.ofFile(projectYaml));
+    }
+
+    private List<SubProject> readSubProjects(final ResourceFolder projectFolder) {
+        var subProjects = new ArrayList<SubProject>();
+        ProjectNodeFactory.maven(projectFolder.root())
+            .depthFirst(projModel -> CodegenModel.readSubProject(projModel)
+                .ifPresent(subProjects::add));
+        return Collections.unmodifiableList(subProjects);
+    }
+
+    private Optional<SubProject> readSubProject(final ProjectNode projectNode) {
         final ResourceFolder artifactRoot = ResourceFolder.ofFile(projectNode.getProjectDirectory());
         final ResourceFolder javaRoot = artifactRoot.relative("src/main/java")
                 .orElse(null);

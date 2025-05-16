@@ -24,7 +24,6 @@ import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.internal.base._Strings;
 
 import io.github.causewaystuff.commons.base.types.ResourceFolder;
-import io.github.causewaystuff.tooling.projectmodel.ProjectNodeFactory;
 
 public class CompanionCli {
 
@@ -34,15 +33,14 @@ public class CompanionCli {
         if(project==null) {
             System.err.println(
                 """
-                please provide the root project configuration as 'companion-project.yaml' at your project root.
+                please provide the project configuration as 'companion-project.yaml' at your project root
+                (we have now create a template for you)
                 """);
             System.exit(1);
             return;
         }
-        var projTree = ProjectNodeFactory.maven(argsModel.projectRoot().root());
 
-        projTree.depthFirst(projModel -> CodegenModel.readSubProject(projModel)
-            .ifPresent(new Emitter(project.licenseHeader(), project.persistence())::emit));
+        new Emitter(project).emitAll();
     }
 
     // -- HELPER

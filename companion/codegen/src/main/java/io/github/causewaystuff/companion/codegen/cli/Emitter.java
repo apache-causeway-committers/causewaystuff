@@ -23,12 +23,13 @@ import java.io.File;
 import io.github.causewaystuff.companion.codegen.cli.CodegenModel.SubProject;
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator;
 import io.github.causewaystuff.companion.codegen.model.Schema;
-import io.github.causewaystuff.companion.schema.LicenseHeader;
-import io.github.causewaystuff.companion.schema.Persistence;
 
 record Emitter(
-    LicenseHeader licenseHeader,
-    Persistence persistence) {
+    CodegenModel.Project project) {
+
+    void emitAll() {
+        project.subProjects().forEach(this::emit);
+    }
 
     void emit(final SubProject subProject) {
 
@@ -39,12 +40,12 @@ record Emitter(
         var moduleDto = subProject.moduleDto();
         emitJavaFiles(DomainGenerator.Config.builder()
             .domain(domain)
-            .licenseHeader(licenseHeader)
+            .licenseHeader(project.dto().license())
             .destinationFolder(subProject.javaRoot())
             .logicalNamespacePrefix(moduleDto.logicalNamespacePrefix())
             .packageNamePrefix(moduleDto.packageNamePrefix())
             .onPurgeKeep(FileKeepStrategy.nonGenerated())
-            .persistence(persistence)
+            .persistence(project.dto().persistence())
             .entitiesModulePackageName(moduleDto.modulePackageName())
             .entitiesModuleClassSimpleName(moduleDto.moduleClassSimpleName())
             .build());
@@ -55,7 +56,7 @@ record Emitter(
     void emitDomainAsYaml(
             final Schema.Domain domain,
             final File destFile) {
-        domain.writeToFileAsYaml(destFile, licenseHeader);
+        domain.writeToFileAsYaml(destFile, project.dto().license());
     }
 
     void emitJavaFiles(final DomainGenerator.Config config) {
