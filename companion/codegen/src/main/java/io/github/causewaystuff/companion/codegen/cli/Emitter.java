@@ -42,12 +42,11 @@ record Emitter(
             .domain(domain)
             .licenseHeader(project.dto().license())
             .destinationFolder(subProject.javaRoot())
-            .logicalNamespacePrefix(moduleDto.logicalNamespacePrefix())
-            .packageNamePrefix(moduleDto.packageNamePrefix())
+            .logicalNamespace(moduleDto.namespace())
+            .javaPackageName(moduleDto.javaPackage())
             .onPurgeKeep(FileKeepStrategy.nonGenerated())
             .persistence(project.dto().persistence())
-            .entitiesModulePackageName(moduleDto.modulePackageName())
-            .entitiesModuleClassSimpleName(moduleDto.moduleClassSimpleName())
+            .moduleClassSimpleName(moduleDto.moduleClassSimpleName())
             .build());
 
         emitDomainAsYaml(domain, subProject.resourcesRoot().relativeFile("companion-schema.yaml"));

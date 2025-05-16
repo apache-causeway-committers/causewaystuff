@@ -20,14 +20,14 @@ package io.github.causewaystuff.companion.codegen.domgen;
 
 import javax.lang.model.element.Modifier;
 
+import org.jspecify.annotations.NonNull;
+
+import lombok.experimental.UtilityClass;
+
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.DomainModel;
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.QualifiedType;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.TypeSpec;
-
-import org.jspecify.annotations.NonNull;
-
-import lombok.experimental.UtilityClass;
 
 @UtilityClass
 class _GenConfigBean {
@@ -36,17 +36,16 @@ class _GenConfigBean {
             final DomainGenerator.@NonNull Config config,
             final @NonNull DomainModel domainModel) {
 
-        var packageName = config.fullPackageName(config.entitiesModulePackageName());
+        var packageName = config.javaPackageName();
 
         final ClassName nameOfClassToGenerate =
                 ClassName.get(packageName, "ModuleConfig");
-                //ClassName.get(packageName, config.entitiesModuleClassSimpleName() + "Config");
 
         var typeModelBuilder = TypeSpec.classBuilder(nameOfClassToGenerate)
                 .addAnnotation(_Annotations.generated(_GenConfigBean.class))
                 .addAnnotation(_Annotations.spring.configuration())
-                .addModifiers(Modifier.PUBLIC)
-                ;
+                .addModifiers(Modifier.PUBLIC);
+
         return new QualifiedType(
                 packageName,
                 typeModelBuilder.build());

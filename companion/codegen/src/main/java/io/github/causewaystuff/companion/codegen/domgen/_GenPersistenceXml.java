@@ -42,7 +42,7 @@ class _GenPersistenceXml {
 
     @SneakyThrows
     void create(@NonNull final Config config, @NonNull final List<Entity> entities) {
-        var unitName = config.entitiesModuleClassSimpleName();
+        var unitName = config.moduleClassSimpleName();
 
         var classes = entities.stream()
                 .map(Entity::fqn)

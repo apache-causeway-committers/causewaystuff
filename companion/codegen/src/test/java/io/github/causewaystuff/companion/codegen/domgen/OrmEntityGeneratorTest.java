@@ -29,12 +29,11 @@ class OrmEntityGeneratorTest {
         var domain = OrmSchemaExamples.examples().getElseFail(0);
 
         var config = DomainGenerator.Config.builder()
-                .logicalNamespacePrefix("test.logical")
-                .packageNamePrefix("test.actual")
+                .logicalNamespace("test.logical.mod")
+                .javaPackageName("test.actual.mod")
                 .licenseHeader(LicenseHeader.ASF_V2)
                 .domain(domain)
-                .entitiesModulePackageName("mod")
-                .entitiesModuleClassSimpleName("MyEntitiesModule")
+                .moduleClassSimpleName("MyEntitiesModule")
                 .build();
 
         var entityGen = new DomainGenerator(config);

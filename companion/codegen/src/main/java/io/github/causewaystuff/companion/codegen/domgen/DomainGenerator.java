@@ -53,18 +53,16 @@ public record DomainGenerator(DomainGenerator.@NonNull Config config) {
     public static class Config {
         private final ResourceFolder destinationFolder;
         @Builder.Default
-        private final @NonNull String logicalNamespacePrefix = "";
+        private final @NonNull String logicalNamespace = "";
         @Builder.Default
-        private final @NonNull String packageNamePrefix = "";
+        private final @NonNull String javaPackageName = "";
         @Builder.Default
         private final @NonNull Persistence persistence = Persistence.NONE;
         @Builder.Default
         private final @NonNull LicenseHeader licenseHeader = LicenseHeader.NONE;
         private final Schema.@NonNull Domain domain;
         @Builder.Default
-        private final @NonNull String entitiesModulePackageName = "";
-        @Builder.Default
-        private final @NonNull String entitiesModuleClassSimpleName = "EntitiesModule";
+        private final @NonNull String moduleClassSimpleName = "MyModule";
 
         @Builder.Default
         private final @NonNull Predicate<File> onPurgeKeep = file->true; // safety net
@@ -77,10 +75,10 @@ public record DomainGenerator(DomainGenerator.@NonNull Config config) {
                     .collect(Collectors.joining("."));
         }
         public String fullLogicalName(final String realativeName) {
-            return prefixed(logicalNamespacePrefix(), realativeName);
+            return prefixed(logicalNamespace(), realativeName);
         }
         public String fullPackageName(final String realativeName) {
-            return prefixed(packageNamePrefix(), realativeName);
+            return prefixed(javaPackageName(), realativeName);
         }
         public ClassName javaPoetClassName(final Schema.Entity entityModel) {
             return ClassName.get(fullPackageName(entityModel.namespace()), entityModel.name());

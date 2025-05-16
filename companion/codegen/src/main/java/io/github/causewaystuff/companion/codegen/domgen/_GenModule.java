@@ -45,7 +45,7 @@ class _GenModule {
             final DomainGenerator.@NonNull Config config,
             final @NonNull DomainModel domainModel) {
 
-        var packageName = config.fullPackageName(config.entitiesModulePackageName());
+        var packageName = config.javaPackageName();
 
         final ListMultimap<String, ClassName> importsByCategory = _Multimaps
                 .newListMultimap(LinkedHashMap<String, List<ClassName>>::new, ArrayList::new);
@@ -72,7 +72,7 @@ class _GenModule {
                 .toList());
 
         final ClassName nameOfClassToGenerate =
-                ClassName.get(packageName, config.entitiesModuleClassSimpleName());
+                ClassName.get(packageName, config.moduleClassSimpleName());
 
         var typeModelBuilder = TypeSpec.classBuilder(nameOfClassToGenerate)
                 .addAnnotation(_Annotations.generated(_GenModule.class))
@@ -86,8 +86,7 @@ class _GenModule {
         typeModelBuilder
                 .addModifiers(Modifier.PUBLIC)
                 // public final static String NAMESPACE = "my.module";
-                .addField(_Fields.namespaceConstant(config.logicalNamespacePrefix()
-                        + "." + config.entitiesModulePackageName()))
+                .addField(_Fields.namespaceConstant(config.logicalNamespace()))
 
                 // static method that provides the schema source
                 .addMethod(_Methods.schemaSource("schemaSource",

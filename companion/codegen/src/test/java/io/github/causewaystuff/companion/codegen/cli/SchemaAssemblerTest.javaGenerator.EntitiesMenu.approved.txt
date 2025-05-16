@@ -11,7 +11,7 @@ import survey.dom.Campaign;
 import survey.dom.Survey;
 
 @Generated("io.github.causewaystuff.companion.codegen.domgen._GenMenu")
-@Named(".EntitiesMenu")
+@Named("EntitiesMenu")
 @DomainService
 public class EntitiesMenu {
     @Inject

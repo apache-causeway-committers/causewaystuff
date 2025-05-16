@@ -58,11 +58,17 @@ class CodegenModel {
      * @implNote used as DTO
      */
     record ModuleDto (
-        String logicalNamespacePrefix,
-        String packageNamePrefix,
-        String modulePackageName,
+        String namespace,
+        String javaPackage,
         String moduleClassSimpleName,
-        String[] fragments) {
+        String[] fragments,
+        String[] moduleImports) {
+
+        ModuleDto normalized() {
+            return javaPackage==null
+                ? new ModuleDto(namespace, namespace, moduleClassSimpleName, fragments, moduleImports)
+                : this;
+        }
     }
 
     /**
@@ -128,7 +134,7 @@ class CodegenModel {
         }
         return YamlUtils.tryRead(ModuleDto.class, DataSource.ofFile(companionYaml))
                 .getValue()
-                .map(moduleDto->new SubProject(projectNode, javaRoot, resourcesRoot, moduleDto));
+                .map(moduleDto->new SubProject(projectNode, javaRoot, resourcesRoot, moduleDto.normalized()));
     }
 
 }

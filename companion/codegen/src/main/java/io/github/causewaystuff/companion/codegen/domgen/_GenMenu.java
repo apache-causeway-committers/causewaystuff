@@ -44,19 +44,15 @@ class _GenMenu {
 
         var typeModelBuilder = TypeSpec.classBuilder("EntitiesMenu")
                 .addAnnotation(_Annotations.generated(_GenMenu.class))
-                .addAnnotation(_Annotations.named(
-                        config.fullLogicalName(config.entitiesModulePackageName()) + "." + "EntitiesMenu"))
+                .addAnnotation(_Annotations.named(config.fullLogicalName("EntitiesMenu")))
                 .addAnnotation(_Annotations.domainService())
                 .addModifiers(Modifier.PUBLIC)
                 //.addField(_Fields.inject(RepositoryService.class, "repositoryService", Modifier.PRIVATE))
                 .addField(_Fields.inject(FactoryService.class, "factoryService", Modifier.PRIVATE))
                 .addField(_Fields.inject(SearchService.class, "searchService", Modifier.PRIVATE))
-                .addMethods(asMethods(entityModels, config, Modifier.PUBLIC))
-                ;
+                .addMethods(asMethods(entityModels, config, Modifier.PUBLIC));
 
-        return new QualifiedType(
-                config.fullPackageName(config.entitiesModulePackageName()),
-                typeModelBuilder.build());
+        return new QualifiedType(config.javaPackageName(), typeModelBuilder.build());
     }
 
     // -- HELPER
