@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.causewaystuff.companion.codegen.cli.CodegenModel.SubProject;
+import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator;
 import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.companion.schema.LicenseHeader;
 import io.github.causewaystuff.companion.schema.Persistence;
@@ -40,17 +41,20 @@ record Emitter(
 
                     System.out.printf("CodegenTask: including %s:%s%n", subProject, includedFolder);
 
-                    var schemaAssembler = SchemaAssembler.assemble(licenseHeader, includedFolder.root());
-                    domains.add(schemaAssembler.domain());
+                    var domain = SchemaAssembler.assemble(includedFolder.root());
+                    domains.add(domain);
 
-                    schemaAssembler.writeJavaFiles(cfg->cfg
+                    emitJavaFiles(DomainGenerator.Config.builder()
+                            .domain(domain)
+                            .licenseHeader(licenseHeader)
                             .destinationFolder(subProject.javaRoot())
                             .logicalNamespacePrefix(fragmentFolder.logicalNamespacePrefix())
                             .packageNamePrefix(fragmentFolder.packageNamePrefix())
                             .onPurgeKeep(FileKeepStrategy.nonGenerated())
                             .persistence(Persistence.parse(fragmentFolder.entitiesGenerator()))
                             .entitiesModulePackageName(fragmentFolder.entitiesModulePackageName())
-                            .entitiesModuleClassSimpleName(fragmentFolder.entitiesModuleClassSimpleName()));
+                            .entitiesModuleClassSimpleName(fragmentFolder.entitiesModuleClassSimpleName())
+                            .build());
                 });
         });
 
@@ -58,8 +62,8 @@ record Emitter(
     }
 
     void emitCombinedDomainAsYaml(
-        final List<Schema.Domain> domains,
-        final File destFile) {
+            final List<Schema.Domain> domains,
+            final File destFile) {
 
         domains.stream()
             .reduce(Schema.Domain::concat)
@@ -68,6 +72,12 @@ record Emitter(
                     destFile,
                     licenseHeader);
             });
+    }
+
+    void emitJavaFiles(final DomainGenerator.Config config) {
+        config.destinationFolder().purgeFiles(config.onPurgeKeep());
+        new DomainGenerator(config)
+            .writeToDirectory(config.destinationFolder().root());
     }
 
 }

@@ -19,37 +19,16 @@
 package io.github.causewaystuff.companion.codegen.cli;
 
 import java.io.File;
-import java.util.function.UnaryOperator;
 
 import org.apache.causeway.commons.io.FileUtils;
 
-import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator;
 import io.github.causewaystuff.companion.codegen.model.Schema;
-import io.github.causewaystuff.companion.schema.LicenseHeader;
 
-record SchemaAssembler(LicenseHeader licenseHeader, Schema.Domain domain) {
+record SchemaAssembler() {
 
-    static SchemaAssembler assemble(final LicenseHeader licenseHeader, final File yamlFolder) {
+    static Schema.Domain assemble(final File yamlFolder) {
         FileUtils.existingDirectoryElseFail(yamlFolder);
-        var domain = Schema.Domain.fromYamlFolder(yamlFolder);
-        return new SchemaAssembler(licenseHeader, domain);
-    }
-
-    void writeAssembly(final File destinationSchemaFile) {
-        domain.writeToFileAsYaml(
-                destinationSchemaFile,
-                licenseHeader);
-    }
-
-    void writeJavaFiles(
-            final UnaryOperator<DomainGenerator.Config.ConfigBuilder> customizer) {
-        var config = customizer.apply(DomainGenerator.Config.builder()
-                .domain(domain))
-                .licenseHeader(licenseHeader)
-                .build();
-        config.destinationFolder().purgeFiles(config.onPurgeKeep());
-        new DomainGenerator(config)
-            .writeToDirectory(config.destinationFolder().root());
+        return Schema.Domain.fromYamlFolder(yamlFolder);
     }
 }
 

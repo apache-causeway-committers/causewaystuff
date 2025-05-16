@@ -43,8 +43,7 @@ class SchemaAssemblerTest {
     @Test
     void assembleAndRoundtrip() {
         var schemaTestFileFolder = ResourceFolder.testResourceRoot().relativeFile("schema-test-files");
-        var assembler = SchemaAssembler.assemble(LicenseHeader.ASF_V2, schemaTestFileFolder);
-        var domain = assembler.domain();
+        var domain = SchemaAssembler.assemble(schemaTestFileFolder);
 
         // test round-trip
         var yaml = domain.toYaml();
@@ -63,8 +62,7 @@ class SchemaAssemblerTest {
 
     private static Stream<Arguments> javaSource() {
         var schemaTestFileFolder = ResourceFolder.testResourceRoot().relativeFile("schema-test-files");
-        var assembler = SchemaAssembler.assemble(LicenseHeader.ASF_V2, schemaTestFileFolder);
-        var domain = assembler.domain();
+        var domain = SchemaAssembler.assemble(schemaTestFileFolder);
 
         var config = DomainGenerator.Config.builder()
                 .domain(domain)
