@@ -28,10 +28,21 @@ import org.apache.causeway.commons.io.YamlUtils;
 import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.commons.base.types.ResourceFolder;
+import io.github.causewaystuff.companion.schema.LicenseHeader;
+import io.github.causewaystuff.companion.schema.Persistence;
 import io.github.causewaystuff.tooling.projectmodel.ProjectNode;
 
 @UtilityClass
 class CodegenModel {
+
+    /**
+     * Project configuration.
+     * @implNote used as DTO
+     */
+    record ProjectDto(
+        String license,
+        String persistence) {
+    }
 
     /**
      * Module configuration including fragment locations that contribute to the sub-project's domain.
@@ -40,9 +51,8 @@ class CodegenModel {
     record ModuleDto (
         String logicalNamespacePrefix,
         String packageNamePrefix,
-        String entitiesGenerator,
-        String entitiesModulePackageName,
-        String entitiesModuleClassSimpleName,
+        String modulePackageName,
+        String moduleClassSimpleName,
         String[] fragments) {
     }
 
@@ -60,6 +70,23 @@ class CodegenModel {
                 .map(it->resourcesRoot().relative(it))
                 .flatMap(Optional::stream);
         }
+    }
+
+    record Project(
+        LicenseHeader licenseHeader,
+        Persistence persistence) {
+    }
+
+    Optional<Project> readProject(final ResourceFolder projectFolder) {
+        var companionYaml = projectFolder.relativeFile("companion-project.yaml");
+        if(!companionYaml.exists()) {
+            return Optional.empty();
+        }
+        return YamlUtils.tryRead(ProjectDto.class, DataSource.ofFile(companionYaml))
+            .getValue()
+            .map(projectDto->new Project(
+                LicenseHeader.valueOf(projectDto.license()),
+                Persistence.parse(projectDto.persistence())));
     }
 
     Optional<SubProject> readSubProject(final ProjectNode projectNode) {

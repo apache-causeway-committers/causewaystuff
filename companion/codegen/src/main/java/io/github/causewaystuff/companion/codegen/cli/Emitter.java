@@ -27,7 +27,8 @@ import io.github.causewaystuff.companion.schema.LicenseHeader;
 import io.github.causewaystuff.companion.schema.Persistence;
 
 record Emitter(
-    LicenseHeader licenseHeader) {
+    LicenseHeader licenseHeader,
+    Persistence persistence) {
 
     void emit(final SubProject subProject) {
 
@@ -43,9 +44,9 @@ record Emitter(
             .logicalNamespacePrefix(moduleDto.logicalNamespacePrefix())
             .packageNamePrefix(moduleDto.packageNamePrefix())
             .onPurgeKeep(FileKeepStrategy.nonGenerated())
-            .persistence(Persistence.parse(moduleDto.entitiesGenerator()))
-            .entitiesModulePackageName(moduleDto.entitiesModulePackageName())
-            .entitiesModuleClassSimpleName(moduleDto.entitiesModuleClassSimpleName())
+            .persistence(persistence)
+            .entitiesModulePackageName(moduleDto.modulePackageName())
+            .entitiesModuleClassSimpleName(moduleDto.moduleClassSimpleName())
             .build());
 
         emitDomainAsYaml(domain, subProject.resourcesRoot().relativeFile("companion-schema.yaml"));
