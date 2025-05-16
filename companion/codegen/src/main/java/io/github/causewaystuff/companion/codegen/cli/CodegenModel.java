@@ -45,17 +45,21 @@ class CodegenModel {
     }
 
     /**
-     * All the resources, that contribute to a single sub-project domain.
+     * All the fragments, that contribute to a single sub-project domain.
+     * @implNote used as DTO
+     */
+    record ResourceFragmentFolders(
+        List<ResourceFragmentFolder> codegen) {
+    }
+
+    /**
+     * All the resources, that contribute to a single sub-project.
      */
     record SubProject(
         ProjectNode projectNode,
         ResourceFolder javaRoot,
         ResourceFolder resourcesRoot,
         List<ResourceFragmentFolder> includes) {
-    }
-
-    record CodegenYamlModel(
-        List<ResourceFragmentFolder> codegen) {
     }
 
     Optional<SubProject> readSubProject(final ProjectNode projectNode) {
@@ -72,9 +76,9 @@ class CodegenModel {
         if(!companionYaml.exists()) {
             return Optional.empty();
         }
-        return YamlUtils.tryRead(CodegenYamlModel.class, DataSource.ofFile(companionYaml))
+        return YamlUtils.tryRead(ResourceFragmentFolders.class, DataSource.ofFile(companionYaml))
                 .getValue()
-                .map(codegenYamlModel->new SubProject(projectNode, javaRoot, resourcesRoot, codegenYamlModel.codegen()));
+                .map(resourceFragmentFolders->new SubProject(projectNode, javaRoot, resourcesRoot, resourceFragmentFolders.codegen()));
     }
 
 }

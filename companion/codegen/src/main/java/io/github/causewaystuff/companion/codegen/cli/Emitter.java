@@ -34,8 +34,8 @@ class Emitter {
 
         var domains = new ArrayList<Schema.Domain>();
 
-        subProject.includes().forEach(codegenResource->{
-            subProject.resourcesRoot().relative(codegenResource.include())
+        subProject.includes().forEach(fragmentFolder->{
+            subProject.resourcesRoot().relative(fragmentFolder.include())
                 .ifPresent(includedFolder->{
 
                     System.out.printf("CodegenTask: including %s:%s%n", subProject, includedFolder);
@@ -45,12 +45,12 @@ class Emitter {
 
                     schemaAssembler.writeJavaFiles(cfg->cfg
                             .destinationFolder(subProject.javaRoot())
-                            .logicalNamespacePrefix(codegenResource.logicalNamespacePrefix())
-                            .packageNamePrefix(codegenResource.packageNamePrefix())
+                            .logicalNamespacePrefix(fragmentFolder.logicalNamespacePrefix())
+                            .packageNamePrefix(fragmentFolder.packageNamePrefix())
                             .onPurgeKeep(FileKeepStrategy.nonGenerated())
-                            .persistence(Persistence.parse(codegenResource.entitiesGenerator()))
-                            .entitiesModulePackageName(codegenResource.entitiesModulePackageName())
-                            .entitiesModuleClassSimpleName(codegenResource.entitiesModuleClassSimpleName()));
+                            .persistence(Persistence.parse(fragmentFolder.entitiesGenerator()))
+                            .entitiesModulePackageName(fragmentFolder.entitiesModulePackageName())
+                            .entitiesModuleClassSimpleName(fragmentFolder.entitiesModuleClassSimpleName()));
                 });
         });
 
