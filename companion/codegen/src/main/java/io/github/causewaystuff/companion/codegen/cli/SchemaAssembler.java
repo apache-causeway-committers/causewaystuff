@@ -28,16 +28,19 @@ import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.companion.schema.LicenseHeader;
 
 record SchemaAssembler(LicenseHeader licenseHeader, Schema.Domain domain) {
+
     static SchemaAssembler assemble(final File yamlFolder) {
         FileUtils.existingDirectoryElseFail(yamlFolder);
         var domain = Schema.Domain.fromYamlFolder(yamlFolder);
         return new SchemaAssembler(LicenseHeader.ASF_V2, domain);
     }
+
     void writeAssembly(final File destinationSchemaFile) {
         domain.writeToFileAsYaml(
                 destinationSchemaFile,
                 licenseHeader);
     }
+
     void writeJavaFiles(
             final UnaryOperator<DomainGenerator.Config.ConfigBuilder> customizer) {
         var config = customizer.apply(DomainGenerator.Config.builder()

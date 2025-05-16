@@ -19,61 +19,48 @@
 package io.github.causewaystuff.companion.codegen.cli;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import io.github.causewaystuff.commons.base.types.ResourceFolder;
+import lombok.experimental.UtilityClass;
+
+import io.github.causewaystuff.companion.codegen.cli.CodegenModel.SubProject;
 import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.companion.schema.LicenseHeader;
 import io.github.causewaystuff.companion.schema.Persistence;
-import io.github.causewaystuff.tooling.projectmodel.ProjectNode;
 
-record CodegenTask(
-        ProjectNode projectNode,
-        ResourceFolder javaRoot,
-        ResourceFolder resourcesRoot,
-        List<CodegenResource> includes) {
+@UtilityClass
+class Emitter {
 
-    record CodegenResource(
-            String include,
-            String logicalNamespacePrefix,
-            String packageNamePrefix,
-            String entitiesGenerator,
-            String entitiesModulePackageName,
-            String entitiesModuleClassSimpleName
-            ) {
-    }
-
-    void run() {
+    void emitCode(final SubProject subProject) {
 
         var domains = new ArrayList<Schema.Domain>();
 
-        includes().forEach(codegenResource->{
-            resourcesRoot.relative(codegenResource.include())
+        subProject.includes().forEach(codegenResource->{
+            subProject.resourcesRoot().relative(codegenResource.include())
                 .ifPresent(includedFolder->{
 
-                    System.out.printf("CodegenTask: including %s:%s%n", this, includedFolder);
+                    System.out.printf("CodegenTask: including %s:%s%n", subProject, includedFolder);
 
                     var schemaAssembler = SchemaAssembler.assemble(includedFolder.root());
                     domains.add(schemaAssembler.domain());
 
                     schemaAssembler.writeJavaFiles(cfg->cfg
-                            .destinationFolder(javaRoot)
+                            .destinationFolder(subProject.javaRoot())
                             .logicalNamespacePrefix(codegenResource.logicalNamespacePrefix())
                             .packageNamePrefix(codegenResource.packageNamePrefix())
                             .onPurgeKeep(FileKeepStrategy.nonGenerated())
-                            .persistence(Persistence.parse(codegenResource.entitiesGenerator))
+                            .persistence(Persistence.parse(codegenResource.entitiesGenerator()))
                             .entitiesModulePackageName(codegenResource.entitiesModulePackageName())
                             .entitiesModuleClassSimpleName(codegenResource.entitiesModuleClassSimpleName()));
                 });
         });
 
         domains.stream()
-        .reduce(Schema.Domain::concat)
-        .ifPresent(combinedDomain->{
-            combinedDomain.writeToFileAsYaml(
-                    resourcesRoot.relativeFile("companion-schema.yaml"),
-                    LicenseHeader.ASF_V2);
-        });
+            .reduce(Schema.Domain::concat)
+            .ifPresent(combinedDomain->{
+                combinedDomain.writeToFileAsYaml(
+                        subProject.resourcesRoot().relativeFile("companion-schema.yaml"),
+                        LicenseHeader.ASF_V2);
+            });
     }
 
 }

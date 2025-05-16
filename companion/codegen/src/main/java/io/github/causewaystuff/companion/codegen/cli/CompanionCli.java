@@ -19,17 +19,11 @@
 package io.github.causewaystuff.companion.codegen.cli;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
 
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.internal.base._Strings;
-import org.apache.causeway.commons.io.DataSource;
-import org.apache.causeway.commons.io.YamlUtils;
 
 import io.github.causewaystuff.commons.base.types.ResourceFolder;
-import io.github.causewaystuff.companion.codegen.cli.CodegenTask.CodegenResource;
-import io.github.causewaystuff.tooling.projectmodel.ProjectNode;
 import io.github.causewaystuff.tooling.projectmodel.ProjectNodeFactory;
 
 public class CompanionCli {
@@ -37,34 +31,11 @@ public class CompanionCli {
     public static void main(final String[] args) {
         var argsModel = ArgsModel.parse(args);
         var projTree = ProjectNodeFactory.maven(argsModel.projectRoot().root());
-        projTree.depthFirst(projModel ->
-            CodegenYamlModel.createTask(projModel)
-            .ifPresent(CodegenTask::run));
+        projTree.depthFirst(projModel -> CodegenModel.readSubProject(projModel)
+            .ifPresent(Emitter::emitCode));
     }
 
     // -- HELPER
-
-    record CodegenYamlModel(
-            List<CodegenResource> codegen) {
-        static Optional<CodegenTask> createTask(final ProjectNode projectNode) {
-            final ResourceFolder artifactRoot = ResourceFolder.ofFile(projectNode.getProjectDirectory());
-            final ResourceFolder javaRoot = artifactRoot.relative("src/main/java")
-                    .orElse(null);
-            final ResourceFolder resourcesRoot = artifactRoot.relative("src/main/resources")
-                    .orElse(null);
-            if(javaRoot==null
-                    || resourcesRoot==null) {
-                return Optional.empty();
-            }
-            var companionYaml = resourcesRoot.relativeFile("companion.yaml");
-            if(!companionYaml.exists()) {
-                return Optional.empty();
-            }
-            return YamlUtils.tryRead(CodegenYamlModel.class, DataSource.ofFile(companionYaml))
-                    .getValue()
-                    .map(codegenYamlModel->new CodegenTask(projectNode, javaRoot, resourcesRoot, codegenYamlModel.codegen()));
-        }
-    }
 
     private record ArgsModel(ResourceFolder projectRoot) {
         static ArgsModel parse(final String[] args) {
