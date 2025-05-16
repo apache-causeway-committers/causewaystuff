@@ -18,17 +18,17 @@
  */
 package io.github.causewaystuff.companion.codegen.cli;
 
+import java.io.File;
 import java.util.ArrayList;
-
-import lombok.experimental.UtilityClass;
+import java.util.List;
 
 import io.github.causewaystuff.companion.codegen.cli.CodegenModel.SubProject;
 import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.companion.schema.LicenseHeader;
 import io.github.causewaystuff.companion.schema.Persistence;
 
-@UtilityClass
-class Emitter {
+record Emitter(
+    LicenseHeader licenseHeader) {
 
     void emitCode(final SubProject subProject) {
 
@@ -40,7 +40,7 @@ class Emitter {
 
                     System.out.printf("CodegenTask: including %s:%s%n", subProject, includedFolder);
 
-                    var schemaAssembler = SchemaAssembler.assemble(includedFolder.root());
+                    var schemaAssembler = SchemaAssembler.assemble(licenseHeader, includedFolder.root());
                     domains.add(schemaAssembler.domain());
 
                     schemaAssembler.writeJavaFiles(cfg->cfg
@@ -54,12 +54,19 @@ class Emitter {
                 });
         });
 
+        emitCombinedDomainAsYaml(domains, subProject.resourcesRoot().relativeFile("companion-schema.yaml"));
+    }
+
+    void emitCombinedDomainAsYaml(
+        final List<Schema.Domain> domains,
+        final File destFile) {
+
         domains.stream()
             .reduce(Schema.Domain::concat)
             .ifPresent(combinedDomain->{
                 combinedDomain.writeToFileAsYaml(
-                        subProject.resourcesRoot().relativeFile("companion-schema.yaml"),
-                        LicenseHeader.ASF_V2);
+                    destFile,
+                    licenseHeader);
             });
     }
 

@@ -29,10 +29,10 @@ import io.github.causewaystuff.companion.schema.LicenseHeader;
 
 record SchemaAssembler(LicenseHeader licenseHeader, Schema.Domain domain) {
 
-    static SchemaAssembler assemble(final File yamlFolder) {
+    static SchemaAssembler assemble(final LicenseHeader licenseHeader, final File yamlFolder) {
         FileUtils.existingDirectoryElseFail(yamlFolder);
         var domain = Schema.Domain.fromYamlFolder(yamlFolder);
-        return new SchemaAssembler(LicenseHeader.ASF_V2, domain);
+        return new SchemaAssembler(licenseHeader, domain);
     }
 
     void writeAssembly(final File destinationSchemaFile) {

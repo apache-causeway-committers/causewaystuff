@@ -24,6 +24,7 @@ import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.internal.base._Strings;
 
 import io.github.causewaystuff.commons.base.types.ResourceFolder;
+import io.github.causewaystuff.companion.schema.LicenseHeader;
 import io.github.causewaystuff.tooling.projectmodel.ProjectNodeFactory;
 
 public class CompanionCli {
@@ -32,7 +33,7 @@ public class CompanionCli {
         var argsModel = ArgsModel.parse(args);
         var projTree = ProjectNodeFactory.maven(argsModel.projectRoot().root());
         projTree.depthFirst(projModel -> CodegenModel.readSubProject(projModel)
-            .ifPresent(Emitter::emitCode));
+            .ifPresent(new Emitter(LicenseHeader.ASF_V2)::emitCode)); //TODO make LicenseHeader an argument option
     }
 
     // -- HELPER
