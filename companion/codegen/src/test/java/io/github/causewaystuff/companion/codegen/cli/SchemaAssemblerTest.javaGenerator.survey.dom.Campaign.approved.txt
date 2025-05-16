@@ -40,6 +40,7 @@ import org.apache.causeway.applib.annotation.PropertyLayout;
 import org.apache.causeway.applib.annotation.Snapshot;
 import org.apache.causeway.applib.annotation.Where;
 import org.apache.causeway.applib.services.repository.RepositoryService;
+import pkg.survey.dom.Survey;
 
 /**
  * A  campaign defines a part of a food consumption survey that contains several interviews.

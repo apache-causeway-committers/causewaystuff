@@ -10,6 +10,7 @@ import org.apache.causeway.applib.annotation.Property;
 import org.apache.causeway.applib.annotation.PropertyLayout;
 import org.apache.causeway.applib.annotation.Snapshot;
 import org.apache.causeway.applib.annotation.Where;
+import pkg.survey.dom.Survey;
 
 @Generated("io.github.causewaystuff.companion.codegen.domgen._GenAssociationMixin")
 @Property(
