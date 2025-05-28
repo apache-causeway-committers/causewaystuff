@@ -194,19 +194,24 @@ public class Schema {
         }
         public List<EntityField> secondaryKeyFields() {
             return _NullSafe.stream(secondaryKey)
-                    .map(fieldId->fields()
-                            .stream()
-                            .filter(field->field.column().equalsIgnoreCase(fieldId))
-                            .findAny()
-                            .orElseThrow(()->_Exceptions
-                                    .noSuchElement("secondary-key field not found by column name '%s' in %s",
-                                            fieldId, id())))
-                    .collect(Collectors.toList());
+                .map(fieldId->fields()
+                        .stream()
+                        .filter(field->field.column().equalsIgnoreCase(fieldId))
+                        .findAny()
+                        .orElseThrow(()->_Exceptions
+                                .noSuchElement("secondary-key field not found by column name '%s' in %s",
+                                        fieldId, id())))
+                .collect(Collectors.toList());
         }
         public Optional<Schema.EntityField> lookupFieldByColumnName(final String columnName) {
-            return fields().stream()
+            return columnName.equalsIgnoreCase("ID")
+                ? Optional.of(idField())
+                : fields().stream()
                     .filter(f->f.column().equalsIgnoreCase(columnName))
                     .findFirst();
+        }
+        public EntityField idField() { //TODO is this really needed?
+            return new EntityField(SneakyRef.of(this), -1, "id", "ID", "bigint(20)", true, true, false, "long", null, null, null, null);
         }
         @Override
         public boolean equals(final Object o) {
