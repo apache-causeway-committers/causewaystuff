@@ -343,8 +343,8 @@
             </dependency>
 
             <dependency>
-                <groupId>org.apache.causeway.app</groupId>
-                <artifactId>causeway-app-starter-parent</artifactId>
+                <groupId>org.apache.causeway</groupId>
+                <artifactId>causeway-bom</artifactId>
                 <version>${causeway.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
