@@ -24,13 +24,13 @@ import java.util.Map;
 import org.apache.causeway.commons.io.FileUtils;
 
 import lombok.SneakyThrows;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 import io.github.causewaystuff.blobstore.applib.BlobDescriptor;
 import io.github.causewaystuff.commons.base.types.NamedPath;
 import io.github.causewaystuff.commons.base.types.ResourceFolder;
 
-@Log4j2
+@Slf4j
 record Scanner(
         ResourceFolder rootDirectory) {
 

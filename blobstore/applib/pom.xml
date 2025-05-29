@@ -25,7 +25,7 @@
     <parent>
         <groupId>io.github.causewaystuff</groupId>
         <artifactId>causewaystuff-blobstore</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>causewaystuff-blobstore-applib</artifactId>

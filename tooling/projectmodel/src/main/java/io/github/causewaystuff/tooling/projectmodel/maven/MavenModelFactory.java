@@ -33,9 +33,9 @@ import org.apache.maven.model.resolution.ModelResolver;
 import lombok.NonNull;
 import lombok.val;
 import lombok.experimental.UtilityClass;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
-@Log4j2
+@Slf4j
 @UtilityClass
 public class MavenModelFactory {
 
@@ -65,7 +65,7 @@ public class MavenModelFactory {
     }
 
     /** non interpolated read */
-    public static Model readModel(File pomFile) {
+    public static Model readModel(final File pomFile) {
         val reader = new MavenXpp3Reader();
         try {
             val model =  reader.read(new FileReader(pomFile));
@@ -77,7 +77,7 @@ public class MavenModelFactory {
         }
     }
 
-    public static String readArtifactKey(Model model) {
+    public static String readArtifactKey(final Model model) {
         if(model==null) {
             return null;
         }
@@ -88,11 +88,11 @@ public class MavenModelFactory {
         return artifactKey;
     }
 
-    public static String getGroupId(@NonNull Model model) {
+    public static String getGroupId(@NonNull final Model model) {
         return Optional.ofNullable(model.getGroupId()).orElseGet(()->model.getParent().getGroupId());
     }
 
-    public static String getVersion(@NonNull Model model) {
+    public static String getVersion(@NonNull final Model model) {
         return Optional.ofNullable(model.getVersion()).orElseGet(()->model.getParent().getVersion());
     }
 

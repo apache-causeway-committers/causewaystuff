@@ -44,9 +44,9 @@ import lombok.Getter;
 import org.jspecify.annotations.NonNull;
 import lombok.Value;
 
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
-@Value @Builder @Log4j2
+@Value @Builder @Slf4j
 public class J2AdocContext {
 
     private final @Nullable String licenseHeader;

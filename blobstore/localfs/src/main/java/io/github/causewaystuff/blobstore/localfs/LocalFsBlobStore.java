@@ -26,7 +26,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+
 import org.springframework.stereotype.Repository;
 
 import org.apache.causeway.applib.value.Blob;
@@ -40,10 +42,9 @@ import org.apache.causeway.commons.io.DataSource;
 import org.apache.causeway.commons.io.FileUtils;
 import org.apache.causeway.commons.io.YamlUtils;
 
-import org.jspecify.annotations.NonNull;
 import lombok.SneakyThrows;
 import lombok.Synchronized;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 import io.github.causewaystuff.blobstore.applib.BlobDescriptor;
 import io.github.causewaystuff.blobstore.applib.BlobDescriptor.Compression;
@@ -54,7 +55,7 @@ import io.github.causewaystuff.commons.base.types.NamedPath;
 import io.github.causewaystuff.commons.base.types.ResourceFolder;
 
 @Repository
-@Log4j2
+@Slf4j
 public class LocalFsBlobStore implements BlobStore {
 
     private final ResourceFolder rootDirectory;

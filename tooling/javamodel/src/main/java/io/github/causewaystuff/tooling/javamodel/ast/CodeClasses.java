@@ -20,14 +20,15 @@ package io.github.causewaystuff.tooling.javamodel.ast;
 
 import java.util.function.Predicate;
 
+import org.jspecify.annotations.NonNull;
+
 import org.apache.causeway.commons.internal.base._Strings;
 
-import org.jspecify.annotations.NonNull;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 import io.github.causewaystuff.tooling.codeassert.model.CodeClass;
 
-@Log4j2
+@Slf4j
 public final class CodeClasses {
 
     // -- PREDICATES

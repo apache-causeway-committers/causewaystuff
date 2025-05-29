@@ -22,20 +22,20 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.SortedSet;
 
+import org.jspecify.annotations.NonNull;
+
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.internal.base._Refs;
 import org.apache.causeway.commons.io.TextUtils;
 import org.apache.causeway.valuetypes.asciidoc.builder.include.IncludeStatement;
 import org.apache.causeway.valuetypes.asciidoc.builder.include.IncludeStatements;
 
-import org.jspecify.annotations.NonNull;
-
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 import io.github.causewaystuff.tooling.cli.CliConfig;
 import io.github.causewaystuff.tooling.j2adoc.J2AdocContext;
 
-@Log4j2
+@Slf4j
 public final class OrphanedIncludeStatementFixer {
 
     public static void fixIncludeStatements(

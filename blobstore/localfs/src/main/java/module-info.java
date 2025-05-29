@@ -22,7 +22,7 @@ module io.github.causewaystuff.blobstore.localfs {
     requires lombok;
     requires transitive org.apache.causeway.applib;
     requires org.apache.causeway.commons;
-    requires org.apache.logging.log4j;
+    requires org.slf4j;
     requires transitive io.github.causewaystuff.blobstore.applib;
     requires io.github.causewaystuff.commons.base;
     requires io.github.causewaystuff.commons.compression;

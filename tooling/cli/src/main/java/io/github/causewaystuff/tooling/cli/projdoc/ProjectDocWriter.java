@@ -30,13 +30,13 @@ import org.apache.causeway.valuetypes.asciidoc.builder.AsciiDocWriter;
 import org.jspecify.annotations.NonNull;
 import lombok.SneakyThrows;
 
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 import io.github.causewaystuff.tooling.cli.CliConfig;
 import io.github.causewaystuff.tooling.j2adoc.J2AdocContext;
 import io.github.causewaystuff.tooling.j2adoc.J2AdocUnit;
 
-@Log4j2
+@Slf4j
 final class ProjectDocWriter {
 
     @SneakyThrows

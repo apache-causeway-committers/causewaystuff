@@ -28,9 +28,15 @@ import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.javadoc.Javadoc;
 
 import org.asciidoctor.ast.Document;
+import org.jspecify.annotations.NonNull;
 
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.internal.base._Strings;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Value;
+import lombok.extern.slf4j.Slf4j;
 
 import io.github.causewaystuff.tooling.j2adoc.util.AsciiDocIncludeTagFilter;
 import io.github.causewaystuff.tooling.j2adoc.util.ResourceCoordinates;
@@ -38,15 +44,8 @@ import io.github.causewaystuff.tooling.javamodel.ast.AnyTypeDeclaration;
 import io.github.causewaystuff.tooling.javamodel.ast.CompilationUnits;
 import io.github.causewaystuff.tooling.javamodel.ast.PackageDeclarations;
 
-import lombok.Getter;
-import org.jspecify.annotations.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.Value;
-
-import lombok.extern.log4j.Log4j2;
-
 @RequiredArgsConstructor
-@Log4j2
+@Slf4j
 public final class J2AdocUnit {
 
     @Value
@@ -65,7 +64,7 @@ public final class J2AdocUnit {
         }
 
         @Override
-        public int compareTo(LookupKey other) {
+        public int compareTo(final LookupKey other) {
             if(other==null) {
                 return -1;
             }

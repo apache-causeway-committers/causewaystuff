@@ -42,9 +42,9 @@ import org.apache.causeway.commons.io.FileUtils;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.val;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
-@Log4j2
+@Slf4j
 public class SimpleModelResolver implements ModelResolver {
 
     //non interpolated models

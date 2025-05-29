@@ -29,14 +29,14 @@ import org.apache.causeway.commons.internal.base._Strings;
 
 import lombok.NonNull;
 import lombok.val;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 import io.github.causewaystuff.tooling.projectmodel.maven.MavenModelFactory;
 
-@Log4j2
+@Slf4j
 class ProjectNodeFactory_gradle {
 
-    public static ProjectNode createProjectTree(@NonNull File projRootFolder) {
+    public static ProjectNode createProjectTree(@NonNull final File projRootFolder) {
         try(val projectConnection = GradleConnector.newConnector().forProjectDirectory(projRootFolder).connect()) {
             val rootProject = projectConnection.getModel(GradleProject.class);
             val rootNode = visitGradleProject(null, rootProject);
