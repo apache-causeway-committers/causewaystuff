@@ -65,7 +65,7 @@
         <maven-model.version>4.0.0-rc-3</maven-model.version>
         <micronaut-sourcegen.version>1.7.10</micronaut-sourcegen.version>
         <picocli.version>4.7.7</picocli.version>
-        <structurizr-dsl.version>4.0.0</structurizr-dsl.version>
+        <structurizr-dsl.version>4.1.0</structurizr-dsl.version>
         <structurizr-export.version>4.0.0</structurizr-export.version>
         <tukaani-xz.version>1.10</tukaani-xz.version>
 
