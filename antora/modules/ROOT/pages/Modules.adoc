@@ -28,7 +28,6 @@ _Causeway Stuff_ modules and sub-modules.
 *** javamodel 
 *** projectmodel 
 *** codeassert¹ 
-*** javapoet¹ 
 *** structurizr¹ 
 
 @endwbs

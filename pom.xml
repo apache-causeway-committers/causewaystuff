@@ -24,7 +24,7 @@
 
     <groupId>io.github.causewaystuff</groupId>
     <artifactId>causewaystuff-bom</artifactId>
-    <version>${revision}</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Causeway Stuff (Umbrella)</name>
     <description>
         Umbrella for non-offical ASF stuff for the Apache Causeway framework.
@@ -35,7 +35,6 @@
     <packaging>pom</packaging>
 
     <properties>
-        <revision>1.0.0-SNAPSHOT</revision>
     
         <maven.compiler.release>21</maven.compiler.release>
         <maven.compiler.arg>-parameters</maven.compiler.arg>
