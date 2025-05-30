@@ -46,17 +46,11 @@
             <groupId>io.github.causewaystuff</groupId>
             <artifactId>causewaystuff-commons-base</artifactId>
         </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>io.github.causewaystuff</groupId>-->
-<!--            <artifactId>causewaystuff-tooling-javapoet</artifactId>-->
-<!--        </dependency>-->
         
         <!-- https://mvnrepository.com/artifact/io.micronaut.sourcegen/micronaut-sourcegen-generator-java -->
         <dependency>
             <groupId>io.micronaut.sourcegen</groupId>
             <artifactId>micronaut-sourcegen-generator-java</artifactId>
-            <version>1.7.10</version>
         </dependency>
 
         <dependency>
