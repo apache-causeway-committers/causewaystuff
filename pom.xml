@@ -42,7 +42,7 @@
 
         <spring-boot.version>4.0.0-SNAPSHOT</spring-boot.version>
         <spring-initializr.version>0.21.0</spring-initializr.version>
-        <causeway.version>4.0.0-SNAPSHOT</causeway.version>
+        <causeway.version>4.0.0-SNAPSHOT.20250603-0309-c1df0624</causeway.version>
 
         <junit.version>5.12.2</junit.version>
         <lombok.version>1.18.38</lombok.version>
