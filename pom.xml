@@ -44,7 +44,7 @@
         <spring-initializr.version>0.22.0</spring-initializr.version>
         <causeway.version>4.0.0-SNAPSHOT</causeway.version>
 
-        <junit.version>5.13.1</junit.version>
+        <junit.version>5.13.2</junit.version>
         <lombok.version>1.18.38</lombok.version>
 
         <!-- plugins -->
@@ -82,7 +82,7 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <causeway.version>4.0.0-SNAPSHOT.20250628-0307-1d7979d3</causeway.version>
+                <causeway.version>4.0.0-SNAPSHOT.20250701-1417-595111ef</causeway.version>
             </properties>
             <repositories>
                 <repository>
