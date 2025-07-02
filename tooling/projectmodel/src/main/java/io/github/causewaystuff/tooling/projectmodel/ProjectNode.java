@@ -26,7 +26,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.ToString;
-import lombok.val;
 
 @Data @Builder
 public class ProjectNode implements Comparable<ProjectNode> {
@@ -48,13 +47,13 @@ public class ProjectNode implements Comparable<ProjectNode> {
 
     public void depthFirst(final @NonNull ProjectVisitor projectVisitor) {
         projectVisitor.accept(this);
-        for(val child : getChildren()){
+        for(var child : getChildren()){
             child.depthFirst(projectVisitor);
         }
     }
 
     public boolean contains(final @NonNull ProjectNode other) {
-        for(val child : getChildren()){
+        for(var child : getChildren()){
             if(child.containsOrEquals(other)) {
                 return true;
             }
@@ -66,7 +65,7 @@ public class ProjectNode implements Comparable<ProjectNode> {
         if(this.getArtifactCoordinates().equals(other.getArtifactCoordinates())) {
             return true;
         }
-        for(val child : getChildren()){
+        for(var child : getChildren()){
             if(child.containsOrEquals(other)) {
                 return true;
             }
@@ -77,7 +76,7 @@ public class ProjectNode implements Comparable<ProjectNode> {
     // -- COMPARATOR
 
     @Override
-    public int compareTo(ProjectNode other) {
+    public int compareTo(final ProjectNode other) {
         if(this.contains(other)) {
             return -1;
         }

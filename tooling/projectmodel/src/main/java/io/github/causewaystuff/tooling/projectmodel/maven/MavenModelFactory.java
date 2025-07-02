@@ -29,9 +29,7 @@ import org.apache.maven.model.building.ModelBuildingException;
 import org.apache.maven.model.building.ModelBuildingRequest;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.resolution.ModelResolver;
-
 import lombok.NonNull;
-import lombok.val;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,18 +39,18 @@ public class MavenModelFactory {
 
     public static Model interpolateModel(final Model model, final ModelResolver modelResolver) {
 
-        val pomFile = model.getPomFile();
+        var pomFile = model.getPomPath().toFile();
 
         log.info("interpolating model {}", pomFile);
 
-        val modelBuildRequest = new DefaultModelBuildingRequest()
+        var modelBuildRequest = new DefaultModelBuildingRequest()
         .setProcessPlugins(false)
         .setPomFile(pomFile)
         .setModelResolver(modelResolver)
         .setValidationLevel(ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL);
 
         try {
-            val modelBuilder = new DefaultModelBuilderFactory().newInstance();
+            var modelBuilder = new DefaultModelBuilderFactory().newInstance();
             return modelBuilder.build(modelBuildRequest).getEffectiveModel();
         } catch (ModelBuildingException e) {
              log.warn("maven model interpolation failed {}", pomFile, e);
@@ -66,10 +64,10 @@ public class MavenModelFactory {
 
     /** non interpolated read */
     public static Model readModel(final File pomFile) {
-        val reader = new MavenXpp3Reader();
+        var reader = new MavenXpp3Reader();
         try {
-            val model =  reader.read(new FileReader(pomFile));
-            model.setPomFile(pomFile);
+            var model =  reader.read(new FileReader(pomFile));
+            model.setPomPath(pomFile.toPath());
             return model;
         } catch (Exception e) {
             log.error("failed to read {}", pomFile.getAbsolutePath(), e);
@@ -81,7 +79,7 @@ public class MavenModelFactory {
         if(model==null) {
             return null;
         }
-        val artifactKey = String.format("%s:%s:%s",
+        var artifactKey = String.format("%s:%s:%s",
                 getGroupId(model),
                 model.getArtifactId(),
                 getVersion(model));

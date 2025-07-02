@@ -27,13 +27,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.maven.model.Model;
-
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import org.apache.causeway.commons.internal.base._Strings;
 
 import lombok.NonNull;
-import lombok.val;
 
 import io.github.causewaystuff.tooling.projectmodel.Dependency.Location;
 import io.github.causewaystuff.tooling.projectmodel.maven.MavenModelFactory;
@@ -42,10 +40,10 @@ import io.github.causewaystuff.tooling.projectmodel.maven.SimpleModelResolver;
 class ProjectNodeFactory_maven {
 
     public static ProjectNode createProjectTree(final @NonNull File projRootFolder) {
-        val modelResolver = new SimpleModelResolver(projRootFolder);
-        val rootModel = modelResolver.getRootModel();
-        val interpolate = false; //XXX interpolation is experimental
-        val projTree = visitMavenProject(null, rootModel, modelResolver, interpolate);
+        var modelResolver = new SimpleModelResolver(projRootFolder);
+        var rootModel = modelResolver.getRootModel();
+        var interpolate = false; //XXX interpolation is experimental
+        var projTree = visitMavenProject(null, rootModel, modelResolver, interpolate);
 
         postProcessDependencyLocation(projTree);
         postProcessDependencyVersion(projTree);
@@ -57,7 +55,7 @@ class ProjectNodeFactory_maven {
     private static void postProcessDependencyLocation(final @NonNull ProjectNode projTree) {
         // first pass: collect local artifacts
         // second pass: update all local dependencies' location to LOCAL
-        val localArtifacts = new HashSet<String>();
+        var localArtifacts = new HashSet<String>();
         projTree.depthFirst(projModel->{
             localArtifacts.add(projModel.getArtifactCoordinates().toStringWithGroupAndId());
         });
@@ -73,7 +71,7 @@ class ProjectNodeFactory_maven {
 
         // first pass: collect external artifacts, that provide a non-empty version
         // second pass: update all external dependencies' versions
-        val externalVersionByArtifact = new HashMap<String, String>();
+        var externalVersionByArtifact = new HashMap<String, String>();
         projTree.depthFirst(projModel->{
 
             projModel.getDependencies().stream()
@@ -96,13 +94,13 @@ class ProjectNodeFactory_maven {
             final @Nullable ProjectNode parent,
             final @NonNull Model mavenProj,
             final @NonNull SimpleModelResolver modelResolver,
-            boolean interpolate) {
+            final boolean interpolate) {
 
-        val interpolatedProj = interpolate
+        var interpolatedProj = interpolate
                 ? MavenModelFactory.interpolateModel(mavenProj, modelResolver)
                 : mavenProj;
-        val projNode = toProjectNode(parent, interpolatedProj);
-        for(val child : childrenOf(interpolatedProj, modelResolver)){
+        var projNode = toProjectNode(parent, interpolatedProj);
+        for(var child : childrenOf(interpolatedProj, modelResolver)){
             visitMavenProject(projNode, child, modelResolver, interpolate);
         }
         return projNode;
@@ -111,7 +109,7 @@ class ProjectNodeFactory_maven {
     private static ProjectNode toProjectNode(
             final @Nullable ProjectNode parent,
             final @NonNull Model mavenProj) {
-        val projNode = ProjectNode.builder()
+        var projNode = ProjectNode.builder()
                 .parent(parent)
                 .artifactCoordinates(artifactCoordinatesOf(mavenProj))
                 .name(_Strings.nullToEmpty(mavenProj.getName()))
@@ -132,7 +130,7 @@ class ProjectNodeFactory_maven {
     }
 
     private static Dependency toDependency(final @NonNull org.apache.maven.model.Dependency dependency) {
-        val artifactCoordinates = ArtifactCoordinates.of(
+        var artifactCoordinates = ArtifactCoordinates.of(
                 dependency.getGroupId(),
                 dependency.getArtifactId(),
                 dependency.getType(),
@@ -147,10 +145,10 @@ class ProjectNodeFactory_maven {
     }
 
     static ArtifactCoordinates artifactCoordinatesOf(final @NonNull Model mavenProj) {
-        val groupId = MavenModelFactory.getGroupId(mavenProj);
-        val artifactId = mavenProj.getArtifactId();
-        val type = mavenProj.getPackaging();
-        val version = MavenModelFactory.getVersion(mavenProj);
+        var groupId = MavenModelFactory.getGroupId(mavenProj);
+        var artifactId = mavenProj.getArtifactId();
+        var type = mavenProj.getPackaging();
+        var version = MavenModelFactory.getVersion(mavenProj);
         return ArtifactCoordinates.of(groupId, artifactId, type, version);
     }
 

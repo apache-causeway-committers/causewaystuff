@@ -41,7 +41,6 @@ import org.apache.causeway.commons.io.FileUtils;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
-import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -65,25 +64,25 @@ public class SimpleModelResolver implements ModelResolver {
     public ModelSource resolveModel(final String groupId, final String artifactId, final String version)
             throws UnresolvableModelException {
 
-        val key = String.format("%s:%s:%s", groupId, artifactId, version);
+        var key = String.format("%s:%s:%s", groupId, artifactId, version);
 
         log.info("resolveModel {}", key);
 
         try {
 
-            val pomModel = projectPomCatalog.get(key);
+            var pomModel = projectPomCatalog.get(key);
             if(pomModel!=null) {
-                return new FileModelSource(pomModel.getPomFile());
+                return new FileModelSource(pomModel.getPomPath().toFile());
             }
 
             if(repositories.size()==0) {
                 throw new RuntimeException("no repo registered");
             }
 
-            for(val entry : repositories.entrySet()) {
-                val repo = entry.getValue();
+            for(var entry : repositories.entrySet()) {
+                var repo = entry.getValue();
 
-                val pomUrl = new URI(String.format("%s/%s/%s/%s/%s-%s.pom",
+                var pomUrl = new URI(String.format("%s/%s/%s/%s/%s-%s.pom",
                         repo.getUrl(),
                         groupId.replace('.', '/'),
                         artifactId,
@@ -93,8 +92,8 @@ public class SimpleModelResolver implements ModelResolver {
                     .toURL();
 
                 try {
-                    val urlConn = pomUrl.openConnection();
-                    val is = urlConn.getInputStream(); // throws if not found
+                    var urlConn = pomUrl.openConnection();
+                    var is = urlConn.getInputStream(); // throws if not found
                     is.close();
                     return new UrlModelSource(pomUrl);
                 } catch (Exception e) {
@@ -146,19 +145,19 @@ public class SimpleModelResolver implements ModelResolver {
 
         final String localPath;
         try {
-            localPath = new File(mavenProj.getPomFile().getParentFile(), realtivePath)
+            localPath = new File(mavenProj.getPomPath().toFile().getParentFile(), realtivePath)
                     .getCanonicalPath();
         } catch (Exception e) {
-            log.error("cannot resolve local path {} relative to {}", realtivePath, mavenProj.getPomFile().getParent(), e);
+            log.error("cannot resolve local path {} relative to {}", realtivePath, mavenProj.getPomPath().toFile().getParent(), e);
             return null;
         }
 
-        val artifactKey = pathToArtifactMap.get(localPath);
+        var artifactKey = pathToArtifactMap.get(localPath);
         if(artifactKey==null) {
             return null;
         }
 
-        val subProj = projectPomCatalog.get(artifactKey);
+        var subProj = projectPomCatalog.get(artifactKey);
         if(subProj==null) {
             return null;
         }
@@ -168,7 +167,7 @@ public class SimpleModelResolver implements ModelResolver {
     @SneakyThrows
     private void populateCatalogs(final File projectRoot) {
 
-        val localRootPath = projectRoot.getCanonicalPath();
+        var localRootPath = projectRoot.getCanonicalPath();
 
         FileUtils.searchFiles(projectRoot,
                 file->
@@ -178,17 +177,17 @@ public class SimpleModelResolver implements ModelResolver {
         .stream()
         .forEach(pomFile->{
 
-            val model = MavenModelFactory.readModel(pomFile);
+            var model = MavenModelFactory.readModel(pomFile);
 
             try {
 
-                val localPath = pomFile.getParentFile().getCanonicalPath();
+                var localPath = pomFile.getParentFile().getCanonicalPath();
 
                 if(localPath.equals(localRootPath)) {
                     rootModel = model;
                 }
 
-                val artifactKey = MavenModelFactory.readArtifactKey(model);
+                var artifactKey = MavenModelFactory.readArtifactKey(model);
                 if(artifactKey!=null) {
                     log.debug("found {} at {}", artifactKey, model.getPomFile().getAbsolutePath());
                     projectPomCatalog.put(artifactKey, model);

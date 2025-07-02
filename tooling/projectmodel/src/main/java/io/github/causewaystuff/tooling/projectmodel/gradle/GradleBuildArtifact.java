@@ -22,7 +22,6 @@ import java.io.File;
 import java.util.Optional;
 
 import lombok.Value;
-import lombok.val;
 
 @Value(staticConstructor = "of")
 public class GradleBuildArtifact {
@@ -35,7 +34,7 @@ public class GradleBuildArtifact {
     }
 
     public final Optional<File> getDefaultBuildFile() {
-        val buildFile = new File(getProjectDirectory(), "build.gradle");
+        var buildFile = new File(getProjectDirectory(), "build.gradle");
         if(buildFile.exists()) {
             return Optional.of(buildFile);
         }

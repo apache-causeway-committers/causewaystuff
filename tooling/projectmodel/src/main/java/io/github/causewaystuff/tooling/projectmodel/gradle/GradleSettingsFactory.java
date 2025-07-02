@@ -25,7 +25,6 @@ import org.apache.causeway.commons.internal.exceptions._Exceptions;
 import org.apache.causeway.commons.io.FileUtils;
 
 import lombok.NonNull;
-import lombok.val;
 
 import io.github.causewaystuff.tooling.projectmodel.ArtifactCoordinates;
 import io.github.causewaystuff.tooling.projectmodel.ProjectNode;
@@ -33,18 +32,18 @@ import io.github.causewaystuff.tooling.projectmodel.ProjectNodeFactory;
 
 public class GradleSettingsFactory {
 
-    public static GradleSettings generateFromMaven(File projRootFolder, String rootProjectName) {
-        val projTree = ProjectNodeFactory.maven(projRootFolder);
+    public static GradleSettings generateFromMaven(final File projRootFolder, final String rootProjectName) {
+        var projTree = ProjectNodeFactory.maven(projRootFolder);
         return generateFromMaven(projTree, rootProjectName);
     }
 
-    public static GradleSettings generateFromMaven(ProjectNode projTree, String rootProjectName) {
+    public static GradleSettings generateFromMaven(final ProjectNode projTree, final String rootProjectName) {
 
-        val rootPath = FileUtils.canonicalPath(projTree.getProjectDirectory())
+        var rootPath = FileUtils.canonicalPath(projTree.getProjectDirectory())
                 .orElseThrow(()->_Exceptions.unrecoverable("cannot resolve project root"));
 
-        val gradleSettings = new GradleSettings(rootProjectName);
-        val folderByArtifactKey = gradleSettings.getBuildArtifactsByArtifactKey();
+        var gradleSettings = new GradleSettings(rootProjectName);
+        var folderByArtifactKey = gradleSettings.getBuildArtifactsByArtifactKey();
 
         projTree.depthFirst(projModel -> {
             folderByArtifactKey.put(projModel.getArtifactCoordinates(), gradleBuildArtifactFor(projModel, rootPath));
@@ -55,9 +54,9 @@ public class GradleSettingsFactory {
 
     // -- HELPER
 
-    private static GradleBuildArtifact gradleBuildArtifactFor(ProjectNode projModel, String rootPath) {
-        val name = toCanonicalBuildName(projModel.getArtifactCoordinates());
-        val realtivePath = toCanonicalRelativePath(projModel, rootPath);
+    private static GradleBuildArtifact gradleBuildArtifactFor(final ProjectNode projModel, final String rootPath) {
+        var name = toCanonicalBuildName(projModel.getArtifactCoordinates());
+        var realtivePath = toCanonicalRelativePath(projModel, rootPath);
         return GradleBuildArtifact.of(name, realtivePath, projModel.getProjectDirectory());
     }
 
@@ -65,11 +64,11 @@ public class GradleSettingsFactory {
         return String.format(":%s:%s", artifactKey.getGroupId(), artifactKey.getArtifactId());
     }
 
-    private static String toCanonicalRelativePath(ProjectNode projModel, String rootPath) {
-        val canonicalProjDir = FileUtils.canonicalPath(projModel.getProjectDirectory())
+    private static String toCanonicalRelativePath(final ProjectNode projModel, final String rootPath) {
+        var canonicalProjDir = FileUtils.canonicalPath(projModel.getProjectDirectory())
                 .orElseThrow(()->_Exceptions.unrecoverable("cannot resolve relative path"));
 
-        val relativePath = FileUtils.toRelativePath(rootPath, canonicalProjDir);
+        var relativePath = FileUtils.toRelativePath(rootPath, canonicalProjDir);
         return _Strings.prefix(relativePath.replace('\\', '/'), "/");
     }
 

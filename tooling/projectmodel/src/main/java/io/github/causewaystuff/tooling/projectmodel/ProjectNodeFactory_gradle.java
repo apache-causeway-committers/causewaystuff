@@ -22,13 +22,11 @@ import java.io.File;
 
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.model.GradleProject;
-
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import org.apache.causeway.commons.internal.base._Strings;
 
 import lombok.NonNull;
-import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
 import io.github.causewaystuff.tooling.projectmodel.maven.MavenModelFactory;
@@ -37,9 +35,9 @@ import io.github.causewaystuff.tooling.projectmodel.maven.MavenModelFactory;
 class ProjectNodeFactory_gradle {
 
     public static ProjectNode createProjectTree(@NonNull final File projRootFolder) {
-        try(val projectConnection = GradleConnector.newConnector().forProjectDirectory(projRootFolder).connect()) {
-            val rootProject = projectConnection.getModel(GradleProject.class);
-            val rootNode = visitGradleProject(null, rootProject);
+        try(var projectConnection = GradleConnector.newConnector().forProjectDirectory(projRootFolder).connect()) {
+            var rootProject = projectConnection.getModel(GradleProject.class);
+            var rootNode = visitGradleProject(null, rootProject);
             return rootNode;
         }
     }
@@ -50,8 +48,8 @@ class ProjectNodeFactory_gradle {
             final @Nullable ProjectNode parent,
             final @NonNull GradleProject gradleProj) {
 
-        val projNode = toProjectNode(parent, gradleProj);
-        for(val child : gradleProj.getChildren()){
+        var projNode = toProjectNode(parent, gradleProj);
+        for(var child : gradleProj.getChildren()){
             visitGradleProject(projNode, child);
         }
         return projNode;
@@ -61,7 +59,7 @@ class ProjectNodeFactory_gradle {
             final @Nullable ProjectNode parent,
             final @NonNull GradleProject gradleProj) {
 
-        val projNode = ProjectNode.builder()
+        var projNode = ProjectNode.builder()
                 .parent(parent)
                 .artifactCoordinates(artifactKeyOf(gradleProj))
                 .name(_Strings.nullToEmpty(gradleProj.getName()))
@@ -75,18 +73,18 @@ class ProjectNodeFactory_gradle {
     }
 
     private static ArtifactCoordinates artifactKeyOf(final @NonNull GradleProject gradleProj) {
-        val pomFile = new File(gradleProj.getProjectDirectory().getAbsoluteFile(), "pom.xml");
+        var pomFile = new File(gradleProj.getProjectDirectory().getAbsoluteFile(), "pom.xml");
         if(pomFile.canRead()) {
-            val mavenModel = MavenModelFactory.readModel(pomFile);
+            var mavenModel = MavenModelFactory.readModel(pomFile);
             if(mavenModel!=null) {
                 return ProjectNodeFactory_maven.artifactCoordinatesOf(mavenModel);
             }
         }
         log.warn("cannot find pom.xml for project {} at {}", gradleProj.getName(), pomFile.getAbsolutePath());
-        val groupId = "?";
-        val artifactId = gradleProj.getName();
-        val type = "?";
-        val version = "?";
+        var groupId = "?";
+        var artifactId = gradleProj.getName();
+        var type = "?";
+        var version = "?";
         return ArtifactCoordinates.of(groupId, artifactId, type, version);
     }
 

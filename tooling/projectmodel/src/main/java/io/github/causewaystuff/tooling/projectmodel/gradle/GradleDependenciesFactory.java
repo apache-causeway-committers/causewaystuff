@@ -20,22 +20,20 @@ package io.github.causewaystuff.tooling.projectmodel.gradle;
 
 import java.io.File;
 
-import lombok.val;
-
 import io.github.causewaystuff.tooling.projectmodel.ProjectNode;
 import io.github.causewaystuff.tooling.projectmodel.ProjectNodeFactory;
 
 public class GradleDependenciesFactory {
 
-    public static GradleDependencies generateFromMaven(File projRootFolder, String rootProjectName) {
-        val projTree = ProjectNodeFactory.maven(projRootFolder);
+    public static GradleDependencies generateFromMaven(final File projRootFolder, final String rootProjectName) {
+        var projTree = ProjectNodeFactory.maven(projRootFolder);
         return generateFromMaven(projTree, rootProjectName);
     }
 
-    public static GradleDependencies generateFromMaven(ProjectNode projTree, String rootProjectName) {
+    public static GradleDependencies generateFromMaven(final ProjectNode projTree, final String rootProjectName) {
 
-        val gradleDependencies = new GradleDependencies();
-        val dependenciesByShortName = gradleDependencies.getDependenciesByShortName();
+        var gradleDependencies = new GradleDependencies();
+        var dependenciesByShortName = gradleDependencies.getDependenciesByShortName();
 
         projTree.depthFirst(projModel -> {
 

@@ -35,7 +35,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.apache.causeway.commons.io.TextUtils;
 
 import lombok.SneakyThrows;
-import lombok.val;
 
 import io.github.causewaystuff.tooling.projectmodel.gradle.GradleSettings;
 import io.github.causewaystuff.tooling.projectmodel.gradle.GradleSettingsFactory;
@@ -71,7 +70,7 @@ class GradleSettingsTest extends ProjectModelTestAbstract {
 
         assertNotNull(gradleSettings);
 
-        val knownBuildArtifactNames = new HashSet<String>();
+        var knownBuildArtifactNames = new HashSet<String>();
 
         gradleSettings.getBuildArtifactsByArtifactKey().forEach((artifactKey, buildArtifact)->{
             knownBuildArtifactNames.add(buildArtifact.getName());
@@ -99,15 +98,15 @@ class GradleSettingsTest extends ProjectModelTestAbstract {
     private void checkBuildFile(final File buildFile, final Set<String> knownBuildArtifactNames) {
         //System.out.println(String.format("checking %s", buildFile.getAbsolutePath()));
 
-        val lines = TextUtils.readLinesFromFile(buildFile, StandardCharsets.UTF_8);
-        for(val line : lines) {
+        var lines = TextUtils.readLinesFromFile(buildFile, StandardCharsets.UTF_8);
+        for(var line : lines) {
             checkBuildFileLine(buildFile, line, knownBuildArtifactNames);
         }
 
     }
 
     private void checkBuildFileLine(final File buildFile, final String line, final Set<String> knownBuildArtifactNames) {
-        val buildArtifactName = parseBuildArtifactName(line);
+        var buildArtifactName = parseBuildArtifactName(line);
         if(buildArtifactName==null) {
             return;
         }
@@ -128,7 +127,7 @@ class GradleSettingsTest extends ProjectModelTestAbstract {
         if(end<0) {
             return null;
         }
-        val buildArtifactName = line.substring(start, end);
+        var buildArtifactName = line.substring(start, end);
         return buildArtifactName;
     }
 

@@ -35,7 +35,7 @@
     <packaging>pom</packaging>
 
     <properties>
-    
+
         <maven.compiler.release>21</maven.compiler.release>
         <maven.compiler.arg>-parameters</maven.compiler.arg>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -61,7 +61,7 @@
         <javapoet.version>1.13.0</javapoet.version>
         <jsonschema-generator.version>4.38.0</jsonschema-generator.version>
         <jsoup.version>1.21.1</jsoup.version>
-        <maven-model.version>4.0.0-rc-3</maven-model.version>
+        <maven-model.version>4.0.0-rc-4</maven-model.version>
         <micronaut-sourcegen.version>1.8.2</micronaut-sourcegen.version>
         <picocli.version>4.7.7</picocli.version>
         <structurizr-dsl.version>4.1.0</structurizr-dsl.version>
@@ -209,7 +209,7 @@
         </plugins>
     </build>
 
-     <!-- Spring Boot 4 early access-->
+    <!-- Spring Boot 4 early access-->
     <repositories>
         <repository>
             <id>spring-milestones</id>
@@ -356,7 +356,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            
+
             <dependency>
                 <groupId>io.spring.initializr</groupId>
                 <artifactId>initializr-bom</artifactId>
@@ -450,6 +450,11 @@
             <dependency>
                 <groupId>org.apache.maven</groupId>
                 <artifactId>maven-artifact</artifactId>
+                <version>${maven-model.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-xml</artifactId>
                 <version>${maven-model.version}</version>
             </dependency>
 

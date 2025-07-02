@@ -21,21 +21,19 @@ package io.github.causewaystuff.tooling.projectmodel.gradle;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import lombok.val;
-
 public class GradleSettingsWriter extends WriterAbstract {
 
-    public static String toString(GradleSettings gradleSettings) {
+    public static String toString(final GradleSettings gradleSettings) {
         if(gradleSettings==null) {
             return "";
         }
-        val adocWriter = new GradleSettingsWriter();
-        val stringWriter = new StringWriter();
+        var adocWriter = new GradleSettingsWriter();
+        var stringWriter = new StringWriter();
         adocWriter.write(gradleSettings, stringWriter);
         return stringWriter.toString();
     }
 
-    public void write(GradleSettings gradleSettings, Writer writer) {
+    public void write(final GradleSettings gradleSettings, final Writer writer) {
         writeWithFormat(writer, "rootProject.name = '%s'\n", gradleSettings.getRootProjectName());
 
         writeEmptyLine(writer);

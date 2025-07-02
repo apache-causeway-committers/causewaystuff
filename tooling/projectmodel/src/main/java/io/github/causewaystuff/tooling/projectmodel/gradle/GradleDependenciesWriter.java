@@ -23,16 +23,14 @@ import java.io.Writer;
 
 import org.apache.causeway.commons.internal.base._Strings;
 
-import lombok.val;
-
 public class GradleDependenciesWriter extends WriterAbstract {
 
-    public static String toString(GradleDependencies gradleDependencies) {
+    public static String toString(final GradleDependencies gradleDependencies) {
         if(gradleDependencies==null) {
             return "";
         }
-        val adocWriter = new GradleDependenciesWriter();
-        val stringWriter = new StringWriter();
+        var adocWriter = new GradleDependenciesWriter();
+        var stringWriter = new StringWriter();
         adocWriter.write(gradleDependencies, stringWriter);
         return stringWriter.toString();
     }
@@ -49,14 +47,14 @@ public class GradleDependenciesWriter extends WriterAbstract {
 //                jacksonModuleJaxbAnnotations    : "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:$jacksonVersion",
 //        ]
 //    }
-    public void write(GradleDependencies gradleDependencies, Writer writer) {
+    public void write(final GradleDependencies gradleDependencies, final Writer writer) {
 
         writeWithFormat(writer, "ext {\n");
         writeWithFormat(writer, "    Libs = [\n");
 
         gradleDependencies.getDependenciesByShortName().forEach((shortName, dependency)->{
 
-            val shortNameWithPadding = _Strings.padEnd(shortName, 64, ' ');
+            var shortNameWithPadding = _Strings.padEnd(shortName, 64, ' ');
 
             writeWithFormat(writer, "        %s : \"%s\",\n",
                     shortNameWithPadding,
