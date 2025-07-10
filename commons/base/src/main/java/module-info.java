@@ -17,14 +17,19 @@
  *  under the License.
  */
 module io.github.causewaystuff.commons.base {
-    exports io.github.causewaystuff.commons.base.types.internal; //TODO restrict
+    exports io.github.causewaystuff.commons.base.cache;
+    exports io.github.causewaystuff.commons.base.listing;
     exports io.github.causewaystuff.commons.base.types;
+    exports io.github.causewaystuff.commons.base.types.internal; //TODO restrict
+    exports io.github.causewaystuff.commons.base.util;
 
     requires static lombok;
+
     requires com.fasterxml.jackson.annotation;
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.databind;
     requires transitive org.apache.causeway.commons;
     requires transitive org.apache.causeway.applib;
     requires spring.core;
+    requires org.slf4j;
 }

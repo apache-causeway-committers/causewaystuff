@@ -16,14 +16,26 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-module io.github.causewaystuff.commons.compression {
-    exports io.github.causewaystuff.commons.compression;
+package io.github.causewaystuff.commons.base.cache;
 
-    requires static lombok;
-    requires transitive org.apache.causeway.commons;
-    requires transitive org.apache.causeway.applib;
-    requires transitive org.apache.commons.compress;
-    requires org.slf4j;
-    requires io.github.causewaystuff.commons.base;
+import org.jspecify.annotations.NonNull;
 
+import org.springframework.util.function.ThrowingSupplier;
+
+import org.apache.causeway.commons.functional.Try;
+
+/**
+ * Required by {@link CachableAggregate}
+ * @param <T> aggregate type
+ * @see CachableAggregate
+ */
+public interface CacheHandler<T> {
+
+    void invalidate();
+    Try<T> tryRead();
+    Try<Void> tryWrite(@NonNull T t);
+
+    default T onGatherFromOrigin(ThrowingSupplier<? extends T> supplier) {
+        return supplier.get();
+    }
 }
