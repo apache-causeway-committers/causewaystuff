@@ -20,9 +20,13 @@ package io.github.causewaystuff.commons.base.cache;
 
 import java.util.Optional;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.util.function.ThrowingSupplier;
 
 import org.apache.causeway.commons.internal.base._Lazy;
+
 import lombok.Synchronized;
 
 /**
@@ -38,8 +42,15 @@ public final class CachableAggregate<T> {
     private final _Lazy<T> lazy;
     private final CacheHandler<T> cacheHandler;
 
-    public CachableAggregate(ThrowingSupplier<? extends T> supplier, CacheHandler<T> cacheHandler) {
-        this.lazy = _Lazy.threadSafe(()->intercept(supplier, cacheHandler));
+    /**
+     * @param supplier assembles the aggregate (considered costly)
+     * @param cacheHandler handles marshaling to and from some store;
+     *      when {@code null} no marshaling is performed
+     */
+    public CachableAggregate(@NonNull ThrowingSupplier<? extends T> supplier, @Nullable CacheHandler<T> cacheHandler) {
+        this.lazy = cacheHandler!=null
+            ? _Lazy.threadSafe(()->intercept(supplier, cacheHandler))
+            : _Lazy.threadSafe(supplier);
         this.cacheHandler = cacheHandler;
     }
 
@@ -51,6 +62,15 @@ public final class CachableAggregate<T> {
     public void invalidate() {
         cacheHandler.invalidate();
         lazy.clear();
+    }
+
+    // -- UTIL
+
+    /**
+     * Acts as a normal {@link _Lazy} without persistent caching.
+     */
+    public static <T> CachableAggregate<T> noCache(@NonNull ThrowingSupplier<? extends T> supplier) {
+        return new CachableAggregate<>(supplier, null);
     }
 
     // -- HELPER
