@@ -43,6 +43,10 @@
             <groupId>io.github.causewaystuff</groupId>
             <artifactId>causewaystuff-commons-base</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.github.causewaystuff</groupId>
+            <artifactId>causewaystuff-commons-compression</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

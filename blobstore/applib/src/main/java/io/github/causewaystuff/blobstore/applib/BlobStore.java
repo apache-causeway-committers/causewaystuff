@@ -25,9 +25,11 @@ import org.jspecify.annotations.Nullable;
 import org.apache.causeway.applib.value.Blob;
 import org.apache.causeway.commons.collections.Can;
 
+import org.apache.commons.compress.archivers.sevenz.SevenZMethod;
 import org.jspecify.annotations.NonNull;
 
 import io.github.causewaystuff.commons.base.types.NamedPath;
+import io.github.causewaystuff.commons.compression.SevenZUtils;
 
 public interface BlobStore {
 
@@ -36,6 +38,14 @@ public interface BlobStore {
      * Any existing blob and descriptor associated with this key will be overwritten.
      */
     void putBlob(@NonNull BlobDescriptor blobDescriptor, @NonNull Blob blob);
+
+    default void compressAndPutBlob(BlobDescriptor descriptor, Blob uncompressedBlob) {
+        putBlob(descriptor, switch (descriptor.compression()) {
+            case NONE -> uncompressedBlob;
+            case ZIP -> uncompressedBlob.zip();
+            case SEVEN_ZIP -> SevenZUtils.compress(uncompressedBlob, SevenZMethod.LZMA2);
+        });
+    }
 
     /**
      * Returns all the {@link BlobDescriptor}(s) from given path that match

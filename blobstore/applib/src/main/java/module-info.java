@@ -26,4 +26,7 @@ module io.github.causewaystuff.blobstore.applib {
     requires spring.beans;
     requires spring.context;
     requires spring.core;
+    requires org.slf4j;
+    requires org.apache.commons.compress;
+    requires io.github.causewaystuff.commons.compression;
 }
