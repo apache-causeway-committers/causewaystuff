@@ -76,12 +76,18 @@ public final class CachableAggregate<T> {
     // -- HELPER
 
     static <T> T intercept(ThrowingSupplier<? extends T> supplier, CacheHandler<T> cacheHandler) {
-        var fromCache = cacheHandler.tryRead().getValue().orElse(null);
+        var fromCache = cacheHandler
+                .tryRead()
+                .ifFailure(Throwable::printStackTrace) // don't fail the request, but log to console
+                .getValue()
+                .orElse(null);
         if(fromCache!=null) return fromCache;
 
         var fromOriging = cacheHandler.onGatherFromOrigin(supplier);
         if(fromOriging!=null) {
-            cacheHandler.tryWrite(fromOriging);
+            cacheHandler
+                .tryWrite(fromOriging)
+                .ifFailure(Throwable::printStackTrace); // don't fail the request, but log to console
         }
         return fromOriging;
     }
