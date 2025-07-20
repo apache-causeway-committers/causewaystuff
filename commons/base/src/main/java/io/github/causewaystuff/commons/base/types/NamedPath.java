@@ -19,6 +19,7 @@
 package io.github.causewaystuff.commons.base.types;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Optional;
@@ -37,7 +38,7 @@ import org.apache.causeway.commons.internal.exceptions._Exceptions;
 /**
  * Wraps a collection of non-null {@link String}(s) which represents the names of a (general purpose) path.
  */
-public record NamedPath(@NonNull Can<String> names) implements Iterable<String> {
+public record NamedPath(@NonNull Can<String> names) implements Iterable<String>, Serializable {
 
     // -- FACTORIES
 
