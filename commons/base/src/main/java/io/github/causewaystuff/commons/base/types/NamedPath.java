@@ -19,20 +19,20 @@
 package io.github.causewaystuff.commons.base.types;
 
 import java.io.File;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.internal.assertions._Assert;
 import org.apache.causeway.commons.internal.base._Strings;
 import org.apache.causeway.commons.internal.exceptions._Exceptions;
-
-import org.jspecify.annotations.NonNull;
 
 /**
  * Wraps a collection of non-null {@link String}(s) which represents the names of a (general purpose) path.
@@ -180,6 +180,23 @@ public record NamedPath(@NonNull Can<String> names) implements Iterable<String> 
             return true;
         }
         return this.names().startsWith(other.names());
+    }
+
+    // -- COMPARISON
+
+    public static Comparator<NamedPath> comparator() {
+        return comparator(String::compareTo);
+    }
+
+    public static Comparator<NamedPath> comparator(final @NonNull Comparator<String> nameComparator) {
+        return Comparator.comparingInt(NamedPath::nameCount)
+            .thenComparing((a, b)->{
+                for (int i = 0; i < a.nameCount(); i++) {
+                    int c = nameComparator.compare(a.getName(i), b.getName(i));
+                    if(c!=0) return c;
+                }
+                return 0;
+            });
     }
 
     // -- HELPER
