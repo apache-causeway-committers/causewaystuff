@@ -30,6 +30,7 @@ import java.util.stream.Stream;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+import org.apache.causeway.applib.annotation.Value;
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.internal.assertions._Assert;
 import org.apache.causeway.commons.internal.base._Strings;
@@ -38,6 +39,7 @@ import org.apache.causeway.commons.internal.exceptions._Exceptions;
 /**
  * Wraps a collection of non-null {@link String}(s) which represents the names of a (general purpose) path.
  */
+@Value
 public record NamedPath(@NonNull Can<String> names) implements Iterable<String>, Serializable {
 
     // -- FACTORIES
