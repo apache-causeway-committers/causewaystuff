@@ -18,14 +18,12 @@
  */
 package io.github.causewaystuff.commons.base.util;
 
-import java.util.concurrent.atomic.AtomicReference;
-
 import org.apache.causeway.applib.services.factory.FactoryService;
 import org.apache.causeway.applib.services.inject.ServiceInjector;
 import org.apache.causeway.applib.services.repository.RepositoryService;
 import org.apache.causeway.applib.services.wrapper.WrapperFactory;
 import org.apache.causeway.commons.internal.context._Context;
-import org.apache.causeway.commons.internal.ioc._IocContainer;
+import org.apache.causeway.commons.internal.ioc.SpringContextHolder;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -51,25 +49,25 @@ public class RuntimeUtils {
      * Invalidates cached values, potentially useful in case the underlying application context was refreshed.
      */
     public void invalidate() {
-        ((AtomicReference<Object>)factoryService).set(null);
-        ((AtomicReference<Object>)serviceInjector).set(null);
-        ((AtomicReference<Object>)repositoryService).set(null);
-        ((AtomicReference<Object>)wrapperFactory).set(null);
-        ((AtomicReference<Object>)iocContainer).set(null);
+        factoryService.set(null);
+        serviceInjector.set(null);
+        repositoryService.set(null);
+        wrapperFactory.set(null);
+        iocContainer.set(null);
     }
 
     // -- HELPER
 
     @Getter(lazy=true, value = AccessLevel.PRIVATE)
-    private final _IocContainer iocContainer = iocContainer();
+    private final SpringContextHolder iocContainer = iocContainer();
 
     //TODO provide friendly error messages (requires a valid/bootstrapped Spring context; otherwise will fail)
     @SneakyThrows
-    private _IocContainer iocContainer() {
+    private SpringContextHolder iocContainer() {
         var envClass = _Context
             .loadClass("org.apache.causeway.core.config.environment.CausewaySystemEnvironment");
         var env = _Context.getElseFail(envClass);
-        final _IocContainer iocContainer = (_IocContainer) envClass.getMethod("getIocContainer")
+        final SpringContextHolder iocContainer = (SpringContextHolder) envClass.getMethod("springContextHolder")
                 .invoke(env);
         return iocContainer;
     }
