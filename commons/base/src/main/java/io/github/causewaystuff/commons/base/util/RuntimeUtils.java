@@ -18,14 +18,16 @@
  */
 package io.github.causewaystuff.commons.base.util;
 
+import org.jspecify.annotations.Nullable;
+
 import org.apache.causeway.applib.services.factory.FactoryService;
 import org.apache.causeway.applib.services.inject.ServiceInjector;
 import org.apache.causeway.applib.services.repository.RepositoryService;
 import org.apache.causeway.applib.services.wrapper.WrapperFactory;
-import org.apache.causeway.commons.internal.context._Context;
+import org.apache.causeway.commons.internal.exceptions._Exceptions;
 import org.apache.causeway.commons.internal.ioc.SpringContextHolder;
+import org.apache.causeway.core.config.environment.CausewaySystemEnvironment;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
@@ -33,43 +35,43 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class RuntimeUtils {
 
-    @Getter(lazy=true)
-    private final FactoryService factoryService = getIocContainer().get(FactoryService.class).orElseThrow();
+    public void init(@Nullable CausewaySystemEnvironment env) {
+        ENV = env;
+        invalidate();
+    }
 
     @Getter(lazy=true)
-    private final ServiceInjector serviceInjector = getIocContainer().get(ServiceInjector.class).orElseThrow();
+    private final FactoryService factoryService = holder().get(FactoryService.class).orElseThrow();
 
     @Getter(lazy=true)
-    private final RepositoryService repositoryService = getIocContainer().get(RepositoryService.class).orElseThrow();
+    private final ServiceInjector serviceInjector = holder().get(ServiceInjector.class).orElseThrow();
 
     @Getter(lazy=true)
-    private final WrapperFactory wrapperFactory = getIocContainer().get(WrapperFactory.class).orElseThrow();
+    private final RepositoryService repositoryService = holder().get(RepositoryService.class).orElseThrow();
+
+    @Getter(lazy=true)
+    private final WrapperFactory wrapperFactory = holder().get(WrapperFactory.class).orElseThrow();
 
     /**
      * Invalidates cached values, potentially useful in case the underlying application context was refreshed.
      */
-    public void invalidate() {
+    private void invalidate() {
         factoryService.set(null);
         serviceInjector.set(null);
         repositoryService.set(null);
         wrapperFactory.set(null);
-        iocContainer.set(null);
     }
 
     // -- HELPER
 
-    @Getter(lazy=true, value = AccessLevel.PRIVATE)
-    private final SpringContextHolder iocContainer = iocContainer();
+    private CausewaySystemEnvironment ENV;
 
-    //TODO provide friendly error messages (requires a valid/bootstrapped Spring context; otherwise will fail)
     @SneakyThrows
-    private SpringContextHolder iocContainer() {
-        var envClass = _Context
-            .loadClass("org.apache.causeway.core.config.environment.CausewaySystemEnvironment");
-        var env = _Context.getElseFail(envClass);
-        final SpringContextHolder iocContainer = (SpringContextHolder) envClass.getMethod("springContextHolder")
-                .invoke(env);
-        return iocContainer;
+    private SpringContextHolder holder() {
+        if(ENV==null) {
+            throw _Exceptions.illegalState("RuntimeUtils must be initialized before use.");
+        }
+        return ENV.springContextHolder();
     }
 
 }

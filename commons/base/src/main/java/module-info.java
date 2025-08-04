@@ -32,4 +32,5 @@ module io.github.causewaystuff.commons.base {
     requires transitive org.apache.causeway.applib;
     requires spring.core;
     requires org.slf4j;
+    requires org.apache.causeway.core.config;
 }
