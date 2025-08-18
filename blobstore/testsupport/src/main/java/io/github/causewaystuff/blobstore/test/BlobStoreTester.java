@@ -21,6 +21,8 @@ package io.github.causewaystuff.blobstore.test;
 import java.time.Instant;
 import java.util.Map;
 
+import org.jspecify.annotations.NonNull;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -30,7 +32,6 @@ import org.apache.causeway.applib.value.NamedWithMimeType.CommonMimeType;
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.collections.Cardinality;
 
-import org.jspecify.annotations.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import io.github.causewaystuff.blobstore.applib.BlobDescriptor;
@@ -181,7 +182,7 @@ public class BlobStoreTester {
             // verify zip exists
             var zippedBlob = blobStore.lookupBlob(zipDescriptor.path())
                     .orElseThrow();
-            assertEquals(CommonMimeType.ZIP.getMimeType(), zippedBlob.mimeType());
+            assertEquals(CommonMimeType.ZIP.mimeType(), zippedBlob.mimeType());
         }
 
         // 7z re-compress
@@ -196,7 +197,7 @@ public class BlobStoreTester {
             // verify 7z exists
             var sevenZBlob = blobStore.lookupBlob(sevenZDescriptor.path())
                     .orElseThrow();
-            assertEquals(CommonMimeType._7Z.getMimeType(), sevenZBlob.mimeType());
+            assertEquals(CommonMimeType._7Z.mimeType(), sevenZBlob.mimeType());
         }
 
         // un-zip
@@ -211,7 +212,7 @@ public class BlobStoreTester {
             // verify zip exists
             var unzippedBlob = blobStore.lookupBlob(unzipDescriptor.path())
                     .orElseThrow();
-            assertEquals(CommonMimeType.BIN.getMimeType(), unzippedBlob.mimeType());
+            assertEquals(CommonMimeType.BIN.mimeType(), unzippedBlob.mimeType());
         }
 
     }
