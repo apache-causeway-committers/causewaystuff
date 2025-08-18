@@ -35,10 +35,9 @@ import org.apache.causeway.commons.collections.Cardinality;
 import lombok.RequiredArgsConstructor;
 
 import io.github.causewaystuff.blobstore.applib.BlobDescriptor;
+import io.github.causewaystuff.blobstore.applib.BlobDescriptor.Compression;
 import io.github.causewaystuff.blobstore.applib.BlobQualifier;
 import io.github.causewaystuff.blobstore.applib.BlobStore;
-import io.github.causewaystuff.blobstore.applib.BlobDescriptor.Compression;
-import io.github.causewaystuff.blobstore.test.BlobStoreTester.Scenario;
 import io.github.causewaystuff.commons.base.types.NamedPath;
 
 @RequiredArgsConstructor
