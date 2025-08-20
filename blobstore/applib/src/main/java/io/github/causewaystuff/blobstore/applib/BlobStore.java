@@ -19,17 +19,16 @@
 package io.github.causewaystuff.blobstore.applib;
 
 import java.util.Optional;
+import java.util.function.UnaryOperator;
 
 import org.jspecify.annotations.Nullable;
 
 import org.apache.causeway.applib.value.Blob;
 import org.apache.causeway.commons.collections.Can;
 
-import org.apache.commons.compress.archivers.sevenz.SevenZMethod;
 import org.jspecify.annotations.NonNull;
 
 import io.github.causewaystuff.commons.base.types.NamedPath;
-import io.github.causewaystuff.commons.compression.SevenZUtils;
 
 public interface BlobStore {
 
@@ -37,14 +36,13 @@ public interface BlobStore {
      * Puts a {@link Blob} onto the store, using {@link BlobDescriptor}'s path as the key.
      * Any existing blob and descriptor associated with this key will be overwritten.
      */
-    void putBlob(@NonNull BlobDescriptor blobDescriptor, @NonNull Blob blob);
-
-    default void compressAndPutBlob(BlobDescriptor descriptor, Blob uncompressedBlob) {
-        putBlob(descriptor, switch (descriptor.compression()) {
-            case NONE -> uncompressedBlob;
-            case ZIP -> uncompressedBlob.zip();
-            case SEVEN_ZIP -> SevenZUtils.compress(uncompressedBlob, SevenZMethod.LZMA2);
-        });
+    BlobDescriptor putBlob(@NonNull NamedPath path, @NonNull Blob blob, UnaryOperator<BlobDescriptor> customizer);
+    /**
+     * Shortcut equivalent to {@code putBlob(NamedPath, Blob, null)}.
+     * @see #putBlob(NamedPath, Blob, UnaryOperator)
+     */
+    default BlobDescriptor putBlob(@NonNull NamedPath path, @NonNull Blob blob) {
+        return putBlob(path, blob, null);
     }
 
     /**
@@ -92,8 +90,9 @@ public interface BlobStore {
      * Acts as a no-op if given blob descriptor's compression equals given compression parameter.
      * @param blobDescriptor
      * @param compression
-     * @return new {@link BlobDescriptor} with new compression value from given compression parameter.
+     * @return optionally new {@link BlobDescriptor} with new compression value from given compression parameter,
+     *      based on whether the underlying blob was found
      */
-    BlobDescriptor compress(@NonNull BlobDescriptor blobDescriptor, BlobDescriptor.@NonNull Compression compression);
+    Optional<BlobDescriptor> compress(@NonNull BlobDescriptor blobDescriptor, BlobDescriptor.@NonNull Compression compression);
 
 }

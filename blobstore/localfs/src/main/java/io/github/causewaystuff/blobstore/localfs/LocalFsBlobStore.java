@@ -25,7 +25,9 @@ import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 
+import org.apache.commons.compress.archivers.sevenz.SevenZMethod;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -53,6 +55,7 @@ import io.github.causewaystuff.blobstore.applib.BlobStore;
 import io.github.causewaystuff.blobstore.applib.BlobStoreFactory.BlobStoreConfiguration;
 import io.github.causewaystuff.commons.base.types.NamedPath;
 import io.github.causewaystuff.commons.base.types.ResourceFolder;
+import io.github.causewaystuff.commons.compression.SevenZUtils;
 
 @Repository
 @Slf4j
@@ -67,24 +70,71 @@ public class LocalFsBlobStore implements BlobStore {
     }
 
     @Override @Synchronized
-    public void putBlob(final @NonNull BlobDescriptor blobDescriptor, final @NonNull Blob blob) {
+    public BlobDescriptor putBlob(@NonNull NamedPath path, @NonNull Blob blob,
+        @Nullable UnaryOperator<BlobDescriptor> customizer) {
 
-        var blobCompression =
-                BlobDescriptor.Compression.valueOf(blob.mimeType());
-        _Assert.assertEquals(
-                blobDescriptor.compression(),
-                blobCompression);
+        _Assert.assertEquals(BlobDescriptor.Compression.NONE, BlobDescriptor.Compression.valueOf(blob.mimeType()),
+            ()->"putBlob does not support compressed Blobs, instead pass an uncompressed blob, then set the desired compression with a customizer");
+
+        var blobDescriptor = new BlobDescriptor(
+            path,
+            CommonMimeType.valueOf(blob.mimeType()).orElseThrow(),
+            null,
+            Instant.now(),
+            0L,
+            Compression.NONE,
+            Map.of(
+                "uncompressed-size", "" + blob.bytes().length,
+                "sha256", blob.sha256Hex()),
+            Can.empty());
+
+        blobDescriptor = customizer!=null
+            ? Optional
+                .ofNullable(customizer.apply(blobDescriptor))
+                .orElse(blobDescriptor)
+            : blobDescriptor;
+
+        var blobToStore = switch (blobDescriptor.compression()) {
+                case NONE -> blob;
+                case ZIP -> blob.zip();
+                case SEVEN_ZIP -> SevenZUtils.compress(blob, SevenZMethod.LZMA2);
+            };
+
+        blobDescriptor = blobDescriptor
+            .withSize(blobToStore.bytes().length);
 
         var locator = FileLocator.of(rootDirectory, blobDescriptor);
         locator.makeDir();
 
         // TODO specify override behavior
-        blob.writeTo(locator.blobFile());
+        blobToStore.writeTo(locator.blobFile());
         DescriptorDto.of(blobDescriptor).writeTo(locator.manifestFile());
 
         descriptorsByPath.put(blobDescriptor.path(), blobDescriptor);
         log.info("Blob written {}", blobDescriptor);
+
+        return blobDescriptor;
     }
+
+//    @Override @Synchronized
+//    public void putBlob(final @NonNull BlobDescriptor blobDescriptor, final @NonNull Blob blob) {
+//
+//        var blobCompression =
+//                BlobDescriptor.Compression.valueOf(blob.mimeType());
+//        _Assert.assertEquals(
+//                blobDescriptor.compression(),
+//                blobCompression);
+//
+//        var locator = FileLocator.of(rootDirectory, blobDescriptor);
+//        locator.makeDir();
+//
+//        // TODO specify override behavior
+//        blob.writeTo(locator.blobFile());
+//        DescriptorDto.of(blobDescriptor).writeTo(locator.manifestFile());
+//
+//        descriptorsByPath.put(blobDescriptor.path(), blobDescriptor);
+//        log.info("Blob written {}", blobDescriptor);
+//    }
 
     @Override @Synchronized
     public Can<BlobDescriptor> listDescriptors(
@@ -150,9 +200,8 @@ public class LocalFsBlobStore implements BlobStore {
     @Override @Synchronized
     public void deleteBlob(final @Nullable NamedPath path) {
         var descriptor = lookupDescriptor(path).orElse(null);
-        if(descriptor==null) {
-            return;
-        }
+        if(descriptor==null) return;
+
         var locator = FileLocator.of(rootDirectory, descriptor);
         var manifestFile = locator.manifestFile();
         var blobFile = locator.blobFile();
@@ -167,26 +216,23 @@ public class LocalFsBlobStore implements BlobStore {
     }
 
     @Override
-    public BlobDescriptor compress(
+    public Optional<BlobDescriptor> compress(
             final @NonNull BlobDescriptor blobDescriptor,
             final BlobDescriptor.@NonNull Compression compression) {
         var oldCompression = blobDescriptor.compression();
-        if(oldCompression.equals(compression)) {
-            return blobDescriptor;
-        }
-        var newDescriptor = blobDescriptor.asBuilder()
-                .compression(compression)
-                .build();
-        var oldBlob = lookupBlob(blobDescriptor.path())
-                .orElse(null);
-        if(oldBlob==null) {
-            return newDescriptor;
-        }
+        if(oldCompression.equals(compression)) return Optional.of(blobDescriptor);
+
+        var oldBlob = lookupBlob(blobDescriptor.path()).orElse(null);
+        if(oldBlob==null) return Optional.empty();
+
+        var newDescriptor = blobDescriptor.withCompression(compression);
         deleteBlob(blobDescriptor.path());
-        putBlob(newDescriptor, CompressUtils.recompressBlob(
-                oldBlob, blobDescriptor.mimeType(),
-                oldCompression, compression));
-        return newDescriptor;
+        return Optional.of(putBlob(
+            blobDescriptor.path(),
+            CompressUtils.uncompressBlob(
+                    oldBlob, blobDescriptor.mimeType(),
+                    oldCompression),
+            desc->newDescriptor));
     }
 
     // -- HELPER

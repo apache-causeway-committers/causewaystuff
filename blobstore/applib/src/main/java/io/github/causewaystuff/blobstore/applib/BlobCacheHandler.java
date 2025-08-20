@@ -26,13 +26,17 @@ import org.jspecify.annotations.NonNull;
 import org.apache.causeway.applib.value.Blob;
 import org.apache.causeway.commons.functional.Try;
 import org.apache.causeway.commons.internal.base._Timing;
+
 import lombok.extern.slf4j.Slf4j;
 
+import io.github.causewaystuff.blobstore.applib.BlobDescriptor.Compression;
 import io.github.causewaystuff.commons.base.cache.CacheHandler;
+import io.github.causewaystuff.commons.base.types.NamedPath;
 
 @Slf4j
 public record BlobCacheHandler<T>(
-    BlobDescriptor descriptor,
+    NamedPath path,
+    Compression compression,
     BlobStore blobStore,
     Function<Blob, T> reader,
     Function<T, Blob> writer
@@ -40,27 +44,27 @@ public record BlobCacheHandler<T>(
 
     @Override
     public void invalidate() {
-        blobStore.deleteBlob(descriptor.path());
+        blobStore.deleteBlob(path);
     }
 
     @Override
     public Try<T> tryRead() {
         var watch = _Timing.now();
         var blob = blobStore
-            .lookupBlobAndUncompress(descriptor.path())
+            .lookupBlobAndUncompress(path)
             .orElse(null);
         if(blob==null) return Try.success(null);
 
         var result = Try.call(()->reader.apply(blob));
         watch.stop();
-        log.info(String.format(Locale.US, "Calling '%s' took %d ms", "read from cache at %s".formatted(descriptor.path()), watch.getMillis()));
+        log.info(String.format(Locale.US, "Calling '%s' took %d ms", "read from cache at %s".formatted(path), watch.getMillis()));
         return result;
     }
 
     @Override
     public Try<Void> tryWrite(@NonNull T t) {
-        return _Timing.callVerbose(log, "write to cache at %s".formatted(descriptor.path()), ()->
+        return _Timing.callVerbose(log, "write to cache at %s".formatted(path), ()->
             Try.run(()->
-                blobStore.compressAndPutBlob(descriptor, writer.apply(t))));
+                blobStore.putBlob(path, writer.apply(t), desc->desc.withCompression(compression))));
     }
 }

@@ -38,17 +38,24 @@ class CompressUtils {
             final BlobDescriptor.@NonNull Compression compressionIn,
             final BlobDescriptor.@NonNull Compression compressionOut) {
         if(compressionIn == compressionOut) return blob;
-        final Blob base = switch (compressionIn) {
-            case NONE -> blob;
-            case ZIP -> blob.unZip(mimeForUncompressed);
-            case SEVEN_ZIP -> SevenZUtils.decompress(blob, mimeForUncompressed);
-        };
+        final Blob base = uncompressBlob(blob, mimeForUncompressed, compressionIn);
         final Blob compressed = switch (compressionOut) {
             case NONE -> base;
             case ZIP -> base.zip();
             case SEVEN_ZIP -> SevenZUtils.compress(base, SevenZMethod.LZMA2);
         };
         return compressed;
+    }
+
+    Blob uncompressBlob(
+            final @NonNull Blob blob,
+            final @NonNull CommonMimeType mimeForUncompressed,
+            final BlobDescriptor.@NonNull Compression compressionIn) {
+        return switch (compressionIn) {
+            case NONE -> blob;
+            case ZIP -> blob.unZip(mimeForUncompressed);
+            case SEVEN_ZIP -> SevenZUtils.decompress(blob, mimeForUncompressed);
+        };
     }
 
 }

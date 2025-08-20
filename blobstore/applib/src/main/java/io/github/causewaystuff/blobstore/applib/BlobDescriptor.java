@@ -29,23 +29,22 @@ import org.jspecify.annotations.Nullable;
 import org.apache.causeway.applib.value.NamedWithMimeType.CommonMimeType;
 import org.apache.causeway.commons.collections.Can;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.With;
 import lombok.experimental.Accessors;
 
 import io.github.causewaystuff.commons.base.types.NamedPath;
 
-@Builder
 public record BlobDescriptor(
         NamedPath path,
         CommonMimeType mimeType,
-        String createdBy,
-        Instant createdOn,
-        long size,
-        Compression compression,
-        Map<String, String> attributes,
-        Can<BlobQualifier> qualifiers) {
+        @With String createdBy,
+        @With Instant createdOn,
+        @With long size,
+        @With Compression compression,
+        @With Map<String, String> attributes,
+        @With Can<BlobQualifier> qualifiers) {
 
     @RequiredArgsConstructor
     public enum Compression {
@@ -117,17 +116,17 @@ public record BlobDescriptor(
 //        this.attributes = attributes;
 //        this.qualifiers = qualifiers;
 //    }
-
-    public BlobDescriptorBuilder asBuilder() {
-        return BlobDescriptor.builder()
-                .path(path)
-                .mimeType(mimeType)
-                .createdBy(createdBy)
-                .createdOn(createdOn)
-                .size(size)
-                .compression(compression)
-                .attributes(attributes)
-                .qualifiers(qualifiers);
-    }
+//
+//    public BlobDescriptorBuilder asBuilder() {
+//        return BlobDescriptor.builder()
+//                .path(path)
+//                .mimeType(mimeType)
+//                .createdBy(createdBy)
+//                .createdOn(createdOn)
+//                .size(size)
+//                .compression(compression)
+//                .attributes(attributes)
+//                .qualifiers(qualifiers);
+//    }
 
 }

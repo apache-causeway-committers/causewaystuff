@@ -53,6 +53,15 @@ public class BlobStoreTester {
         public NamedPath path() {
             return blobDescriptor.path();
         }
+        public BlobDescriptor customize(final BlobDescriptor in) {
+            var out = in
+                .withCompression(blobDescriptor.compression())
+                .withCreatedOn(blobDescriptor.createdOn())
+                .withCreatedBy(blobDescriptor.createdBy())
+                .withQualifiers(blobDescriptor.qualifiers())
+                .withAttributes(blobDescriptor.attributes());
+            return out;
+        }
     }
 
     final BlobStore blobStore;
@@ -120,7 +129,7 @@ public class BlobStoreTester {
         assertTrue(blobStore.listDescriptors(NamedPath.empty(), true).isEmpty());
 
         // when
-        blobStore.putBlob(scenario.blobDescriptor(), scenario.blob());
+        blobStore.putBlob(scenario.blobDescriptor().path(), scenario.blob(), scenario::customize);
     }
 
     public void cleanup(final Scenario scenario) {
@@ -166,12 +175,12 @@ public class BlobStoreTester {
         var baseDescriptor = firstDescriptor();
 
         // compress no-op
-        var noCompressDescriptor = blobStore.compress(baseDescriptor, Compression.NONE);
+        var noCompressDescriptor = blobStore.compress(baseDescriptor, Compression.NONE).orElseThrow();
         assertTrue(descriptors().getCardinality().isOne());
         assertEquals(noCompressDescriptor, firstDescriptor());
 
         // zip
-        var zipDescriptor = blobStore.compress(baseDescriptor, Compression.ZIP);
+        var zipDescriptor = blobStore.compress(baseDescriptor, Compression.ZIP).orElseThrow();
         {
             assertTrue(descriptors().getCardinality().isOne());
             var firstDescriptor = firstDescriptor();
@@ -186,7 +195,7 @@ public class BlobStoreTester {
         }
 
         // 7z re-compress
-        var sevenZDescriptor = blobStore.compress(zipDescriptor, Compression.SEVEN_ZIP);
+        var sevenZDescriptor = blobStore.compress(zipDescriptor, Compression.SEVEN_ZIP).orElseThrow();
         {
             assertTrue(descriptors().getCardinality().isOne());
             var firstDescriptor = firstDescriptor();
@@ -201,7 +210,7 @@ public class BlobStoreTester {
         }
 
         // un-zip
-        var unzipDescriptor = blobStore.compress(sevenZDescriptor, Compression.NONE);
+        var unzipDescriptor = blobStore.compress(sevenZDescriptor, Compression.NONE).orElseThrow();
         {
             assertTrue(descriptors().getCardinality().isOne());
             var firstDescriptor = firstDescriptor();
