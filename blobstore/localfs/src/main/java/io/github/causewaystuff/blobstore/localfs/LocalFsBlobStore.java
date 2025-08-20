@@ -34,6 +34,7 @@ import org.jspecify.annotations.Nullable;
 
 import org.springframework.stereotype.Repository;
 
+import org.apache.causeway.applib.exceptions.UnrecoverableException;
 import org.apache.causeway.applib.value.Blob;
 import org.apache.causeway.applib.value.NamedWithMimeType.CommonMimeType;
 import org.apache.causeway.commons.collections.Can;
@@ -251,6 +252,7 @@ public class LocalFsBlobStore implements BlobStore {
         }
         static DescriptorDto readFrom(final File file) {
             var descriptorDto = YamlUtils.tryRead(DescriptorDto.class, DataSource.ofFile(file))
+                    .mapFailure(ex->new UnrecoverableException("failed to parse file %s".formatted(file), ex))
                     .valueAsNonNullElseFail();
             return descriptorDto;
         }

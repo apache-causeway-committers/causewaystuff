@@ -18,6 +18,8 @@
  */
 package io.github.causewaystuff.blobstore.applib;
 
+import java.util.Objects;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.stereotype.Service;
@@ -36,6 +38,7 @@ public class BlobStoreFactory {
 
     @SneakyThrows
     public BlobStore createBlobStore(final BlobStoreConfiguration config) {
+        Objects.requireNonNull(config, ()->"missing BlobStoreConfiguration");
         var blobStore = config.implementation().getConstructor(new Class[]{BlobStoreConfiguration.class})
             .newInstance(config);
         beanFactory.autowireBean(blobStore);
