@@ -94,39 +94,4 @@ public record BlobDescriptor(
         this(path, mimeType, createdBy, createdOn, size, compression, attributes, Can.empty());
     }
 
-//validation
-//    public BlobDescriptor(
-//            final NamedPath path,
-//            final CommonMimeType mimeType,
-//            final String createdBy,
-//            final Instant createdOn,
-//            final long size,
-//            final Compression compression,
-//            final Map<String, String> attributes,
-//            final Can<BlobQualifier> qualifiers) {
-//        if(path.lastNameElseFail().endsWith(".zip")) {
-//            throw _Exceptions.illegalArgument("%s", path);
-//        }
-//        this.path = path;
-//        this.mimeType = mimeType;
-//        this.createdBy = createdBy;
-//        this.createdOn = createdOn;
-//        this.size = size;
-//        this.compression = compression;
-//        this.attributes = attributes;
-//        this.qualifiers = qualifiers;
-//    }
-//
-//    public BlobDescriptorBuilder asBuilder() {
-//        return BlobDescriptor.builder()
-//                .path(path)
-//                .mimeType(mimeType)
-//                .createdBy(createdBy)
-//                .createdOn(createdOn)
-//                .size(size)
-//                .compression(compression)
-//                .attributes(attributes)
-//                .qualifiers(qualifiers);
-//    }
-
 }

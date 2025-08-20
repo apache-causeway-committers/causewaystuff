@@ -116,26 +116,6 @@ public class LocalFsBlobStore implements BlobStore {
         return blobDescriptor;
     }
 
-//    @Override @Synchronized
-//    public void putBlob(final @NonNull BlobDescriptor blobDescriptor, final @NonNull Blob blob) {
-//
-//        var blobCompression =
-//                BlobDescriptor.Compression.valueOf(blob.mimeType());
-//        _Assert.assertEquals(
-//                blobDescriptor.compression(),
-//                blobCompression);
-//
-//        var locator = FileLocator.of(rootDirectory, blobDescriptor);
-//        locator.makeDir();
-//
-//        // TODO specify override behavior
-//        blob.writeTo(locator.blobFile());
-//        DescriptorDto.of(blobDescriptor).writeTo(locator.manifestFile());
-//
-//        descriptorsByPath.put(blobDescriptor.path(), blobDescriptor);
-//        log.info("Blob written {}", blobDescriptor);
-//    }
-
     @Override @Synchronized
     public Can<BlobDescriptor> listDescriptors(
             final @Nullable NamedPath path,
