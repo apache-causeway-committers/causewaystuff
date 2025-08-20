@@ -33,7 +33,7 @@ import io.github.causewaystuff.commons.base.types.NamedPath;
 public interface BlobStore {
 
     /**
-     * Puts a {@link Blob} onto the store, using {@link BlobDescriptor}'s path as the key.
+     * Puts a {@link Blob} onto the store, using path and blob.name() w/o extension as the key.
      * Any existing blob and descriptor associated with this key will be overwritten.
      */
     BlobDescriptor putBlob(@NonNull NamedPath path, @NonNull Blob blob, UnaryOperator<BlobDescriptor> customizer);

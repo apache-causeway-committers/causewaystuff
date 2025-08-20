@@ -69,7 +69,7 @@ public class BlobStoreTester {
     public enum ScenarioSample {
         SMALL_BINARY {
             @Override public Scenario create() {
-                var name = "myblob.bin";
+                var name = "myblob";
                 var mime = CommonMimeType.BIN;
                 var blob = Blob.of(name, mime, new byte[] {1, 2, 3, 4});
                 var createdOn = Instant.now();
@@ -81,7 +81,7 @@ public class BlobStoreTester {
         },
         SMALL_BINARY_ATTRIBUTED {
             @Override public Scenario create() {
-                var name = "myblob.bin";
+                var name = "myblob";
                 var mime = CommonMimeType.BIN;
                 var blob = Blob.of(name, mime, new byte[] {1, 2, 3, 4});
                 var createdOn = Instant.now();
@@ -97,7 +97,7 @@ public class BlobStoreTester {
         },
         SMALL_BINARY_QUALIFIED {
             @Override public Scenario create() {
-                var name = "myblob.bin";
+                var name = "myblob";
                 var mime = CommonMimeType.BIN;
                 var blob = Blob.of(name, mime, new byte[] {1, 2, 3, 4});
                 var createdOn = Instant.now();
@@ -129,7 +129,7 @@ public class BlobStoreTester {
         assertTrue(blobStore.listDescriptors(NamedPath.empty(), true).isEmpty());
 
         // when
-        blobStore.putBlob(scenario.blobDescriptor().path(), scenario.blob(), scenario::customize);
+        blobStore.putBlob(scenario.path().parentElseFail(), scenario.blob(), scenario::customize);
     }
 
     public void cleanup(final Scenario scenario) {

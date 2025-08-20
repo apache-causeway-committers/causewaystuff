@@ -20,11 +20,11 @@ package io.github.causewaystuff.blobstore.localfs;
 
 import java.io.File;
 
-import org.jspecify.annotations.Nullable;
-
-import org.apache.causeway.commons.io.FileUtils;
-
 import org.jspecify.annotations.NonNull;
+
+import org.apache.causeway.applib.value.NamedWithMimeType.CommonMimeType;
+import org.apache.causeway.commons.internal.base._Strings;
+import org.apache.causeway.commons.io.FileUtils;
 
 import io.github.causewaystuff.blobstore.applib.BlobDescriptor;
 import io.github.causewaystuff.blobstore.localfs.LocalFsBlobStore.DescriptorDto;
@@ -36,7 +36,7 @@ record FileLocator(
         File manifestFile,
         File blobFile) {
 
-    static final String MANIFEST_SUFFIX = "~.yaml";
+    static final String MANIFEST_SUFFIX = "..yaml";
 
     // -- FACTORIES
 
@@ -50,7 +50,7 @@ record FileLocator(
         return new FileLocator(
                 blobDescriptor,
                 manifestFile,
-                honorCompressionExtension(manifestFile, blobDescriptor.compression()));
+                resolveBlob(manifestFile, blobDescriptor));
     }
 
     static FileLocator forManifestFile(
@@ -60,7 +60,7 @@ record FileLocator(
         return new FileLocator(
                 blobDescriptor,
                 manifestFile,
-                honorCompressionExtension(manifestFile, blobDescriptor.compression()));
+                resolveBlob(manifestFile, blobDescriptor));
     }
 
     static FileLocator forBlobFile(
@@ -70,7 +70,7 @@ record FileLocator(
         var compression = dto.compression();
         var relPath = NamedPath.of(blobFile.getParentFile())
                 .toRelativePath(NamedPath.of(rootDirectory.root()));
-        var baseName = baseNameFromBlobName(blobFile.getName(), compression);
+        var baseName = baseNameFromBlobName(blobFile.getName(), dto.mimeType(), compression);
         var fallbackDescriptor = dto
                 .toBlobDescriptor(relPath.add(baseName));
         return new FileLocator(
@@ -101,27 +101,24 @@ record FileLocator(
                         .add(baseNameFromManifestName(manifestFile.getName())));
     }
 
-    private static String honorCompressionExtension(
-            final String baseName, final BlobDescriptor.Compression compression) {
-        return baseName + compression.fileSuffix();
-    }
-
-    private static File honorCompressionExtension(
+    private static File resolveBlob(
             final File manifestFile,
-            final BlobDescriptor.@Nullable Compression compressionIfAny) {
-        var compression = compressionIfAny!=null
-                ? compressionIfAny
+            final BlobDescriptor blobDescriptor) {
+        var compression = blobDescriptor.compression()!=null
+                ? blobDescriptor.compression()
                 : DescriptorDto.readFrom(manifestFile).compression();
-        var blobName = honorCompressionExtension(
-                baseNameFromManifestName(manifestFile.getName()), compression);
+        var blobName = _Strings.asFileNameWithExtension(
+                baseNameFromManifestName(manifestFile.getName()),
+                blobDescriptor.mimeType().proposedFileExtensions())
+            + compression.fileSuffix();
         return new File(manifestFile.getParentFile(), blobName);
     }
 
     private static String baseNameFromManifestName(final String manifestName) {
         return manifestName.substring(0, manifestName.length()-FileLocator.MANIFEST_SUFFIX.length());
     }
-    private static String baseNameFromBlobName(final String blobName, final BlobDescriptor.Compression compression) {
-        return blobName.substring(0, blobName.length()-compression.fileSuffix().length());
+    private static String baseNameFromBlobName(final String blobName, final CommonMimeType mime, final BlobDescriptor.Compression compression) {
+        return LocalFsBlobStore.baseNameNoExt(blobName.substring(0, blobName.length()-compression.fileSuffix().length()), mime);
     }
 
 }
