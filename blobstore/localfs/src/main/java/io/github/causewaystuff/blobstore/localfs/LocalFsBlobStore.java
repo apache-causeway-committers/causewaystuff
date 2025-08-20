@@ -22,7 +22,6 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Instant;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -40,7 +39,6 @@ import org.apache.causeway.applib.value.NamedWithMimeType.CommonMimeType;
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.functional.Try;
 import org.apache.causeway.commons.internal.assertions._Assert;
-import org.apache.causeway.commons.internal.base._Strings;
 import org.apache.causeway.commons.internal.functions._Predicates;
 import org.apache.causeway.commons.io.DataSink;
 import org.apache.causeway.commons.io.DataSource;
@@ -79,11 +77,9 @@ public class LocalFsBlobStore implements BlobStore {
         _Assert.assertEquals(BlobDescriptor.Compression.NONE, BlobDescriptor.Compression.valueOf(blob.mimeType()),
             ()->"putBlob does not support compressed Blobs, instead pass an uncompressed blob, then set the desired compression with a customizer");
 
-        var mime = CommonMimeType.valueOf(blob.mimeType()).orElseThrow();
-
         var blobDescriptor = new BlobDescriptor(
-            path.add(baseNameNoExt(blob.name(), mime)),
-            mime,
+            path,
+            CommonMimeType.valueOf(blob.mimeType()).orElseThrow(),
             null,
             Instant.now(),
             0L,
@@ -221,16 +217,6 @@ public class LocalFsBlobStore implements BlobStore {
     }
 
     // -- HELPER
-
-    static String baseNameNoExt(String name, CommonMimeType mime) {
-        var lower = name.toLowerCase(Locale.ROOT);
-        for(var ext : mime.proposedFileExtensions()) {
-            if(lower.endsWith("." + ext)) {
-                return _Strings.substring(name, 0, -(ext.length() + 1));
-            }
-        }
-        return name;
-    }
 
     /** used for serializing to file */
     static record DescriptorDto(
