@@ -36,7 +36,7 @@ import org.apache.causeway.commons.internal.base._Strings;
 import lombok.experimental.UtilityClass;
 
 import io.github.causewaystuff.companion.applib.jpa.Persistable;
-import io.github.causewaystuff.companion.applib.services.iconfa.IconFaService;
+import io.github.causewaystuff.companion.applib.services.icon.IconService;
 import io.github.causewaystuff.companion.applib.services.lookup.HasSecondaryKey;
 import io.github.causewaystuff.companion.applib.services.search.SearchService;
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.QualifiedType;
@@ -117,8 +117,8 @@ class _GenEntity {
 
         if(entityModel.iconService()) {
             typeModelBuilder
-                .addField(_Fields.inject(IconFaService.class, "iconFaService", injectedFieldOptions))
-                .addMethod(_Methods.iconFaLayers(Modifier.PUBLIC));
+                .addField(_Fields.inject(IconService.class, "iconService", injectedFieldOptions))
+                .addMethod(_Methods.icon(Modifier.PUBLIC));
         }
 
         // super type

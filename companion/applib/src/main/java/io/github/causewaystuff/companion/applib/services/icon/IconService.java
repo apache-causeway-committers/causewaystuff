@@ -16,14 +16,14 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package io.github.causewaystuff.companion.applib.services.iconfa;
+package io.github.causewaystuff.companion.applib.services.icon;
 
 import org.jspecify.annotations.Nullable;
 
-import org.apache.causeway.applib.fa.FontAwesomeLayers;
+import org.apache.causeway.applib.annotation.ObjectSupport;
 
-public interface IconFaService {
+public interface IconService {
 
-    FontAwesomeLayers iconFaLayers(@Nullable Object entity);
+    ObjectSupport.IconResource icon(@Nullable Object entity, ObjectSupport.IconWhere iconWhere);
 
 }

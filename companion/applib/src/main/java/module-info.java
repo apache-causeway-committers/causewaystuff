@@ -19,7 +19,7 @@
 module io.github.causewaystuff.companion.applib {
     exports io.github.causewaystuff.companion.applib.decorate;
     exports io.github.causewaystuff.companion.applib.jpa;
-    exports io.github.causewaystuff.companion.applib.services.iconfa;
+    exports io.github.causewaystuff.companion.applib.services.icon;
     exports io.github.causewaystuff.companion.applib.services.lookup;
     exports io.github.causewaystuff.companion.applib.services.search;
 

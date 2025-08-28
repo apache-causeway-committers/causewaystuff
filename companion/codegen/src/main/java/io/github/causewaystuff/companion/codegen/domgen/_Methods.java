@@ -23,9 +23,9 @@ import java.util.stream.Collectors;
 import javax.lang.model.element.Modifier;
 
 import org.apache.causeway.applib.annotation.Navigable;
+import org.apache.causeway.applib.annotation.ObjectSupport;
 import org.apache.causeway.applib.annotation.Snapshot;
 import org.apache.causeway.applib.annotation.Where;
-import org.apache.causeway.applib.fa.FontAwesomeLayers;
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.io.DataSource;
 
@@ -58,12 +58,21 @@ class _Methods {
             .build();
     }
 
-    MethodSpec iconFaLayers(final Modifier ... modifiers) {
-        return MethodSpec.methodBuilder("iconFaLayers")
+    /**
+     * <pre>
+     * @ObjectSupport
+     * public ObjectSupport.IconResource icon(final ObjectSupport.IconWhere iconWhere) {
+     *      return iconService.icon(this, iconWhere);
+     * }
+     * </pre>
+     */
+    MethodSpec icon(final Modifier ... modifiers) {
+        return MethodSpec.methodBuilder("icon")
             .addModifiers(modifiers)
             .addAnnotation(_Annotations.objectSupport())
-            .returns(ClassName.get(FontAwesomeLayers.class))
-            .addCode("return iconFaService.iconFaLayers(this);")
+            .addParameter(ClassName.get(ObjectSupport.IconWhere.class), "iconWhere")
+            .returns(ClassName.get(ObjectSupport.IconResource.class))
+            .addCode("return iconService.icon(this, iconWhere);")
             .build();
     }
 
