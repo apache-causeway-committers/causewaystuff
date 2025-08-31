@@ -20,24 +20,24 @@ package io.github.causewaystuff.companion.codegen.domgen;
 
 import javax.lang.model.element.Modifier;
 
+import org.springframework.context.annotation.Configuration;
+
+import org.apache.causeway.commons.collections.Can;
+import org.apache.causeway.commons.functional.IndexedConsumer;
+
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.UtilityClass;
+
 import io.github.causewaystuff.companion.applib.decorate.CollectionTitleDecorator;
 import io.github.causewaystuff.companion.applib.services.lookup.DependantLookupService;
 import io.github.causewaystuff.companion.codegen.domgen.DomainGenerator.QualifiedType;
 import io.github.causewaystuff.companion.codegen.model.Schema;
 import io.github.causewaystuff.companion.codegen.model.Schema.Entity;
-
-import org.springframework.context.annotation.Configuration;
 import io.micronaut.sourcegen.javapoet.AnnotationSpec;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import io.micronaut.sourcegen.javapoet.TypeSpec;
-
-import org.apache.causeway.commons.collections.Can;
-
-import lombok.RequiredArgsConstructor;
-
-import lombok.experimental.UtilityClass;
 
 @UtilityClass
 class _GenDependants {
@@ -57,7 +57,7 @@ class _GenDependants {
 
         // inner mixin classes
 
-        mixinSpecs.forEach(mixinSpec->{
+        mixinSpecs.forEach(IndexedConsumer.zeroBased((index, mixinSpec)->{
             Schema.EntityField fieldWithForeignKeys = mixinSpec.fieldWithForeignKeys();
             Can<Schema.EntityField> foreignFields = mixinSpec.foreignFields();
             ClassName propertyMixinClassName = mixinSpec.propertyMixinClassName();
@@ -66,7 +66,10 @@ class _GenDependants {
             var innerMixin = TypeSpec.classBuilder(mixinSpec.mixinClassName())
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .addAnnotation(_Annotations.collection(attr->attr))
-                .addAnnotation(_Annotations.collectionLayout(attr->attr.tableDecorator(CollectionTitleDecorator.class)))
+                .addAnnotation(_Annotations.collectionLayout(attr->
+                    attr
+                        .tableDecorator(CollectionTitleDecorator.class)
+                        .sequence("1." + index)))
                 .addAnnotation(RequiredArgsConstructor.class)
                 .addField(_Fields.inject(DependantLookupService.class, "dependantLookup"))
                 .addField(_Fields.mixee(ClassName.get(packageName, localEntity.name()), Modifier.FINAL, Modifier.PRIVATE))
@@ -75,7 +78,7 @@ class _GenDependants {
                 ;
 
             typeModelBuilder.addType(innerMixin.build());
-        });
+        }));
 
         // static method that provides all mixin classes we generated above
         typeModelBuilder.addMethod(_Methods.classList("mixinClasses",

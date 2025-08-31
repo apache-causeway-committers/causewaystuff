@@ -356,6 +356,7 @@ class _Annotations {
     static record CollectionLayoutSpec(
             String describedAs,
             Where hiddenWhere,
+            String sequence,
             Class<? extends TableDecorator> tableDecorator) {
     }
     AnnotationSpec collectionLayout(final UnaryOperator<CollectionLayoutSpec.CollectionLayoutSpecBuilder> attrProvider) {
@@ -363,6 +364,8 @@ class _Annotations {
         var attr = attrProvider.apply(CollectionLayoutSpec.builder()).build();
         _Strings.nonEmpty(attr.describedAs())
             .ifPresent(describedAs->builder.addMember("describedAs", "$1S", describedAs));
+        _Strings.nonEmpty(attr.sequence())
+            .ifPresent(describedAs->builder.addMember("sequence", "$1S", describedAs));
         Optional.ofNullable(attr.hiddenWhere())
             .ifPresent(hiddenWhere->builder.addMember("hidden", "$1T.$2L", Where.class, hiddenWhere.name()));
         Optional.ofNullable(attr.tableDecorator())
