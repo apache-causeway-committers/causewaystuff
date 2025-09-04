@@ -46,6 +46,22 @@ public interface BlobStore {
     }
 
     /**
+     * Shortcut equivalent to {@code putBlob(path.add(blob.name()), blob, customizer)}.
+     * @see #putBlob(NamedPath, Blob, UnaryOperator)
+     */
+    default BlobDescriptor putBlobToFolder(@NonNull NamedPath path, @NonNull Blob blob, UnaryOperator<BlobDescriptor> customizer) {
+        return putBlob(path.add(blob.name()), blob, customizer);
+    }
+
+    /**
+     * Shortcut equivalent to {@code putBlob(path.add(blob.name()), blob)}.
+     * @see #putBlob(NamedPath, Blob, UnaryOperator)
+     */
+    default BlobDescriptor putBlobToFolder(@NonNull NamedPath path, @NonNull Blob blob) {
+        return putBlob(path.add(blob.name()), blob);
+    }
+
+    /**
      * Returns all the {@link BlobDescriptor}(s) from given path that match
      * <em>all</em> given {@code qualifiers}. If {@code qualifiers} is empty or {@code null}
      * the match does not discriminate. (includes all)
