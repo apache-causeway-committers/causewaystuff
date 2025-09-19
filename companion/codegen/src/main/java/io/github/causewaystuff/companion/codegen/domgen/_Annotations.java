@@ -199,7 +199,7 @@ class _Annotations {
                     .build();
         }
         AnnotationSpec entityScan() {
-            return AnnotationSpec.builder(ClassName.get("org.springframework.boot.autoconfigure.domain", "EntityScan"))
+            return AnnotationSpec.builder(ClassName.get("org.springframework.boot.persistence.autoconfigure", "EntityScan"))
                 .build();
         }
         AnnotationSpec enableJpaRepositories() {

@@ -78,7 +78,8 @@ class _GenModule {
                 .addAnnotation(_Annotations.generated(_GenModule.class))
                 .addAnnotation(_Annotations.spring.configuration())
                 .addAnnotation(_Annotations.spring.imports(importsByCategory));
-        if(config.persistence().isJpa()) {
+        if(config.persistence().isJpa()
+            && domainModel.entities().size()>0) {
             typeModelBuilder
                 //.addAnnotation(_Annotations.spring.enableJpaRepositories())
                 .addAnnotation(_Annotations.spring.entityScan());
