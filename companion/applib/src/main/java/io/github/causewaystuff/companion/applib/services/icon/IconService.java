@@ -24,6 +24,6 @@ import org.apache.causeway.applib.annotation.ObjectSupport;
 
 public interface IconService {
 
-    ObjectSupport.IconResource icon(@Nullable Object entity, ObjectSupport.IconWhere iconWhere);
+    ObjectSupport.IconResource icon(@Nullable Object entity, ObjectSupport.IconSize iconSize);
 
 }

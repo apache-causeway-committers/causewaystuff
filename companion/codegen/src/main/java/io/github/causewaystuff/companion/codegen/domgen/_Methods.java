@@ -70,9 +70,9 @@ class _Methods {
         return MethodSpec.methodBuilder("icon")
             .addModifiers(modifiers)
             .addAnnotation(_Annotations.objectSupport())
-            .addParameter(ClassName.get(ObjectSupport.IconWhere.class), "iconWhere")
+            .addParameter(ClassName.get(ObjectSupport.IconSize.class), "iconSize")
             .returns(ClassName.get(ObjectSupport.IconResource.class))
-            .addCode("return iconService.icon(this, iconWhere);")
+            .addCode("return iconService.icon(this, iconSize);")
             .build();
     }
 
