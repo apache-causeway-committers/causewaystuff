@@ -45,7 +45,7 @@
         <causeway.version>4.0.0-SNAPSHOT</causeway.version>
 
         <junit.version>5.13.4</junit.version>
-        <lombok.version>1.18.40</lombok.version>
+        <lombok.version>1.18.42</lombok.version>
 
         <!-- plugins -->
         <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
