@@ -59,7 +59,6 @@ implements CoProjectDescription {
         super.setPlatformVersion(Version.parse("3.4.1"));
         super.setVersion(appModel.version());
         
-        
         //TODO allow for dependencies to be declared
 //        resolvedDependencies.forEach((dependency) -> description.addDependency(dependency.getId(),
 //                MetadataBuildItemMapper.toDependency(dependency)));

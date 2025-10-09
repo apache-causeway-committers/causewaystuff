@@ -81,7 +81,6 @@ class _Initializr {
               action: /starter.zip
         """;
 
-
     private InitializrProperties loadInitializrProperties() {
         var factoryBean = new YamlPropertiesFactoryBean();
         factoryBean.setResources(new ByteArrayResource(config.getBytes(StandardCharsets.UTF_8)));
