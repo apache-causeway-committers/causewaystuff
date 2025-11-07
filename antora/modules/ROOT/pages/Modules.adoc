@@ -26,7 +26,7 @@ _Causeway Stuff_ modules and sub-modules.
 *** cli 
 *** java2adoc 
 *** javamodel 
-*** projectmodel 
+*** projectmodel¹ 
 *** codeassert¹ 
 *** structurizr¹ 
 
