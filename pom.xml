@@ -27,7 +27,7 @@
     <version>1.0.0-SNAPSHOT</version>
     <name>Causeway Stuff (Umbrella)</name>
     <description>
-        Umbrella for non-offical ASF stuff for the Apache Causeway framework.
+        Tools and other non-offical ASF stuff for the Apache Causeway framework.
     </description>
 
     <url>https://github.com/apache-causeway-committers/causewaystuff</url>
