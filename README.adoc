@@ -12,7 +12,7 @@ For details see https://apache-causeway-committers.github.io/causewaystuff[Cause
 == Java Version
 
 _Causewaystuff_ projects are not bound by the Java baseline of the _Apache Causeway_ framework. 
-Specifically newer Java language features like e.g. _virtual threads_ may be required by these.
+Specifically newer Java language features may be required by these.
 
 == License
 _Causewaystuff_ is _open-source_ software released under the https://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license].
