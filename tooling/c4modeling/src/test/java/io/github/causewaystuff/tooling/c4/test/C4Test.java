@@ -131,9 +131,9 @@ class C4Test {
 
     // debug
     private void dump(final String plantUmlSource){
-        // System.err.println("---");
-        // System.out.println(plantUmlSource);
-        // System.err.println("---");
+        System.err.println("---");
+        System.out.println(plantUmlSource);
+        System.err.println("---");
     }
 
 }

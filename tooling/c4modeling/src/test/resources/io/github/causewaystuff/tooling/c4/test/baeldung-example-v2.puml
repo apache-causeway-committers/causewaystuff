@@ -1,41 +1,54 @@
 @startuml
+title <size:24>System Context View: Payment Terminal</size>\n<size:24>Payment Gateway Diagram</size>
+
 set separator none
-title Payment Terminal - System Context
-
 top to bottom direction
-
-skinparam {
-  arrowFontSize 10
-  defaultTextAlignment center
-  wrapWidth 200
-  maxMessageSize 100
-}
-
 hide stereotype
 
-skinparam rectangle<<FraudDetector>> {
-  BackgroundColor #dddddd
-  FontColor #fffffe
-  BorderColor #9a9a9a
-  shadowing false
-}
-skinparam person<<Merchant>> {
-  BackgroundColor #08427b
-  FontColor #ffffff
-  BorderColor #052e56
-  shadowing false
-}
-skinparam rectangle<<PaymentTerminal>> {
-  BackgroundColor #dddddd
-  FontColor #fffffe
-  BorderColor #9a9a9a
-  shadowing false
-}
+<style>
+  root {
+    BackgroundColor: #ffffff;
+    FontColor: #444444;
+  }
+  // Element
+  .Element-RWxlbWVudA== {
+    BackgroundColor: #ffffff;
+    LineColor: #444444;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #fffffe;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Element,Person
+  .Element-RWxlbWVudCxQZXJzb24= {
+    BackgroundColor: #08427b;
+    LineColor: #052e56;
+    LineStyle: 0;
+    LineThickness: 2;
+    FontColor: #ffffff;
+    FontSize: 24;
+    HorizontalAlignment: center;
+    Shadowing: 0;
+    MaximumWidth: 450;
+  }
+  // Relationship
+  .Relationship-UmVsYXRpb25zaGlw {
+    LineThickness: 2;
+    LineStyle: 10-10;
+    LineColor: #444444;
+    FontColor: #444444;
+    FontSize: 24;
+  }
+</style>
 
-person "==Merchant\n<size:10>[Person]</size>\n\nMerchant" <<Merchant>> as Merchant
-rectangle "==Payment Terminal\n<size:10>[Software System]</size>\n\nPayment Terminal" <<PaymentTerminal>> as PaymentTerminal
-rectangle "==Fraud Detector\n<size:10>[Software System]</size>\n\nFraud Detector" <<FraudDetector>> as FraudDetector
+person "==Merchant\n<size:16>[Person]</size>\n\nMerchant" <<Element-RWxlbWVudCxQZXJzb24=>> as Merchant
+rectangle "==Payment Terminal\n<size:16>[Software System]</size>\n\nPayment Terminal" <<Element-RWxlbWVudA==>> as PaymentTerminal
+rectangle "==Fraud Detector\n<size:16>[Software System]</size>\n\nFraud Detector" <<Element-RWxlbWVudA==>> as FraudDetector
 
-Merchant .[#707070,thickness=2].> PaymentTerminal : "<color:#707070>Makes payment"
-PaymentTerminal .[#707070,thickness=2].> FraudDetector : "<color:#707070>Obtains fraud score"
+Merchant --> PaymentTerminal <<Relationship-UmVsYXRpb25zaGlw>> : "Makes payment"
+PaymentTerminal --> FraudDetector <<Relationship-UmVsYXRpb25zaGlw>> : "Obtains fraud score"
+
 @enduml
