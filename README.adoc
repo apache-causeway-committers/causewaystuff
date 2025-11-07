@@ -1,6 +1,6 @@
 = Apache Causeway - Stuff
 
-Project umbrella for the _Apache Causeway_ framework, containing stuff,
+Tooling and other stuff for the _Apache Causeway_ framework,
 that is NOT released under the official _Apache Software Foundation_ (ASF) protectorate. 
 ____
 https://causeway.apache.org[Apache Causeway] software is a framework for rapidly developing domain-driven apps in Java.
@@ -11,7 +11,7 @@ For details see https://apache-causeway-committers.github.io/causewaystuff[Cause
 
 == Java Version
 
-_Causeway Stuff_ projects are not bound by the Java baseline of the _Apache Causeway_ framework. 
+_Causewaystuff_ projects are not bound by the Java baseline of the _Apache Causeway_ framework. 
 Specifically newer Java language features like e.g. _virtual threads_ may be required by these.
 
 == License
