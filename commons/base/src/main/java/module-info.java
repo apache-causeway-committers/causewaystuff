@@ -26,8 +26,8 @@ module io.github.causewaystuff.commons.base {
     requires static lombok;
 
     requires com.fasterxml.jackson.annotation;
-    requires com.fasterxml.jackson.core;
-    requires com.fasterxml.jackson.databind;
+    requires tools.jackson.core;
+    requires tools.jackson.databind;
     requires transitive org.apache.causeway.commons;
     requires transitive org.apache.causeway.applib;
     requires spring.core;

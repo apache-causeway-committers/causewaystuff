@@ -18,20 +18,21 @@
  */
 package io.github.causewaystuff.commons.base.types.internal;
 
-import java.io.IOException;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import org.jspecify.annotations.NonNull;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.jspecify.annotations.NonNull;
 import lombok.Setter;
+
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueSerializer;
+import tools.jackson.databind.annotation.JsonSerialize;
 
 /**
  * Specifically designed to be used with Java record types,
@@ -80,14 +81,12 @@ public final class ObjectRef<T> {
 
     // -- JACKSON SUPPORT
 
-    static class ObjectRefSerializer extends JsonSerializer<ObjectRef<?>> {
+    static class ObjectRefSerializer extends ValueSerializer<ObjectRef<?>> {
 
-        @Override
-        public void serialize(
-                final ObjectRef<?> value,
-                final JsonGenerator gen,
-                final SerializerProvider serializers) throws IOException {
-            gen.writeObject(value.toString());
+		@Override
+		public void serialize(ObjectRef<?> value, JsonGenerator gen, SerializationContext ctxt)
+				throws JacksonException {
+            gen.writeString(value.toString());
         }
 
     }
