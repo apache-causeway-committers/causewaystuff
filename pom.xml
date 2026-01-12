@@ -57,7 +57,7 @@
         <code-assert.version>0.9.15</code-assert.version>
         <commons-compress.version>1.28.0</commons-compress.version>
         <gradle-tooling.version>7.3-20210825160000+0000</gradle-tooling.version>
-        <javaparser.version>3.27.1</javaparser.version>
+        <javaparser.version>3.28.0</javaparser.version>
         <javapoet.version>1.13.0</javapoet.version>
         <jsonschema-generator.version>4.38.0</jsonschema-generator.version>
         <jsoup.version>1.22.1</jsoup.version>
