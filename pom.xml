@@ -40,7 +40,7 @@
         <maven.compiler.arg>-parameters</maven.compiler.arg>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <spring-boot.version>4.0.1</spring-boot.version>
+        <spring-boot.version>4.0.2</spring-boot.version>
         <spring-initializr.version>0.22.0</spring-initializr.version>
         <causeway.version>4.0.0-SNAPSHOT</causeway.version>
 
@@ -82,7 +82,7 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <causeway.version>4.0.0-SNAPSHOT.20260107-0902-d0379d7d</causeway.version>
+                <causeway.version>4.0.0-SNAPSHOT.20260122-0435-4afd0133</causeway.version>
             </properties>
             <repositories>
                 <repository>
