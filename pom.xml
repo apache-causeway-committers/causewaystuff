@@ -40,15 +40,15 @@
         <maven.compiler.arg>-parameters</maven.compiler.arg>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <spring-boot.version>4.0.0-RC2</spring-boot.version>
+        <spring-boot.version>4.0.2</spring-boot.version>
         <spring-initializr.version>0.22.0</spring-initializr.version>
         <causeway.version>4.0.0-SNAPSHOT</causeway.version>
 
-        <junit.version>6.0.1</junit.version>
+        <junit.version>6.0.2</junit.version>
         <lombok.version>1.18.42</lombok.version>
 
         <!-- plugins -->
-        <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
         <maven-jar-plugin.version>3.5.0</maven-jar-plugin.version>
         <maven-shade-plugin.version>3.6.1</maven-shade-plugin.version>
         <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
@@ -57,16 +57,16 @@
         <code-assert.version>0.9.15</code-assert.version>
         <commons-compress.version>1.28.0</commons-compress.version>
         <gradle-tooling.version>7.3-20210825160000+0000</gradle-tooling.version>
-        <javaparser.version>3.27.1</javaparser.version>
+        <javaparser.version>3.28.0</javaparser.version>
         <javapoet.version>1.13.0</javapoet.version>
         <jsonschema-generator.version>4.38.0</jsonschema-generator.version>
-        <jsoup.version>1.21.2</jsoup.version>
+        <jsoup.version>1.22.1</jsoup.version>
         <maven-model.version>4.0.0-rc-5</maven-model.version>
-        <micronaut-sourcegen.version>1.8.2</micronaut-sourcegen.version>
+        <micronaut-sourcegen.version>1.8.4</micronaut-sourcegen.version>
         <picocli.version>4.7.7</picocli.version>
-        <structurizr-dsl.version>5.0.2</structurizr-dsl.version>
-        <structurizr-export.version>5.0.2</structurizr-export.version>
-        <tukaani-xz.version>1.10</tukaani-xz.version>
+        <structurizr-dsl.version>5.0.3</structurizr-dsl.version>
+        <structurizr-export.version>5.0.3</structurizr-export.version>
+        <tukaani-xz.version>1.11</tukaani-xz.version>
 
         <!-- testing -->
         <surefire-plugin.argLine>-Xmx384m</surefire-plugin.argLine>
@@ -82,7 +82,7 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <causeway.version>4.0.0-SNAPSHOT.20251106-0306-bef00f58</causeway.version>
+                <causeway.version>4.0.0-SNAPSHOT.20260122-0435-4afd0133</causeway.version>
             </properties>
             <repositories>
                 <repository>
@@ -156,7 +156,7 @@
                     <dependency>
                         <groupId>org.ow2.asm</groupId>
                         <artifactId>asm</artifactId>
-                        <version>9.9</version> <!-- in support of JDK23 as
+                        <version>9.9.1</version> <!-- in support of JDK23 as
                         build JVM - overrides 9.6 from v3.13.0-->
                     </dependency>
                 </dependencies>
