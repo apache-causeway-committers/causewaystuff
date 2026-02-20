@@ -33,7 +33,6 @@ import com.structurizr.model.DeploymentElement;
 import com.structurizr.model.DeploymentNode;
 import com.structurizr.model.Element;
 import com.structurizr.model.InfrastructureNode;
-import com.structurizr.model.Location;
 import com.structurizr.model.Model;
 import com.structurizr.model.ModelItem;
 import com.structurizr.model.Person;
@@ -50,7 +49,6 @@ import com.structurizr.view.DynamicView;
 import com.structurizr.view.ElementStyle;
 import com.structurizr.view.ElementView;
 import com.structurizr.view.FilteredView;
-import com.structurizr.view.Font;
 import com.structurizr.view.RelationshipStyle;
 import com.structurizr.view.RelationshipView;
 import com.structurizr.view.SystemContextView;
@@ -72,8 +70,6 @@ public final class StructurizrDslFormatter extends StructurizrDslTokens {
     public static String toDsl(final Workspace workspace) {
         return new StructurizrDslFormatter().format(workspace);
     }
-
-    private static final String DEFAULT_FONT = "Open Sans";
 
     private StringBuilder buf = new StringBuilder();
     private int indent = 0;
@@ -159,9 +155,8 @@ public final class StructurizrDslFormatter extends StructurizrDslTokens {
         boolean hasViews = !workspace.getViews().isEmpty();
         boolean hasStyles = !workspace.getViews().getConfiguration().getStyles().getElements().isEmpty() || !workspace.getViews().getConfiguration().getStyles().getRelationships().isEmpty();
         boolean hasThemes = workspace.getViews().getConfiguration().getThemes() != null && workspace.getViews().getConfiguration().getThemes().length > 0;
-        boolean hasBranding = workspace.getViews().getConfiguration().getBranding() != null && (!StringUtils.isNullOrEmpty(workspace.getViews().getConfiguration().getBranding().getLogo()) || workspace.getViews().getConfiguration().getBranding().getFont() != null);
 
-        if (hasViews || hasStyles || hasThemes || hasBranding) {
+        if (hasViews || hasStyles || hasThemes) {
             newline();
             start(VIEWS_TOKEN);
 
@@ -475,29 +470,6 @@ public final class StructurizrDslFormatter extends StructurizrDslTokens {
                 }
             }
 
-            if (hasBranding) {
-                newline();
-                start(BRANDING_TOKEN);
-                String brandingLogo = workspace.getViews().getConfiguration().getBranding().getLogo();
-                Font brandingFont = workspace.getViews().getConfiguration().getBranding().getFont();
-
-                if (!StringUtils.isNullOrEmpty(brandingLogo)) {
-                    start(BRANDING_LOGO_TOKEN, quote(brandingLogo));
-                    end();
-                }
-
-                if (brandingFont != null) {
-                    if (!StringUtils.isNullOrEmpty(brandingFont.getUrl())) {
-                        start(BRANDING_FONT_TOKEN, quote(brandingFont.getName()), quote(brandingFont.getUrl()));
-                        end();
-                    } else if (!DEFAULT_FONT.equals(brandingFont.getName())){
-                        start(BRANDING_FONT_TOKEN, quote(brandingFont.getName()));
-                        end();
-                    }
-                }
-                end();
-            }
-
             newline();
             end();
         }
@@ -509,24 +481,16 @@ public final class StructurizrDslFormatter extends StructurizrDslTokens {
     }
 
     private void format(final AutomaticLayout automaticLayout) {
-        if (automaticLayout == null) {
+        if (automaticLayout == null)
             return;
-        } else {
+        else {
             String direction = "tb";
-            switch (automaticLayout.getRankDirection()) {
-                case TopBottom:
-                    direction = "tb";
-                    break;
-                case BottomTop:
-                    direction = "bt";
-                    break;
-                case LeftRight:
-                    direction = "lr";
-                    break;
-                case RightLeft:
-                    direction = "rl";
-                    break;
-            }
+            direction = switch (automaticLayout.getRankDirection()) {
+            case TopBottom -> "tb";
+            case BottomTop -> "bt";
+            case LeftRight -> "lr";
+            case RightLeft -> "rl";
+            };
             start(AUTOLAYOUT_VIEW_TOKEN, direction, "" + automaticLayout.getRankSeparation(), "" + automaticLayout.getNodeSeparation());
             end();
         }
@@ -673,41 +637,36 @@ public final class StructurizrDslFormatter extends StructurizrDslTokens {
     }
 
     private String id(final ModelItem modelItem) {
-        if (modelItem instanceof Person) {
+        if (modelItem instanceof Person)
             return id((Person)modelItem);
-        } else  if (modelItem instanceof SoftwareSystem) {
+        else  if (modelItem instanceof SoftwareSystem)
             return id((SoftwareSystem)modelItem);
-        } else  if (modelItem instanceof Container) {
+        else  if (modelItem instanceof Container)
             return id((Container)modelItem);
-        } else  if (modelItem instanceof Component) {
+        else  if (modelItem instanceof Component)
             return id((Component)modelItem);
-        } else  if (modelItem instanceof DeploymentNode) {
+        else  if (modelItem instanceof DeploymentNode)
             return id((DeploymentNode)modelItem);
-        } else  if (modelItem instanceof InfrastructureNode) {
+        else  if (modelItem instanceof InfrastructureNode)
             return id((InfrastructureNode)modelItem);
-        } else  if (modelItem instanceof SoftwareSystemInstance) {
+        else  if (modelItem instanceof SoftwareSystemInstance)
             return id((SoftwareSystemInstance)modelItem);
-        } else  if (modelItem instanceof ContainerInstance) {
+        else  if (modelItem instanceof ContainerInstance)
             return id((ContainerInstance)modelItem);
-        }
 
         return modelItem.getId();
     }
 
     private String id(final ModelItem modelItem, final boolean hierarchical) {
         if (hierarchical) {
-            if (modelItem instanceof Element) {
-                Element element = (Element)modelItem;
+            if (modelItem instanceof Element element) {
                 if (element.getParent() == null) {
-                    if (element instanceof DeploymentNode) {
-                        DeploymentNode dn = (DeploymentNode)element;
+                    if (element instanceof DeploymentNode dn)
                         return filter(dn.getEnvironment()) + "." + id(dn);
-                    } else {
+                    else
                         return id(element);
-                    }
-                } else {
+                } else
                     return id(element.getParent(), true) + "." + id(modelItem);
-                }
             }
         }
 
