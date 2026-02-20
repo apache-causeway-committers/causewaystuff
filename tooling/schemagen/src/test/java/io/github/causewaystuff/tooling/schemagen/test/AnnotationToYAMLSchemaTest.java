@@ -22,8 +22,6 @@ import static io.github.causewaystuff.tooling.codeassert.config.Language.JAVA;
 
 import java.io.File;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
 import org.junit.jupiter.api.Test;
 
 import org.apache.causeway.applib.annotation.PropertyLayout;
@@ -37,6 +35,7 @@ import io.github.causewaystuff.tooling.javamodel.ast.AnnotationMemberDeclaration
 import io.github.causewaystuff.tooling.javamodel.ast.AnyTypeDeclaration;
 import io.github.causewaystuff.tooling.javamodel.ast.CompilationUnits;
 import io.github.causewaystuff.tooling.schemagen.SchemaGeneratorUtils;
+import tools.jackson.databind.JsonNode;
 
 class AnnotationToYAMLSchemaTest {
 

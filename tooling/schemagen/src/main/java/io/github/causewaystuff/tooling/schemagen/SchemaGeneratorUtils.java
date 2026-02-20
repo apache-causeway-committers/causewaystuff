@@ -18,9 +18,6 @@
  */
 package io.github.causewaystuff.tooling.schemagen;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.github.victools.jsonschema.generator.Option;
 import com.github.victools.jsonschema.generator.OptionPreset;
 import com.github.victools.jsonschema.generator.SchemaGenerator;
@@ -31,6 +28,10 @@ import com.github.victools.jsonschema.generator.impl.module.MethodExclusionModul
 
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
+
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 @UtilityClass
 public class SchemaGeneratorUtils {
@@ -43,7 +44,7 @@ public class SchemaGeneratorUtils {
         var typeContext = TypeContextFactory.createDefaultTypeContext(config);
         return new SchemaGenerator(config, typeContext);
     }
-    
+
     @SneakyThrows
     public SchemaGenerator schemaGeneratorWithAnnotationTypeSupport() {
         var config = defaultConfigBuilder()
@@ -53,19 +54,20 @@ public class SchemaGeneratorUtils {
         var typeContext = TypeContextFactory.createDefaultTypeContext(config);
         return new SchemaGenerator(config, SchemaGeneratorPatcher.patch(typeContext));
     }
-    
+
     @SneakyThrows
-    public String prettyPrint(JsonNode jsonSchema) {
-        var objectMapper = new ObjectMapper()
-            .enable(SerializationFeature.INDENT_OUTPUT); // pretty-printing
-        var prettyJsonString = objectMapper
+    public String prettyPrint(final JsonNode jsonSchema) {
+        var builder = JsonMapper.builder();
+        builder.enable(SerializationFeature.INDENT_OUTPUT); // pretty-printing
+        var jsonMapper = builder.build();
+        var prettyJsonString = jsonMapper
             .writerWithDefaultPrettyPrinter()
             .writeValueAsString(jsonSchema);
         return prettyJsonString;
     }
-    
+
     // -- HELPER
-    
+
     private SchemaGeneratorConfigBuilder defaultConfigBuilder() {
         return new SchemaGeneratorConfigBuilder(SchemaVersion.DRAFT_2020_12, OptionPreset.PLAIN_JSON)
                 .with(new MethodExclusionModule(methodScope->
