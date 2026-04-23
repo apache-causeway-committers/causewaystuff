@@ -62,7 +62,7 @@
         <jsonschema-generator.version>5.0.0</jsonschema-generator.version>
         <jsoup.version>1.22.2</jsoup.version>
         <maven-model.version>4.0.0-rc-5</maven-model.version>
-        <micronaut-sourcegen.version>1.8.4</micronaut-sourcegen.version>
+        <micronaut-sourcegen.version>1.8.5</micronaut-sourcegen.version>
         <picocli.version>4.7.7</picocli.version>
         <structurizr-dsl.version>6.2.0</structurizr-dsl.version>
         <structurizr-export.version>6.2.0</structurizr-export.version>
