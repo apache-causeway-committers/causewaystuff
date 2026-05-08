@@ -109,6 +109,7 @@ class CodegenModel {
             return Optional.empty();
         }
         var projectOptional = YamlUtils.tryRead(ProjectDto.class, DataSource.ofFile(projectYaml))
+            .ifFailureFail()
             .getValue()
             .map(projectDto-> new Project(projectDto, readSubProjects(projectFolder)));
         return projectOptional;
@@ -135,13 +136,11 @@ class CodegenModel {
         final ResourceFolder resourcesRoot = artifactRoot.relative("src/main/resources")
                 .orElse(null);
         if(javaRoot==null
-                || resourcesRoot==null) {
+                || resourcesRoot==null)
             return Optional.empty();
-        }
         var companionYaml = resourcesRoot.relativeFile("companion-module.yaml");
-        if(!companionYaml.exists()) {
+        if(!companionYaml.exists())
             return Optional.empty();
-        }
         return YamlUtils.tryRead(ModuleDto.class, DataSource.ofFile(companionYaml))
                 .getValue()
                 .map(moduleDto->new SubProject(projectNode, javaRoot, resourcesRoot, moduleDto.normalized()));

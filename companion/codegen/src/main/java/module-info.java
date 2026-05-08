@@ -38,5 +38,5 @@ module io.github.causewaystuff.companion.codegen {
     requires org.codehaus.stax2;
     requires io.micronaut.sourcegen.sourcegen_generator_java;
 
-    opens io.github.causewaystuff.companion.codegen.cli to com.fasterxml.jackson.databind;
+    opens io.github.causewaystuff.companion.codegen.cli to tools.jackson.databind;
 }
