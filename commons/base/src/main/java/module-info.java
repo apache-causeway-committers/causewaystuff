@@ -18,7 +18,6 @@
  */
 module io.github.causewaystuff.commons.base {
     exports io.github.causewaystuff.commons.base.cache;
-    exports io.github.causewaystuff.commons.base.listing;
     exports io.github.causewaystuff.commons.base.types;
     exports io.github.causewaystuff.commons.base.types.internal; //TODO restrict
     exports io.github.causewaystuff.commons.base.util;
