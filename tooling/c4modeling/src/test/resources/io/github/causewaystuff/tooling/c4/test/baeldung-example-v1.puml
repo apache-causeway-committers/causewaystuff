@@ -29,6 +29,7 @@ hide stereotype
     LineColor: #444444;
     FontColor: #444444;
     FontSize: 24;
+    MaximumWidth: 200;
   }
 </style>
 
