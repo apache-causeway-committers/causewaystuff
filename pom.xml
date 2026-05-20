@@ -69,7 +69,10 @@
         <tukaani-xz.version>1.12</tukaani-xz.version>
 
         <!-- testing -->
-        <surefire-plugin.argLine>-Xmx384m</surefire-plugin.argLine>
+        <surefire-plugin.argLine>
+            -Xmx384m
+            -XX:+EnableDynamicAgentLoading
+        </surefire-plugin.argLine>
         <surefire.useModulePath>false</surefire.useModulePath> <!-- disable
         module-path for testing, that is, put everything on the class-path -->
     </properties>
