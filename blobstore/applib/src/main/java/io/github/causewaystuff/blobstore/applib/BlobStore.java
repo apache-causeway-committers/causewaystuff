@@ -21,12 +21,11 @@ package io.github.causewaystuff.blobstore.applib;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
 
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import org.apache.causeway.applib.value.Blob;
 import org.apache.causeway.commons.collections.Can;
-
-import org.jspecify.annotations.NonNull;
 
 import io.github.causewaystuff.commons.base.types.NamedPath;
 
@@ -41,7 +40,7 @@ public interface BlobStore {
      * Shortcut equivalent to {@code putBlob(NamedPath, Blob, null)}.
      * @see #putBlob(NamedPath, Blob, UnaryOperator)
      */
-    default BlobDescriptor putBlob(@NonNull NamedPath path, @NonNull Blob blob) {
+    default BlobDescriptor putBlob(@NonNull final NamedPath path, @NonNull final Blob blob) {
         return putBlob(path, blob, null);
     }
 
@@ -49,7 +48,7 @@ public interface BlobStore {
      * Shortcut equivalent to {@code putBlob(path.add(blob.name()), blob, customizer)}.
      * @see #putBlob(NamedPath, Blob, UnaryOperator)
      */
-    default BlobDescriptor putBlobToFolder(@NonNull NamedPath path, @NonNull Blob blob, UnaryOperator<BlobDescriptor> customizer) {
+    default BlobDescriptor putBlobToFolder(@NonNull final NamedPath path, @NonNull final Blob blob, final UnaryOperator<BlobDescriptor> customizer) {
         return putBlob(path.add(blob.name()), blob, customizer);
     }
 
@@ -57,7 +56,7 @@ public interface BlobStore {
      * Shortcut equivalent to {@code putBlob(path.add(blob.name()), blob)}.
      * @see #putBlob(NamedPath, Blob, UnaryOperator)
      */
-    default BlobDescriptor putBlobToFolder(@NonNull NamedPath path, @NonNull Blob blob) {
+    default BlobDescriptor putBlobToFolder(@NonNull final NamedPath path, @NonNull final Blob blob) {
         return putBlob(path.add(blob.name()), blob);
     }
 
@@ -82,6 +81,12 @@ public interface BlobStore {
      * based on existence.
      */
     Optional<BlobDescriptor> lookupDescriptor(@Nullable NamedPath path);
+
+    /**
+     * Optionally returns the {@link BlobDescriptor} that was subject to the update,
+     * based on whether given {@link NamedPath} could be resolved (was found).
+     */
+    Optional<BlobDescriptor> updateDescriptor(@NonNull NamedPath path, UnaryOperator<BlobDescriptor> customizer);
 
     /**
      * Optionally returns the {@link Blob} thats stored under given {@link NamedPath},

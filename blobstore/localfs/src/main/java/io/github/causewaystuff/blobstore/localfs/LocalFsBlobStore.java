@@ -71,8 +71,8 @@ public class LocalFsBlobStore implements BlobStore {
     }
 
     @Override @Synchronized
-    public BlobDescriptor putBlob(@NonNull NamedPath path, @NonNull Blob blob,
-        @Nullable UnaryOperator<BlobDescriptor> customizer) {
+    public BlobDescriptor putBlob(@NonNull final NamedPath path, @NonNull final Blob blob,
+        @Nullable final UnaryOperator<BlobDescriptor> customizer) {
 
         _Assert.assertEquals(BlobDescriptor.Compression.NONE, BlobDescriptor.Compression.valueOf(blob.mimeType()),
             ()->"putBlob does not support compressed Blobs, instead pass an uncompressed blob, then set the desired compression with a customizer");
@@ -138,6 +138,20 @@ public class LocalFsBlobStore implements BlobStore {
     public Optional<BlobDescriptor> lookupDescriptor(final @Nullable NamedPath path) {
         return Optional.ofNullable(descriptorsByPath.get(path));
     }
+
+	@Override
+	public Optional<BlobDescriptor> updateDescriptor(
+			final NamedPath path,
+			final UnaryOperator<BlobDescriptor> customizer) {
+		return lookupDescriptor(path)
+			.map(customizer::apply)
+			.map(updatedDescriptor->{
+				var locator = FileLocator.of(rootDirectory, updatedDescriptor);
+				DescriptorDto.of(updatedDescriptor).writeTo(locator.manifestFile());
+				descriptorsByPath.put(path, updatedDescriptor);
+				return updatedDescriptor;
+			});
+	}
 
     @Override
     public Optional<Blob> lookupBlob(final @Nullable NamedPath path) {
@@ -300,13 +314,10 @@ public class LocalFsBlobStore implements BlobStore {
 
     private Predicate<BlobDescriptor> satisfiesAll(final @Nullable Can<BlobQualifier> requiredQualifiers) {
         if(requiredQualifiers==null
-                || requiredQualifiers.isEmpty()) {
-            return _Predicates.alwaysTrue();
-        }
+                || requiredQualifiers.isEmpty())
+			return _Predicates.alwaysTrue();
         var required = requiredQualifiers.toSet();
-        return desc -> {
-            return desc.qualifiers().toSet().containsAll(required);
-        };
+        return desc -> desc.qualifiers().toSet().containsAll(required);
     }
 
 }
