@@ -20,9 +20,9 @@ package io.github.causewaystuff.tooling.j2adoc.test;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.causeway.commons.internal.collections._Lists;
 import org.apache.causeway.commons.io.TextUtils;
 
 class ExampleReferenceRewriter {
@@ -35,13 +35,12 @@ class ExampleReferenceRewriter {
                 lines,
                 line->line.contains("refguide:applib-svc:example$services/"));
 
-        if(exampleRefs.isEmpty()) {
-            return;
-        }
+        if(exampleRefs.isEmpty())
+			return;
 
         System.out.println(exampleRefs);
 
-        var fixedLines = _Lists.<String>newArrayList();
+        var fixedLines = new ArrayList<String>();
 
         var it = lines.iterator();
         String line;

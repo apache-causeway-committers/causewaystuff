@@ -22,28 +22,25 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.jspecify.annotations.Nullable;
-
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.internal.base._Strings;
-import org.apache.causeway.commons.internal.collections._Maps;
 import org.apache.causeway.commons.internal.collections._Multimaps;
 import org.apache.causeway.commons.internal.collections._Multimaps.ListMultimap;
 import org.apache.causeway.commons.internal.exceptions._Exceptions;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import io.github.causewaystuff.tooling.j2adoc.J2AdocUnit.LookupKey;
 import io.github.causewaystuff.tooling.j2adoc.format.UnitFormatter;
 import io.github.causewaystuff.tooling.javamodel.ast.ImportDeclarations;
-
 import lombok.Builder;
 import lombok.Getter;
-import org.jspecify.annotations.NonNull;
 import lombok.Value;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Value @Builder @Slf4j
@@ -81,19 +78,18 @@ public class J2AdocContext {
 
     // -- UNIT INDEX
 
-    private final Map<LookupKey, J2AdocUnit> unitIndex = _Maps.newTreeMap();
+    private final Map<LookupKey, J2AdocUnit> unitIndex = new TreeMap<>();
     private final ListMultimap<String, J2AdocUnit> unitsByTypeSimpleName = _Multimaps.newListMultimap();
 
     public J2AdocContext add(final @NonNull J2AdocUnit unit) {
         var unitKey = LookupKey.of(unit.getResourceCoordinates());
         var previousKey = unitIndex.put(unitKey, unit);
-        if(previousKey!=null) {
-            throw _Exceptions.unrecoverable(
+        if(previousKey!=null)
+			throw _Exceptions.unrecoverable(
                     "J2AUnit index entries must be unique, "
                     + "index key collision on \nexists: %s\nnew:    %s",
                     previousKey,
                     unit);
-        }
         unitsByTypeSimpleName.putElement(unit.getName().stream().collect(Collectors.joining(".")), unit);
         return this;
     }
@@ -116,18 +112,16 @@ public class J2AdocContext {
             final @Nullable String partialName,
             final @NonNull  J2AdocUnit unit) {
 
-        if(_Strings.isNullOrEmpty(partialName)) {
-            return Optional.empty();
-        }
+        if(_Strings.isNullOrEmpty(partialName))
+			return Optional.empty();
 
         var partialNameNoWhiteSpaces = partialName.split("\\s")[0];
 
-        if(partialNameNoWhiteSpaces.contains("#")) {
-            // skip member reference lookup
+        if(partialNameNoWhiteSpaces.contains("#"))
+			// skip member reference lookup
             //XXX reserved for future extensions ...
             //var partialNameWithoutMember = _Refs.stringRef(partialName).cutAtIndexOf("#");
             return Optional.empty();
-        }
 
         //XXX debug entry point (keep)
 //        if(unit.getFriendlyName().contains("")
@@ -220,9 +214,8 @@ public class J2AdocContext {
 
     public Optional<J2AdocUnit> findUnitByTypeSimpleName(final @Nullable String typeSimpleName) {
 
-        if(_Strings.isNullOrEmpty(typeSimpleName)) {
-            return Optional.empty();
-        }
+        if(_Strings.isNullOrEmpty(typeSimpleName))
+			return Optional.empty();
 
         var searchResult = Can.ofCollection(unitsByTypeSimpleName.getOrElseEmpty(typeSimpleName));
 

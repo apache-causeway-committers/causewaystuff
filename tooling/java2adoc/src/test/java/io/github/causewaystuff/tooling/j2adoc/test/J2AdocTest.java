@@ -23,20 +23,18 @@ import static io.github.causewaystuff.tooling.codeassert.config.Language.JAVA;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.TreeSet;
 import java.util.function.Consumer;
 
-import com.github.javaparser.StaticJavaParser;
-
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-
 import org.apache.causeway.commons.collections.Can;
-import org.apache.causeway.commons.internal.collections._Sets;
 import org.apache.causeway.commons.io.DataSource;
 import org.apache.causeway.commons.io.TextUtils;
 import org.apache.causeway.valuetypes.asciidoc.builder.AsciiDocWriter;
-
 import org.jspecify.annotations.NonNull;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+import com.github.javaparser.StaticJavaParser;
 
 import io.github.causewaystuff.tooling.codeassert.config.Language;
 import io.github.causewaystuff.tooling.j2adoc.J2AdocContext;
@@ -101,7 +99,7 @@ class J2AdocTest {
 
         var adocFiles = ProjectSampler.adocFiles(ProjectSampler.apacheCausewayRoot());
 
-        var names = _Sets.<String>newTreeSet();
+        var names = new TreeSet<String>();
 
         Can.ofCollection(adocFiles)
         .stream()

@@ -19,17 +19,16 @@
 package io.github.causewaystuff.tooling.j2adoc.util;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Comparator;
-
-import org.jspecify.annotations.Nullable;
 
 import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.internal.base._Strings;
-import org.apache.causeway.commons.internal.collections._Lists;
 import org.apache.causeway.commons.io.TextUtils;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import lombok.Builder;
-import org.jspecify.annotations.NonNull;
 import lombok.Value;
 
 @Value @Builder
@@ -37,7 +36,7 @@ public class ResourceCoordinates
 implements Comparable<ResourceCoordinates> {
 
     public static ResourceCoordinates fromFile(final @NonNull File file) {
-        var parts = _Lists.<String>newArrayList();
+        var parts = new ArrayList<String>();
         File next = file;
         while(next!=null) {
             if(_Strings.isNotEmpty(next.getName())) {
@@ -112,9 +111,8 @@ implements Comparable<ResourceCoordinates> {
      // when returning
         // -1 ... this is before other
         // +1 ... this is after other
-        if(other==null) {
-            return 1; // nulls first
-        }
+        if(other==null)
+			return 1; // nulls first
         return comparator.compare(this, other);
     }
 

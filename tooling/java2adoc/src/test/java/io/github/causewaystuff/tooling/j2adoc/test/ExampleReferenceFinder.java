@@ -18,16 +18,15 @@
  */
 package io.github.causewaystuff.tooling.j2adoc.test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import org.apache.causeway.commons.internal.collections._Lists;
-
 import lombok.ToString;
 
 class ExampleReferenceFinder {
-    
+
     @ToString(doNotUseGetters = true)
     static class ExampleReference {
         int exampleRef = -1;
@@ -37,20 +36,20 @@ class ExampleReferenceFinder {
         String name;
         String shortName;
     }
-    
-    static List<ExampleReference> find(Iterable<String> lines, Predicate<String> matcher) {
-        var eRefs = _Lists.<ExampleReference>newArrayList();
-        
+
+    static List<ExampleReference> find(final Iterable<String> lines, final Predicate<String> matcher) {
+        var eRefs = new ArrayList<ExampleReference>();
+
         ExampleReference acc = new ExampleReference();
-        
+
         int i = 0;
-        
+
         for(var line : lines) {
             if(matcher.test(line)) {
                 acc.exampleRef = i;
-                
+
                 var shortRef = line.substring(line.lastIndexOf("/")+1);
-                
+
                 var name = Stream.of(
                         ".java",
                         ".adoc")
@@ -58,25 +57,25 @@ class ExampleReferenceFinder {
                 .map(ext->shortRef.substring(0, shortRef.lastIndexOf(ext)))
                 .findFirst()
                 .orElse("???");
-                
+
                 acc.name = name;
                 acc.matchingLine = line;
-                
+
                 if(name.contains(".")) {
                     acc.shortName = name.substring(name.lastIndexOf(".")+1);
                 } else {
                     acc.shortName = name;
                 }
-                
+
             } else if(line.startsWith("= ")
                     || line.startsWith("== ")
                     || line.startsWith("=== ")
                     || line.startsWith("==== ")
                     || line.startsWith("===== ")
                     ) {
-                
+
                 if(acc.exampleRef==-1) {
-                    acc.chapterStart = i;    
+                    acc.chapterStart = i;
                 } else if(acc.chapterEnd==-1) {
                     acc.chapterEnd = i;
                     //commit
@@ -87,15 +86,15 @@ class ExampleReferenceFinder {
             }
             i++;
         }
-        
+
         if(acc.exampleRef!=-1
                 && acc.chapterEnd==-1) {
             acc.chapterEnd = i-1;
             //commit
             eRefs.add(acc);
         }
-        
-        return eRefs; 
+
+        return eRefs;
     }
 
 }

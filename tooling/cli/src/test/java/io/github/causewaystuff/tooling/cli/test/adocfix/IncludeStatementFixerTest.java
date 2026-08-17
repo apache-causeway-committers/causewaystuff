@@ -21,17 +21,15 @@ package io.github.causewaystuff.tooling.cli.test.adocfix;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.TreeSet;
 import java.util.function.Consumer;
 
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-
 import org.apache.causeway.commons.collections.Can;
-import org.apache.causeway.commons.internal.collections._Sets;
 import org.apache.causeway.commons.io.TextUtils;
 import org.apache.causeway.valuetypes.asciidoc.builder.include.IncludeStatements;
-
 import org.jspecify.annotations.NonNull;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 class IncludeStatementFixerTest {
 
@@ -40,7 +38,7 @@ class IncludeStatementFixerTest {
 
         var adocFiles = ProjectSampler.adocFiles(ProjectSampler.apacheCausewayRoot());
 
-        var names = _Sets.<String>newTreeSet();
+        var names = new TreeSet<String>();
 
         Can.ofCollection(adocFiles)
         .stream()

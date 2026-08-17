@@ -18,25 +18,34 @@
  */
 package io.github.causewaystuff.tooling.javamodel.ast;
 
+import java.util.LinkedList;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.apache.causeway.commons.collections.Can;
+import org.apache.causeway.commons.internal.exceptions._Exceptions;
+import org.jspecify.annotations.NonNull;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.PackageDeclaration;
-import com.github.javaparser.ast.body.*;
+import com.github.javaparser.ast.body.AnnotationDeclaration;
+import com.github.javaparser.ast.body.AnnotationMemberDeclaration;
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.body.ConstructorDeclaration;
+import com.github.javaparser.ast.body.EnumConstantDeclaration;
+import com.github.javaparser.ast.body.EnumDeclaration;
+import com.github.javaparser.ast.body.FieldDeclaration;
+import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.body.RecordDeclaration;
+import com.github.javaparser.ast.body.TypeDeclaration;
 import com.github.javaparser.ast.nodeTypes.NodeWithSimpleName;
 import com.github.javaparser.ast.type.TypeParameter;
 import com.github.javaparser.javadoc.Javadoc;
 
-import org.apache.causeway.commons.collections.Can;
-import org.apache.causeway.commons.internal.collections._Lists;
-import org.apache.causeway.commons.internal.exceptions._Exceptions;
-
 import lombok.AccessLevel;
 import lombok.Getter;
-import org.jspecify.annotations.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @Getter
@@ -173,18 +182,14 @@ public final class AnyTypeDeclaration {
             final @NonNull TypeDeclaration<?> td,
             final @NonNull CompilationUnit cu) {
 
-        if(td instanceof ClassOrInterfaceDeclaration) {
-            return of((ClassOrInterfaceDeclaration)td, cu);
-        }
-        if(td instanceof EnumDeclaration) {
-            return of((EnumDeclaration)td, cu);
-        }
-        if(td instanceof AnnotationDeclaration) {
-            return of((AnnotationDeclaration)td, cu);
-        }
-        if(td instanceof RecordDeclaration) {
-            return of((RecordDeclaration)td, cu);
-        }
+        if(td instanceof ClassOrInterfaceDeclaration)
+			return of((ClassOrInterfaceDeclaration)td, cu);
+        if(td instanceof EnumDeclaration)
+			return of((EnumDeclaration)td, cu);
+        if(td instanceof AnnotationDeclaration)
+			return of((AnnotationDeclaration)td, cu);
+        if(td instanceof RecordDeclaration)
+			return of((RecordDeclaration)td, cu);
         throw _Exceptions.unsupportedOperation("unsupported TypeDeclaration %s", td.getClass());
     }
 
@@ -216,7 +221,7 @@ public final class AnyTypeDeclaration {
         return typeParameters.isEmpty()
                 ? ""
                 : String.format("<%s>", typeParameters.stream()
-                        .map(tp->tp.getNameAsString())
+                        .map(TypeParameter::getNameAsString)
                         .collect(Collectors.joining(", ")));
     }
 
@@ -234,14 +239,16 @@ public final class AnyTypeDeclaration {
     // -- HELPER
 
     private Can<String> createName() {
-        var nameParts = _Lists.<String>newLinkedList();
+        var nameParts = new LinkedList<String>();
         nameParts.push(td.getNameAsString());
         Node walker = td;
         while(walker.getParentNode().isPresent()) {
             walker = walker.getParentNode().get();
             if(walker instanceof NodeWithSimpleName) {
                 nameParts.addFirst(((NodeWithSimpleName<?>)walker).getNameAsString());
-            } else break;
+            } else {
+				break;
+			}
         }
         return Can.ofCollection(nameParts);
     }
