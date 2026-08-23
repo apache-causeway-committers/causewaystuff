@@ -21,17 +21,14 @@ package io.github.causewaystuff.companion.codegen.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.IntStream;
 
-import org.springframework.util.StringUtils;
-
-import org.apache.causeway.commons.internal.base._NullSafe;
 import org.apache.causeway.commons.internal.base._Strings;
 import org.apache.causeway.commons.io.TextUtils;
-
-import lombok.experimental.UtilityClass;
+import org.apache.causeway.commons.io.YamlUtils.YamlWriter;
+import org.springframework.util.StringUtils;
 
 import io.github.causewaystuff.companion.codegen.model.Schema.ModuleNaming;
+import lombok.experimental.UtilityClass;
 
 @UtilityClass
 class _Writer {
@@ -66,9 +63,7 @@ class _Writer {
         {   // icon
             var iconLines = TextUtils.readLines(viewmodel.icon());
             if(iconLines.isCardinalityMultiple()) {
-                yaml.ind().write("icon:").multiLineStartIfNotEmtpy(iconLines.toList()).nl();
-                iconLines.forEach(line->
-                yaml.ind().ind().write(line).nl());
+            	yaml.multiline(1, "icon", iconLines.toList());
             } else {
                 yaml.ind().write("icon: ", viewmodel.icon()).nl();
             }
@@ -79,7 +74,7 @@ class _Writer {
         if(StringUtils.hasLength(viewmodel.named())) {
             yaml.ind().write("named: ", viewmodel.named()).nl();
         }
-        yaml.write(1, "description", viewmodel.description());
+        yaml.multiline(1, "description", viewmodel.description().lines());
         yaml.ind().write("fields:").nl();
         viewmodel.fields().forEach(field->writeField(yaml, field));
     }
@@ -99,15 +94,13 @@ class _Writer {
             .ifPresent(propertyLayout->propertyLayout.streamAttributes()
                     .forEach(attr->{
                         if(attr.value() instanceof Multiline ml) {
-                            writeLast.add(()->yaml.write(3, "description", ml));
+                            writeLast.add(()->yaml.multiline(3, "description", ml.lines()));
                         } else {
                             yaml.ind().ind().ind().write(attr.name(), ": ", attr.value().toString()).nl();
                         }
                     }));
         if(field.isEnum()) {
-            yaml.ind().ind().ind().write("enum:").multiLineStartIfNotEmtpy(field.enumeration()).nl();
-            field.enumeration().forEach(line->
-            yaml.ind().ind().ind().ind().write(line).nl());
+        	yaml.multiline(3, "enum", field.enumeration());
         }
         writeLast.forEach(Runnable::run);
     }
@@ -120,15 +113,11 @@ class _Writer {
         if(_Strings.isNotEmpty(entity.superType())) {
             yaml.ind().write("superType: ", entity.superType()).nl();
         }
-        yaml.ind().write("secondaryKey:").multiLineStartIfNotEmtpy(entity.secondaryKey()).nl();
-        entity.secondaryKey().forEach(line->
-        yaml.ind().ind().writeUpper(line).nl());
+        yaml.multiline(1, "secondaryKey", toUpperCase(entity.secondaryKey()));
         {   // title
             var titleLines = TextUtils.readLines(entity.title());
             if(titleLines.isCardinalityMultiple()) {
-                yaml.ind().write("title:").multiLineStartIfNotEmtpy(titleLines.toList()).nl();
-                titleLines.forEach(line->
-                yaml.ind().ind().write(line).nl());
+                yaml.multiline(1, "title", titleLines.toList());
             } else {
                 yaml.ind().write("title: ", entity.title()).nl();
             }
@@ -139,9 +128,7 @@ class _Writer {
         {   // icon
             var iconLines = TextUtils.readLines(entity.icon());
             if(iconLines.isCardinalityMultiple()) {
-                yaml.ind().write("icon:").multiLineStartIfNotEmtpy(iconLines.toList()).nl();
-                iconLines.forEach(line->
-                yaml.ind().ind().write(line).nl());
+            	yaml.multiline(1, "icon", iconLines.toList());
             } else {
                 yaml.ind().write("icon: ", entity.icon()).nl();
             }
@@ -152,12 +139,12 @@ class _Writer {
         if(StringUtils.hasLength(entity.named())) {
             yaml.ind().write("named: ", entity.named()).nl();
         }
-        yaml.write(1, "description", entity.description());
+        yaml.multiline(1, "description", entity.description().lines());
         yaml.ind().write("fields:").nl();
         entity.fields().forEach(field->writeField(yaml, field));
     }
 
-    void writeField(final YamlWriter yaml, final Schema.EntityField field) {
+	void writeField(final YamlWriter yaml, final Schema.EntityField field) {
         final var writeLast = new ArrayList<Runnable>(1);
         yaml.ind().ind().write(field.name(), ":").nl();
         yaml.ind().ind().ind().write("column: ", field.column()).nl();
@@ -174,68 +161,27 @@ class _Writer {
             .ifPresent(propertyLayout->propertyLayout.streamAttributes()
                     .forEach(attr->{
                         if(attr.value() instanceof Multiline ml) {
-                            writeLast.add(()->yaml.write(3, "description", ml));
+                            writeLast.add(()->yaml.multiline(3, "description", ml.lines()));
                         } else {
                             yaml.ind().ind().ind().write(attr.name(), ": ", attr.value().toString()).nl();
                         }
                     }));
         if(field.isEnum()) {
-            yaml.ind().ind().ind().write("enum:").multiLineStartIfNotEmtpy(field.enumeration()).nl();
-            field.enumeration().forEach(line->
-            yaml.ind().ind().ind().ind().write(line).nl());
+            yaml.multiline(3, "enum", field.enumeration());
         }
         if(field.hasDiscriminator()) {
-            yaml.ind().ind().ind().write("discriminator:").multiLineStartIfNotEmtpy(field.discriminator()).nl();
-            field.discriminator().forEach(line->
-            yaml.ind().ind().ind().ind().writeUpper(line).nl());
+        	yaml.multiline(3, "discriminator", toUpperCase(field.discriminator()));
         }
         if(field.hasForeignKeys()) {
-            yaml.ind().ind().ind().write("foreignKeys:").multiLineStartIfNotEmtpy(field.foreignKeys()).nl();
-            field.foreignKeys().forEach(line->
-            yaml.ind().ind().ind().ind().writeUpper(line).nl());
+        	yaml.multiline(3, "foreignKeys", toUpperCase(field.foreignKeys()));
         }
         writeLast.forEach(Runnable::run);
     }
 
-    // -- HELPER
-
-    static class YamlWriter {
-        final StringBuilder sb = new StringBuilder();
-        @Override public String toString() { return sb.toString(); }
-        YamlWriter write(final int indentCount, final String key, final Multiline multiline) {
-            if(multiline==null) return this;
-            ind(indentCount);
-            write(key, ":").multiLineStartIfNotEmtpy(multiline.lines()).nl();
-            multiline.lines().forEach(line->{
-                ind(indentCount + 1);
-                write(line).nl();
-            });
-            return this;
-        }
-        YamlWriter multiLineStartIfNotEmtpy(final List<?> list) {
-            if(!_NullSafe.isEmpty(list)) sb.append(" |");
-            return this;
-        }
-        YamlWriter write(final String ...s) {
-            for(var str:s) sb.append(str);
-            return this;
-        }
-        YamlWriter writeUpper(final String ...s) {
-            for(var str:s) sb.append(str.toUpperCase());
-            return this;
-        }
-        YamlWriter ind(final int indentCount) {
-            IntStream.range(0, indentCount).forEach(i->sb.append("  "));
-            return this;
-        }
-        YamlWriter ind() {
-            sb.append("  ");
-            return this;
-        }
-        YamlWriter nl() {
-            sb.append('\n');
-            return this;
-        }
-    }
+	private static List<String> toUpperCase(final List<String> strings) {
+		return strings.stream()
+        		.map(String::toUpperCase)
+        		.toList();
+	}
 
 }

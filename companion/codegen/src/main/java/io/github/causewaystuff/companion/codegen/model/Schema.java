@@ -20,6 +20,8 @@ package io.github.causewaystuff.companion.codegen.model;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -28,11 +30,9 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
-
 import org.apache.causeway.applib.services.metamodel.objgraph.ObjectGraph;
 import org.apache.causeway.commons.collections.Can;
+import org.apache.causeway.commons.functional.IndexedConsumer;
 import org.apache.causeway.commons.functional.IndexedFunction;
 import org.apache.causeway.commons.internal.assertions._Assert;
 import org.apache.causeway.commons.internal.base._NullSafe;
@@ -40,8 +40,8 @@ import org.apache.causeway.commons.internal.base._Strings;
 import org.apache.causeway.commons.internal.exceptions._Exceptions;
 import org.apache.causeway.commons.internal.primitives._Ints;
 import org.apache.causeway.commons.io.TextUtils;
-
-import lombok.experimental.UtilityClass;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import io.github.causewaystuff.commons.base.types.internal.ObjectRef;
 import io.github.causewaystuff.commons.base.types.internal.SneakyRef;
@@ -49,6 +49,7 @@ import io.github.causewaystuff.companion.codegen.model._Parser.ParserHint;
 import io.github.causewaystuff.companion.schema.LicenseHeader;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.TypeName;
+import lombok.experimental.UtilityClass;
 
 /**
  * Read and write schema model from and to YAML format.
@@ -191,6 +192,16 @@ public class Schema {
         }
         public boolean hasSecondaryKey() {
             return secondaryKey.size()>0;
+        }
+        public BitSet secondaryKeyAsBitSet() {
+			var bitSet = new BitSet(fields.size());
+			var sec = new HashSet<EntityField>(secondaryKeyFields());
+			fields.forEach(IndexedConsumer.zeroBased((i, field)->{
+				if(sec.contains(field)) {
+					bitSet.set(i);
+				}
+			}));
+        	return bitSet;
         }
         public List<EntityField> secondaryKeyFields() {
             return _NullSafe.stream(secondaryKey)
