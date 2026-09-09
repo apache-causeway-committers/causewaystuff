@@ -40,7 +40,11 @@ class ProjectExplorerTest {
             .forEach((final String name, final ResolvedProject proj)->{
                 var yaml = proj.toYaml();
                 Approvals.verify(yaml, ApprovalsOptions.defaultOptions()
-                        .withScrubber(s -> TextUtils.readLines(s).join("\n"))
+                        .withScrubber(s -> TextUtils.readLines(s)
+                                .map(line->line.startsWith("  projPath: ")
+                                        ? "  projPath: \"<suppressed>\""
+                                        : line)
+                                .join("\n"))
                         .forFile()
                         .withExtension(".yaml"));
                 //debug System.out.println(yaml));

@@ -1,7 +1,7 @@
 projDescriptor:
   projName: "causewaystuff-projectexplorer-testdomain"
   packageFilter: "io.github.causewaystuff.tooling.projectexplorertest"
-  projPath: "file:///home/hobrom/git/causewaystuff/tooling/projectexplorertest/"
+  projPath: "<suppressed>"
 classes:
 - qualifiedName: "io.github.causewaystuff.tooling.projectexplorertest.PublicAbstractClass"
   superclass: "java.lang.Object"
