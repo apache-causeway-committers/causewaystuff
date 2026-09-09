@@ -36,6 +36,7 @@ import java.util.stream.Stream;
 
 import org.jspecify.annotations.Nullable;
 
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import org.apache.causeway.commons.internal.base._NullSafe;
@@ -58,6 +59,7 @@ public record ProjectExplorer(
         Map<String, ResolvedClass> classByQualifiedName) {
 
     public record ResolvedProject(
+            ProjectDescriptor rootDescriptor,
             ProjectDescriptor projDescriptor,
             SortedSet<ResolvedClass> classes) {
 
@@ -66,6 +68,7 @@ public record ProjectExplorer(
         }
 
         public String name() { return projDescriptor.projName(); }
+        public boolean isRoot() { return projDescriptor.equals(rootDescriptor); }
 
         public Optional<Path> sourcePath(final CodeClass codeClass) {
             var sourceFile = codeClass.getSourceFile();
@@ -85,6 +88,14 @@ public record ProjectExplorer(
         }
         public String toJson() { return JsonUtils.toStringUtf8(toDto()); }
         public String toYaml() { return YamlUtils.toStringUtf8(toDto()); }
+
+        /**
+         * @return whether this is a sub-project of given root-project or equals the root-project
+         */
+        public boolean isSubProjectOf(final ResolvedProject rootProject) {
+            Assert.isTrue(rootProject.isRoot(), ()->"not a root project %s".formatted(rootProject.projDescriptor()));
+            return rootDescriptor.equals(rootProject.rootDescriptor());
+        }
     }
 
     public record ResolvedClass(
@@ -141,8 +152,7 @@ public record ProjectExplorer(
             .toList();
 
         var projects = projectTrees.stream()
-            .flatMap(ProjectTree::streamDescriptors)
-            .map(ProjectBuilder::new)
+            .flatMap(ProjectTree::streamProjectBuilders)
             .map(ProjectBuilder::build)
             .toList();
 
@@ -197,8 +207,9 @@ public record ProjectExplorer(
                 final ProjectDescriptor rootDescriptor) {
             this(rootDescriptor, ProjectNodeFactory.maven(rootDescriptor.projPath().toFile()));
         }
-        Stream<ProjectDescriptor> streamDescriptors() {
-            return Stream.concat(Stream.of(rootDescriptor), subProjectDescriptors().stream());
+        Stream<ProjectBuilder> streamProjectBuilders() {
+            return Stream.concat(Stream.of(rootDescriptor), subProjectDescriptors().stream())
+                    .map(desc->new ProjectBuilder(rootDescriptor, desc));
         }
         List<ProjectDescriptor> subProjectDescriptors() {
             if(!rootDescriptor.recure())
@@ -219,11 +230,13 @@ public record ProjectExplorer(
     }
 
     private record ProjectBuilder(
+            ProjectDescriptor rootDescriptor,
             ProjectDescriptor projDescriptor,
             AnalyzerConfig analyzerConfig) {
         ProjectBuilder(
+                final ProjectDescriptor rootDescriptor,
                 final ProjectDescriptor projDescriptor) {
-            this(projDescriptor, analyzerConfig(projDescriptor));
+            this(rootDescriptor, projDescriptor, analyzerConfig(projDescriptor));
         }
         ResolvedProject build() {
             var classes = Model.from(analyzerConfig.getClasses()).read().getClasses()
@@ -234,7 +247,7 @@ public record ProjectExplorer(
                       codeClass))
                 .map(ClassBuilder::build)
                 .collect(Collectors.toCollection(TreeSet::new));
-            return new ResolvedProject(projDescriptor, classes);
+            return new ResolvedProject(rootDescriptor, projDescriptor, classes);
         }
         private static AnalyzerConfig analyzerConfig(final ProjectDescriptor projDescriptor) {
             return AnalyzerConfigFactory.maven(projDescriptor.projPath().toFile(), Language.JAVA).main();
