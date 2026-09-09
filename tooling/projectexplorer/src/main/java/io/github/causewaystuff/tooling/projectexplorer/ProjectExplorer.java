@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeMap;
@@ -104,6 +105,13 @@ public record ProjectExplorer(
                 this(info.getName(), info.getReferencedClasses());
             }
         }
+        public String simpleName() {
+            return codeClass.getSimpleName();
+        }
+        public boolean isDirectSubTypeOf(final ResolvedClass resolvedClass) {
+            return Objects.equals(codeClass.getSuperClass(), resolvedClass.qualifiedName)
+                    || codeClass.getInterfaces().contains(resolvedClass.qualifiedName);
+        }
         public Dto toDto() {
             return new Dto(qualifiedName,
                     codeClass.getSuperClass(),
@@ -151,6 +159,7 @@ public record ProjectExplorer(
             this.codeClass = codeClass;
             projectBuilder.ifPresent(proj->proj.addClass(this));
         }
+        // idempotent
         ResolvedClass build() {
             if(resolvedClass==null) {
                 resolvedClass = new ResolvedClass(qualifiedName, projectBuilder.map(ProjectBuilder::projDescriptor), codeClass);
@@ -183,10 +192,28 @@ public record ProjectExplorer(
         var projectByName = _Maps.mapValues(projectBuilderByName, TreeMap::new, ProjectBuilder::build);
         var classByQualifiedName = _Maps.mapValues(classBuilderByQualifiedName, TreeMap::new, ClassBuilder::build);
 
-        var nav = new ProjectExplorer(projectByName, classByQualifiedName, model);
-
-        return nav;
+        return new ProjectExplorer(projectByName, classByQualifiedName, model);
     }
+
+    public SortedSet<ResolvedClass> directSubTypesOf(final ResolvedClass resolvedClass) {
+        return classByQualifiedName.values().stream()
+            .filter(it->it.isDirectSubTypeOf(resolvedClass))
+            .collect(Collectors.toCollection(TreeSet::new));
+    }
+    public SortedSet<ResolvedClass> subTypesOf(final ResolvedClass resolvedClass) {
+        var result = new TreeSet<ResolvedClass>();
+        for(
+                var next = directSubTypesOf(resolvedClass);
+                !next.isEmpty();
+                next = next.stream()
+                        .flatMap(it->directSubTypesOf(it).stream())
+                        .collect(Collectors.toCollection(TreeSet::new))) {
+            result.addAll(next);
+        }
+        return result;
+    }
+
+    // -- HELPER
 
     private static Optional<ProjectDescriptor> lookupMatchingProjectDescriptor(
             final Collection<ProjectDescriptor> projectDescriptors,

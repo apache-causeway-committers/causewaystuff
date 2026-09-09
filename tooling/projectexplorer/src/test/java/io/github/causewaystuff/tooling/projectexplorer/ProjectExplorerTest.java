@@ -18,14 +18,20 @@
  */
 package io.github.causewaystuff.tooling.projectexplorer;
 
+import java.util.Collection;
+import java.util.List;
+
 import org.approvaltests.Approvals;
 import org.approvaltests.reporters.DiffReporter;
 import org.approvaltests.reporters.UseReporter;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.apache.causeway.commons.io.TextUtils;
 import org.apache.causeway.testing.integtestsupport.applib.ApprovalsOptions;
 
+import io.github.causewaystuff.tooling.projectexplorer.ProjectExplorer.ResolvedClass;
 import io.github.causewaystuff.tooling.projectexplorer.ProjectExplorer.ResolvedProject;
 
 class ProjectExplorerTest {
@@ -49,6 +55,32 @@ class ProjectExplorerTest {
                         .withExtension(".yaml"));
                 //debug System.out.println(yaml));
             });
+    }
+
+    @Test
+    void findAllSubTypes() {
+
+        var projNav = ProjectExplorerSamples.getDefault();
+
+        var publicIMultiplier = projNav.classByQualifiedName()
+                .get("io.github.causewaystuff.tooling.projectexplorertest.PublicIMultiplier");
+        assertThat(simpleNames(projNav.subTypesOf(publicIMultiplier)))
+            .containsExactly("PublicAbstractClass", "PublicClass", "PublicIAdderMultiplier");
+
+        var publicIDivider = projNav.classByQualifiedName()
+                .get("io.github.causewaystuff.tooling.projectexplorertest.PublicIDivider");
+        assertThat(simpleNames(projNav.subTypesOf(publicIDivider)))
+            .containsExactly("PublicClass");
+
+        var publicClass = projNav.classByQualifiedName()
+                .get("io.github.causewaystuff.tooling.projectexplorertest.PublicClass");
+        assertThat(simpleNames(projNav.subTypesOf(publicClass))).isEmpty();
+    }
+
+    // -- HELPER
+
+    static List<String> simpleNames(final Collection<ResolvedClass> resolvedClasses) {
+        return resolvedClasses.stream().map(ResolvedClass::simpleName).toList();
     }
 
 }
