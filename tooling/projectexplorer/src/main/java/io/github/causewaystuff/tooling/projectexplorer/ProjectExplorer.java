@@ -112,6 +112,12 @@ public record ProjectExplorer(
             return Objects.equals(codeClass.getSuperClass(), resolvedClass.qualifiedName)
                     || codeClass.getInterfaces().contains(resolvedClass.qualifiedName);
         }
+        public Optional<Path> sourcePath(final ProjectExplorer explorer) {
+            return projectDescriptor
+                    .map(ProjectDescriptor::projName)
+                    .map(explorer.projectByName::get)
+                    .flatMap(proj->proj.sourcePath(codeClass));
+        }
         public Dto toDto() {
             return new Dto(qualifiedName,
                     codeClass.getSuperClass(),

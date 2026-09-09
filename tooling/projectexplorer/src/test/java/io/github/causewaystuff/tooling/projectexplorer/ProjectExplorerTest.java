@@ -18,6 +18,8 @@
  */
 package io.github.causewaystuff.tooling.projectexplorer;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Collection;
 import java.util.List;
 
@@ -40,9 +42,9 @@ class ProjectExplorerTest {
     @UseReporter(DiffReporter.class)
     void projectToYaml() {
 
-        var projNav = ProjectExplorerSamples.getDefault();
+        var explorer = ProjectExplorerSamples.getDefault();
 
-        projNav.projectByName()
+        explorer.projectByName()
             .forEach((final String name, final ResolvedProject proj)->{
                 var yaml = proj.toYaml();
                 Approvals.verify(yaml, ApprovalsOptions.defaultOptions()
@@ -60,21 +62,34 @@ class ProjectExplorerTest {
     @Test
     void findAllSubTypes() {
 
-        var projNav = ProjectExplorerSamples.getDefault();
+        var explorer = ProjectExplorerSamples.getDefault();
 
-        var publicIMultiplier = projNav.classByQualifiedName()
+        var publicIMultiplier = explorer.classByQualifiedName()
                 .get("io.github.causewaystuff.tooling.projectexplorertest.PublicIMultiplier");
-        assertThat(simpleNames(projNav.subTypesOf(publicIMultiplier)))
+        assertThat(simpleNames(explorer.subTypesOf(publicIMultiplier)))
             .containsExactly("PublicAbstractClass", "PublicClass", "PublicIAdderMultiplier");
 
-        var publicIDivider = projNav.classByQualifiedName()
+        var publicIDivider = explorer.classByQualifiedName()
                 .get("io.github.causewaystuff.tooling.projectexplorertest.PublicIDivider");
-        assertThat(simpleNames(projNav.subTypesOf(publicIDivider)))
+        assertThat(simpleNames(explorer.subTypesOf(publicIDivider)))
             .containsExactly("PublicClass");
 
-        var publicClass = projNav.classByQualifiedName()
+        var publicClass = explorer.classByQualifiedName()
                 .get("io.github.causewaystuff.tooling.projectexplorertest.PublicClass");
-        assertThat(simpleNames(projNav.subTypesOf(publicClass))).isEmpty();
+        assertThat(simpleNames(explorer.subTypesOf(publicClass))).isEmpty();
+    }
+
+    @Test
+    void readSource() throws IOException {
+
+        var explorer = ProjectExplorerSamples.getDefault();
+
+        var publicIMultiplier = explorer.classByQualifiedName()
+                .get("io.github.causewaystuff.tooling.projectexplorertest.PublicIMultiplier");
+
+        var path = publicIMultiplier.sourcePath(explorer).orElseThrow();
+        var lines = Files.readAllLines(path);
+        assertThat(lines).contains("public interface PublicIMultiplier {");
     }
 
     // -- HELPER
