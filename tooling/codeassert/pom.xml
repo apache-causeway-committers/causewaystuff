@@ -50,6 +50,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <createDependencyReducedPom>true</createDependencyReducedPom>
                             <artifactSet>
                                 <includes>
                                     <include>guru.nidi:code-assert</include>
@@ -78,6 +79,7 @@
             <groupId>guru.nidi</groupId>
             <artifactId>code-assert</artifactId>
             <version>${code-assert.version}</version>
+            <optional>true</optional>
             <exclusions>
                 <exclusion>
                     <groupId>com.pinterest.ktlint</groupId>

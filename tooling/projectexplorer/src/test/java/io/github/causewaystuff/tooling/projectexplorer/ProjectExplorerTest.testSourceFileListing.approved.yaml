@@ -1,0 +1,61 @@
+projDescriptor:
+  projName: "causewaystuff-projectexplorer-testdomain"
+  packageFilter: "io.github.causewaystuff.tooling.projectexplorertest"
+  projPath: "file:///home/hobrom/git/causewaystuff/tooling/projectexplorertest/"
+classes:
+- qualifiedName: "io.github.causewaystuff.tooling.projectexplorertest.PublicAbstractClass"
+  superclass: "java.lang.Object"
+  interfaces:
+  - "io.github.causewaystuff.tooling.projectexplorertest.PublicIAdderMultiplier"
+  - "io.github.causewaystuff.tooling.projectexplorertest.PublicISubtractor"
+  fields: []
+  methods:
+  - name: "<init>"
+    referencedClasses: []
+- qualifiedName: "io.github.causewaystuff.tooling.projectexplorertest.PublicClass"
+  superclass: "io.github.causewaystuff.tooling.projectexplorertest.PublicAbstractClass"
+  interfaces:
+  - "io.github.causewaystuff.tooling.projectexplorertest.PublicIDivider"
+  fields: []
+  methods:
+  - name: "<init>"
+    referencedClasses: []
+- qualifiedName: "io.github.causewaystuff.tooling.projectexplorertest.PublicIAdder"
+  superclass: "java.lang.Object"
+  interfaces: []
+  fields: []
+  methods:
+  - name: "add"
+    referencedClasses:
+    - "java.lang.Number"
+- qualifiedName: "io.github.causewaystuff.tooling.projectexplorertest.PublicIAdderMultiplier"
+  superclass: "java.lang.Object"
+  interfaces:
+  - "io.github.causewaystuff.tooling.projectexplorertest.PublicIAdder"
+  - "io.github.causewaystuff.tooling.projectexplorertest.PublicIMultiplier"
+  fields: []
+  methods: []
+- qualifiedName: "io.github.causewaystuff.tooling.projectexplorertest.PublicIDivider"
+  superclass: "java.lang.Object"
+  interfaces: []
+  fields: []
+  methods:
+  - name: "div"
+    referencedClasses:
+    - "java.lang.Number"
+- qualifiedName: "io.github.causewaystuff.tooling.projectexplorertest.PublicIMultiplier"
+  superclass: "java.lang.Object"
+  interfaces: []
+  fields: []
+  methods:
+  - name: "mul"
+    referencedClasses:
+    - "java.lang.Number"
+- qualifiedName: "io.github.causewaystuff.tooling.projectexplorertest.PublicISubtractor"
+  superclass: "java.lang.Object"
+  interfaces: []
+  fields: []
+  methods:
+  - name: "sub"
+    referencedClasses:
+    - "java.lang.Number"

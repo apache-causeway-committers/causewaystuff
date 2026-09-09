@@ -85,8 +85,7 @@ class AnalyzerTest {
         });
     }
 
-    @Test //fails when run with the CI pipeline
-    //@DisabledIfRunningWithSurefire
+    @Test
     void testAnnotationGathering() {
 
         var projDir = ProjectSamples.causewaystuffBlobstoreApplib();

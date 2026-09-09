@@ -38,7 +38,19 @@ gradlew.*
 #Lombok (don't accept config alterations, might lead to a maintenance hell)
 lombok.config
 
+# approval tests
 .approval_tests_temp
+*.json.bak
+*.yaml.bak
+*.csv.bak
+*.tsv.bak
+*.received.json
+*.received.yaml
+*.received.csv
+*.received.tsv
+*.received.txt
+Private*approved*
+
 *.exe
 *~
 .~*
