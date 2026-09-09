@@ -45,6 +45,10 @@
             <groupId>io.github.causewaystuff</groupId>
             <artifactId>causewaystuff-tooling-javamodel</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.github.causewaystuff</groupId>
+            <artifactId>causewaystuff-tooling-projectmodel</artifactId>
+        </dependency>
 
         <!-- TESTING-->
 

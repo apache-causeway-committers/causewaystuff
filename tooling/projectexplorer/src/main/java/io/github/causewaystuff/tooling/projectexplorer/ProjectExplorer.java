@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -31,30 +32,30 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.StringUtils;
 
 import org.apache.causeway.commons.internal.base._NullSafe;
 import org.apache.causeway.commons.internal.base._Strings;
-import org.apache.causeway.commons.internal.collections._Maps;
 import org.apache.causeway.commons.io.JsonUtils;
 import org.apache.causeway.commons.io.YamlUtils;
-
-import lombok.Getter;
-import lombok.experimental.Accessors;
 
 import io.github.causewaystuff.tooling.codeassert.config.AnalyzerConfig;
 import io.github.causewaystuff.tooling.codeassert.config.Language;
 import io.github.causewaystuff.tooling.codeassert.model.CodeClass;
-import io.github.causewaystuff.tooling.codeassert.model.CodePackage;
 import io.github.causewaystuff.tooling.codeassert.model.MemberInfo;
 import io.github.causewaystuff.tooling.codeassert.model.Model;
 import io.github.causewaystuff.tooling.javamodel.AnalyzerConfigFactory;
+import io.github.causewaystuff.tooling.projectmodel.ProjectNode;
+import io.github.causewaystuff.tooling.projectmodel.ProjectNodeFactory;
+import io.github.causewaystuff.tooling.projectmodel.ProjectVisitor;
 
 public record ProjectExplorer(
         Map<String, ResolvedProject> projectByName,
-        Map<String, ResolvedClass> classByQualifiedName,
-        Model model) {
+        Map<String, ResolvedClass> classByQualifiedName) {
 
     public record ResolvedProject(
             ProjectDescriptor projDescriptor,
@@ -63,6 +64,8 @@ public record ProjectExplorer(
         record Dto(ProjectDescriptor projDescriptor,
                 List<ResolvedClass.Dto> classes) {
         }
+
+        public String name() { return projDescriptor.projName(); }
 
         public Optional<Path> sourcePath(final CodeClass codeClass) {
             var sourceFile = codeClass.getSourceFile();
@@ -132,73 +135,25 @@ public record ProjectExplorer(
         }
     }
 
-    private record ProjectBuilder(
-            ProjectDescriptor projDescriptor,
-            AnalyzerConfig analyzerConfig,
-            List<ClassBuilder> classBuilders) {
-        ProjectBuilder(
-                final ProjectDescriptor projDescriptor,
-                final AnalyzerConfig analyzerConfig) {
-            this(projDescriptor, analyzerConfig, new ArrayList<>());
-        }
-        void addClass(final ClassBuilder classBuilder) {
-            classBuilders.add(classBuilder);
-        }
-        ResolvedProject build() {
-            return new ResolvedProject(projDescriptor, classBuilders.stream()
-                    .map(ClassBuilder::build)
-                    .collect(Collectors.toCollection(TreeSet::new)));
-        }
-    }
-
-    private final static class ClassBuilder {
-        @Getter @Accessors(fluent = true) final String qualifiedName;
-        final Optional<ProjectBuilder> projectBuilder;
-        final CodeClass codeClass;
-        ResolvedClass resolvedClass;
-        ClassBuilder(
-                final String qualifiedName,
-                final Optional<ProjectBuilder> projectBuilder,
-                final CodeClass codeClass) {
-            this.qualifiedName = qualifiedName;
-            this.projectBuilder = projectBuilder;
-            this.codeClass = codeClass;
-            projectBuilder.ifPresent(proj->proj.addClass(this));
-        }
-        // idempotent
-        ResolvedClass build() {
-            if(resolvedClass==null) {
-                resolvedClass = new ResolvedClass(qualifiedName, projectBuilder.map(ProjectBuilder::projDescriptor), codeClass);
-            }
-            return resolvedClass;
-        }
-    }
-
     public static ProjectExplorer from(final Collection<ProjectDescriptor> projDescriptors) {
-        var projectBuilderByName = _NullSafe.stream(projDescriptors)
-            .map(projDesc->new ProjectBuilder(projDesc, AnalyzerConfigFactory.maven(projDesc.projPath().toFile(), Language.JAVA).main()))
-            .collect(Collectors.toMap(it->it.projDescriptor().projName(), UnaryOperator.identity()));
-
-        var allClassFiles = projectBuilderByName.values().stream()
-            .map(ProjectBuilder::analyzerConfig)
-            .map(AnalyzerConfig::getClasses)
-            .flatMap(List::stream)
+        var projectTrees = _NullSafe.stream(projDescriptors)
+            .map(ProjectTree::new)
             .toList();
-        var model = Model.from(allClassFiles).read();
 
-        var classBuilderByQualifiedName = model.getClasses().stream()
-            .map(codeClass->new ClassBuilder(
-                    codeClass.getName(),
-                    lookupMatchingProjectDescriptor(projDescriptors, codeClass.getPackage())
-                        .map(ProjectDescriptor::projName)
-                        .map(projectBuilderByName::get),
-                    codeClass))
-            .collect(Collectors.toMap(ClassBuilder::qualifiedName, UnaryOperator.identity()));
+        var projects = projectTrees.stream()
+            .flatMap(ProjectTree::streamDescriptors)
+            .map(ProjectBuilder::new)
+            .map(ProjectBuilder::build)
+            .toList();
 
-        var projectByName = _Maps.mapValues(projectBuilderByName, TreeMap::new, ProjectBuilder::build);
-        var classByQualifiedName = _Maps.mapValues(classBuilderByQualifiedName, TreeMap::new, ClassBuilder::build);
+        var projectByName = projects.stream()
+            .collect(Collectors.toMap(ResolvedProject::name, UnaryOperator.identity(), (a, b)->a, TreeMap::new));
 
-        return new ProjectExplorer(projectByName, classByQualifiedName, model);
+        var classByQualifiedName = projects.stream()
+            .flatMap(proj->proj.classes().stream())
+            .collect(Collectors.toMap(ResolvedClass::qualifiedName, UnaryOperator.identity(), (a, b)->a, TreeMap::new));
+
+        return new ProjectExplorer(projectByName, classByQualifiedName);
     }
 
     public SortedSet<ResolvedClass> directSubTypesOf(final ResolvedClass resolvedClass) {
@@ -219,15 +174,90 @@ public record ProjectExplorer(
         return result;
     }
 
+    public Optional<ResolvedClass> lookupClassForQualifiedName(final @Nullable String qualifiedName) {
+        return Optional.ofNullable(classByQualifiedName.get(qualifiedName));
+    }
+
+    public Optional<Path> lookupSourceForClass(final @Nullable ResolvedClass resolvedClass) {
+        return Optional.ofNullable(resolvedClass)
+                .flatMap(cls->cls.sourcePath(this));
+    }
+
+    public Optional<Path> lookupSourceForQualifiedName(final @Nullable String qualifiedName) {
+        return lookupClassForQualifiedName(qualifiedName)
+                .flatMap(this::lookupSourceForClass);
+    }
+
     // -- HELPER
 
-    private static Optional<ProjectDescriptor> lookupMatchingProjectDescriptor(
-            final Collection<ProjectDescriptor> projectDescriptors,
-            final CodePackage codePackage) {
-        final var pkgName = codePackage.getPackageName();
-        return projectDescriptors.stream()
-            .filter(desc->pkgName.startsWith(desc.packageFilter()))
-            .findFirst();
+    private record ProjectTree(
+            ProjectDescriptor rootDescriptor,
+            ProjectNode root) {
+        ProjectTree(
+                final ProjectDescriptor rootDescriptor) {
+            this(rootDescriptor, ProjectNodeFactory.maven(rootDescriptor.projPath().toFile()));
+        }
+        Stream<ProjectDescriptor> streamDescriptors() {
+            return Stream.concat(Stream.of(rootDescriptor), subProjectDescriptors().stream());
+        }
+        List<ProjectDescriptor> subProjectDescriptors() {
+            if(!rootDescriptor.recure())
+                return List.of();
+            var subProjectDescriptors = new ArrayList<ProjectDescriptor>();
+            root.depthFirst((ProjectVisitor) projModel -> {
+                if(projModel == root)
+                    return;
+                var sub = new ProjectDescriptor(
+                        projModel.getArtifactCoordinates().getArtifactId(),
+                        rootDescriptor.packageFilter(),
+                        projModel.getProjectDirectory().toPath(),
+                        false);
+                subProjectDescriptors.add(sub);
+            });
+            return Collections.unmodifiableList(subProjectDescriptors);
+        }
+    }
+
+    private record ProjectBuilder(
+            ProjectDescriptor projDescriptor,
+            AnalyzerConfig analyzerConfig) {
+        ProjectBuilder(
+                final ProjectDescriptor projDescriptor) {
+            this(projDescriptor, analyzerConfig(projDescriptor));
+        }
+        ResolvedProject build() {
+            var classes = Model.from(analyzerConfig.getClasses()).read().getClasses()
+                .stream()
+                .filter(codeClass->codeClass.getPackageName().startsWith(projDescriptor.packageFilter()))
+                .map(codeClass->new ClassBuilder(
+                      Optional.of(this),
+                      codeClass))
+                .map(ClassBuilder::build)
+                .collect(Collectors.toCollection(TreeSet::new));
+            return new ResolvedProject(projDescriptor, classes);
+        }
+        private static AnalyzerConfig analyzerConfig(final ProjectDescriptor projDescriptor) {
+            return AnalyzerConfigFactory.maven(projDescriptor.projPath().toFile(), Language.JAVA).main();
+        }
+    }
+
+    private final static class ClassBuilder {
+        final Optional<ProjectBuilder> projectBuilder;
+        final CodeClass codeClass;
+        ResolvedClass resolvedClass;
+        ClassBuilder(
+                final Optional<ProjectBuilder> projectBuilder,
+                final CodeClass codeClass) {
+            this.projectBuilder = projectBuilder;
+            this.codeClass = codeClass;
+        }
+        // idempotent
+        ResolvedClass build() {
+            if(resolvedClass==null) {
+                resolvedClass = new ResolvedClass(codeClass.getName(), projectBuilder.map(ProjectBuilder::projDescriptor), codeClass);
+            }
+            return resolvedClass;
+        }
     }
 
 }

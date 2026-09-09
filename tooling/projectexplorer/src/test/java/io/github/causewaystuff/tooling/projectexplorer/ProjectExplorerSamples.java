@@ -33,7 +33,16 @@ class ProjectExplorerSamples {
         return new ProjectDescriptor(
                 "causewaystuff-projectexplorer-testdomain",
                 "io.github.causewaystuff.tooling.projectexplorertest",
-                Path.of("../projectexplorertest"));
+                Path.of("../projectexplorertest"),
+                false);
     }
+
+//    private static ProjectDescriptor testCauseway() {
+//        return new ProjectDescriptor(
+//                "causeway",
+//                "org.apache.causeway",
+//                Path.of("/home/hobrom/git/causeway/cw4"),
+//                true);
+//    }
 
 }

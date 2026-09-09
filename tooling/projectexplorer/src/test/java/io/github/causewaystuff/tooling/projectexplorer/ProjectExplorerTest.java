@@ -47,6 +47,7 @@ class ProjectExplorerTest {
         explorer.projectByName()
             .forEach((final String name, final ResolvedProject proj)->{
                 var yaml = proj.toYaml();
+                //debug System.out.println(yaml);
                 Approvals.verify(yaml, ApprovalsOptions.defaultOptions()
                         .withScrubber(s -> TextUtils.readLines(s)
                                 .map(line->line.startsWith("  projPath: ")
@@ -55,9 +56,9 @@ class ProjectExplorerTest {
                                 .join("\n"))
                         .forFile()
                         .withExtension(".yaml"));
-                //debug System.out.println(yaml));
             });
     }
+
 
     @Test
     void findAllSubTypes() {
@@ -91,6 +92,20 @@ class ProjectExplorerTest {
         var lines = Files.readAllLines(path);
         assertThat(lines).contains("public interface PublicIMultiplier {");
     }
+
+//    @Test
+//    void causeway() {
+//        var explorer = ProjectExplorer.from(List.of(ProjectExplorerSamples.testCauseway()));
+//        var x = explorer.classByQualifiedName()
+//                .get("org.apache.causeway.viewer.wicket.model.models.UiAttributeWkt");
+//        assertNotNull(x);
+//
+//        var path = explorer.lookupSourceForQualifiedName("org.apache.causeway.viewer.wicket.model.models.UiAttributeWkt")
+//                .orElse(null);
+//        assertNotNull(path);
+//
+//        assertTrue(Files.exists(path));
+//    }
 
     // -- HELPER
 

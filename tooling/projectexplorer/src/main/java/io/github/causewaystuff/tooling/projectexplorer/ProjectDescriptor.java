@@ -27,7 +27,8 @@ import org.springframework.util.Assert;
 public record ProjectDescriptor(
         String projName,
         String packageFilter,
-        Path projPath) {
+        Path projPath,
+        boolean recure) {
 
     public ProjectDescriptor {
         Objects.requireNonNull(projPath);
