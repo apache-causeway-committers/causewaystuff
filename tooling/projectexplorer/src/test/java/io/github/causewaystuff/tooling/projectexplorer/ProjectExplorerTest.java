@@ -32,7 +32,7 @@ class ProjectExplorerTest {
 
     @Test
     @UseReporter(DiffReporter.class)
-    void testSourceFileListing() {
+    void projectToYaml() {
 
         var projNav = ProjectExplorerSamples.getDefault();
 
