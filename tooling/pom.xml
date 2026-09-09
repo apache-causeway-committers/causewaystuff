@@ -46,6 +46,7 @@
         <module>java2adoc</module>
         <module>projectmodel</module>
         <module>schemagen</module>
+        <module>projectexplorertest</module>
         <module>projectexplorer</module>
         <module>cli</module>
     </modules>
