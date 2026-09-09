@@ -23,6 +23,7 @@ import org.approvaltests.reporters.DiffReporter;
 import org.approvaltests.reporters.UseReporter;
 import org.junit.jupiter.api.Test;
 
+import org.apache.causeway.commons.io.TextUtils;
 import org.apache.causeway.testing.integtestsupport.applib.ApprovalsOptions;
 
 import io.github.causewaystuff.tooling.projectexplorer.ProjectExplorer.ResolvedProject;
@@ -39,6 +40,7 @@ class ProjectExplorerTest {
             .forEach((final String name, final ResolvedProject proj)->{
                 var yaml = proj.toYaml();
                 Approvals.verify(yaml, ApprovalsOptions.defaultOptions()
+                        .withScrubber(s -> TextUtils.readLines(s).join("\n"))
                         .forFile()
                         .withExtension(".yaml"));
                 //debug System.out.println(yaml));
