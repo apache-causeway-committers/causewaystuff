@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -67,6 +68,7 @@ public record ProjectExplorer(
                 List<ResolvedClass.Dto> classes) {
         }
 
+        public String rootName() { return rootDescriptor.projName(); }
         public String name() { return projDescriptor.projName(); }
         public boolean isRoot() { return projDescriptor.equals(rootDescriptor); }
 
@@ -103,15 +105,15 @@ public record ProjectExplorer(
             Optional<ProjectDescriptor> projectDescriptor,
             CodeClass codeClass) implements Comparable<ResolvedClass> {
 
-        record Dto(String qualifiedName,
+        public record Dto(String qualifiedName,
                 String superclass,
                 SortedSet<String> interfaces,
                 List<FieldDto> fields,
                 List<MethodDto> methods) {
         }
-        record FieldDto(String name, Collection<String> referencedClasses) {
+        record FieldDto(String name, String referencedClass) {
             public FieldDto(final MemberInfo info) {
-                this(info.getName(), info.getReferencedClasses());
+                this(info.getName(), info.getReferencedClasses().iterator().next());
             }
         }
         record MethodDto(String name, Collection<String> referencedClasses) {
@@ -125,6 +127,13 @@ public record ProjectExplorer(
         public boolean isDirectSubTypeOf(final ResolvedClass resolvedClass) {
             return Objects.equals(codeClass.getSuperClass(), resolvedClass.qualifiedName)
                     || codeClass.getInterfaces().contains(resolvedClass.qualifiedName);
+        }
+        public boolean isDirectlyReferencing(final ResolvedClass resolvedClass) {
+            return isDirectSubTypeOf(resolvedClass)
+                || codeClass.getMembers().stream()
+                    .map(MemberInfo::getReferencedClasses)
+                    .flatMap(Set::stream)
+                    .anyMatch(resolvedClass.qualifiedName::equals);
         }
         public Optional<Path> sourcePath(final ProjectExplorer explorer) {
             return projectDescriptor
@@ -166,22 +175,32 @@ public record ProjectExplorer(
         return new ProjectExplorer(projectByName, classByQualifiedName);
     }
 
+    /** All direct sub-types (extending/implementing classes and interfaces) of the given class, across all indexed projects. */
     public SortedSet<ResolvedClass> directSubTypesOf(final ResolvedClass resolvedClass) {
         return classByQualifiedName.values().stream()
             .filter(it->it.isDirectSubTypeOf(resolvedClass))
             .collect(Collectors.toCollection(TreeSet::new));
     }
+    /** All transitive sub-types of the given class/interface, across all indexed projects. */
     public SortedSet<ResolvedClass> subTypesOf(final ResolvedClass resolvedClass) {
         var result = new TreeSet<ResolvedClass>();
         for(
                 var next = directSubTypesOf(resolvedClass);
                 !next.isEmpty();
                 next = next.stream()
-                        .flatMap(it->directSubTypesOf(it).stream())
+                        .map(this::directSubTypesOf)
+                        .flatMap(SortedSet::stream)
                         .collect(Collectors.toCollection(TreeSet::new))) {
             result.addAll(next);
         }
         return result;
+    }
+
+    /** All classes that directly reference the given class/interface, across all indexed projects. */
+    public SortedSet<ResolvedClass> directReferencersOf(final ResolvedClass resolvedClass) {
+        return classByQualifiedName.values().stream()
+                .filter(it->it.isDirectlyReferencing(resolvedClass))
+                .collect(Collectors.toCollection(TreeSet::new));
     }
 
     public Optional<ResolvedClass> lookupClassForQualifiedName(final @Nullable String qualifiedName) {
@@ -196,6 +215,18 @@ public record ProjectExplorer(
     public Optional<Path> lookupSourceForQualifiedName(final @Nullable String qualifiedName) {
         return lookupClassForQualifiedName(qualifiedName)
                 .flatMap(this::lookupSourceForClass);
+    }
+
+    public Optional<ResolvedProject> lookupProjectForClass(final @Nullable ResolvedClass resolvedClass) {
+        return Optional.ofNullable(resolvedClass)
+                .flatMap(ResolvedClass::projectDescriptor)
+                .map(ProjectDescriptor::projName)
+                .map(it->projectByName.get(it));
+    }
+
+    public Optional<ResolvedProject> lookupProjectForQualifiedName(final @Nullable String qualifiedName) {
+        return lookupClassForQualifiedName(qualifiedName)
+                .flatMap(this::lookupProjectForClass);
     }
 
     // -- HELPER
@@ -267,7 +298,8 @@ public record ProjectExplorer(
         // idempotent
         ResolvedClass build() {
             if(resolvedClass==null) {
-                resolvedClass = new ResolvedClass(codeClass.getName(), projectBuilder.map(ProjectBuilder::projDescriptor), codeClass);
+                resolvedClass = new ResolvedClass(
+                        codeClass.getName(), projectBuilder.map(ProjectBuilder::projDescriptor), codeClass);
             }
             return resolvedClass;
         }

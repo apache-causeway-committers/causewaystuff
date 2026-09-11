@@ -21,4 +21,7 @@ package io.github.causewaystuff.tooling.projectexplorertest;
 public class PublicClass extends PublicAbstractClass
 implements PublicIDivider {
 
+    @SuppressWarnings("unused")
+    private final String privateStringField = "";
+
 }

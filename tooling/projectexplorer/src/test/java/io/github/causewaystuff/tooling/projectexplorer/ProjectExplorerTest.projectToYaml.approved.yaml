@@ -17,7 +17,9 @@ classes:
   superclass: "io.github.causewaystuff.tooling.projectexplorertest.PublicAbstractClass"
   interfaces:
   - "io.github.causewaystuff.tooling.projectexplorertest.PublicIDivider"
-  fields: []
+  fields:
+  - name: "privateStringField"
+    referencedClass: "java.lang.String"
   methods:
   - name: "<init>"
     referencedClasses: []

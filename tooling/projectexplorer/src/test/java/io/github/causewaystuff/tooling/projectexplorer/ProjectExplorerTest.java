@@ -59,7 +59,6 @@ class ProjectExplorerTest {
             });
     }
 
-
     @Test
     void findAllSubTypes() {
 
