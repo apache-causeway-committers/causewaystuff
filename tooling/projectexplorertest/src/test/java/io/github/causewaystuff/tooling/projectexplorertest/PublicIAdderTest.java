@@ -16,29 +16,15 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package io.github.causewaystuff.tooling.projectexplorer;
+package io.github.causewaystuff.tooling.projectexplorertest;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Objects;
+import org.junit.jupiter.api.Test;
 
-import org.springframework.util.Assert;
+class PublicIAdderTest {
 
-public record ProjectDescriptor(
-        String projName,
-        String packageFilter,
-        Path projPath,
-        boolean includeTests,
-        boolean recure) {
-
-    public ProjectDescriptor {
-        Objects.requireNonNull(projPath);
-        projPath = projPath.toAbsolutePath().normalize();
-        assertExists(projPath);
-    }
-
-    private static void assertExists(final Path projPath) {
-        Assert.isTrue(Files.isDirectory(projPath), ()->"Project path does not exist %s".formatted(projPath));
-    }
+	@Test
+	void test() {
+		// not a test, but used by another test to verify we find test classes
+	}
 
 }

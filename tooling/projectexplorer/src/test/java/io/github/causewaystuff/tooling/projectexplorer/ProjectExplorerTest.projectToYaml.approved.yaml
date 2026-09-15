@@ -2,6 +2,7 @@ projDescriptor:
   projName: "causewaystuff-projectexplorer-testdomain"
   packageFilter: "io.github.causewaystuff.tooling.projectexplorertest"
   projPath: "<suppressed>"
+  includeTests: true
   recure: false
 classes:
 - qualifiedName: "io.github.causewaystuff.tooling.projectexplorertest.PublicAbstractClass"

@@ -18,20 +18,20 @@
  */
 package io.github.causewaystuff.tooling.projectexplorer;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.causeway.commons.io.TextUtils;
+import org.apache.causeway.testing.integtestsupport.applib.ApprovalsOptions;
 import org.approvaltests.Approvals;
 import org.approvaltests.reporters.DiffReporter;
 import org.approvaltests.reporters.UseReporter;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
-import org.apache.causeway.commons.io.TextUtils;
-import org.apache.causeway.testing.integtestsupport.applib.ApprovalsOptions;
 
 import io.github.causewaystuff.tooling.projectexplorer.ProjectExplorer.ResolvedClass;
 import io.github.causewaystuff.tooling.projectexplorer.ProjectExplorer.ResolvedProject;
@@ -90,6 +90,21 @@ class ProjectExplorerTest {
         var path = publicIMultiplier.sourcePath(explorer).orElseThrow();
         var lines = Files.readAllLines(path);
         assertThat(lines).contains("public interface PublicIMultiplier {");
+    }
+
+    @Test
+    void readTestSource() throws IOException {
+
+        var explorer = ProjectExplorerSamples.getDefault();
+
+        var publicIAdderTest = explorer.classByQualifiedName()
+                .get("io.github.causewaystuff.tooling.projectexplorertest.PublicIAdderTest");
+
+        assertNotNull(publicIAdderTest);
+
+        var path = publicIAdderTest.sourcePath(explorer).orElseThrow();
+        var lines = Files.readAllLines(path);
+        assertThat(lines).contains("class PublicIAdderTest {");
     }
 
 //    @Test

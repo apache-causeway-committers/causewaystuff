@@ -35,17 +35,14 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.jspecify.annotations.Nullable;
-
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-
 import org.apache.causeway.commons.internal.base._NullSafe;
 import org.apache.causeway.commons.internal.base._Strings;
 import org.apache.causeway.commons.io.JsonUtils;
 import org.apache.causeway.commons.io.YamlUtils;
+import org.jspecify.annotations.Nullable;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
-import io.github.causewaystuff.tooling.codeassert.config.AnalyzerConfig;
 import io.github.causewaystuff.tooling.codeassert.config.Language;
 import io.github.causewaystuff.tooling.codeassert.model.CodeClass;
 import io.github.causewaystuff.tooling.codeassert.model.MemberInfo;
@@ -58,6 +55,12 @@ import io.github.causewaystuff.tooling.projectmodel.ProjectVisitor;
 public record ProjectExplorer(
         Map<String, ResolvedProject> projectByName,
         Map<String, ResolvedClass> classByQualifiedName) {
+
+	public enum SourceType {
+		UNKNOWN,
+		MAIN,
+		TEST,
+	}
 
     public record ResolvedProject(
             ProjectDescriptor rootDescriptor,
@@ -72,13 +75,13 @@ public record ProjectExplorer(
         public String name() { return projDescriptor.projName(); }
         public boolean isRoot() { return projDescriptor.equals(rootDescriptor); }
 
-        public Optional<Path> sourcePath(final CodeClass codeClass) {
+        public Optional<Path> sourcePath(final CodeClass codeClass, final SourceType sourceType) {
             var sourceFile = codeClass.getSourceFile();
             return StringUtils.hasText(sourceFile)
                     && !"Unknown".equals(sourceFile)
                 ? Optional.of(projDescriptor.projPath()
                         .resolve("src")
-                        .resolve("main")
+                        .resolve(sourceType.name().toLowerCase())
                         .resolve("java")
                         .resolve(Path.of(codeClass.getPackageName().replace('.', '/')))
                         .resolve(codeClass.getSourceFile()))
@@ -103,6 +106,7 @@ public record ProjectExplorer(
     public record ResolvedClass(
             String qualifiedName,
             Optional<ProjectDescriptor> projectDescriptor,
+            SourceType sourceType,
             CodeClass codeClass) implements Comparable<ResolvedClass> {
 
         public record Dto(String qualifiedName,
@@ -139,7 +143,7 @@ public record ProjectExplorer(
             return projectDescriptor
                     .map(ProjectDescriptor::projName)
                     .map(explorer.projectByName::get)
-                    .flatMap(proj->proj.sourcePath(codeClass));
+                    .flatMap(proj->proj.sourcePath(codeClass, sourceType));
         }
         public Dto toDto() {
             return new Dto(qualifiedName,
@@ -221,7 +225,7 @@ public record ProjectExplorer(
         return Optional.ofNullable(resolvedClass)
                 .flatMap(ResolvedClass::projectDescriptor)
                 .map(ProjectDescriptor::projName)
-                .map(it->projectByName.get(it));
+                .map(projectByName::get);
     }
 
     public Optional<ResolvedProject> lookupProjectForQualifiedName(final @Nullable String qualifiedName) {
@@ -240,7 +244,7 @@ public record ProjectExplorer(
         }
         Stream<ProjectBuilder> streamProjectBuilders() {
             return Stream.concat(Stream.of(rootDescriptor), subProjectDescriptors().stream())
-                    .map(desc->new ProjectBuilder(rootDescriptor, desc));
+                    .map(desc->new ProjectBuilder(rootDescriptor, desc, rootDescriptor.includeTests()));
         }
         List<ProjectDescriptor> subProjectDescriptors() {
             if(!rootDescriptor.recure())
@@ -253,6 +257,7 @@ public record ProjectExplorer(
                         projModel.getArtifactCoordinates().getArtifactId(),
                         rootDescriptor.packageFilter(),
                         projModel.getProjectDirectory().toPath(),
+                        rootDescriptor.includeTests(),
                         false);
                 subProjectDescriptors.add(sub);
             });
@@ -263,43 +268,56 @@ public record ProjectExplorer(
     private record ProjectBuilder(
             ProjectDescriptor rootDescriptor,
             ProjectDescriptor projDescriptor,
-            AnalyzerConfig analyzerConfig) {
-        ProjectBuilder(
-                final ProjectDescriptor rootDescriptor,
-                final ProjectDescriptor projDescriptor) {
-            this(rootDescriptor, projDescriptor, analyzerConfig(projDescriptor));
-        }
+            boolean includeTests) {
         ResolvedProject build() {
-            var classes = Model.from(analyzerConfig.getClasses()).read().getClasses()
+        	var analyzerConfig = AnalyzerConfigFactory.maven(projDescriptor.projPath().toFile(), Language.JAVA).main();
+            var mainClasses = Model.from(analyzerConfig.getClasses()).read().getClasses()
                 .stream()
                 .filter(codeClass->codeClass.getPackageName().startsWith(projDescriptor.packageFilter()))
                 .map(codeClass->new ClassBuilder(
                       Optional.of(this),
+                      SourceType.MAIN,
                       codeClass))
                 .map(ClassBuilder::build)
                 .collect(Collectors.toCollection(TreeSet::new));
+
+            SortedSet<ResolvedClass> classes = mainClasses;
+
+            if(includeTests) {
+            	analyzerConfig = AnalyzerConfigFactory.mavenTest(projDescriptor.projPath().toFile(), Language.JAVA).main();
+	            Model.from(analyzerConfig.getClasses()).read().getClasses()
+	                .stream()
+	                .filter(codeClass->codeClass.getPackageName().startsWith(projDescriptor.packageFilter()))
+	                .map(codeClass->new ClassBuilder(
+	                      Optional.of(this),
+	                      SourceType.TEST,
+	                      codeClass))
+	                .map(ClassBuilder::build)
+	                .forEach(classes::add);
+            }
+
             return new ResolvedProject(rootDescriptor, projDescriptor, classes);
-        }
-        private static AnalyzerConfig analyzerConfig(final ProjectDescriptor projDescriptor) {
-            return AnalyzerConfigFactory.maven(projDescriptor.projPath().toFile(), Language.JAVA).main();
         }
     }
 
     private final static class ClassBuilder {
         final Optional<ProjectBuilder> projectBuilder;
+        final SourceType sourceType;
         final CodeClass codeClass;
         ResolvedClass resolvedClass;
         ClassBuilder(
                 final Optional<ProjectBuilder> projectBuilder,
+                final SourceType sourceType,
                 final CodeClass codeClass) {
             this.projectBuilder = projectBuilder;
+            this.sourceType = sourceType;
             this.codeClass = codeClass;
         }
         // idempotent
         ResolvedClass build() {
             if(resolvedClass==null) {
                 resolvedClass = new ResolvedClass(
-                        codeClass.getName(), projectBuilder.map(ProjectBuilder::projDescriptor), codeClass);
+                        codeClass.getName(), projectBuilder.map(ProjectBuilder::projDescriptor), sourceType, codeClass);
             }
             return resolvedClass;
         }

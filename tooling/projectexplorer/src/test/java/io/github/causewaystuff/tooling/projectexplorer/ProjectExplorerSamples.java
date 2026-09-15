@@ -34,6 +34,7 @@ class ProjectExplorerSamples {
                 "causewaystuff-projectexplorer-testdomain",
                 "io.github.causewaystuff.tooling.projectexplorertest",
                 Path.of("../projectexplorertest"),
+                true,
                 false);
     }
 
