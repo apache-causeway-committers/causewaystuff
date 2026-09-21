@@ -39,6 +39,15 @@ classes:
   - "io.github.causewaystuff.tooling.projectexplorertest.PublicIMultiplier"
   fields: []
   methods: []
+- qualifiedName: "io.github.causewaystuff.tooling.projectexplorertest.PublicIAdderTest"
+  superclass: "java.lang.Object"
+  interfaces: []
+  fields: []
+  methods:
+  - name: "<init>"
+    referencedClasses: []
+  - name: "test"
+    referencedClasses: []
 - qualifiedName: "io.github.causewaystuff.tooling.projectexplorertest.PublicIDivider"
   superclass: "java.lang.Object"
   interfaces: []
