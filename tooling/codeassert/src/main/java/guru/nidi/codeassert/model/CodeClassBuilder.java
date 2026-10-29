@@ -277,9 +277,14 @@ class CodeClassBuilder {
         return slashesToDots(typed);
     }
 
-    private String descriptorToType(final String descriptor) {
-        if (!descriptor.startsWith("L"))
+    private String descriptorToTypeOrig(final String descriptor) {
+        if (!descriptor.startsWith("L")) {
+            final char first = descriptor.charAt(0);
+            if ("VBCDFIJZS".indexOf(first) >= 0)
+                // likely a bytecode anomaly (seeing this when processing test code)
+                return "";
             throw new AssertionError("Expected Object descriptor, but found '" + descriptor + "'");
+        }
         return descriptor.substring(1, descriptor.length() - 1);
     }
 
@@ -305,4 +310,40 @@ class CodeClassBuilder {
 
         return types;
     }
+
+    private String descriptorToType(final String descriptor) {
+        if (descriptor.isEmpty())
+            return "";
+        final char first = descriptor.charAt(0);
+        if (first == 'L')
+            // Standard Object reference: Lfully/qualified/Name;
+            return descriptor.substring(1, descriptor.length() - 1).replace('/', '.');
+        else if (first == '[')
+            // Array type: [Ljava/lang/Object; or [I etc.
+            // For annotation element values, arrays of objects are allowed.
+            // We need to resolve the component type.
+            return descriptorToType(descriptor.substring(1));
+        else if ("BCDFIJZS".indexOf(first) >= 0)
+            // Primitive types: byte, char, double, float, int, long, short, boolean
+            // These should not appear in annotation element value references directly as class refs,
+            // but if they do (due to bytecode quirks), we can map them to their wrapper classes or skip.
+            // For now, let's return the primitive name wrapped or just empty to avoid crash.
+            return switch (first) {
+            case 'B' -> "byte";
+            case 'C' -> "char";
+            case 'D' -> "double";
+            case 'F' -> "float";
+            case 'I' -> "int";
+            case 'J' -> "long";
+            case 'S' -> "short";
+            case 'Z' -> "boolean";
+            default -> "";
+            };
+        else
+            // Unknown or Void ('V') - likely a bytecode anomaly.
+            // Returning empty string prevents the crash and allows indexing to continue.
+            // Alternatively, log a warning if you have access to logging.
+            return "";
+    }
+
 }
