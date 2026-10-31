@@ -35,13 +35,15 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
+
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+
 import org.apache.causeway.commons.internal.base._NullSafe;
 import org.apache.causeway.commons.internal.base._Strings;
 import org.apache.causeway.commons.io.JsonUtils;
 import org.apache.causeway.commons.io.YamlUtils;
-import org.jspecify.annotations.Nullable;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 import io.github.causewaystuff.tooling.codeassert.config.Language;
 import io.github.causewaystuff.tooling.codeassert.model.CodeClass;
@@ -274,6 +276,8 @@ public record ProjectExplorer(
             var mainClasses = Model.from(analyzerConfig.getClasses()).read().getClasses()
                 .stream()
                 .filter(codeClass->codeClass.getPackageName().startsWith(projDescriptor.packageFilter()))
+                .filter(codeClass->codeClass.getSourceFile()!=null
+            		&& !"Unknown".equals(codeClass.getSourceFile()))
                 .map(codeClass->new ClassBuilder(
                       Optional.of(this),
                       SourceType.MAIN,
@@ -288,6 +292,8 @@ public record ProjectExplorer(
 	            Model.from(analyzerConfig.getClasses()).read().getClasses()
 	                .stream()
 	                .filter(codeClass->codeClass.getPackageName().startsWith(projDescriptor.packageFilter()))
+	                .filter(codeClass->codeClass.getSourceFile()!=null
+                		&& !"Unknown".equals(codeClass.getSourceFile()))
 	                .map(codeClass->new ClassBuilder(
 	                      Optional.of(this),
 	                      SourceType.TEST,
