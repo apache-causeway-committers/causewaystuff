@@ -40,6 +40,7 @@ import org.apache.causeway.commons.collections.Can;
 import org.apache.causeway.commons.functional.Try;
 import org.apache.causeway.commons.internal.assertions._Assert;
 import org.apache.causeway.commons.internal.functions._Predicates;
+import org.apache.causeway.commons.internal.proxy.Proxyable;
 import org.apache.causeway.commons.io.DataSink;
 import org.apache.causeway.commons.io.DataSource;
 import org.apache.causeway.commons.io.FileUtils;
@@ -60,14 +61,18 @@ import io.github.causewaystuff.commons.compression.SevenZUtils;
 
 @Repository
 @Slf4j
-public class LocalFsBlobStore implements BlobStore {
+public class LocalFsBlobStore implements Proxyable, BlobStore {
 
-    private final ResourceFolder rootDirectory;
-    private final Map<NamedPath, BlobDescriptor> descriptorsByPath;
+    private /*final*/ ResourceFolder rootDirectory;
+    private /*final*/ Map<NamedPath, BlobDescriptor> descriptorsByPath;
 
     public LocalFsBlobStore(final BlobStoreConfiguration config) {
         this.rootDirectory = ResourceFolder.ofFile(new File(config.resource()));
         this.descriptorsByPath = new Scanner(rootDirectory).scan();
+    }
+
+    // Needed only for CGLIB proxy instantiation; never used at runtime
+    protected LocalFsBlobStore() {
     }
 
     @Override @Synchronized
