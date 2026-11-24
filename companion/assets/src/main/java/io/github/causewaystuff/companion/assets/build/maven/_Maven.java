@@ -35,29 +35,29 @@ import io.spring.initializr.generator.buildsystem.maven.MavenDependency;
 
 @UtilityClass
 class _Maven {
-    
+
     // -- TYPES
 
-    String scopeForType(DependencyScope type) {
-        if (type == null) return null;
-        
+    String scopeForType(final DependencyScope type) {
+        if (type == null)
+            return null;
+
         return switch (type) {
             case ANNOTATION_PROCESSOR, COMPILE, COMPILE_ONLY -> null;
             case PROVIDED_RUNTIME -> "provided";
             case RUNTIME -> "runtime";
-            case TEST_COMPILE, TEST_RUNTIME -> "test";
+            case TEST_COMPILE, TEST_RUNTIME, TEST_ANNOTATION_PROCESSOR, TEST_COMPILE_ONLY  -> "test";
         };
     }
-    
-    boolean isOptional(io.spring.initializr.generator.buildsystem.Dependency dependency) {
-        if (dependency instanceof MavenDependency mavenDependency && mavenDependency.isOptional()) {
+
+    boolean isOptional(final io.spring.initializr.generator.buildsystem.Dependency dependency) {
+        if (dependency instanceof MavenDependency mavenDependency && mavenDependency.isOptional())
             return true;
-        }
         return (dependency.getScope() == DependencyScope.ANNOTATION_PROCESSOR
                 || dependency.getScope() == DependencyScope.COMPILE_ONLY);
     }
-    
-    Dependency dependency(io.spring.initializr.generator.buildsystem.Dependency dependency) {
+
+    Dependency dependency(final io.spring.initializr.generator.buildsystem.Dependency dependency) {
         var mavenDependency = new Dependency();
         mavenDependency.setArtifactId(dependency.getArtifactId());
         mavenDependency.setClassifier(dependency.getClassifier());
@@ -71,14 +71,14 @@ class _Maven {
         mavenDependency.setScope(scopeForType(dependency.getScope()));
         //mavenDependency.setSystemPath();
         mavenDependency.setType(dependency.getType());
-        
+
         if(dependency.getVersion()!=null) {
             mavenDependency.setVersion(dependency.getVersion().getValue());
         }
         return mavenDependency;
     }
-    
-    Exclusion exclusion(io.spring.initializr.generator.buildsystem.Dependency.Exclusion exclusion) {
+
+    Exclusion exclusion(final io.spring.initializr.generator.buildsystem.Dependency.Exclusion exclusion) {
         var mavenExclusion = new Exclusion();
         mavenExclusion.setArtifactId(exclusion.getArtifactId());
         mavenExclusion.setGroupId(exclusion.getGroupId());
@@ -86,8 +86,8 @@ class _Maven {
         //mavenExclusion.setLocation();
         return mavenExclusion;
     }
-    
-    Dependency dependency(BillOfMaterials bom) {
+
+    Dependency dependency(final BillOfMaterials bom) {
         var mavenDependency = new Dependency();
         mavenDependency.setArtifactId(bom.getArtifactId());
         //mavenDependency.setClassifier();
@@ -105,27 +105,27 @@ class _Maven {
         return mavenDependency;
 
     }
-    
+
     // -- CONTAINERS
-    
-    List<Dependency> dependencies(DependencyContainer dependencyContainer) {
+
+    List<Dependency> dependencies(final DependencyContainer dependencyContainer) {
         return dependencyContainer.items()
             .map(_Maven::dependency)
             .toList();
     }
-    
-    List<Exclusion> exclusions(Set<io.spring.initializr.generator.buildsystem.Dependency.Exclusion> exclusions) {
+
+    List<Exclusion> exclusions(final Set<io.spring.initializr.generator.buildsystem.Dependency.Exclusion> exclusions) {
         return exclusions.stream()
             .map(_Maven::exclusion)
             .toList();
     }
 
-    DependencyManagement dependencyManagement(BomContainer boms) {
+    DependencyManagement dependencyManagement(final BomContainer boms) {
         var dependencyManagement = new DependencyManagement();
         dependencyManagement.setDependencies(boms.items()
             .map(_Maven::dependency)
             .toList());
         return dependencyManagement;
     }
-    
+
 }
